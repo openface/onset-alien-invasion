@@ -1,6 +1,8 @@
 local AlienNPCs = {}
 local AlienLocations = {} -- aliens.json
 
+local AlienHealth = 999
+
 local LootPickups = {}
 local LootLocations = {} -- lootpickups.json
 
@@ -86,7 +88,7 @@ function SetupAliens()
     -- create alien npcs
     for _,pos in pairs(AlienLocations) do
         npc = CreateNPC(pos[1], pos[2], pos[3], 90)
-        SetNPCHealth(npc, 999)
+        SetNPCHealth(npc, AlienHealth)
         SetNPCPropertyValue(npc, 'clothing', math.random(23, 24))
         SetNPCPropertyValue(npc, 'location', pos)
         table.insert(AlienNPCs, npc)
@@ -178,7 +180,8 @@ function OnPlayerPickupHit(player, pickup)
         for l,p in pairs(lp) do
             if p == pickup then
                 if (GetPickupPropertyValue(pickup, 'type') == 'weapon') then
-                    SetPlayerWeapon(player, GetPickupPropertyValue(pickup, 'weaponId'), 450, true, 1, true)
+                    local slot = GetNextEmptySlot(player)
+                    SetPlayerWeapon(player, GetPickupPropertyValue(pickup, 'weaponId'), 450, true, slot, true)
                 elseif (GetPickupPropertyValue(pickup, 'type') == 'heal') then
                     CallRemoteEvent(player, 'HealthPickup')                
                     SetPlayerHealth(player, GetPlayerHealth(player) + 25)
@@ -191,6 +194,16 @@ function OnPlayerPickupHit(player, pickup)
 end
 AddEvent("OnPlayerPickupHit", OnPlayerPickupHit)
 
+function GetNextEmptySlot(player)
+    -- slot 1 is reserved for fists
+    for slot=2,3 do
+        local w,a,m = GetPlayerWeapon(player, slot)
+        if (w == 1) then
+            return slot
+        end          
+    end
+    return 2
+end
 
 -- damage aliens
 function OnNPCDamage(npc, damagetype, amount)
@@ -198,12 +211,13 @@ function OnNPCDamage(npc, damagetype, amount)
     local x, y, z = GetNPCLocation(npc)
     SetNPCTargetLocation(npc, x, y, z)
 
-    health = GetNPCHealth(npc)
-
-    local text = CreateText3D(health, 12, x, y, z + 140, 0, 0, 0)
-    Delay(1000, function()
-        DestroyText3D(text)
-    end)
+    local percent_remaining = math.floor(GetNPCHealth(npc) * 100 / AlienHealth)
+    if (percent_remaining < 0) then
+        local text = CreateText3D(percent_remaining..'%', 24, x, y, z + 140, 0, 0, 0)
+        Delay(1000, function()
+            DestroyText3D(text)
+        end)
+    end
 
     if (health <= 0) then
         -- alien is dead

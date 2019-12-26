@@ -1,11 +1,11 @@
 
-function OnPlayerSpawn()
+AddEvent('OnPlayerSpawn', function()
     StartCameraFade(1.0, 0.0, 10.0, "#000")
     local player = GetPlayerId()
     SetPlayerClothingPreset(player, 25)
-end
-AddEvent('OnPlayerSpawn', OnPlayerSpawn)
-
+    SetPostEffect("Chromatic", "Intensity", 0.0)
+	SetPostEffect("Chromatic", "StartOffset", 0.0)
+end)
 
 AddEvent("OnNPCStreamIn", function(npc)
     local clothing = GetNPCPropertyValue(npc, 'clothing')

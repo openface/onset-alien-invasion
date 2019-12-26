@@ -123,9 +123,14 @@ function SpawnLootArea(pos)
         return
     end
 
+    players = GetPlayersInRange3D(pos[1], pos[2], pos[3], 100000)
+    if next(players) == nil then
+        return
+    end
+
     print 'Spawning loot area'
 
-    for _,ply in pairs(GetNearbyPlayers(pos[1], pos[2], pos[3])) do
+    for _,ply in pairs(players) do
         CallRemoteEvent(ply, 'LootSpawnNearby', pos)
     end
 
@@ -212,7 +217,7 @@ function OnNPCDamage(npc, damagetype, amount)
     SetNPCTargetLocation(npc, x, y, z)
 
     local percent_remaining = math.floor(GetNPCHealth(npc) * 100 / AlienHealth)
-    if (percent_remaining < 0) then
+    if (percent_remaining > 0) then
         local text = CreateText3D(percent_remaining..'%', 24, x, y, z + 140, 0, 0, 0)
         Delay(1000, function()
             DestroyText3D(text)
@@ -289,19 +294,4 @@ function GetNearestPlayer(npc)
 		end
 	end
 	return found, nearest_dist
-end
-
--- get nearby players to pos
-function GetNearbyPlayers(x, y, z)
-	local plys = GetAllPlayers()
-    local players = {}	
-
-	for _,v in pairs(plys) do
-		local x2, y2, z2 = GetPlayerLocation(v)
-		local dist = GetDistance3D(x, y, z, x2, y2, z2)
-		if dist < 10000 then
-            table.insert(players, v)
-        end
-	end
-	return players
 end

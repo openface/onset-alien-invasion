@@ -1,0 +1,15 @@
+{
+	"author": "openface",
+	"version": "0.1",
+	"server_scripts": [
+		"server.lua",
+		"json.lua"
+	],
+	"client_scripts": [
+		"client.lua"
+	],
+	"files": [
+		"sounds/alien.wav",
+		"sounds/health_pickup.wav"
+	]
+}

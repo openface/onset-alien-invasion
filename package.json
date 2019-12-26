@@ -3,7 +3,8 @@
 	"version": "0.1",
 	"server_scripts": [
 		"server.lua",
-		"json.lua"
+		"admin.lua",
+		"vendor/json.lua"
 	],
 	"client_scripts": [
 		"client.lua"

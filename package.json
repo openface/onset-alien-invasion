@@ -10,6 +10,7 @@
 	],
 	"files": [
 		"sounds/alien.wav",
-		"sounds/health_pickup.wav"
+		"sounds/health_pickup.wav",
+		"sounds/flyby.wav"
 	]
 }

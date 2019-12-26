@@ -25,7 +25,7 @@ AddEvent("OnPlayerDeath", OnPlayerDeath)
 -- add alien pos
 AddCommand("apos", function(playerid)
     local x, y, z = GetPlayerLocation(playerid)
-    string = "Location: "..x..", "..y..", "..z
+    string = "Location: "..x.." "..y.." "..z
     AddPlayerChat(playerid, string)
     print(string)
     table.insert(AlienLocations, { x, y, z })
@@ -39,7 +39,7 @@ end)
 -- add loot pos
 AddCommand("lpos", function(playerid)
     local x, y, z = GetPlayerLocation(playerid)
-    string = "Location: "..x..", "..y..", "..z
+    string = "Location: "..x.." "..y.." "..z
     AddPlayerChat(playerid, string)
     print(string)
     table.insert(LootLocations, { x, y, z })
@@ -48,6 +48,17 @@ AddCommand("lpos", function(playerid)
     local contents = json_encode(LootLocations)
     file:write(contents)
     io.close(file)
+end)
+
+AddCommand("loc", function(playerid, x, y, z)
+    if (x == nil) then
+        local x, y, z = GetPlayerLocation(playerid)
+        string = "Location: "..x.." "..y.." "..z
+        AddPlayerChat(playerid, string)
+        print(string)
+        return
+    end
+    SetPlayerLocation(playerid, x, y, z + 150)
 end)
 
 -- Setup world
@@ -89,59 +100,87 @@ function SetupLootPickups()
     LootLocations = json_decode(contents);
     io.close(file)
 
-    -- create loot pickups
-    for _,pos in pairs(LootLocations) do
-        local pickup = CreatePickup(815, pos[1], pos[2], pos[3])
-        SetPickupPropertyValue(pickup, 'type', 'heal')
-        table.insert(LootPickups, pickup)
-
-        local objectId = math.random(4,22)
-        local weaponId = objectId - 2
-        local pickup = CreatePickup(objectId, pos[1] + 200, pos[2], pos[3])
-        SetPickupPropertyValue(pickup, 'type', 'weapon')
-        SetPickupPropertyValue(pickup, 'weaponId', weaponId)
-        table.insert(LootPickups, pickup)
-
-        local objectId = math.random(4,22)
-        local weaponId = objectId - 2
-        local pickup = CreatePickup(objectId, pos[1] - 200, pos[2], pos[3])
-        SetPickupPropertyValue(pickup, 'type', 'weapon')
-        SetPickupPropertyValue(pickup, 'weaponId', weaponId)
-        table.insert(LootPickups, pickup)
-
-        local objectId = math.random(4,22)
-        local weaponId = objectId - 2
-        local pickup = CreatePickup(objectId, pos[1], pos[2] + 200, pos[3])
-        SetPickupPropertyValue(pickup, 'type', 'weapon')
-        SetPickupPropertyValue(pickup, 'weaponId', weaponId)
-        table.insert(LootPickups, pickup)
-
-        local objectId = math.random(4,22)
-        local weaponId = objectId - 2
-        local pickup = CreatePickup(objectId, pos[1], pos[2] - 200, pos[3])
-        SetPickupPropertyValue(pickup, 'type', 'weapon')
-        SetPickupPropertyValue(pickup, 'weaponId', weaponId)
-        table.insert(LootPickups, pickup)
-    end
+    -- spawn loot areas every 15 minutes
+	loot_timer = CreateTimer(function()
+        for _,loc in pairs(LootLocations) do
+            SpawnLootArea(loc)
+        end
+    end, 1 * 60 * 1000)
 end
+
+function SpawnLootArea(pos)
+    if (LootPickups[pos] ~= nil) then
+        print 'Loot area already spawned'
+        return
+    end
+
+    print 'Spawning loot area'
+
+    for _,ply in pairs(GetNearbyPlayers(pos[1], pos[2], pos[3])) do
+        CallRemoteEvent(ply, 'LootSpawnNearby', pos)
+    end
+
+    LootPickups[pos] = {}
+
+    local pickup = CreatePickup(815, pos[1], pos[2], pos[3])
+    SetPickupPropertyValue(pickup, 'type', 'heal')
+    table.insert(LootPickups[pos], pickup)
+
+    local objectId = math.random(4,22)
+    local weaponId = objectId - 2
+    local pickup = CreatePickup(objectId, pos[1] + 200, pos[2], pos[3])
+    SetPickupPropertyValue(pickup, 'type', 'weapon')
+    SetPickupPropertyValue(pickup, 'weaponId', weaponId)
+    table.insert(LootPickups[pos], pickup)
+
+    local objectId = math.random(4,22)
+    local weaponId = objectId - 2
+    local pickup = CreatePickup(objectId, pos[1] - 200, pos[2], pos[3])
+    SetPickupPropertyValue(pickup, 'type', 'weapon')
+    SetPickupPropertyValue(pickup, 'weaponId', weaponId)
+    table.insert(LootPickups[pos], pickup)
+
+    local objectId = math.random(4,22)
+    local weaponId = objectId - 2
+    local pickup = CreatePickup(objectId, pos[1], pos[2] + 200, pos[3])
+    SetPickupPropertyValue(pickup, 'type', 'weapon')
+    SetPickupPropertyValue(pickup, 'weaponId', weaponId)
+    table.insert(LootPickups[pos], pickup)
+
+    local objectId = math.random(4,22)
+    local weaponId = objectId - 2
+    local pickup = CreatePickup(objectId, pos[1], pos[2] - 200, pos[3])
+    SetPickupPropertyValue(pickup, 'type', 'weapon')
+    SetPickupPropertyValue(pickup, 'weaponId', weaponId)
+    table.insert(LootPickups[pos], pickup)
+
+    -- despawn after 10 mins
+    Delay(1 * 60 * 1000, function()
+        print('Despawning loot area')
+        for _,p in pairs(LootPickups[pos]) do
+            DestroyPickup(p)
+        end
+        LootPickups[pos] = nil
+    end)
+end
+
 
 -- pickup loot
 function OnPlayerPickupHit(player, pickup)
-	for _,p in pairs(LootPickups) do
-		if p == pickup then
-            if (GetPickupPropertyValue(pickup, 'type') == 'weapon') then
-                SetPlayerWeapon(player, GetPickupPropertyValue(pickup, 'weaponId'), 450, true, 1, true)
-            elseif (GetPickupPropertyValue(pickup, 'type') == 'heal') then
-                CallRemoteEvent(player, 'HealthPickup')                
-                SetPlayerHealth(player, GetPlayerHealth(player) + 25)
+    for _,lp in pairs(LootPickups) do
+        for l,p in pairs(lp) do
+            if p == pickup then
+                if (GetPickupPropertyValue(pickup, 'type') == 'weapon') then
+                    SetPlayerWeapon(player, GetPickupPropertyValue(pickup, 'weaponId'), 450, true, 1, true)
+                elseif (GetPickupPropertyValue(pickup, 'type') == 'heal') then
+                    CallRemoteEvent(player, 'HealthPickup')                
+                    SetPlayerHealth(player, GetPlayerHealth(player) + 25)
+                end
+                SetPickupVisibility(pickup, player, false)
+                return
             end
-            SetPickupVisibility(pickup, player, false)
-            Delay(30 * 1000, function()
-                SetPickupVisibility(pickup, player, true)
-            end)
-            return
-		end
-	end
+        end
+    end
 end
 AddEvent("OnPlayerPickupHit", OnPlayerPickupHit)
 
@@ -213,7 +252,7 @@ function AttackNearestPlayer(npc)
 end
 AddEvent("OnNPCReachTarget", AttackNearestPlayer)
 
-
+-- get nearest player to npc
 function GetNearestPlayer(npc)
 	local plys = GetAllPlayers()
 	local found = 0
@@ -229,4 +268,19 @@ function GetNearestPlayer(npc)
 		end
 	end
 	return found, nearest_dist
+end
+
+-- get nearby players to pos
+function GetNearbyPlayers(x, y, z)
+	local plys = GetAllPlayers()
+    local players = {}	
+
+	for _,v in pairs(plys) do
+		local x2, y2, z2 = GetPlayerLocation(v)
+		local dist = GetDistance3D(x, y, z, x2, y2, z2)
+		if dist < 10000 then
+            table.insert(players, v)
+        end
+	end
+	return players
 end

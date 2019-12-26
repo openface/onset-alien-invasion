@@ -100,6 +100,13 @@ function SetupLootPickups()
     LootLocations = json_decode(contents);
     io.close(file)
 
+    -- spawn a vehicle by each loot area
+    local validVehicles = { 1, 7, 11, 13, 14, 16, 17, 18, 21, 22, 23 }
+    for _,loc in pairs(LootLocations) do
+        local v = validVehicles[ math.random( #validVehicles ) ]
+        CreateVehicle(v, loc[1], loc[2] + 3500, loc[3] + 3500)
+    end
+
     -- spawn loot areas every 15 minutes
 	loot_timer = CreateTimer(function()
         for _,loc in pairs(LootLocations) do

@@ -2,15 +2,15 @@
 	"author": "openface",
 	"version": "0.1",
 	"server_scripts": [
-		"server.lua",
-		"vendor/json.lua"
+		"server/server.lua",
+		"server/json.lua"
 	],
 	"client_scripts": [
-		"client.lua"
+		"client/client.lua"
 	],
 	"files": [
-		"sounds/alien.wav",
-		"sounds/health_pickup.wav",
-		"sounds/flyby.wav"
+		"client/sounds/alien.wav",
+		"client/sounds/health_pickup.wav",
+		"client/sounds/flyby.wav"
 	]
 }

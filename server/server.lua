@@ -32,7 +32,7 @@ AddCommand("apos", function(playerid)
     print(string)
     table.insert(AlienLocations, { x, y, z })
 
-    local file = io.open("packages/"..GetPackageName().."/data/aliens.json", 'w')
+    local file = io.open("packages/"..GetPackageName().."/server/data/aliens.json", 'w')
     local contents = json_encode(AlienLocations)
     file:write(contents)
     io.close(file)
@@ -46,7 +46,7 @@ AddCommand("lpos", function(playerid)
     print(string)
     table.insert(LootLocations, { x, y, z })
 
-    local file = io.open("packages/"..GetPackageName().."/data/lootboxes.json", 'w')
+    local file = io.open("packages/"..GetPackageName().."/server/data/lootboxes.json", 'w')
     local contents = json_encode(LootLocations)
     file:write(contents)
     io.close(file)
@@ -80,7 +80,7 @@ AddEvent("OnPackageStart", OnPackageStart)
 
 function SetupAliens()
     print "Reading alien NPC positions..."
-    local file = io.open("packages/"..GetPackageName().."/data/aliens.json", 'r')
+    local file = io.open("packages/"..GetPackageName().."/server/data/aliens.json", 'r')
     local contents = file:read("*a")
     AlienLocations = json_decode(contents);
     io.close(file)
@@ -97,7 +97,7 @@ end
 
 function SetupLootPickups()
     print "Reading loot pickups..."
-    local file = io.open("packages/"..GetPackageName().."/data/lootpickups.json", 'r')
+    local file = io.open("packages/"..GetPackageName().."/server/data/lootpickups.json", 'r')
     local contents = file:read("*a")
     LootLocations = json_decode(contents);
     io.close(file)
@@ -295,3 +295,4 @@ function GetNearestPlayer(npc)
 	end
 	return found, nearest_dist
 end
+

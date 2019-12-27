@@ -46,7 +46,7 @@ AddCommand("lpos", function(playerid)
     print(string)
     table.insert(LootLocations, { x, y, z })
 
-    local file = io.open("packages/"..GetPackageName().."/server/data/lootboxes.json", 'w')
+    local file = io.open("packages/"..GetPackageName().."/server/data/lootpickups.json", 'w')
     local contents = json_encode(LootLocations)
     file:write(contents)
     io.close(file)

@@ -102,13 +102,6 @@ function SetupLootPickups()
     LootLocations = json_decode(contents);
     io.close(file)
 
-    -- spawn a vehicle by each loot area
-    local validVehicles = { 1, 7, 11, 13, 14, 16, 17, 18, 21, 22, 23 }
-    for _,loc in pairs(LootLocations) do
-        local v = validVehicles[ math.random( #validVehicles ) ]
-        CreateVehicle(v, loc[1], loc[2] + 3500, loc[3] + 3500)
-    end
-
     -- spawn loot areas every 15 minutes
 	loot_timer = CreateTimer(function()
         for _,loc in pairs(LootLocations) do
@@ -130,6 +123,7 @@ function SpawnLootArea(pos)
 
     print 'Spawning loot area'
 
+    -- notify nearby players
     for _,ply in pairs(players) do
         CallRemoteEvent(ply, 'LootSpawnNearby', pos)
     end
@@ -168,14 +162,22 @@ function SpawnLootArea(pos)
     SetPickupPropertyValue(pickup, 'weaponId', weaponId)
     table.insert(LootPickups[pos], pickup)
 
+    local pickups = LootPickups[pos]
+
+    -- spawn a vehicle
+    local validVehicles = { 1, 7, 11, 13, 14, 16, 17, 18, 21, 22, 23 }
+    local vehicleModelId = validVehicles[ math.random( #validVehicles ) ]
+    local vehicle = CreateVehicle(vehicleModelId, pos[1] + 3000, pos[2] + 3000, pos[3] + 50)
+
     -- despawn after 10 mins
-    Delay(1 * 60 * 1000, function()
+    Delay(1 * 60 * 1000, function(pickups, vehicle)
         print('Despawning loot area')
-        for _,p in pairs(LootPickups[pos]) do
+        for _,p in pairs(pickups) do
             DestroyPickup(p)
         end
+        DestroyVehicle(vehicle)
         LootPickups[pos] = nil
-    end)
+    end, pickups, vehicle)
 end
 
 
@@ -265,11 +267,11 @@ function AttackNearestPlayer(npc)
     local target, nearest_dist = GetNearestPlayer(npc)
     if (target~=0 and nearest_dist==0.0) then
         if (not IsPlayerDead(target)) then
-            SetNPCAnimation(npc, "SLAP01", false)
+            SetNPCAnimation(npc, "THROW", false)
             SetPlayerHealth(target, 0)
             SetNPCPropertyValue(npc, 'target', nil, true)
             SetNPCAnimation(npc, "DANCE12", true)
-            Delay(7000, function()
+            Delay(5000, function()
                 local location = GetNPCPropertyValue(npc, 'location')
                 SetNPCTargetLocation(npc, location[1], location[2], location[3])
             end)

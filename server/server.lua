@@ -212,13 +212,19 @@ function GetNextEmptySlot(player)
     return 2
 end
 
+function OnNPCSpawn(npc)
+    SetNPCHealth(npc, AlienHealth)
+end
+AddEvent("OnNPCSpawn", OnNPCSpawn)
+
+
 -- damage aliens
 function OnNPCDamage(npc, damagetype, amount)
     -- stop alien temporarily when damaged
     local x, y, z = GetNPCLocation(npc)
     SetNPCTargetLocation(npc, x, y, z)
-
-    local percent_remaining = math.floor(GetNPCHealth(npc) * 100 / AlienHealth)
+    local health = GetNPCHealth(npc)
+    local percent_remaining = math.floor(health * 100 / AlienHealth)
     if (percent_remaining > 0) then
         local text = CreateText3D(percent_remaining..'%', 24, x, y, z + 140, 0, 0, 0)
         Delay(1000, function()

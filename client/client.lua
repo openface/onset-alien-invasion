@@ -1,4 +1,8 @@
 
+
+
+
+
 AddEvent('OnPlayerSpawn', function()
     StartCameraFade(1.0, 0.0, 10.0, "#000")
     local player = GetPlayerId()
@@ -35,41 +39,18 @@ AddRemoteEvent('HealthPickup', function()
     SetSoundVolume(HealthPickupSound, 1)
 end)
 
-local NearbyLootLocation
 AddRemoteEvent('LootSpawnNearby', function(pos)
-    NearbyLootLocation = pos
-    local LootSpawnSound = CreateSound3D("client/sounds/flyby.wav", pos[1], pos[2], pos[3] + 10000, 50000.0)
+    local LootSpawnSound = CreateSound3D("client/sounds/flyby.wav", pos[1], pos[2], pos[3] + 10000, 100000.0)
     SetSoundVolume(LootSpawnSound, 1)
-    Delay(3000, function(pos)
-        AddPlayerChat('There is a supply drop nearby!')
-        CreateFireworks(1, pos[1], pos[2], pos[3] + 150, 90, 0, 0)
-    end, pos)
+    AddPlayerChat('There is a supply drop nearby!')
+
+    local timer = CreateTimer(function(pos)
+        CreateFireworks(3, pos[1], pos[2], pos[3] + 150, 90, 0, 0)
+    end, 3000, pos)
+
+    -- fireworks for 30 secs
+    Delay(30 * 1000, function(timer)
+        DestroyTimer(timer)
+    end, timer)
 end)
 
-function OnKeyPress(key)
-    if key == "E" then
-        print 'press E'
-        local NearestLootLocation = GetNearestLootLocation()
-        if NearestLootLocation ~= 0 then
-            AddPlayerChat('Interacting...')
-            --CallRemoteEvent("TerminalInteract", NearestLootLocation)
-		end
-	end
-end
-AddEvent("OnKeyPress", OnKeyPress)
-
-function GetNearestLootLocation()
-    if NearbyLootLocation == nil then
-        print 'no loot nearby'
-        return 0
-    end     
-    
-    local x, y, z = GetPlayerLocation()
-    local dist = GetDistance3D(x, y, z, NearbyLootLocation[1], NearbyLootLocation[2], NearbyLootLocation[3])
-
-    if dist < 250.0 then
-        return NearbyLootLocation
-    end
-
-	return 0
-end

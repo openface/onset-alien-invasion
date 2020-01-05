@@ -1,15 +1,18 @@
-local AlienNPCs = {}
-local AlienLocations = {} -- aliens.json
+local SpawnLocation = { x = -102037, y = 194299, z = 1400 }
 
+local AlienNPCs = {}
 local AlienHealth = 999
+local AlienLocations = {} -- aliens.json
+local AlienAttackRange = 5000
 
 local LootPickups = {}
 local LootLocations = {} -- lootpickups.json
-
+local LootDropInterval = 5 * 60 * 1000
 
 -- welcome message
 function OnPlayerJoin(player)
-    SetPlayerSpawnLocation(player, 125773.000000, 80246.000000, 1645.000000, 90.0)
+    local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 3000)
+    SetPlayerSpawnLocation(player, x, y, SpawnLocation.z, 90.0)
     SetPlayerRespawnTime(player, 15 * 1000)
 	AddPlayerChatAll('<span color="#eeeeeeaa">'..GetPlayerName(player)..' ('..player..') joined the server</>')
 	AddPlayerChatAll('<span color="#eeeeeeaa">There are '..GetPlayerCount()..' players on the server</>')
@@ -36,6 +39,12 @@ AddCommand("apos", function(playerid)
     local contents = json_encode(AlienLocations)
     file:write(contents)
     io.close(file)
+end)
+
+AddCommand("loot", function(player)
+    local x, y, z = GetPlayerLocation(player)
+    local pos = { [1] = x, [2] = y, [3] = z }
+    SpawnLootArea(pos)
 end)
 
 -- add loot pos
@@ -87,6 +96,8 @@ function SetupAliens()
 
     -- create alien npcs
     for _,pos in pairs(AlienLocations) do
+        CreateObject(303, pos[1], pos[2], pos[3], 0, 0, 0, 10, 10, 200)
+
         npc = CreateNPC(pos[1], pos[2], pos[3], 90)
         SetNPCHealth(npc, AlienHealth)
         SetNPCPropertyValue(npc, 'clothing', math.random(23, 24))
@@ -102,101 +113,56 @@ function SetupLootPickups()
     LootLocations = json_decode(contents);
     io.close(file)
 
-    -- spawn loot areas every 15 minutes
+    -- spawn random loot area
 	loot_timer = CreateTimer(function()
-        for _,loc in pairs(LootLocations) do
-            SpawnLootArea(loc)
-        end
-    end, 1 * 60 * 1000)
+        SpawnLootArea(LootLocations[ math.random(#LootLocations) ])
+    end, LootDropInterval)
 end
 
 function SpawnLootArea(pos)
-    if (LootPickups[pos] ~= nil) then
-        print 'Loot area already spawned'
-        return
+    -- destroy any existing loot pickups
+    local pickups = GetAllPickups()
+    for _,p in pairs(pickups) do
+        if (GetPickupPropertyValue(p, 'type') == 'loot') then
+            DestroyPickup(p)
+            LootPickups[p] = nil
+        end
     end
 
-    players = GetPlayersInRange3D(pos[1], pos[2], pos[3], 100000)
+    players = GetPlayersInRange3D(pos[1], pos[2], pos[3], 50000)
     if next(players) == nil then
         return
     end
 
-    print 'Spawning loot area'
+    print 'Spawning loot...'
 
     -- notify nearby players
     for _,ply in pairs(players) do
         CallRemoteEvent(ply, 'LootSpawnNearby', pos)
     end
 
-    LootPickups[pos] = {}
-
-    local pickup = CreatePickup(815, pos[1], pos[2], pos[3])
-    SetPickupPropertyValue(pickup, 'type', 'heal')
-    table.insert(LootPickups[pos], pickup)
-
-    local objectId = math.random(4,22)
-    local weaponId = objectId - 2
-    local pickup = CreatePickup(objectId, pos[1] + 200, pos[2], pos[3])
-    SetPickupPropertyValue(pickup, 'type', 'weapon')
-    SetPickupPropertyValue(pickup, 'weaponId', weaponId)
-    table.insert(LootPickups[pos], pickup)
-
-    local objectId = math.random(4,22)
-    local weaponId = objectId - 2
-    local pickup = CreatePickup(objectId, pos[1] - 200, pos[2], pos[3])
-    SetPickupPropertyValue(pickup, 'type', 'weapon')
-    SetPickupPropertyValue(pickup, 'weaponId', weaponId)
-    table.insert(LootPickups[pos], pickup)
-
-    local objectId = math.random(4,22)
-    local weaponId = objectId - 2
-    local pickup = CreatePickup(objectId, pos[1], pos[2] + 200, pos[3])
-    SetPickupPropertyValue(pickup, 'type', 'weapon')
-    SetPickupPropertyValue(pickup, 'weaponId', weaponId)
-    table.insert(LootPickups[pos], pickup)
-
-    local objectId = math.random(4,22)
-    local weaponId = objectId - 2
-    local pickup = CreatePickup(objectId, pos[1], pos[2] - 200, pos[3])
-    SetPickupPropertyValue(pickup, 'type', 'weapon')
-    SetPickupPropertyValue(pickup, 'weaponId', weaponId)
-    table.insert(LootPickups[pos], pickup)
-
-    local pickups = LootPickups[pos]
-
-    -- spawn a vehicle
-    local validVehicles = { 1, 7, 11, 13, 14, 16, 17, 18, 21, 22, 23 }
-    local vehicleModelId = validVehicles[ math.random( #validVehicles ) ]
-    local vehicle = CreateVehicle(vehicleModelId, pos[1] + 3000, pos[2] + 3000, pos[3] + 50)
-
-    -- despawn after 10 mins
-    Delay(1 * 60 * 1000, function(pickups, vehicle)
-        print('Despawning loot area')
-        for _,p in pairs(pickups) do
-            DestroyPickup(p)
-        end
-        DestroyVehicle(vehicle)
-        LootPickups[pos] = nil
-    end, pickups, vehicle)
+    local pickup = CreatePickup(588, pos[1], pos[2], pos[3])
+    SetPickupPropertyValue(pickup, 'type', 'loot')
+    table.insert(LootPickups, pickup)
 end
-
 
 -- pickup loot
 function OnPlayerPickupHit(player, pickup)
-    for _,lp in pairs(LootPickups) do
-        for l,p in pairs(lp) do
-            if p == pickup then
-                if (GetPickupPropertyValue(pickup, 'type') == 'weapon') then
-                    local slot = GetNextEmptySlot(player)
-                    SetPlayerWeapon(player, GetPickupPropertyValue(pickup, 'weaponId'), 450, true, slot, true)
-                elseif (GetPickupPropertyValue(pickup, 'type') == 'heal') then
-                    CallRemoteEvent(player, 'HealthPickup')                
-                    SetPlayerHealth(player, GetPlayerHealth(player) + 25)
-                end
-                SetPickupVisibility(pickup, player, false)
-                return
-            end
-        end
+    if (GetPickupPropertyValue(pickup, 'type') == 'loot') then
+        -- random weapon
+        local slot = GetNextEmptySlot(player)
+        SetPlayerWeapon(player, math.random(4,22), 450, true, slot, true)
+
+        -- health
+        CallRemoteEvent(player, 'HealthPickup')                
+        SetPlayerHealth(player, 100)
+
+        -- armor
+        CallRemoteEvent(player, 'HealthPickup')
+        SetPlayerArmor(player, 100)
+
+        DestroyPickup(pickup)
+        LootPickups[pickup] = nil
     end
 end
 AddEvent("OnPlayerPickupHit", OnPlayerPickupHit)
@@ -256,7 +222,7 @@ function ResetAlien(npc)
 
     local target, nearest_dist = GetNearestPlayer(npc)
     if (target~=0 and not IsPlayerDead(target)) then
-        if (nearest_dist < 3000) then
+        if (nearest_dist < AlienAttackRange) then
             SetNPCPropertyValue(npc, 'target', target, true)
             SetNPCFollowPlayer(npc, target, 350)
             CallRemoteEvent(target, 'AlienAttacking', npc)
@@ -304,3 +270,10 @@ function GetNearestPlayer(npc)
 	return found, nearest_dist
 end
 
+function randomPointInCircle(x, y, radius)
+	local randX, randY
+	repeat
+		randX, randY = math.random(-radius, radius), math.random(-radius, radius)
+	until (((-randX) ^ 2) + ((-randY) ^ 2)) ^ 0.5 <= radius
+	return x + randX, y + randY
+end

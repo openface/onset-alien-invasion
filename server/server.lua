@@ -4,7 +4,7 @@ local PlayerRespawnTime = 20 * 1000 -- 20 secs
 local AlienHealth = 999
 local AlienLocations = {} -- aliens.json
 local AlienAttackRange = 5000
-local AlienSpawnInterval = 1 * 60 * 1000 -- spawn aliens every 30 mins
+local AlienSpawnInterval = 30 * 60 * 1000 -- spawn aliens every 30 mins
 
 local LootLocations = {} -- lootpickups.json
 local LootDropInterval = 5 * 60 * 1000 -- drop loot every 5 min (if players are nearby)
@@ -114,7 +114,7 @@ function SpawnAlienAreas()
             -- only destroy aliens not currently attacking
             if (GetNPCPropertyValue(npc, 'target') == nil) then
                 DestroyNPC(npc)
-                print "despawned alien"
+                --print "despawned alien"
             end
         end
     end
@@ -124,14 +124,14 @@ function SpawnAlienAreas()
     -- create alien npcs
     for _,pos in pairs(AlienLocations) do
         local x,y = randomPointInCircle(pos[1], pos[2], 5000)
-        CreateObject(303, x, y, pos[3]+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
+        --CreateObject(303, x, y, pos[3]+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
 
         local npc = CreateNPC(x, y, pos[3]+100, 90)
         SetNPCHealth(npc, AlienHealth)
         SetNPCPropertyValue(npc, 'type', 'alien')
         SetNPCPropertyValue(npc, 'clothing', math.random(23, 24))
         SetNPCPropertyValue(npc, 'location', pos)
-        print "spawned alien"
+        --print "spawned alien"
     end
 end
 
@@ -152,7 +152,7 @@ function SpawnLootArea(pos)
     local pickups = GetAllPickups()
     for _,p in pairs(pickups) do
         if (GetPickupPropertyValue(p, 'type') == 'loot') then
-            print "despawned loot pickup"
+            --print "despawned loot pickup"
             DestroyPickup(p)
         end
     end
@@ -171,7 +171,7 @@ function SpawnLootArea(pos)
 
     local pickup = CreatePickup(588, pos[1], pos[2], pos[3])
     SetPickupPropertyValue(pickup, 'type', 'loot')
-    print "spawned loot pickup"
+    --print "spawned loot pickup"
 end
 
 -- pickup loot

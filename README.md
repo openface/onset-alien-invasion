@@ -17,9 +17,8 @@ We do not know much about these alien lifeforms.  We do know that they are very 
 
 You will be backed by the reinforcements from the military.  They will drop supplies (health, armor, and weapons) occassionally.  If you hear aircraft overhead or see fireworks, head towards the drop zone - but be warned, these areas are NOT safezones.  You may also encounter conflict from other players while obtaining the loot box.  
 
-### Mission
-TODO
+### TODO
 
-### Rewards
-TODO
-
+- Figure out a mission
+- Offer rewards other than loot
+- Decorate the world

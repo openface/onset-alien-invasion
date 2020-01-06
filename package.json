@@ -11,6 +11,7 @@
 	"files": [
 		"client/sounds/alien.wav",
 		"client/sounds/health_pickup.wav",
-		"client/sounds/flyby.wav"
+		"client/sounds/flyby.wav",
+		"client/sounds/ambience.mp3"
 	]
 }

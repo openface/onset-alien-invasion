@@ -20,14 +20,13 @@ function OnPlayerJoin(player)
 end
 AddEvent("OnPlayerJoin", OnPlayerJoin)
 
--- death message
 function OnPlayerDeath(player, killer)
-    AddPlayerChatAll(GetPlayerName(player)..' has been taken')
+    AddPlayerChatAll(GetPlayerName(player)..' has been taken!')
     AddPlayerChat(player, "DEAD!  You must wait 15 seconds to respawn...")
 end
 AddEvent("OnPlayerDeath", OnPlayerDeath)
 
--- add alien pos
+-- TODO remove
 AddCommand("apos", function(playerid)
     local x, y, z = GetPlayerLocation(playerid)
     string = "Location: "..x.." "..y.." "..z
@@ -41,13 +40,14 @@ AddCommand("apos", function(playerid)
     io.close(file)
 end)
 
+-- TODO remove
 AddCommand("loot", function(player)
     local x, y, z = GetPlayerLocation(player)
     local pos = { [1] = x, [2] = y, [3] = z }
     SpawnLootArea(pos)
 end)
 
--- add loot pos
+-- TODO remove
 AddCommand("lpos", function(playerid)
     local x, y, z = GetPlayerLocation(playerid)
     string = "Location: "..x.." "..y.." "..z
@@ -61,6 +61,7 @@ AddCommand("lpos", function(playerid)
     io.close(file)
 end)
 
+-- TODO remove
 AddCommand("loc", function(playerid, x, y, z)
     if (x == nil) then
         local x, y, z = GetPlayerLocation(playerid)
@@ -149,16 +150,12 @@ end
 -- pickup loot
 function OnPlayerPickupHit(player, pickup)
     if (GetPickupPropertyValue(pickup, 'type') == 'loot') then
+        CallRemoteEvent(player, 'LootPickup')                
+
         -- random weapon
         local slot = GetNextEmptySlot(player)
         SetPlayerWeapon(player, math.random(4,22), 450, true, slot, true)
-
-        -- health
-        CallRemoteEvent(player, 'HealthPickup')                
         SetPlayerHealth(player, 100)
-
-        -- armor
-        CallRemoteEvent(player, 'HealthPickup')
         SetPlayerArmor(player, 100)
 
         DestroyPickup(pickup)
@@ -200,11 +197,14 @@ function OnNPCDamage(npc, damagetype, amount)
 
     if (health <= 0) then
         -- alien is dead
-        local location = GetNPCPropertyValue(npc, 'location')
-        local target = GetNPCPropertyValue(npc, 'target')
-        SetNPCTargetLocation(npc, location[1], location[2], location[3])
-        SetNPCPropertyValue(npc, 'target', nil, true)
         CallRemoteEvent(target, 'AlienNoLongerAttacking', npc)
+        local killer = GetNPCPropertyValue(npc, 'target')
+
+        AlienNPCs[npc] = nil
+        DestroyNPC(npc)
+        if (killer ~= nil) then
+            AddPlayerChatAll(GetPlayerName(killer) .. 'has killed an alien!')
+        end
     else
         -- keep attacking if still alive
         Delay(500, function(npc)
@@ -224,13 +224,34 @@ function ResetAlien(npc)
     if (target~=0 and not IsPlayerDead(target)) then
         if (nearest_dist < AlienAttackRange) then
             SetNPCPropertyValue(npc, 'target', target, true)
-            SetNPCFollowPlayer(npc, target, 350)
+
+            local veh = GetPlayerVehicle(target)
+            if veh == 0 then
+                SetNPCFollowPlayer(npc, target, 350)
+            else
+                SetNPCFollowVehicle(npc, veh, 400)
+                if (nearest_dist < 2000) then
+                    -- force player out of vehicle and disable it
+                    RemovePlayerFromVehicle(target)
+                    SetVehicleDamage(veh, math.random(1,8), 1.0)
+                    -- remove it from game
+                    Delay(60000, function()
+                        DestroyVehicle(veh)
+                    end)
+                end
+            end
             CallRemoteEvent(target, 'AlienAttacking', npc)
         elseif (GetNPCPropertyValue(npc, 'target') == target) then
+            -- target is out of range, alien is sad
             local x, y, z = GetNPCLocation(npc)
             SetNPCTargetLocation(npc, x, y, z)
             SetNPCPropertyValue(npc, 'target', nil, true)
             CallRemoteEvent(target, 'AlienNoLongerAttacking', npc)
+            -- wait a bit then walk back home, little alien
+            Delay(15000, function()
+                local location = GetNPCPropertyValue(npc, 'location')
+                SetNPCTargetLocation(npc, location[1], location[2], location[3], 100)
+            end)
         end
     end
 end
@@ -239,13 +260,17 @@ function AttackNearestPlayer(npc)
     local target, nearest_dist = GetNearestPlayer(npc)
     if (target~=0 and nearest_dist==0.0) then
         if (not IsPlayerDead(target)) then
-            SetNPCAnimation(npc, "THROW", false)
-            SetPlayerHealth(target, 0)
-            SetNPCPropertyValue(npc, 'target', nil, true)
-            SetNPCAnimation(npc, "DANCE12", true)
-            Delay(5000, function()
+            -- insta-kill
+            CallRemoteEvent(target, 'AlienTouched')
+            SetNPCAnimation(npc, "THROW", true)
+            Delay(2000, function()
+                SetPlayerHealth(target, 0)
+                SetNPCPropertyValue(npc, 'target', nil, true)
+                SetNPCAnimation(npc, "DANCE12", true)
+            end)
+            Delay(7000, function()
                 local location = GetNPCPropertyValue(npc, 'location')
-                SetNPCTargetLocation(npc, location[1], location[2], location[3])
+                SetNPCTargetLocation(npc, location[1], location[2], location[3], 800)
             end)
         end
     end
@@ -277,3 +302,10 @@ function randomPointInCircle(x, y, radius)
 	until (((-randX) ^ 2) + ((-randY) ^ 2)) ^ 0.5 <= radius
 	return x + randX, y + randY
 end
+
+-- chat
+function OnPlayerChat(player, message)
+    local fullchatmessage = GetPlayerName(player)..' ('..player..'): '..message
+    AddPlayerChatAll(fullchatmessage)
+end
+AddEvent("OnPlayerChat", OnPlayerChat)

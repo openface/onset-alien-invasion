@@ -57,7 +57,7 @@ AddRemoteEvent('LootPickup', function()
 end)
 
 AddRemoteEvent('LootSpawnNearby', function(pos)
-    local LootSpawnSound = CreateSound3D("client/sounds/flyby.wav", pos[1], pos[2], pos[3] + 10000, 100000.0)
+    local LootSpawnSound = CreateSound3D("client/sounds/flyby.mp3", pos[1], pos[2], pos[3] + 10000, 100000.0)
     SetSoundVolume(LootSpawnSound, 1)
     AddPlayerChat('There is a supply drop nearby!')
 

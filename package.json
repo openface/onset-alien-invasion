@@ -12,6 +12,10 @@
 		"client/sounds/alien.wav",
 		"client/sounds/health_pickup.wav",
 		"client/sounds/flyby.mp3",
-		"client/sounds/ambience.mp3"
+		"client/sounds/ambience.mp3",
+		"client/ui/banner.html",
+		"client/ui/jquery.js",
+		"client/ui/style.css",
+		"client/ui/ui.js"
 	]
 }

@@ -1,4 +1,5 @@
 local AmbientSound
+local BannerUI
 
 AddEvent('OnPlayerSpawn', function()
     StartCameraFade(1.0, 0.0, 13.0, "#000")
@@ -11,10 +12,14 @@ AddEvent('OnPlayerSpawn', function()
     SetSoundVolume(AmbientSound, 1)
 end)
 
-function OnPlayerDeath(player, killer)
+AddEvent("OnPlayerDeath", function(player, killer)
     SetPostEffect("ImageEffects", "VignetteIntensity", 2.0)
-end
-AddEvent("OnPlayerDeath", OnPlayerDeath)
+    ShowBanner("YOU HAVE DIED", 5000)
+    SetCameraShakeRotation(0.0, 0.0, 1.0, 10.0, 0.0, 0.0)
+    SetCameraShakeFOV(5.0, 5.0)
+    PlayCameraShake(100000.0, 2.0, 1.0, 1.1)
+end)
+
 
 AddEvent("OnNPCStreamIn", function(npc)
     local clothing = GetNPCPropertyValue(npc, 'clothing')
@@ -29,7 +34,7 @@ AddRemoteEvent('AlienAttacking', function(npc)
     SetSoundVolume(AmbientSound, 2)
 
     local x, y, z = GetNPCLocation(npc)
-    local AttackSound = CreateSound3D("client/sounds/alien.wav", x, y, z, 3000.0)
+    local AttackSound = CreateSound3D("client/sounds/alien.wav", x, y, z, 5000.0)
     SetSoundVolume(AttackSound, 1)
 
     --local px, py, pz = GetPlayerLocation(GetPlayerId())
@@ -37,12 +42,6 @@ AddRemoteEvent('AlienAttacking', function(npc)
     --if (dist < 5000) then
     -- 
     --end
-end)
-
-AddRemoteEvent('AlienTouched', function()
-    SetCameraShakeRotation(0.0, 0.0, 1.0, 10.0, 0.0, 0.0)
-    SetCameraShakeFOV(5.0, 5.0)
-    PlayCameraShake(100000.0, 2.0, 1.0, 1.1)
 end)
 
 AddRemoteEvent('AlienNoLongerAttacking', function()
@@ -71,3 +70,29 @@ AddRemoteEvent('LootSpawnNearby', function(pos)
     end, timer)
 end)
 
+--[[
+function OnKeyPress(key)
+	if key == "F1" then
+		ShowBanner("YOU HAVE DIED", 5000)
+	end
+end
+AddEvent("OnKeyPress", OnKeyPress)
+--]]
+
+AddEvent("OnPackageStart", function()
+    BannerUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
+    LoadWebFile(BannerUI, "http://asset/"..GetPackageName().."/client/ui/banner.html")
+    SetWebAlignment(BannerUI, 0.0, 0.0)
+    SetWebAnchors(BannerUI, 0.0, 0.0, 1.0, 1.0)
+    SetWebVisibility(BannerUI, WEB_HIDDEN)
+end)
+
+
+function ShowBanner(msg, duration)
+    ExecuteWebJS(BannerUI, "SetBannerMessage('"..msg.."')")
+    SetWebVisibility(BannerUI, WEB_VISIBLE)
+    Delay(duration, function()
+        SetWebVisibility(BannerUI, WEB_HIDDEN)
+    end)
+end
+AddRemoteEvent("ShowBanner", ShowBanner)

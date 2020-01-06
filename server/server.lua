@@ -1,4 +1,5 @@
 local SpawnLocation = { x = -102037, y = 194299, z = 1400 }
+local PlayerRespawnTime = 20 * 1000 -- 20 secs
 
 local AlienHealth = 999
 local AlienLocations = {} -- aliens.json
@@ -12,16 +13,18 @@ local LootDropInterval = 5 * 60 * 1000 -- drop loot every 5 min (if players are 
 function OnPlayerJoin(player)
     local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 3000)
     SetPlayerSpawnLocation(player, x, y, SpawnLocation.z, 90.0)
-    SetPlayerRespawnTime(player, 15 * 1000)
-	AddPlayerChatAll('<span color="#eeeeeeaa">'..GetPlayerName(player)..' ('..player..') joined the server</>')
+    SetPlayerRespawnTime(player, PlayerRespawnTime)
+	AddPlayerChatAll('<span color="#eeeeeeaa">'..GetPlayerName(player)..' has joined the server</>')
 	AddPlayerChatAll('<span color="#eeeeeeaa">There are '..GetPlayerCount()..' players on the server</>')
-    AddPlayerChat(player, "Welcome to the invasion!")
+    Delay(5000, function()
+        CallRemoteEvent(player, "ShowBanner", "WELCOME TO THE<br/>INVASION", 5000)
+    end)
 end
 AddEvent("OnPlayerJoin", OnPlayerJoin)
 
 function OnPlayerDeath(player, killer)
     AddPlayerChatAll(GetPlayerName(player)..' has been taken!')
-    AddPlayerChat(player, "DEAD!  You must wait 15 seconds to respawn...")
+    AddPlayerChat(player, "DEAD!  You must wait "..PlayerRespawnTime.." seconds to respawn...")
 end
 AddEvent("OnPlayerDeath", OnPlayerDeath)
 
@@ -288,14 +291,13 @@ function AttackNearestPlayer(npc)
     if (target~=0 and nearest_dist==0.0) then
         if (not IsPlayerDead(target)) then
             -- insta-kill
-            CallRemoteEvent(target, 'AlienTouched')
             SetNPCAnimation(npc, "THROW", true)
             Delay(2000, function()
                 SetPlayerHealth(target, 0)
                 SetNPCPropertyValue(npc, 'target', nil, true)
                 SetNPCAnimation(npc, "DANCE12", true)
             end)
-            Delay(7000, function()
+            Delay(10000, function()
                 local location = GetNPCPropertyValue(npc, 'location')
                 SetNPCTargetLocation(npc, location[1], location[2], location[3], 800)
             end)

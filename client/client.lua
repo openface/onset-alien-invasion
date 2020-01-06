@@ -45,7 +45,7 @@ AddRemoteEvent('AlienTouched', function()
     PlayCameraShake(100000.0, 2.0, 1.0, 1.1)
 end)
 
-AddRemoteEvent('AlienNoLongerAttacking', function(npc)
+AddRemoteEvent('AlienNoLongerAttacking', function()
     AddPlayerChat('You are safe for now.')
     if IsValidSound(AmbientSound) then
         DeleteSound(AmbientSound)

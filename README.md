@@ -22,3 +22,6 @@ You will be backed by the reinforcements from the military.  They will drop supp
 - Figure out a mission
 - Offer rewards other than loot
 - Decorate the world
+- Figure out how to introduce vehicles
+- Scoreboard
+- Welcome screen (choose character)

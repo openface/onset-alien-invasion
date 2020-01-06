@@ -1,13 +1,12 @@
 local SpawnLocation = { x = -102037, y = 194299, z = 1400 }
 
-local AlienNPCs = {}
 local AlienHealth = 999
 local AlienLocations = {} -- aliens.json
 local AlienAttackRange = 5000
+local AlienSpawnInterval = 1 * 60 * 1000 -- spawn aliens every 30 mins
 
-local LootPickups = {}
 local LootLocations = {} -- lootpickups.json
-local LootDropInterval = 5 * 60 * 1000
+local LootDropInterval = 5 * 60 * 1000 -- drop loot every 5 min (if players are nearby)
 
 -- welcome message
 function OnPlayerJoin(player)
@@ -77,45 +76,70 @@ end)
 function OnPackageStart()
     SetupAliens()
     SetupLootPickups()
-
-    -- one timer to rule them all
-    CreateTimer(function()
-        for _,npc in pairs(AlienNPCs) do
-            ResetAlien(npc)
-        end
-    end, 10000, npc)
 end
 AddEvent("OnPackageStart", OnPackageStart)
 
 
 function SetupAliens()
-    print "Reading alien NPC positions..."
     local file = io.open("packages/"..GetPackageName().."/server/data/aliens.json", 'r')
     local contents = file:read("*a")
     AlienLocations = json_decode(contents);
     io.close(file)
 
+    -- spawn all aliens
+    SpawnAlienAreas()
+
+    -- re-spawn on a timer
+    CreateTimer(function()
+        SpawnAlienAreas()
+    end, AlienSpawnInterval)
+
+    -- process timer for all aliens
+    CreateTimer(function()
+        for _,npc in pairs(GetAllNPC()) do
+            if (GetNPCPropertyValue(npc, 'type') == 'alien') then
+                ResetAlien(npc)
+            end
+        end
+    end, 10000)
+end
+
+function SpawnAlienAreas()
+    -- destroy any existing aliens
+    for _,npc in pairs(GetAllNPC()) do
+        if (GetNPCPropertyValue(npc, 'type') == 'alien') then
+            -- only destroy aliens not currently attacking
+            if (GetNPCPropertyValue(npc, 'target') == nil) then
+                DestroyNPC(npc)
+                print "despawned alien"
+            end
+        end
+    end
+
+    print "Spawning aliens..."
+
     -- create alien npcs
     for _,pos in pairs(AlienLocations) do
-        CreateObject(303, pos[1], pos[2], pos[3], 0, 0, 0, 10, 10, 200)
+        local x,y = randomPointInCircle(pos[1], pos[2], 5000)
+        CreateObject(303, x, y, pos[3]+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
 
-        npc = CreateNPC(pos[1], pos[2], pos[3], 90)
+        local npc = CreateNPC(x, y, pos[3]+100, 90)
         SetNPCHealth(npc, AlienHealth)
+        SetNPCPropertyValue(npc, 'type', 'alien')
         SetNPCPropertyValue(npc, 'clothing', math.random(23, 24))
         SetNPCPropertyValue(npc, 'location', pos)
-        table.insert(AlienNPCs, npc)
+        print "spawned alien"
     end
 end
 
 function SetupLootPickups()
-    print "Reading loot pickups..."
     local file = io.open("packages/"..GetPackageName().."/server/data/lootpickups.json", 'r')
     local contents = file:read("*a")
     LootLocations = json_decode(contents);
     io.close(file)
 
     -- spawn random loot area
-	loot_timer = CreateTimer(function()
+	local loot_timer = CreateTimer(function()
         SpawnLootArea(LootLocations[ math.random(#LootLocations) ])
     end, LootDropInterval)
 end
@@ -125,8 +149,8 @@ function SpawnLootArea(pos)
     local pickups = GetAllPickups()
     for _,p in pairs(pickups) do
         if (GetPickupPropertyValue(p, 'type') == 'loot') then
+            print "despawned loot pickup"
             DestroyPickup(p)
-            LootPickups[p] = nil
         end
     end
 
@@ -135,7 +159,7 @@ function SpawnLootArea(pos)
         return
     end
 
-    print 'Spawning loot...'
+    print 'Spawning loot pickups...'
 
     -- notify nearby players
     for _,ply in pairs(players) do
@@ -144,7 +168,7 @@ function SpawnLootArea(pos)
 
     local pickup = CreatePickup(588, pos[1], pos[2], pos[3])
     SetPickupPropertyValue(pickup, 'type', 'loot')
-    table.insert(LootPickups, pickup)
+    print "spawned loot pickup"
 end
 
 -- pickup loot
@@ -159,7 +183,6 @@ function OnPlayerPickupHit(player, pickup)
         SetPlayerArmor(player, 100)
 
         DestroyPickup(pickup)
-        LootPickups[pickup] = nil
     end
 end
 AddEvent("OnPlayerPickupHit", OnPlayerPickupHit)
@@ -180,13 +203,15 @@ function OnNPCSpawn(npc)
 end
 AddEvent("OnNPCSpawn", OnNPCSpawn)
 
-
 -- damage aliens
 function OnNPCDamage(npc, damagetype, amount)
     -- stop alien temporarily when damaged
     local x, y, z = GetNPCLocation(npc)
     SetNPCTargetLocation(npc, x, y, z)
+
     local health = GetNPCHealth(npc)
+
+    --[[
     local percent_remaining = math.floor(health * 100 / AlienHealth)
     if (percent_remaining > 0) then
         local text = CreateText3D(percent_remaining..'%', 24, x, y, z + 140, 0, 0, 0)
@@ -194,17 +219,19 @@ function OnNPCDamage(npc, damagetype, amount)
             DestroyText3D(text)
         end)
     end
+    --]]
 
     if (health <= 0) then
         -- alien is dead
-        CallRemoteEvent(target, 'AlienNoLongerAttacking', npc)
         local killer = GetNPCPropertyValue(npc, 'target')
+        CallRemoteEvent(killer, 'AlienNoLongerAttacking')
 
-        AlienNPCs[npc] = nil
-        DestroyNPC(npc)
         if (killer ~= nil) then
-            AddPlayerChatAll(GetPlayerName(killer) .. 'has killed an alien!')
+            AddPlayerChatAll(GetPlayerName(killer) .. ' has killed an alien!')
         end
+        Delay(90000, function()
+            DestroyNPC(npc)
+        end)
     else
         -- keep attacking if still alive
         Delay(500, function(npc)
@@ -216,7 +243,7 @@ AddEvent("OnNPCDamage", OnNPCDamage)
 
 function ResetAlien(npc)
     health = GetNPCHealth(npc)
-    if (health <= 0) then
+    if (health == false or health <= 0) then
         return
     end
 

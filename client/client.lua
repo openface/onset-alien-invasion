@@ -1,5 +1,5 @@
 local AmbientSound
-local BannerUI
+local WebUI
 
 AddEvent('OnPlayerSpawn', function()
     StartCameraFade(1.0, 0.0, 13.0, "#000")
@@ -80,19 +80,19 @@ AddEvent("OnKeyPress", OnKeyPress)
 --]]
 
 AddEvent("OnPackageStart", function()
-    BannerUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
-    LoadWebFile(BannerUI, "http://asset/"..GetPackageName().."/client/ui/banner.html")
-    SetWebAlignment(BannerUI, 0.0, 0.0)
-    SetWebAnchors(BannerUI, 0.0, 0.0, 1.0, 1.0)
-    SetWebVisibility(BannerUI, WEB_HIDDEN)
+    WebUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
+    LoadWebFile(WebUI, "http://asset/"..GetPackageName().."/client/ui/index.html")
+    SetWebAlignment(WebUI, 0.0, 0.0)
+    SetWebAnchors(WebUI, 0.0, 0.0, 1.0, 1.0)
+    SetWebVisibility(WebUI, WEB_HIDDEN)
 end)
 
 
 function ShowBanner(msg, duration)
-    ExecuteWebJS(BannerUI, "SetBannerMessage('"..msg.."')")
-    SetWebVisibility(BannerUI, WEB_VISIBLE)
+    ExecuteWebJS(WebUI, "SetBannerMessage('"..msg.."')")
+    SetWebVisibility(WebUI, WEB_VISIBLE)
     Delay(duration, function()
-        SetWebVisibility(BannerUI, WEB_HIDDEN)
+        SetWebVisibility(WebUI, WEB_HIDDEN)
     end)
 end
 AddRemoteEvent("ShowBanner", ShowBanner)

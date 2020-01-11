@@ -74,7 +74,9 @@ end
 
 
 function OnNPCSpawn(npc)
-    SetNPCHealth(npc, AlienHealth)
+    if GetNPCPropertyValue(npc, 'type') == 'alien' then
+        SetNPCHealth(npc, AlienHealth)
+    end
 end
 AddEvent("OnNPCSpawn", OnNPCSpawn)
 

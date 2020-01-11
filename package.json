@@ -3,6 +3,9 @@
 	"version": "0.1",
 	"server_scripts": [
 		"server/server.lua",
+		"server/aliens.lua",
+		"server/loot.lua",
+		"server/util.lua",
 		"server/json.lua"
 	],
 	"client_scripts": [

@@ -84,15 +84,38 @@ AddEvent("OnPackageStart", function()
     LoadWebFile(WebUI, "http://asset/"..GetPackageName().."/client/ui/index.html")
     SetWebAlignment(WebUI, 0.0, 0.0)
     SetWebAnchors(WebUI, 0.0, 0.0, 1.0, 1.0)
-    SetWebVisibility(WebUI, WEB_HIDDEN)
+    SetWebVisibility(WebUI, WEB_VISIBLE)
 end)
 
+AddEvent("OnObjectStreamIn", function(object)
+    if GetObjectPropertyValue(object, "type") == "boss" then
+        AddPlayerChat("player streams boss")
+        SetSkyLightIntensity(1)
+        SetSunShine(1)
+        SetSunLightIntensity(1)
+
+        EnableObjectHitEvents(object, true)
+        --SetObjectEmissiveColor(object, "0x39ff14", 1)
+    end
+end)
+
+AddRemoteEvent("DespawnBoss", function()
+    AddPlayerChat("despawn event")
+    SetSkyLightIntensity(4.0)
+    SetSunShine(15)
+    SetSunLightIntensity(4.0)
+    ExecuteWebJS(WebUI, "HideBossHealth()")
+end)
+
+AddRemoteEvent("UpdateBossHealth", function(BossHealth, BossInitialHealth)
+    AddPlayerChat("Boss health:" .. BossHealth)
+    ExecuteWebJS(WebUI, "SetBossHealth("..BossHealth..", "..BossInitialHealth..")")
+end)
 
 function ShowBanner(msg, duration)
-    ExecuteWebJS(WebUI, "SetBannerMessage('"..msg.."')")
-    SetWebVisibility(WebUI, WEB_VISIBLE)
+    ExecuteWebJS(WebUI, "ShowBanner('"..msg.."')")
     Delay(duration, function()
-        SetWebVisibility(WebUI, WEB_HIDDEN)
+        ExecuteWebJS(WebUI, "HideBanner()")
     end)
 end
 AddRemoteEvent("ShowBanner", ShowBanner)

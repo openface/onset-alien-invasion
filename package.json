@@ -5,6 +5,7 @@
 		"server/server.lua",
 		"server/aliens.lua",
 		"server/loot.lua",
+		"server/boss.lua",
 		"server/util.lua",
 		"server/json.lua"
 	],

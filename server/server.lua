@@ -1,4 +1,4 @@
-local SpawnLocation = { x = -102037, y = 194299, z = 1400 }
+SpawnLocation = { x = -102037, y = 194299, z = 1400 }
 local PlayerRespawnTime = 20 * 1000 -- 20 secs
 
 -- welcome message
@@ -36,6 +36,7 @@ end)
 -- Setup world
 function OnPackageStart()
     SetupAliens()
+    SetupBoss()
     SetupLootPickups()
 end
 AddEvent("OnPackageStart", OnPackageStart)

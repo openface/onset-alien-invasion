@@ -1,7 +1,9 @@
 local BossSpawnInterval = 30 * 1000
-local BossDespawnDelay = 15 * 1000
+local BossDespawnDelay = 20 * 1000
 local BossObjectId = 1164
 local BossInitialHealth = 999
+local BossDamageInterval = 10 * 1000 -- hurts players every 10 seconds
+local BossDamageAmount = 1 -- hurts players this much every interval
 
 local BossHealth
 local Boss
@@ -28,16 +30,28 @@ function SpawnBoss()
     SetObjectPropertyValue(Boss, "health", BossHealth)
 
     print("spawning boss with "..BossHealth.." health")
-    Delay(BossDespawnDelay, DespawnBoss)  
+
+    local timer = CreateTimer(HurtPlayers, BossDamageInterval)
+    
+    Delay(BossDespawnDelay, DespawnBoss, timer)  
 end
 
-function DespawnBoss()
+function HurtPlayers()
+    local players = GetAllPlayers()
+    for _,ply in pairs(players) do
+        CallRemoteEvent(ply, "HurtPlayer")
+        SetPlayerHealth(ply, GetPlayerHealth(ply) - BossDamageAmount)
+    end
+end
+
+function DespawnBoss(timer)
     if Boss == nil then
         return
     end
     print "despawning boss"
     DestroyObject(Boss)
     Boss = nil
+    DestroyTimer(timer)
 
     local players = GetAllPlayers()
     for _,ply in pairs(players) do

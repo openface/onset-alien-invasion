@@ -44,7 +44,6 @@ function SpawnAlienAreas()
             -- only destroy aliens not currently attacking
             if (GetNPCPropertyValue(npc, 'target') == nil) then
                 DestroyNPC(npc)
-                --print "despawned alien"
             end
         end
     end
@@ -59,8 +58,8 @@ function SpawnAlienAreas()
         local npc = CreateNPC(x, y, pos[3]+100, 90)
         SetNPCHealth(npc, AlienHealth)
         SetNPCRespawnTime(npc, AlienRespawnTime)
-        SetNPCPropertyValue(npc, 'type', 'alien')
         SetNPCPropertyValue(npc, 'clothing', math.random(23, 24))
+        SetNPCPropertyValue(npc, 'type', 'alien')
         SetNPCPropertyValue(npc, 'location', pos)
     end
 end
@@ -69,6 +68,11 @@ end
 function OnNPCSpawn(npc)
     if GetNPCPropertyValue(npc, 'type') == 'alien' then
         SetNPCHealth(npc, AlienHealth)
+        SetNPCPropertyValue(npc, 'type', 'alien')
+        SetNPCPropertyValue(npc, 'clothing', math.random(23, 24))
+
+        local x,y,z = GetNPCLocation(npc)
+        SetNPCPropertyValue(npc, 'location', { x, y, z })
     end
 end
 AddEvent("OnNPCSpawn", OnNPCSpawn)

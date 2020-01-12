@@ -16,7 +16,7 @@ AddEvent("OnPlayerJoin", OnPlayerJoin)
 
 function OnPlayerDeath(player, killer)
     AddPlayerChatAll(GetPlayerName(player)..' has been taken!')
-    AddPlayerChat(player, "DEAD!  You must wait "..PlayerRespawnTime.." seconds to respawn...")
+    AddPlayerChat(player, "DEAD!  You must wait ".. math.floor(PlayerRespawnTime / 60) .." seconds to respawn...")
 end
 AddEvent("OnPlayerDeath", OnPlayerDeath)
 
@@ -40,3 +40,8 @@ function OnPlayerChat(player, message)
     AddPlayerChatAll(fullchatmessage)
 end
 AddEvent("OnPlayerChat", OnPlayerChat)
+
+AddRemoteEvent("PlayerInWater", function(player)
+    AddPlayerChat(player, "You feel the poison sear through your veins.")
+    SetPlayerHealth(player, GetPlayerHealth(player) - 10)
+end)

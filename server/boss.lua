@@ -1,4 +1,4 @@
-local BossSpawnInterval = 180 * 1000
+local BossSpawnInterval = 10 * 60 * 1000
 local BossDespawnDelay = 35 * 1000 -- how long does boss stay around
 local BossInitialHealth = 999
 local BossDamageInterval = 5 * 1000 -- hurts players every 5 seconds

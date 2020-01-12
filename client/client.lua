@@ -1,7 +1,7 @@
 local AmbientSound
 local WebUI
 
-AddEvent('OnPlayerSpawn', function()
+AddEvent("OnPlayerSpawn", function()
     StartCameraFade(1.0, 0.0, 13.0, "#000")
     local player = GetPlayerId()
     SetPlayerClothingPreset(player, 25)
@@ -10,6 +10,8 @@ AddEvent('OnPlayerSpawn', function()
 
     AmbientSound = CreateSound("client/sounds/ambience.mp3")
     SetSoundVolume(AmbientSound, 1)
+
+    SetOceanColor("0x8a0303", "0x9b0000", "0x7c0000", "0x850101", "0x6a0101")
 end)
 
 AddEvent("OnPlayerDeath", function(player, killer)
@@ -26,7 +28,7 @@ AddEvent("OnNPCStreamIn", function(npc)
     SetNPCClothingPreset(npc, clothing)
 end)
 
-AddRemoteEvent('AlienAttacking', function(npc)
+AddRemoteEvent("AlienAttacking", function(npc)
     AddPlayerChat('You are being attacked by an alien... RUN!')
     if not IsValidSound(AmbientSound) then
         AmbientSound = CreateSound("client/sounds/ambience.mp3")
@@ -116,6 +118,14 @@ end)
 AddRemoteEvent("UpdateBossHealth", function(BossHealth, BossInitialHealth)
     ExecuteWebJS(WebUI, "SetBossHealth("..BossHealth..", "..BossInitialHealth..")")
 end)
+
+AddEvent("OnPlayerEnterWater", function()
+    CreateCountTimer(function()
+        CallRemoteEvent("PlayerInWater")        
+        SetSoundVolume(CreateSound("client/sounds/pain.mp3"), 1)
+    end, 3000, 10)
+end)
+
 
 AddRemoteEvent("HurtPlayer", function()
     SetSoundVolume(CreateSound("client/sounds/pain.mp3"), 1)

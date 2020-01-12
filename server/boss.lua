@@ -77,7 +77,7 @@ function DespawnBoss()
     DestroyObject(Boss)
     Boss = nil
 
-    Delay(3000, function()
+    Delay(5000, function()
         local players = GetAllPlayers()
         for _,ply in pairs(players) do
             CallRemoteEvent(ply, "DespawnBoss")

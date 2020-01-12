@@ -8,7 +8,7 @@ AddEvent("OnPackageStart", function()
     SetWebVisibility(BannerUI, WEB_HIDDEN)
 end)
 
-function ShowBanner(msg, duration)
+AddRemoteEvent("ShowBanner", function(msg, duration)
     ExecuteWebJS(BannerUI, "ShowBanner('"..msg.."')")
     SetWebVisibility(BannerUI, WEB_VISIBLE)
 
@@ -16,5 +16,4 @@ function ShowBanner(msg, duration)
         ExecuteWebJS(BannerUI, "HideBanner()")
         SetWebVisibility(BannerUI, WEB_HIDDEN)
     end)
-end
-AddRemoteEvent("ShowBanner", ShowBanner)
+end)

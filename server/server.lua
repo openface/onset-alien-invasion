@@ -38,18 +38,9 @@ function OnPackageStart()
     SetupVehicles()
 
     -- central computer
-    local pickup = CreatePickup(2, -106279.4140625, 193854.59375, 1399.1424560547)
-    SetPickupPropertyValue(pickup, 'type', 'computer')
-    
+    CreateText3D("Press E to Interact", 15, -106279.4140625, 193854.59375, 1399.1424560547 + 130, 0,0,0)
 end
 AddEvent("OnPackageStart", OnPackageStart)
-
--- Access computer
-AddEvent("OnPlayerPickupHit", function(player, pickup)
-    if (GetPickupPropertyValue(pickup, 'type') == 'computer') then
-        CallRemoteEvent(player, 'AccessComputer')
-    end
-end)
 
 -- Chat
 function OnPlayerChat(player, message)

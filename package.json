@@ -12,7 +12,12 @@
 		"server/vendor/file.lua"
 	],
 	"client_scripts": [
-		"client/client.lua"
+		"client/client.lua",
+		"client/banner.lua",
+		"client/aliens.lua",
+		"client/loot.lua",
+		"client/boss.lua",
+		"client/computer.lua"
 	],
 	"files": [
 		"client/sounds/alien.wav",
@@ -22,9 +27,16 @@
 		"client/sounds/mothership.mp3",
 		"client/sounds/pain.mp3",
 		"client/sounds/modem.mp3",
-		"client/ui/index.html",
 		"client/ui/jquery.js",
-		"client/ui/style.css",
-		"client/ui/ui.js"
+		"client/ui/ui.js",
+		"client/ui/banner/banner.html",
+		"client/ui/banner/banner.css",
+		"client/ui/banner/banner.js",
+		"client/ui/boss/boss.html",
+		"client/ui/boss/boss.css",
+		"client/ui/boss/boss.js",
+		"client/ui/computer/computer.html",
+		"client/ui/computer/computer.css",
+		"client/ui/computer/computer.js"
 	]
 }

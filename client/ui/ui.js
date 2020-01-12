@@ -22,36 +22,3 @@ $(document).ready(function () {
     })(ue.game);
     CallEvent = ue.game.callevent;
 });
-
-
-
-function ShowBanner(message) {
-    $('#banner').html(message)
-    $('#banner').show();
-}
-
-function HideBanner() {
-    $('#banner').fadeOut();
-}
-
-function SetBossHealth(health, max_health) {
-    var h = health * (100 / max_health);
-
-    $('#health-box').show();
-    $(".health-bar").animate({
-        'width': h + "%"
-    }, 500);
-}
-
-function HideBossHealth() {
-    $('#health-box').fadeOut();
-}
-
-function ShowComputer() {
-    $('#terminal-box').show();
-}
-
-function HideComputer() {
-    $('#terminal-box').fadeOut();
-}
-

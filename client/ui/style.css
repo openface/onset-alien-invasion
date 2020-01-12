@@ -9,40 +9,6 @@ html {
     color: white;
 }
 
-#banner {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 600px;
-    text-align: center;
-    text-shadow: 10px 10px rgba(0,0,0,0.2);
-    color: #fff;
-    font-size:150px;
-    font-weight:bold;
-    font-family: Impact;
-}
-
-#health-box {
-    position:absolute;
-    top:10px;
-    left:0;
-    right:0;
-    background: rgba(0,0,0,0.7);
-    height: 30px;
-    width: 500px;
-    margin: auto;
-    border: solid 5px rgba(0,0,0,0.1);
-    border-radius: 2px;
-}
-
-.health-bar {
-    background-color: rgba(138,3,3,0.9);
-    width: inherit;
-    height: 29px;
-    position: relative;
-}
-
 form p {
     font-size: 12px;
 }
@@ -87,28 +53,4 @@ button {
 
 button:hover {
     cursor: pointer;
-}
-
-#terminal-box {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
-}
-
-#terminal {
-    width: 650px;
-    background-color: black;
-    background-image: radial-gradient(
-        rgba(0, 150, 0, 0.75), black 120%
-    );
-    border-radius: 25px;
-    border: 2px solid #73AD21;
-    color: white;
-    font: 1.3rem Inconsolata, monospace;
-    text-shadow: 0 0 5px #C8C8C8;
-    font-family: monospace;
-    white-space: pre;
-    padding:0 20px;
 }

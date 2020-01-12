@@ -60,14 +60,10 @@ AddRemoteEvent('LootSpawnNearby', function(pos)
     SetSoundVolume(LootSpawnSound, 1)
     AddPlayerChat('There is a supply drop nearby!')
 
-    local timer = CreateTimer(function(pos)
+    -- fireworks/flares
+    CreateCountTimer(function(pos)
         CreateFireworks(3, pos[1], pos[2], pos[3] + 150, 90, 0, 0)
-    end, 3000, pos)
-
-    -- fireworks for 30 secs
-    Delay(30 * 1000, function(timer)
-        DestroyTimer(timer)
-    end, timer)
+    end, 3000, 10, pos)
 end)
 
 --[[
@@ -89,10 +85,19 @@ end)
 
 AddEvent("OnObjectStreamIn", function(object)
     if GetObjectPropertyValue(object, "type") == "boss" then
+        local x,y,z = GetObjectLocation(object)
+        
+        local MothershipSpawnSound = CreateSound3D("client/sounds/mothership.mp3", x, y, z, 100000.0)
+        SetSoundVolume(MothershipSpawnSound, 1)
+
+        local sound = CreateSound("client/sounds/ambience.mp3")
+        SetSoundVolume(sound, 1)
+
         AddPlayerChat("player streams boss")
         SetSkyLightIntensity(1)
         SetSunShine(1)
         SetSunLightIntensity(1)
+        SetFogDensity(4)
 
         EnableObjectHitEvents(object, true)
         --SetObjectEmissiveColor(object, "0x39ff14", 1)
@@ -100,16 +105,21 @@ AddEvent("OnObjectStreamIn", function(object)
 end)
 
 AddRemoteEvent("DespawnBoss", function()
-    AddPlayerChat("despawn event")
     SetSkyLightIntensity(4.0)
     SetSunShine(15)
     SetSunLightIntensity(4.0)
+    SetFogDensity(0)
+
     ExecuteWebJS(WebUI, "HideBossHealth()")
 end)
 
 AddRemoteEvent("UpdateBossHealth", function(BossHealth, BossInitialHealth)
-    AddPlayerChat("Boss health:" .. BossHealth)
     ExecuteWebJS(WebUI, "SetBossHealth("..BossHealth..", "..BossInitialHealth..")")
+end)
+
+AddRemoteEvent("HurtPlayer", function()
+    SetSoundVolume(CreateSound("client/sounds/pain.mp3"), 1)
+    AddPlayerChat("You feel life leaving your body.")
 end)
 
 function ShowBanner(msg, duration)

@@ -1,4 +1,5 @@
 local AlienHealth = 999
+local AlienRespawnTime = 20 * 1000
 local AlienLocations = {} -- aliens.json
 local AlienAttackRange = 5000
 local AlienSpawnInterval = 30 * 60 * 1000 -- spawn aliens every 30 mins
@@ -65,6 +66,7 @@ function SpawnAlienAreas()
 
         local npc = CreateNPC(x, y, pos[3]+100, 90)
         SetNPCHealth(npc, AlienHealth)
+        SetNPCRespawnTime(npc, AlienRespawnTime)
         SetNPCPropertyValue(npc, 'type', 'alien')
         SetNPCPropertyValue(npc, 'clothing', math.random(23, 24))
         SetNPCPropertyValue(npc, 'location', pos)

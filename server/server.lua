@@ -20,17 +20,10 @@ function OnPlayerDeath(player, killer)
 end
 AddEvent("OnPlayerDeath", OnPlayerDeath)
 
-
 -- TODO remove
-AddCommand("loc", function(playerid, x, y, z)
-    if (x == nil) then
-        local x, y, z = GetPlayerLocation(playerid)
-        string = "Location: "..x.." "..y.." "..z
-        AddPlayerChat(playerid, string)
-        print(string)
-        return
-    end
-    SetPlayerLocation(playerid, x, y, z + 150)
+AddCommand("exp", function(player, explosionid)
+    local x,y,z = GetPlayerLocation(player)
+    CreateExplosion(explosionid, x+2000, y, z, true, 15000, 1000000)
 end)
 
 -- Setup world

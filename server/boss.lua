@@ -100,12 +100,21 @@ function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, st
 
         if BossHealth <= 0 then
             local x,y,z = GetObjectLocation(hitid)
-            CreateExplosion(9, x, y, z, true, 15000, 1000000)
 
+            -- explosions in the sky
+            CreateCountTimer(function()
+                local ex,ey = randomPointInCircle(x, y, 5000)
+                CreateExplosion(9, ex, ey, z, true)
+            end, 300, 20)
+            
             DespawnBoss()
             BossHealth = nil
 
-            AddPlayerChatAll("Boss is destroyed!")
+            AddPlayerChatAll("Mothership is destroyed!")
+
+            for _,ply in pairs(players) do
+                CallRemoteEvent(ply, "ShowBanner", "MOTHERSHIP IS DOWN!", 5000)
+            end
         end
     end
 end

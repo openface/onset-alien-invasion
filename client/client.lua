@@ -158,3 +158,7 @@ function ShowBanner(msg, duration)
     end)
 end
 AddRemoteEvent("ShowBanner", ShowBanner)
+
+AddRemoteEvent("ClientSetTime", function(time)
+	SetTime(time)
+end)

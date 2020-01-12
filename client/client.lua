@@ -76,6 +76,7 @@ end
 AddEvent("OnKeyPress", OnKeyPress)
 --]]
 
+
 AddEvent("OnPackageStart", function()
     WebUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
     LoadWebFile(WebUI, "http://asset/"..GetPackageName().."/client/ui/index.html")
@@ -121,14 +122,6 @@ AddRemoteEvent("UpdateBossHealth", function(BossHealth, BossInitialHealth)
     SetWebVisibility(WebUI, WEB_VISIBLE)
 end)
 
-function OnKeyPress(key)
-	if key == "F1" then
-        ExecuteWebJS(WebUI, "SetBossHealth(50,999)")
-        SetWebVisibility(WebUI, WEB_VISIBLE)
-	end
-end
-AddEvent("OnKeyPress", OnKeyPress)
-
 AddEvent("OnPlayerEnterWater", function()
     CreateCountTimer(function()
         CallRemoteEvent("OnPlayerEnterWater")        
@@ -136,10 +129,27 @@ AddEvent("OnPlayerEnterWater", function()
     end, 3000, 10)
 end)
 
-
 AddRemoteEvent("HurtPlayer", function()
     SetSoundVolume(CreateSound("client/sounds/pain.mp3"), 1)
     AddPlayerChat("You feel life leaving your body.")
+end)
+
+AddRemoteEvent("AccessComputer", function()
+    SetSoundVolume(CreateSound("client/sounds/modem.mp3"), 0.7)
+    SetInputMode(INPUT_GAMEANDUI)
+    ShowMouseCursor(true)
+    SetIgnoreMoveInput(true)
+    Delay(8000, function()
+        ExecuteWebJS(WebUI, "ShowComputer()")
+        SetWebVisibility(WebUI, WEB_VISIBLE)
+    end)
+end)
+AddEvent("CloseComputer", function()
+    ExecuteWebJS(WebUI, "HideComputer()")
+    SetWebVisibility(WebUI, WEB_HIDDEN)
+  	SetInputMode(INPUT_GAME)
+    ShowMouseCursor(false)
+    SetIgnoreMoveInput(false)
 end)
 
 function ShowBanner(msg, duration)

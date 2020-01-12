@@ -1,4 +1,3 @@
-/*
 $(document).ready(function () {
     if (typeof ue === 'undefined') {
         // for browser testing outside of game
@@ -23,7 +22,6 @@ $(document).ready(function () {
     })(ue.game);
     CallEvent = ue.game.callevent;
 });
-*/
 
 function ShowBanner(message) {
     $('#banner').html(message)
@@ -45,4 +43,15 @@ function SetBossHealth(health, max_health) {
 
 function HideBossHealth() {
     $('#health-box').fadeOut();
+}
+
+function ShowComputer() {
+    $('#terminal-box').show();
+    $('#terminal-box').click(function () {
+        CallEvent('CloseComputer'); 
+    });
+}
+
+function HideComputer() {
+    $('#terminal-box').fadeOut();
 }

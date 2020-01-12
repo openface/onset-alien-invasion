@@ -88,3 +88,26 @@ button:hover {
     cursor: pointer;
 }
 
+#terminal-box {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.terminal {
+    width: 600px;
+    background-color: black;
+    background-image: radial-gradient(
+        rgba(0, 150, 0, 0.75), black 120%
+    );
+    border-radius: 25px;
+    border: 2px solid #73AD21;
+    color: white;
+    font: 1.3rem Inconsolata, monospace;
+    text-shadow: 0 0 5px #C8C8C8;
+    font-family: monospace;
+    white-space: pre;
+    padding:0 20px;
+}

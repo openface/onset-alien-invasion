@@ -60,7 +60,7 @@ end
 -- pickup loot
 function OnPlayerPickupHit(player, pickup)
     if (GetPickupPropertyValue(pickup, 'type') == 'loot') then
-        CallRemoteEvent(player, 'LootPickup')                
+        CallRemoteEvent(player, 'LootPickup')
 
         -- random weapon
         local slot = GetNextEmptySlot(player)

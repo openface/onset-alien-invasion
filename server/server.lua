@@ -1,6 +1,15 @@
 local SpawnLocation = { x = -102037, y = 194299, z = 1400 }
 local PlayerRespawnTime = 20 * 1000 -- 20 secs
 
+-- TODO remove
+AddCommand("pos", function(playerid)
+    local x, y, z = GetPlayerLocation(playerid)
+    string = "Location: "..x.." "..y.." "..z
+    AddPlayerChat(playerid, string)
+    print(string)
+end)
+
+
 -- welcome message
 function OnPlayerJoin(player)
     local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 3000)
@@ -26,10 +35,22 @@ function OnPackageStart()
     SetupBoss()
     SetupLootPickups()
     SetupVehicles()
+
+    -- central computer
+    local pickup = CreatePickup(2, -106279.4140625, 193854.59375, 1399.1424560547)
+    SetPickupPropertyValue(pickup, 'type', 'computer')
+    
 end
 AddEvent("OnPackageStart", OnPackageStart)
 
--- chat
+-- Access computer
+AddEvent("OnPlayerPickupHit", function(player, pickup)
+    if (GetPickupPropertyValue(pickup, 'type') == 'computer') then
+        CallRemoteEvent(player, 'AccessComputer')
+    end
+end)
+
+-- Chat
 function OnPlayerChat(player, message)
     local fullchatmessage = GetPlayerName(player)..' ('..player..'): '..message
     AddPlayerChatAll(fullchatmessage)

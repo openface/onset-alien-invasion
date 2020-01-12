@@ -16,7 +16,7 @@ html {
     align-items: center;
     height: 600px;
     text-align: center;
-    text-shadow: 2px 2px #000;
+    text-shadow: 10px 10px #000;
     color: #fff;
     font-size:150px;
     font-weight:bold;
@@ -24,18 +24,21 @@ html {
 }
 
 #health-box {
-    display: flex;
-    background-color: #ccc;
+    position:absolute;
+    top:10px;
+    left:0;
+    right:0;
+    background: rgba(0,0,0,0.2);
     height: 30px;
     width: 500px;
-    margin: 0 auto;
-    border: solid 1px #aaa;
+    margin: auto;
+    border: solid 2px rgba(0,0,0,0.1);
 }
 
 .health-bar {
-    background-color: #007f00;
+    background-color: rgba(138,3,3,0.8);
     width: inherit;
-    height: 28px;
+    height: 29px;
     position: relative;
 }
 

@@ -7,6 +7,7 @@ local BossDamageRange = 10000
 
 local BossHealth
 local Boss
+local BossRotationTimer
 
 -- TODO remove
 AddCommand("boss", function(player)
@@ -33,8 +34,10 @@ function SpawnBoss()
 
     local x,y = randomPointInCircle(x, y, BossDamageRange)
 
+    -- target all players in area
     local targeted_players = GetPlayersInRange3D(x, y, z, BossDamageRange)
 
+    -- spawn boss around the target
     Boss = CreateObject(1164, x, y, z+10000, 0, 0, 0, 35, 35, 35)
     SetObjectPropertyValue(Boss, "type", "boss")
     if BossHealth == nil then
@@ -43,6 +46,11 @@ function SpawnBoss()
     SetObjectPropertyValue(Boss, "health", BossHealth)
 
     print("Spawning boss with "..BossHealth.." health on target "..GetPlayerName(target))
+
+    BossRotationTimer = CreateTimer(function()
+        local x,y,z = GetObjectRotation(Boss)
+        SetObjectRotation(Boss, x, y+1, z)
+    end, 50)
 
     -- hurt all targeted players
     CreateCountTimer(function(targeted_players)
@@ -64,19 +72,21 @@ function DespawnBoss()
     if Boss == nil then
         return
     end
-    print "Despawning boss"
+
+    DestroyTimer(BossRotationTimer)
     DestroyObject(Boss)
     Boss = nil
 
-    local players = GetAllPlayers()
-    for _,ply in pairs(players) do
-        CallRemoteEvent(ply, "DespawnBoss")
-    end
+    Delay(3000, function()
+        local players = GetAllPlayers()
+        for _,ply in pairs(players) do
+            CallRemoteEvent(ply, "DespawnBoss")
+        end
+    end)
 end
     
 function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, startx, starty, startz, normalx, normaly, normalz)
 	if (hittype == HIT_OBJECT and GetObjectPropertyValue(hitid, "type") == "boss") then
-        AddPlayerChatAll(GetPlayerName(player) .. " is attacking the boss!")
         BossHealth = BossHealth - 10
 
         local players = GetAllPlayers()
@@ -85,7 +95,7 @@ function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, st
 	    end
 
         if (math.random(1,5) == 1) then
-            CreateExplosion(6, hitx, hity, hitz, true, 15000, 1000000)
+            CreateExplosion(6, hitx, hity, hitz, true)
         end
 
         if BossHealth <= 0 then

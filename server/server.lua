@@ -20,12 +20,6 @@ function OnPlayerDeath(player, killer)
 end
 AddEvent("OnPlayerDeath", OnPlayerDeath)
 
--- TODO remove
-AddCommand("exp", function(player, explosionid)
-    local x,y,z = GetPlayerLocation(player)
-    CreateExplosion(explosionid, x+2000, y, z, true, 15000, 1000000)
-end)
-
 -- Setup world
 function OnPackageStart()
     SetupAliens()

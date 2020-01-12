@@ -22,7 +22,6 @@ AddEvent("OnPlayerDeath", function(player, killer)
     PlayCameraShake(100000.0, 2.0, 1.0, 1.1)
 end)
 
-
 AddEvent("OnNPCStreamIn", function(npc)
     local clothing = GetNPCPropertyValue(npc, 'clothing')
     SetNPCClothingPreset(npc, clothing)
@@ -82,7 +81,7 @@ AddEvent("OnPackageStart", function()
     LoadWebFile(WebUI, "http://asset/"..GetPackageName().."/client/ui/index.html")
     SetWebAlignment(WebUI, 0.0, 0.0)
     SetWebAnchors(WebUI, 0.0, 0.0, 1.0, 1.0)
-    SetWebVisibility(WebUI, WEB_VISIBLE)
+    SetWebVisibility(WebUI, WEB_HIDDEN)
 end)
 
 AddEvent("OnObjectStreamIn", function(object)
@@ -95,11 +94,11 @@ AddEvent("OnObjectStreamIn", function(object)
         local sound = CreateSound("client/sounds/ambience.mp3")
         SetSoundVolume(sound, 1)
 
-        AddPlayerChat("player streams boss")
         SetSkyLightIntensity(1)
         SetSunShine(1)
         SetSunLightIntensity(1)
         SetFogDensity(4)
+        SetPostEffect("ImageEffects", "VignetteIntensity", 1)
 
         EnableObjectHitEvents(object, true)
         --SetObjectEmissiveColor(object, "0x39ff14", 1)
@@ -111,17 +110,28 @@ AddRemoteEvent("DespawnBoss", function()
     SetSunShine(15)
     SetSunLightIntensity(4.0)
     SetFogDensity(0)
+    SetPostEffect("ImageEffects", "VignetteIntensity", 0)
 
     ExecuteWebJS(WebUI, "HideBossHealth()")
+    SetWebVisibility(WebUI, WEB_HIDDEN)
 end)
 
 AddRemoteEvent("UpdateBossHealth", function(BossHealth, BossInitialHealth)
     ExecuteWebJS(WebUI, "SetBossHealth("..BossHealth..", "..BossInitialHealth..")")
+    SetWebVisibility(WebUI, WEB_VISIBLE)
 end)
+
+function OnKeyPress(key)
+	if key == "F1" then
+        ExecuteWebJS(WebUI, "SetBossHealth(50,999)")
+        SetWebVisibility(WebUI, WEB_VISIBLE)
+	end
+end
+AddEvent("OnKeyPress", OnKeyPress)
 
 AddEvent("OnPlayerEnterWater", function()
     CreateCountTimer(function()
-        CallRemoteEvent("PlayerInWater")        
+        CallRemoteEvent("OnPlayerEnterWater")        
         SetSoundVolume(CreateSound("client/sounds/pain.mp3"), 1)
     end, 3000, 10)
 end)
@@ -134,8 +144,11 @@ end)
 
 function ShowBanner(msg, duration)
     ExecuteWebJS(WebUI, "ShowBanner('"..msg.."')")
+    SetWebVisibility(WebUI, WEB_VISIBLE)
+
     Delay(duration, function()
         ExecuteWebJS(WebUI, "HideBanner()")
+        SetWebVisibility(WebUI, WEB_HIDDEN)
     end)
 end
 AddRemoteEvent("ShowBanner", ShowBanner)

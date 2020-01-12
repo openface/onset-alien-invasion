@@ -64,12 +64,9 @@ function SpawnAlienAreas()
     end
 end
 
-
 function OnNPCSpawn(npc)
     if GetNPCPropertyValue(npc, 'type') == 'alien' then
         SetNPCHealth(npc, AlienHealth)
-        SetNPCPropertyValue(npc, 'type', 'alien')
-        SetNPCPropertyValue(npc, 'clothing', math.random(23, 24))
 
         local x,y,z = GetNPCLocation(npc)
         SetNPCPropertyValue(npc, 'location', { x, y, z })
@@ -84,17 +81,6 @@ function OnNPCDamage(npc, damagetype, amount)
     SetNPCTargetLocation(npc, x, y, z)
 
     local health = GetNPCHealth(npc)
-
-    --[[
-    local percent_remaining = math.floor(health * 100 / AlienHealth)
-    if (percent_remaining > 0) then
-        local text = CreateText3D(percent_remaining..'%', 24, x, y, z + 140, 0, 0, 0)
-        Delay(1000, function()
-            DestroyText3D(text)
-        end)
-    end
-    --]]
-
     if (health <= 0) then
         -- alien is dead
         local killer = GetNPCPropertyValue(npc, 'target')
@@ -103,9 +89,6 @@ function OnNPCDamage(npc, damagetype, amount)
         if (killer ~= nil) then
             AddPlayerChatAll(GetPlayerName(killer) .. ' has killed an alien!')
         end
-        Delay(90000, function()
-            DestroyNPC(npc)
-        end)
     else
         -- keep attacking if still alive
         Delay(500, function(npc)

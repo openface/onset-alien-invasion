@@ -1,5 +1,5 @@
 local SpawnLocation = { x = -102037, y = 194299, z = 1400 }
-local PlayerRespawnTime = 20 * 1000 -- 20 secs
+local PlayerRespawnSecs = 20 -- 20 secs
 
 -- TODO remove
 AddCommand("pos", function(playerid)
@@ -14,7 +14,7 @@ end)
 function OnPlayerJoin(player)
     local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 3000)
     SetPlayerSpawnLocation(player, x, y, SpawnLocation.z, 90.0)
-    SetPlayerRespawnTime(player, PlayerRespawnTime)
+    SetPlayerRespawnTime(player, PlayerRespawnSecs * 1000)
 	AddPlayerChatAll('<span color="#eeeeeeaa">'..GetPlayerName(player)..' has joined the server</>')
 	AddPlayerChatAll('<span color="#eeeeeeaa">There are '..GetPlayerCount()..' players on the server</>')
     Delay(5000, function()
@@ -25,9 +25,10 @@ AddEvent("OnPlayerJoin", OnPlayerJoin)
 
 function OnPlayerDeath(player, killer)
     AddPlayerChatAll(GetPlayerName(player)..' has been taken!')
-    AddPlayerChat(player, "DEAD!  You must wait ".. math.floor(PlayerRespawnTime / 60) .." seconds to respawn...")
+    AddPlayerChat(player, "DEAD!  You must wait ".. PlayerRespawnSecs .." seconds to respawn...")
 end
 AddEvent("OnPlayerDeath", OnPlayerDeath)
+
 
 -- Setup world
 function OnPackageStart()

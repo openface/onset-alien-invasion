@@ -23,6 +23,8 @@ $(document).ready(function () {
     CallEvent = ue.game.callevent;
 });
 
+
+
 function ShowBanner(message) {
     $('#banner').html(message)
     $('#banner').show();
@@ -47,11 +49,9 @@ function HideBossHealth() {
 
 function ShowComputer() {
     $('#terminal-box').show();
-    $('#terminal-box').click(function () {
-        CallEvent('CloseComputer'); 
-    });
 }
 
 function HideComputer() {
     $('#terminal-box').fadeOut();
 }
+

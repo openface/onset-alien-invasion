@@ -54,7 +54,6 @@ function SpawnLootArea(pos)
 
     local pickup = CreatePickup(588, pos[1], pos[2], pos[3])
     SetPickupPropertyValue(pickup, 'type', 'loot')
-    --print "spawned loot pickup"
 end
 
 -- pickup loot
@@ -76,7 +75,7 @@ AddEvent("OnPlayerPickupHit", OnPlayerPickupHit)
 function GetNextEmptySlot(player)
     -- slot 1 is reserved for fists
     for slot=2,3 do
-        local w,a,m = GetPlayerWeapon(player, slot)
+        local w,a = GetPlayerWeapon(player, slot)
         if (w == 1) then
             return slot
         end          

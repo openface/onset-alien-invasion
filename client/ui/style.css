@@ -16,7 +16,7 @@ html {
     align-items: center;
     height: 600px;
     text-align: center;
-    text-shadow: 10px 10px #000;
+    text-shadow: 10px 10px rgba(0,0,0,0.2);
     color: #fff;
     font-size:150px;
     font-weight:bold;

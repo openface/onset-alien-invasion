@@ -12,19 +12,11 @@ AddCommand("apos", function(playerid)
     print(string)
     table.insert(AlienLocations, { x, y, z })
 
-    local file = io.open("packages/"..GetPackageName().."/server/data/aliens.json", 'w')
-    local contents = json_encode(AlienLocations)
-    file:write(contents)
-    io.close(file)
+    File_SaveJSONTable("packages/"..GetPackageName().."/server/data/aliens.json", AlienLocations)
 end)
 
-
-
 function SetupAliens()
-    local file = io.open("packages/"..GetPackageName().."/server/data/aliens.json", 'r')
-    local contents = file:read("*a")
-    AlienLocations = json_decode(contents);
-    io.close(file)
+    AlienLocations = File_LoadJSONTable("packages/"..GetPackageName().."/server/data/aliens.json")
 
     -- spawn all aliens
     SpawnAlienAreas()
@@ -61,8 +53,8 @@ function SpawnAlienAreas()
 
     -- create alien npcs
     for _,pos in pairs(AlienLocations) do
-        local x,y = randomPointInCircle(pos[1], pos[2], 5000)
-        --CreateObject(303, x, y, pos[3]+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
+        local x,y = randomPointInCircle(pos[1], pos[2], 10000)
+        CreateObject(303, x, y, pos[3]+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
 
         local npc = CreateNPC(x, y, pos[3]+100, 90)
         SetNPCHealth(npc, AlienHealth)
@@ -70,7 +62,6 @@ function SpawnAlienAreas()
         SetNPCPropertyValue(npc, 'type', 'alien')
         SetNPCPropertyValue(npc, 'clothing', math.random(23, 24))
         SetNPCPropertyValue(npc, 'location', pos)
-        --print "spawned alien"
     end
 end
 

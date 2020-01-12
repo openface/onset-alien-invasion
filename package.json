@@ -5,9 +5,11 @@
 		"server/server.lua",
 		"server/aliens.lua",
 		"server/loot.lua",
+		"server/vehicles.lua",
 		"server/boss.lua",
 		"server/util.lua",
-		"server/json.lua"
+		"server/vendor/json.lua",
+		"server/vendor/file.lua"
 	],
 	"client_scripts": [
 		"client/client.lua"

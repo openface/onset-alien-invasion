@@ -1,5 +1,5 @@
 local LootLocations = {} -- lootpickups.json
-local LootDropInterval = 3 * 60 * 1000 -- drop loot every 3 min (if players are nearby)
+local LootDropInterval = 2 * 60 * 1000 -- drop loot every 2 min (if players are nearby)
 
 -- TODO remove
 AddCommand("loot", function(player)
@@ -16,18 +16,12 @@ AddCommand("lpos", function(playerid)
     print(string)
     table.insert(LootLocations, { x, y, z })
 
-    local file = io.open("packages/"..GetPackageName().."/server/data/lootpickups.json", 'w')
-    local contents = json_encode(LootLocations)
-    file:write(contents)
-    io.close(file)
+    File_SaveJSONTable("packages/"..GetPackageName().."/server/data/lootpickups.json", LootLocations)
 end)
 
 
 function SetupLootPickups()
-    local file = io.open("packages/"..GetPackageName().."/server/data/lootpickups.json", 'r')
-    local contents = file:read("*a")
-    LootLocations = json_decode(contents);
-    io.close(file)
+    LootLocations = File_LoadJSONTable("packages/"..GetPackageName().."/server/data/lootpickups.json")
 
     -- spawn random loot area
 	local loot_timer = CreateTimer(function()

@@ -1,4 +1,4 @@
-SpawnLocation = { x = -102037, y = 194299, z = 1400 }
+local SpawnLocation = { x = -102037, y = 194299, z = 1400 }
 local PlayerRespawnTime = 20 * 1000 -- 20 secs
 
 -- welcome message
@@ -25,6 +25,7 @@ function OnPackageStart()
     SetupAliens()
     SetupBoss()
     SetupLootPickups()
+    SetupVehicles()
 end
 AddEvent("OnPackageStart", OnPackageStart)
 
@@ -39,3 +40,4 @@ AddRemoteEvent("PlayerInWater", function(player)
     AddPlayerChat(player, "You feel the poison sear through your veins.")
     SetPlayerHealth(player, GetPlayerHealth(player) - 10)
 end)
+

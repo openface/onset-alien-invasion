@@ -8,6 +8,7 @@
 		"server/vehicles.lua",
 		"server/boss.lua",
 		"server/util.lua",
+		"server/time.lua",
 		"server/vendor/json.lua",
 		"server/vendor/file.lua"
 	],

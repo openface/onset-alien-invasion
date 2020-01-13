@@ -19,8 +19,7 @@ You will be backed by the reinforcements from the military.  They will drop supp
 
 ### TODO
 
-- Decorate the world
-- Figure out how to introduce vehicles
 - Scoreboard
-- Welcome screen (choose character)
 - Smooth the mothership event
+- Add other activities/rewards
+- Add more loot drops

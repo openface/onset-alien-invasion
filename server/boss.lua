@@ -27,8 +27,12 @@ function SpawnBoss()
         return
     end
 
-    -- random pick a player target
     local players = GetAllPlayers()
+    if #players == 0 then
+        return
+    end
+
+    -- random pick a player target
     local target = players[ math.random(#players) ]
     local x,y,z = GetPlayerLocation(target)
 

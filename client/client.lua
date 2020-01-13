@@ -3,7 +3,12 @@ local AmbientSound
 AddEvent("OnPlayerSpawn", function()
     StartCameraFade(1.0, 0.0, 13.0, "#000")
     local player = GetPlayerId()
-    SetPlayerClothingPreset(player, 25)
+    local clothing = GetPlayerPropertyValue(player, 'clothing')
+    if clothing == nil then
+        clothing = 25
+    end
+        
+    SetPlayerClothingPreset(player, clothing)
     SetPostEffect("ImageEffects", "VignetteIntensity", 0.0)
     StopCameraShake(false)
 

@@ -9,7 +9,6 @@ AddCommand("pos", function(playerid)
     print(string)
 end)
 
-
 -- welcome message
 function OnPlayerJoin(player)
     local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 3000)
@@ -17,11 +16,13 @@ function OnPlayerJoin(player)
     SetPlayerRespawnTime(player, PlayerRespawnSecs * 1000)
 	AddPlayerChatAll('<span color="#eeeeeeaa">'..GetPlayerName(player)..' has joined the server</>')
 	AddPlayerChatAll('<span color="#eeeeeeaa">There are '..GetPlayerCount()..' players on the server</>')
-    Delay(5000, function()
-        CallRemoteEvent(player, "ShowBanner", "WELCOME TO THE<br/>INVASION", 5000)
-    end)
+    CallRemoteEvent(player, "ShowCharacterSelection")
 end
 AddEvent("OnPlayerJoin", OnPlayerJoin)
+
+AddRemoteEvent("SelectCharacter", function(player, preset)
+    SetPlayerPropertyValue(player, 'clothing', preset, true)
+end)
 
 function OnPlayerDeath(player, killer)
     AddPlayerChatAll(GetPlayerName(player)..' has been taken!')
@@ -49,25 +50,9 @@ function OnPlayerChat(player, message)
 end
 AddEvent("OnPlayerChat", OnPlayerChat)
 
+-- Water is a killer
 AddRemoteEvent("PlayerInWater", function(player)
     AddPlayerChat(player, "You feel the poison sear through your veins.")
     SetPlayerHealth(player, GetPlayerHealth(player) - 10)
 end)
 
--- Time
-local time = 8
-function SyncTime()
-    for _,ply in pairs(GetAllPlayers()) do
-        CallRemoteEvent(ply, "ClientSetTime", time)
-    end
-end
-AddEvent("OnPlayerJoin", SyncTime)
-
-CreateTimer(function()
-    time = time + 0.05
-    if time > 24 then
-        time = 0
-    end
-    print("Time is now "..time)
-    SyncTime()
-end, 60 * 1000)

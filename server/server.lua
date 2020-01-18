@@ -12,6 +12,9 @@ end)
 -- welcome message
 function OnPlayerJoin(player)
     local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 3000)
+
+    -- place player in separate dimension while character is selected
+    SetPlayerDimension(player, math.random(1, 999))
     SetPlayerSpawnLocation(player, x, y, SpawnLocation.z, 90.0)
     SetPlayerRespawnTime(player, PlayerRespawnSecs * 1000)
 	AddPlayerChatAll('<span color="#eeeeeeaa">'..GetPlayerName(player)..' has joined the server</>')
@@ -22,6 +25,9 @@ AddEvent("OnPlayerJoin", OnPlayerJoin)
 
 AddRemoteEvent("SelectCharacter", function(player, preset)
     SetPlayerPropertyValue(player, 'clothing', preset, true)
+
+    -- join the others
+    SetPlayerDimension(player, 0)
 end)
 
 function OnPlayerDeath(player, killer)

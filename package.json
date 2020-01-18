@@ -9,6 +9,7 @@
 		"server/boss.lua",
 		"server/util.lua",
 		"server/time.lua",
+		"server/world.lua",
 		"server/vendor/json.lua",
 		"server/vendor/file.lua"
 	],

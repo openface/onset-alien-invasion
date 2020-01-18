@@ -3,7 +3,7 @@ local BossDespawnDelay = 35 * 1000 -- how long does boss stay around
 local BossInitialHealth = 999
 local BossDamageInterval = 5 * 1000 -- hurts players every 5 seconds
 local BossDamageAmount = 5 -- hurts players this much every interval
-local BossDamageRange = 10000
+local BossDamageRange = 8000
 
 local BossHealth
 local Boss
@@ -67,9 +67,10 @@ function SpawnBoss()
 
     -- random explosions
     CreateCountTimer(function(x, y, z)
-        local ex,ey = randomPointInCircle(x, y, math.floor(BossDamageRange / 2))
+        local ex,ey = randomPointInCircle(x, y, BossDamageRange)
+        --CreateObject(303, ex, ey, z, 0, 0, 0, 10, 10, 200) -- TODO remove me
         CreateExplosion(10, ex, ey, z, true, 15000, 1000000)
-    end, 6000, 5, x, y, z)
+    end, 2500, 14, x, y, z)
 end
 
 function DespawnBoss()

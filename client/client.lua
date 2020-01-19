@@ -44,14 +44,6 @@ end
 AddEvent("OnKeyPress", OnKeyPress)
 --]]
 
-
-AddEvent("OnPlayerEnterWater", function()
-    CreateCountTimer(function()
-        CallRemoteEvent("OnPlayerEnterWater")        
-        SetSoundVolume(CreateSound("client/sounds/pain.mp3"), 1)
-    end, 3000, 10)
-end)
-
 AddRemoteEvent("ClientSetTime", function(time)
 	SetTime(time)
 end)

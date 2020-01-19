@@ -8,7 +8,7 @@ end
 AddEvent("OnPlayerJoin", SyncTime)
 
 CreateTimer(function()
-    time = time + 0.05
+    time = time + 0.10
     if time > 24 then
         time = 0
     end

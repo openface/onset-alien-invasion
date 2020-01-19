@@ -71,7 +71,7 @@ end
 AddEvent("OnPlayerChat", OnPlayerChat)
 
 -- Water is a killer
-AddRemoteEvent("PlayerInWater", function(player)
+AddRemoteEvent("HandlePlayerInWater", function(player)
     AddPlayerChat(player, "You feel the poison sear through your veins.")
     SetPlayerHealth(player, GetPlayerHealth(player) - 10)
 end)

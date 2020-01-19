@@ -9,6 +9,12 @@ AddCommand("pos", function(playerid)
     print(string)
 end)
 
+AddCommand("players", function(player)
+    for _, v in pairs(GetAllPlayers()) do
+        AddPlayerChat(player, '['..v..'] '..GetPlayerName(v))
+    end
+end)
+
 -- welcome message
 function OnPlayerJoin(player)
     local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 3000)
@@ -31,7 +37,13 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
 end)
 
 function OnPlayerDeath(player, killer)
-    AddPlayerChatAll(GetPlayerName(player)..' has been taken!')
+    if IsValidNPC(killer) then
+        if GetNPCPropertyValue(killer, 'type') == 'alien' then
+            AddPlayerChatAll(GetPlayerName(player)..' has been taken!')
+        end
+    else 
+        AddPlayerChatAll(GetPlayerName(player)..' has been killed by '..GetPlayerName(killer)..'!')
+    end
     AddPlayerChat(player, "DEAD!  You must wait ".. PlayerRespawnSecs .." seconds to respawn...")
 end
 AddEvent("OnPlayerDeath", OnPlayerDeath)

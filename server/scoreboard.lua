@@ -1,6 +1,6 @@
 ScoreboardData = {}
 
-AddRemoteEvent('RequestScoreboardUpdate', function(player)
+function Scoreboard_RequestUpdate(player)
   local _send = {}
   for _, v in ipairs(GetAllPlayers()) do
     local kills = ScoreboardData[v]['kills']
@@ -26,11 +26,14 @@ AddRemoteEvent('RequestScoreboardUpdate', function(player)
   end
 
   CallRemoteEvent(player, 'OnServerScoreboardUpdate', json_encode(_send))
-end)
+end
+AddRemoteEvent('RequestScoreboardUpdate', Scoreboard_RequestUpdate)
 
 function Scoreboard_UpdateAllClients()
   for _, v in pairs(GetAllPlayers()) do
-    Scoreboard_RequestUpdate(v)
+    if v ~= nil then
+      Scoreboard_RequestUpdate(v)
+    end
   end
 end
 

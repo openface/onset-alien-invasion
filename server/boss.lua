@@ -51,10 +51,10 @@ function SpawnBoss()
 
     print("Spawning boss with "..BossHealth.." health on target "..GetPlayerName(target))
 
-    BossRotationTimer = CreateTimer(function()
+    BossRotationTimer = CreateTimer(function(Boss)
         local x,y,z = GetObjectRotation(Boss)
         SetObjectRotation(Boss, x, y+1, z)
-    end, 50)
+    end, 50, Boss)
 
     -- hurt all targeted players
     CreateCountTimer(function(targeted_players)
@@ -88,6 +88,9 @@ function DespawnBoss()
             CallRemoteEvent(ply, "DespawnBoss")
         end
     end)
+
+    AddPlayerChatAll("The mothership has left.")
+    
 end
     
 function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, startx, starty, startz, normalx, normaly, normalz)
@@ -99,6 +102,7 @@ function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, st
             CallRemoteEvent(ply, "UpdateBossHealth", BossHealth, BossInitialHealth)
 	    end
 
+        -- explosions in the sky
         if (math.random(1,5) == 1) then
             CreateExplosion(6, hitx, hity, hitz, true)
         end

@@ -68,6 +68,8 @@ function OnPlayerPickupHit(player, pickup)
         SetPlayerArmor(player, 100)
 
         DestroyPickup(pickup)
+
+        AddPlayerChatAll(GetPlayerName(player)..' has picked up a lootbox!')        
     end
 end
 AddEvent("OnPlayerPickupHit", OnPlayerPickupHit)

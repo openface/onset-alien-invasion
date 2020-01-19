@@ -23,7 +23,16 @@ end)
 
 AddEvent("OnNPCStreamIn", function(npc)
     local clothing = GetNPCPropertyValue(npc, 'clothing')
-    SetNPCClothingPreset(npc, clothing)
+  	if (clothing ~= nil) then
+        SetNPCClothingPreset(npc, clothing)
+    end
+end)
+
+AddEvent("OnPlayerStreamIn", function(player)
+	local clothing = GetPlayerPropertyValue(player, "clothing")
+	if (clothing ~= nil) then
+		SetPlayerClothingPreset(player, clothing)
+	end
 end)
 
 --[[

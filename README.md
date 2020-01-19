@@ -20,6 +20,14 @@ You will be backed by the reinforcements from the military.  They will drop supp
 ### TODO
 
 - Scoreboard
+    - loot pickups
+    - alien kills
+    - player kills
+    - killed by player
+    - killed by alien
+    - mothership kills
 - Smooth the mothership event
 - Add other activities/rewards
 - Add more loot drops
+- Set longer respawn time for vehicles
+

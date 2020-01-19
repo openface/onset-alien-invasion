@@ -22,7 +22,8 @@
 		"client/boss.lua",
 		"client/computer.lua",
 		"client/character.lua",
-		"client/scoreboard.lua"
+		"client/scoreboard.lua",
+		"client/undermap.lua"
 	],
 	"files": [
 		"client/sounds/alien.wav",

@@ -74,3 +74,7 @@ AddRemoteEvent("PlayerInWater", function(player)
     SetPlayerHealth(player, GetPlayerHealth(player) - 10)
 end)
 
+AddRemoteEvent("UnderMapFix", function(player, terrain)
+	local x, y, z = GetPlayerLocation(player)
+	CallEvent("SafeTeleport", player, x, y, terrain + 200)
+end)

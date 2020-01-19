@@ -1,6 +1,7 @@
+local WorldLoaded
+
 function World_LoadWorld()
   if WorldLoaded then return end
-  if IsPackageStarted('sandbox') then return error('ERROR: Not loading world since sandbox package is enabled, this package should only be used when sandbox is disabled.') end
   WorldLoaded = true
 
   print('Server: Attempting to load world.')

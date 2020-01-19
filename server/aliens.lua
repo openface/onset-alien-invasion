@@ -75,28 +75,27 @@ end
 AddEvent("OnNPCSpawn", OnNPCSpawn)
 
 -- damage aliens
-function OnNPCDamage(npc, damagetype, amount)
+AddEvent("OnNPCDamage", function(npc, damagetype, amount)
     -- stop alien temporarily when damaged
     local x, y, z = GetNPCLocation(npc)
     SetNPCTargetLocation(npc, x, y, z)
 
     local health = GetNPCHealth(npc)
-    if (health <= 0) then
-        -- alien is dead
-        local killer = GetNPCPropertyValue(npc, 'target')
-        CallRemoteEvent(killer, 'AlienNoLongerAttacking')
-
-        if (killer ~= nil) then
-            AddPlayerChatAll(GetPlayerName(killer) .. ' has killed an alien!')
-        end
-    else
+    if (health > 0) then
         -- keep attacking if still alive
         Delay(500, function(npc)
             ResetAlien(npc)
         end, npc)
     end
-end
-AddEvent("OnNPCDamage", OnNPCDamage)
+end)
+
+AddEvent("OnNPCDeath", function(npc, killer)
+    if killer ~= 0 then
+        CallRemoteEvent(killer, 'AlienNoLongerAttacking')
+        AddPlayerChatAll(GetPlayerName(killer) .. ' has killed an alien!')
+    end
+    SetNPCPropertyValue(npc, 'target', nil, true)
+end)
 
 function ResetAlien(npc)
     health = GetNPCHealth(npc)

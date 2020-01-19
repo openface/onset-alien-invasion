@@ -6,6 +6,8 @@ function Scoreboard_RequestUpdate(player)
     local kills = ScoreboardData[v]['kills']
     if kills == nil then kills = 0 end
 
+    local alien_kills = ScoreboardData[v]['alien_kills'] or 0
+
     local deaths = ScoreboardData[v]['deaths']
     if deaths == nil then deaths = 0 end
 
@@ -19,6 +21,7 @@ function Scoreboard_RequestUpdate(player)
     _send[v] = {
       ['name'] = GetPlayerName(v),
       ['kills'] = kills,
+      ['alien_kills'] = alien_kills,
       ['deaths'] = deaths,
       ['joined'] = joined,
       ['ping'] = GetPlayerPing(v)
@@ -41,6 +44,7 @@ AddEvent('OnPlayerJoin', function(player)
   if ScoreboardData[player] == nil then
     local _new = {
       ['kills'] = 0,
+      ['alien_kills'] = 0,
       ['deaths'] = 0,
       ['joined'] = GetTimeSeconds()
     }
@@ -77,4 +81,14 @@ AddEvent('OnPlayerDeath', function(player, killer)
   end
 
   Scoreboard_UpdateAllClients()
+end)
+
+AddEvent("OnNPCDeath", function(npc, killer)
+    if killer == 0 or killer == nil then return end
+    if GetNPCPropertyValue(npc, 'type') ~= 'alien' then return end
+    
+    -- player kills alien
+    if ScoreboardData[killer] ~= nil then
+      ScoreboardData[killer]['alien_kills'] = ScoreboardData[killer]['alien_kills'] + 1
+    end
 end)

@@ -4,6 +4,7 @@ function LoadOnlinePlayers(players) {
     $('#online table tbody').append(`<tr>
       <td>${p.name}</td>
       <td>${p.kills}</td>
+      <td>${p.alien_kills}</td>
       <td>${p.deaths}</td>
       <td>${SecondsToTime(p.joined)}</td>
       <td>${p.ping}ms</td>

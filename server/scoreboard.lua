@@ -1,4 +1,4 @@
-ScoreboardData = {}
+local ScoreboardData = {}
 
 function Scoreboard_RequestUpdate(player)
   local _send = {}

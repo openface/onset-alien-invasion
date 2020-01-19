@@ -90,7 +90,6 @@ function DespawnBoss()
     end)
 
     AddPlayerChatAll("The mothership has left.")
-    
 end
     
 function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, startx, starty, startz, normalx, normaly, normalz)

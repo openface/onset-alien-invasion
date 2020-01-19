@@ -3,13 +3,9 @@ local ScoreboardData = {}
 function Scoreboard_RequestUpdate(player)
   local _send = {}
   for _, v in ipairs(GetAllPlayers()) do
-    local kills = ScoreboardData[v]['kills']
-    if kills == nil then kills = 0 end
-
+    local kills = ScoreboardData[v]['kills'] or 0
     local alien_kills = ScoreboardData[v]['alien_kills'] or 0
-
-    local deaths = ScoreboardData[v]['deaths']
-    if deaths == nil then deaths = 0 end
+    local deaths = ScoreboardData[v]['deaths'] or 0
 
     local joined = 0
     if ScoreboardData[v]['joined'] == nil then 
@@ -70,12 +66,12 @@ AddEvent('OnPlayerQuit', function(player)
 end)
 
 AddEvent('OnPlayerDeath', function(player, killer)
-  -- Player
+
   if ScoreboardData[player] ~= nil then
     ScoreboardData[player]['deaths'] = ScoreboardData[player]['deaths'] + 1
   end
 
-  -- Killer
+  -- killed by player
   if (ScoreboardData[killer] ~= nil and killer ~= player) then
     ScoreboardData[killer]['kills'] = ScoreboardData[killer]['kills'] + 1
   end

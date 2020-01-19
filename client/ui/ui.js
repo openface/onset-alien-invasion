@@ -2,6 +2,7 @@ $(document).ready(function () {
     if (typeof ue === 'undefined') {
         // for browser testing outside of game
         ue = { game: { callevent: console.log } };
+        indev = true;
     }
     (function (obj) {
         ue.game = {};

@@ -40,8 +40,10 @@ function OnPlayerDeath(player, killer)
     if IsValidNPC(killer) then
         if GetNPCPropertyValue(killer, 'type') == 'alien' then
             AddPlayerChatAll(GetPlayerName(player)..' has been taken!')
+            print(GetPlayerName(player)..' has been killed by an alien')
         end
     else 
+        print(GetPlayerName(player)..' has been killed by '..GetPlayerName(killer)..'!')
         AddPlayerChatAll(GetPlayerName(player)..' has been killed by '..GetPlayerName(killer)..'!')
     end
     AddPlayerChat(player, "DEAD!  You must wait ".. PlayerRespawnSecs .." seconds to respawn...")

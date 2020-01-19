@@ -93,6 +93,7 @@ AddEvent("OnNPCDeath", function(npc, killer)
     if killer ~= 0 then
         CallRemoteEvent(killer, 'AlienNoLongerAttacking')
         AddPlayerChatAll(GetPlayerName(killer) .. ' has killed an alien!')
+        print(GetPlayerName(killer) .. ' has killed an alien')
     end
     SetNPCPropertyValue(npc, 'target', nil, true)
 end)

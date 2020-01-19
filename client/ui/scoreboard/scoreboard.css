@@ -1,0 +1,74 @@
+body,
+html {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  height: 100%;
+  width: 100%;
+}
+
+#container {
+  height: 80%;
+  width: 80%;
+  height: 580px;
+  overflow-y: hidden;
+  color:#fff;
+  font-family: Arial;
+}
+
+#online {
+  float:left;
+  width:45%;
+  background: rgba(0,0,0,0.9);
+  border: solid 10px rgba(0,0,0,0.2);
+  border-radius: 5px;
+}
+
+#highscores {
+  float:right;
+  width:45%;
+  background: rgba(0,0,0,0.9);
+  border: solid 10px rgba(0,0,0,0.2);
+  border-radius: 5px;
+}
+
+h3 {
+  text-transform: uppercase;
+  font-weight:normal;
+  margin:0;
+  padding:5px 0;
+}
+
+table {
+  width:100%;
+  border-spacing: 0;
+  border-collapse: separate;
+}
+
+table tr {
+  height: 65px;
+}
+
+table td {
+  padding: 7px 14px;
+}
+
+table tr:nth-child(even)  {
+  background: #343434;
+}
+
+table thead tr, table thead tr th {
+  height: 30px;
+  text-align: left;
+  background: #3684ff;
+  text-transform: uppercase;
+  font-weight:normal;
+  text-shadow: 1px 1px #000;
+}
+
+table thead tr td:first-child {
+  width: 35%;
+}

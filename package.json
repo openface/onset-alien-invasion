@@ -10,6 +10,7 @@
 		"server/util.lua",
 		"server/time.lua",
 		"server/world.lua",
+		"server/scoreboard.lua",
 		"server/vendor/json.lua",
 		"server/vendor/file.lua"
 	],
@@ -20,7 +21,8 @@
 		"client/loot.lua",
 		"client/boss.lua",
 		"client/computer.lua",
-		"client/character.lua"
+		"client/character.lua",
+		"client/scoreboard.lua"
 	],
 	"files": [
 		"client/sounds/alien.wav",
@@ -31,17 +33,25 @@
 		"client/sounds/pain.mp3",
 		"client/sounds/modem.mp3",
 		"client/sounds/laser.mp3",
+
 		"client/ui/jquery.js",
 		"client/ui/ui.js",
+
+		"client/ui/scoreboard/scoreboard.html",
+		"client/ui/scoreboard/scoreboard.css",
+		"client/ui/scoreboard/scoreboard.js",
+
 		"client/ui/banner/banner.html",
 		"client/ui/banner/banner.css",
 		"client/ui/banner/banner.js",
 		"client/ui/boss/boss.html",
 		"client/ui/boss/boss.css",
 		"client/ui/boss/boss.js",
+
 		"client/ui/computer/computer.html",
 		"client/ui/computer/computer.css",
 		"client/ui/computer/computer.js",
+
 		"client/ui/character/character.html",
 		"client/ui/character/character.css",
 		"client/ui/character/character.js",

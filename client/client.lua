@@ -1,5 +1,3 @@
-local AmbientSound
-
 AddEvent("OnPlayerSpawn", function()
     StartCameraFade(1.0, 0.0, 13.0, "#000")
     local player = GetPlayerId()
@@ -11,9 +9,6 @@ AddEvent("OnPlayerSpawn", function()
     SetPlayerClothingPreset(player, clothing)
     SetPostEffect("ImageEffects", "VignetteIntensity", 0.0)
     StopCameraShake(false)
-
-    AmbientSound = CreateSound("client/sounds/ambience.mp3")
-    SetSoundVolume(AmbientSound, 1)
 
     SetOceanColor("0x8a0303", "0x9b0000", "0x7c0000", "0x850101", "0x6a0101")
 end)

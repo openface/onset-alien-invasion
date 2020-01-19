@@ -52,7 +52,7 @@ function SpawnAlienAreas()
 
     -- create alien npcs
     for _,pos in pairs(AlienLocations) do
-        local x,y = randomPointInCircle(pos[1], pos[2], 15000)
+        local x,y = randomPointInCircle(pos[1], pos[2], 10000)
         --CreateObject(303, x, y, pos[3]+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
 
         local npc = CreateNPC(x, y, pos[3]+100, 90)

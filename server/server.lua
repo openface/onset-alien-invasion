@@ -36,15 +36,15 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
     SetPlayerDimension(player, 0)
 end)
 
+-- killer is never a NPC so we have to guess
+-- if player is killed by themselves, assume it's an alien?
 function OnPlayerDeath(player, killer)
-    if IsValidNPC(killer) then
-        if GetNPCPropertyValue(killer, 'type') == 'alien' then
-            AddPlayerChatAll(GetPlayerName(player)..' has been taken!')
-            print(GetPlayerName(player)..' has been killed by an alien')
-        end
-    else 
+    if player ~= killer then
         print(GetPlayerName(player)..' has been killed by '..GetPlayerName(killer)..'!')
         AddPlayerChatAll(GetPlayerName(player)..' has been killed by '..GetPlayerName(killer)..'!')
+    else
+        AddPlayerChatAll(GetPlayerName(player)..' has been taken!')
+        print(GetPlayerName(player)..' has been taken')
     end
     AddPlayerChat(player, "DEAD!  You must wait ".. PlayerRespawnSecs .." seconds to respawn...")
 end

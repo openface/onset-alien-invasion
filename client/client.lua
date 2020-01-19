@@ -9,8 +9,6 @@ AddEvent("OnPlayerSpawn", function()
     SetPlayerClothingPreset(player, clothing)
     SetPostEffect("ImageEffects", "VignetteIntensity", 0.0)
     StopCameraShake(false)
-
-    SetOceanColor("0x8a0303", "0x9b0000", "0x7c0000", "0x850101", "0x6a0101")
 end)
 
 AddEvent("OnPlayerDeath", function(player, killer)

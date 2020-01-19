@@ -25,7 +25,6 @@ AddRemoteEvent('RequestScoreboardUpdate', function(player)
     }
   end
 
-  print(json_encode(_send))
   CallRemoteEvent(player, 'OnServerScoreboardUpdate', json_encode(_send))
 end)
 

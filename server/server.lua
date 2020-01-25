@@ -60,8 +60,20 @@ function OnPackageStart()
 
     -- central computer
     CreateText3D("Press E to Interact", 15, -106279.4140625, 193854.59375, 1399.1424560547 + 130, 0,0,0)
+
+    -- pistol pickup near spawn
+    local pickup = CreatePickup(1006, -103693.2421875, 192599.9375, 1310.6505126953)
+    SetPickupPropertyValue(pickup, 'type', 'pistol')
+    
 end
 AddEvent("OnPackageStart", OnPackageStart)
+
+function OnPlayerPickupHit(player, pickup)
+    if GetPickupPropertyValue(pickup, 'type') == 'pistol' then
+    	SetPlayerWeapon(player, math.random(2,5), 100, true, 2)
+	end
+end
+AddEvent("OnPlayerPickupHit", OnPlayerPickupHit)
 
 -- Chat
 function OnPlayerChat(player, message)

@@ -40,30 +40,24 @@ function SpawnLootArea(pos)
         end
     end
 
-    players = GetPlayersInRange3D(pos[1], pos[2], pos[3], 50000)
-    if next(players) == nil then
-        return
-    end
-
-    print 'Spawning loot pickups...'
-
-    -- notify nearby players
-    for _,ply in pairs(players) do
-        CallRemoteEvent(ply, 'LootSpawnNearby', pos)
-    end
-
+    print 'Spawning loot pickup...'
     local pickup = CreatePickup(588, pos[1], pos[2], pos[3])
     SetPickupPropertyValue(pickup, 'type', 'loot')
+
+    -- notify players
+    local players = GetAllPlayers()
+    for _,p in pairs(players) do
+        CallRemoteEvent(p, 'LootSpawned', pos, pickup)
+    end
 end
 
 -- pickup loot
 function OnPlayerPickupHit(player, pickup)
     if (GetPickupPropertyValue(pickup, 'type') == 'loot') then
-        CallRemoteEvent(player, 'LootPickup')
+        CallRemoteEvent(player, 'LootPickedup', pickup)
 
         -- random weapon
-        local slot = GetNextEmptySlot(player)
-        SetPlayerWeapon(player, math.random(4,22), 450, true, slot, true)
+        SetPlayerWeapon(player, math.random(6,20), 450, true, 1, true)
         SetPlayerHealth(player, 100)
         SetPlayerArmor(player, 100)
 
@@ -73,14 +67,3 @@ function OnPlayerPickupHit(player, pickup)
     end
 end
 AddEvent("OnPlayerPickupHit", OnPlayerPickupHit)
-
-function GetNextEmptySlot(player)
-    -- slot 1 is reserved for fists
-    for slot=2,3 do
-        local w,a = GetPlayerWeapon(player, slot)
-        if (w == 1) then
-            return slot
-        end          
-    end
-    return 2
-end

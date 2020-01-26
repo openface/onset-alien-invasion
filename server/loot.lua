@@ -1,5 +1,5 @@
 local LootLocations = {} -- lootpickups.json
-local LootDropInterval = 1 * 60 * 1000 -- drop loot every 1 min (if players are nearby)
+local LootDropInterval = 2 * 60 * 1000 -- drop loot every 2 min (if players are nearby)
 
 -- TODO remove
 AddCommand("loot", function(player)
@@ -19,7 +19,6 @@ AddCommand("lpos", function(playerid)
     File_SaveJSONTable("packages/"..GetPackageName().."/server/data/lootpickups.json", LootLocations)
 end)
 
-
 function SetupLootPickups()
     LootLocations = File_LoadJSONTable("packages/"..GetPackageName().."/server/data/lootpickups.json")
 
@@ -28,7 +27,6 @@ function SetupLootPickups()
         SpawnLootArea(LootLocations[ math.random(#LootLocations) ])
     end, LootDropInterval)
 end
-
 
 function SpawnLootArea(pos)
     print 'Spawning loot pickup...'

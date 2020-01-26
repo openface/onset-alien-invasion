@@ -63,13 +63,19 @@ function SpawnBoss()
             SetPlayerHealth(ply, GetPlayerHealth(ply) - BossDamageAmount)
         end
     end, BossDamageInterval, math.floor(BossDespawnDelay / BossDamageInterval), targeted_players)
-    Delay(BossDespawnDelay, DespawnBoss)
 
-    -- random explosions
+    -- boss leaves after a while
+    Delay(BossDespawnDelay, function()
+        DespawnBoss()
+        AddPlayerChatAll("The mothership has left.")
+    end)
+
+    -- random explosions on the ground
     CreateCountTimer(function(x, y, z)
-        local ex,ey = randomPointInCircle(x, y, BossDamageRange)
-        --CreateObject(303, ex, ey, z, 0, 0, 0, 10, 10, 200) -- TODO remove me
-        CreateExplosion(10, ex, ey, z, true, 15000, 1000000)
+        if Boss ~= nil then
+            local ex,ey = randomPointInCircle(x, y, BossDamageRange)
+            CreateExplosion(10, ex, ey, z, true, 15000, 1000000)
+        end
     end, 2500, 14, x, y, z)
 end
 
@@ -88,8 +94,6 @@ function DespawnBoss()
             CallRemoteEvent(ply, "DespawnBoss")
         end
     end)
-
-    AddPlayerChatAll("The mothership has left.")
 end
     
 function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, startx, starty, startz, normalx, normaly, normalz)
@@ -117,8 +121,6 @@ function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, st
             
             DespawnBoss()
             BossHealth = nil
-
-            AddPlayerChatAll("Mothership is destroyed!")
 
             for _,ply in pairs(players) do
                 CallRemoteEvent(ply, "ShowBanner", "MOTHERSHIP IS DOWN!", 5000)

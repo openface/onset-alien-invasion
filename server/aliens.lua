@@ -86,10 +86,6 @@ AddEvent("OnNPCSpawn", OnNPCSpawn)
 
 -- damage aliens
 AddEvent("OnNPCDamage", function(npc, damagetype, amount)
-    -- stop alien temporarily when damaged
-    local x, y, z = GetNPCLocation(npc)
-    SetNPCTargetLocation(npc, x, y, z)
-
     local health = GetNPCHealth(npc)
     if (health > 0) then
         -- keep attacking if still alive
@@ -152,6 +148,10 @@ end
 
 -- kills players when reached
 function OnNPCReachTarget(npc)
+    if GetNPCPropertyValue(npc, 'type') ~= 'alien' then
+        return
+    end
+
     local target = GetNPCPropertyValue(npc, 'target')
     if target ~= nil then
         if (not IsPlayerDead(target)) then

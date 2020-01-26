@@ -183,7 +183,7 @@ function ApplyPlayerDamage(player)
     local armor = GetPlayerArmor(player)
     local health = GetPlayerHealth(player)
 
-    if armor > 0 then
+    if armor ~= false and armor > 0 then
         -- absorb damage
         SetPlayerArmor(player, armor - AlienAttackDamage)        
         SetPlayerHealth(player, health - 10)

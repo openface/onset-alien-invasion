@@ -1,3 +1,5 @@
+local LootNearbyRange = 50000 -- distance to loot that is considered nearby
+
 AddRemoteEvent('LootPickedup', function(pickup)
     SetSoundVolume(CreateSound("client/sounds/health_pickup.wav"), 1)
 
@@ -14,7 +16,7 @@ AddRemoteEvent('LootSpawned', function(pos, pickup)
     end
 
     local x,y,z = GetPlayerLocation()
-    if GetDistance3D(x, y, z, pos[1], pos[2], pos[3]) > 5000 then
+    if GetDistance3D(x, y, z, pos[1], pos[2], pos[3]) > LootNearbyRange then
         return
     end    
 

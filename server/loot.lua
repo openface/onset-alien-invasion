@@ -1,5 +1,5 @@
 local LootLocations = {} -- lootpickups.json
-local LootDropInterval = 2 * 60 * 1000 -- drop loot every 2 min (if players are nearby)
+local LootDropInterval = 1 * 60 * 1000 -- drop loot every 1 min (if players are nearby)
 
 -- TODO remove
 AddCommand("loot", function(player)
@@ -31,16 +31,16 @@ end
 
 
 function SpawnLootArea(pos)
+    print 'Spawning loot pickup...'
+
     -- destroy any existing loot pickups
     local pickups = GetAllPickups()
     for _,p in pairs(pickups) do
         if (GetPickupPropertyValue(p, 'type') == 'loot') then
-            --print "despawned loot pickup"
             DestroyPickup(p)
         end
     end
 
-    print 'Spawning loot pickup...'
     local pickup = CreatePickup(588, pos[1], pos[2], pos[3])
     SetPickupPropertyValue(pickup, 'type', 'loot')
 

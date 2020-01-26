@@ -3,7 +3,7 @@ local AlienRespawnTime = 20 * 1000
 local AlienLocations = {} -- aliens.json
 local AlienAttackRange = 5000
 local AlienSpawnInterval = 30 * 60 * 1000 -- spawn aliens every 30 mins
-local AlienAttackDamage = 33
+local AlienAttackDamage = 50
 
 -- TODO remove
 AddCommand("apos", function(playerid)
@@ -162,9 +162,14 @@ function OnNPCReachTarget(npc)
                 SetNPCFollowPlayer(npc, target, 350)
             end)
         else
-            -- player already dead, go home
+            -- player already dead, dance and go home
             Delay(2000, function()
-                SetNPCAnimation(npc, "DANCE12", true)
+                local dances = { 
+                    "DANCE01", "DANCE02", "DANCE03", "DANCE04", "DANCE05", "DANCE06", "DANCE07", "DANCE08",
+                    "DANCE09", "DANCE10", "DANCE11", "DANCE12", "DANCE13", "DANCE14", "DANCE15", "DANCE16",
+                    "DANCE17", "DANCE18", "DANCE19", "DANCE20"
+                }
+                SetNPCAnimation(npc, dances[ math.random(#dances) ], true)
             end)
             Delay(8000, function()
                 AlienReturn(npc)

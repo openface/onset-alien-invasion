@@ -57,7 +57,10 @@ function OnPlayerPickupHit(player, pickup)
         -- random weapon
         SetPlayerWeapon(player, math.random(6,20), 450, true, 1, true)
         SetPlayerHealth(player, 100)
+
+        -- full armor
         SetPlayerArmor(player, 100)
+        EquipVest(player)
 
         DestroyPickup(pickup)
 
@@ -65,3 +68,9 @@ function OnPlayerPickupHit(player, pickup)
     end
 end
 AddEvent("OnPlayerPickupHit", OnPlayerPickupHit)
+
+function EquipVest(player)
+    local x,y,z = GetPlayerLocation(player)
+    local vest = CreateObject(843, x, y, z)
+    SetObjectAttached(vest, ATTACH_PLAYER, player, -17, 0, 0, 270, 0, 0, "spine_02")
+end

@@ -68,12 +68,19 @@ function OnPackageStart()
 end
 AddEvent("OnPackageStart", OnPackageStart)
 
+-- Pickup for pistol
 function OnPlayerPickupHit(player, pickup)
     if GetPickupPropertyValue(pickup, 'type') == 'pistol' then
     	SetPlayerWeapon(player, math.random(2,5), 100, true, 2)
 	end
 end
 AddEvent("OnPlayerPickupHit", OnPlayerPickupHit)
+
+-- Player spawn
+function OnPlayerSpawn(player)
+    SetPlayerArmor(player, 0)
+end
+AddEvent("OnPlayerSpawn", OnPlayerSpawn)
 
 -- Chat
 function OnPlayerChat(player, message)

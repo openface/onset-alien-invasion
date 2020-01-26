@@ -15,6 +15,12 @@ AddCommand("apos", function(playerid)
     File_SaveJSONTable("packages/"..GetPackageName().."/server/data/aliens.json", AlienLocations)
 end)
 
+-- TODO remove
+AddCommand("alien", function(player)
+    local x, y, z = GetPlayerLocation(player)
+    SpawnAlien(x+2000, y, z)
+end)
+
 function SetupAliens()
     AlienLocations = File_LoadJSONTable("packages/"..GetPackageName().."/server/data/aliens.json")
 
@@ -53,15 +59,18 @@ function SpawnAlienAreas()
     -- create alien npcs
     for _,pos in pairs(AlienLocations) do
         local x,y = randomPointInCircle(pos[1], pos[2], 10000)
-        --CreateObject(303, x, y, pos[3]+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
-
-        local npc = CreateNPC(x, y, pos[3]+100, 90)
-        SetNPCHealth(npc, AlienHealth)
-        SetNPCRespawnTime(npc, AlienRespawnTime)
-        SetNPCPropertyValue(npc, 'clothing', math.random(23, 24))
-        SetNPCPropertyValue(npc, 'type', 'alien')
-        SetNPCPropertyValue(npc, 'location', pos)
+        SpawnAlien(x, y, pos[3]+100)
     end
+end
+
+function SpawnAlien(x, y, z)
+    --CreateObject(303, x, y, z+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
+    local npc = CreateNPC(x, y, z+100, 90)
+    SetNPCHealth(npc, AlienHealth)
+    SetNPCRespawnTime(npc, AlienRespawnTime)
+    SetNPCPropertyValue(npc, 'clothing', math.random(23, 24))
+    SetNPCPropertyValue(npc, 'type', 'alien')
+    SetNPCPropertyValue(npc, 'location', { x, y, z })
 end
 
 function OnNPCSpawn(npc)
@@ -140,25 +149,36 @@ function ResetAlien(npc)
     end
 end
 
-function AttackNearestPlayer(npc)
-    local target, nearest_dist = GetNearestPlayer(npc)
-    if (target~=0 and nearest_dist==0.0) then
+-- kills players when reached
+function OnNPCReachTarget(npc)
+    local target = GetNPCPropertyValue(npc, 'target')
+    if target ~= nil then
         if (not IsPlayerDead(target)) then
             -- insta-kill
-            SetNPCAnimation(npc, "THROW", true)
+            SetNPCAnimation(npc, "KUNGFU", true)
+            SetPlayerHealth(target, 0)
             Delay(2000, function()
-                SetPlayerHealth(target, 0)
-                SetNPCPropertyValue(npc, 'target', nil, true)
                 SetNPCAnimation(npc, "DANCE12", true)
             end)
-            Delay(10000, function()
-                local location = GetNPCPropertyValue(npc, 'location')
-                SetNPCTargetLocation(npc, location[1], location[2], location[3], 800)
+            Delay(8000, function()
+                AlienReturn(npc)
             end)
+        else
+            -- player already dead, go home
+            AlienReturn(npc)
         end
     end
 end
-AddEvent("OnNPCReachTarget", AttackNearestPlayer)
+AddEvent("OnNPCReachTarget", OnNPCReachTarget)
+
+-- return alien back to starting position
+function AlienReturn(npc)
+    SetNPCAnimation(npc, "STOP", true)
+    SetNPCPropertyValue(npc, 'target', nil, true)
+
+    local location = GetNPCPropertyValue(npc, 'location')
+    SetNPCTargetLocation(npc, location[1], location[2], location[3], 800)
+end
 
 -- get nearest player to npc
 function GetNearestPlayer(npc)

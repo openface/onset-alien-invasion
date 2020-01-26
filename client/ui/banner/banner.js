@@ -4,5 +4,6 @@ function ShowBanner(message) {
 }
 
 function HideBanner() {
-    $('#banner').fadeOut();
+    $('#banner').hide();
+    $('#banner').html('');
 }

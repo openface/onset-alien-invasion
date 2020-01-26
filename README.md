@@ -28,7 +28,4 @@ You will be backed by the reinforcements from the military.  They will drop supp
     - mothership kills
 - Smooth the mothership event
 - Add other activities/rewards
-- Add more loot drops
 - Set longer respawn time for vehicles
-- Implement armor bonus on damage
-- Attach vest when wearing armor

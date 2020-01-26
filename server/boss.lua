@@ -51,6 +51,7 @@ function SpawnBoss()
 
     print("Spawning boss with "..BossHealth.." health on target "..GetPlayerName(target))
 
+    -- spin
     BossRotationTimer = CreateTimer(function(Boss)
         local x,y,z = GetObjectRotation(Boss)
         SetObjectRotation(Boss, x, y+1, z)

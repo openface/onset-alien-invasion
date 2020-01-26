@@ -33,6 +33,10 @@ AddEvent("OnPlayerStreamIn", function(player)
 	end
 end)
 
+AddEvent("OnPlayerTalking", function(player)
+    SetPlayerLipMovement(player)
+end)
+
 --[[
 function OnKeyPress(key)
 	if key == "F1" then

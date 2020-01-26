@@ -3,6 +3,7 @@ local AlienRespawnTime = 20 * 1000
 local AlienLocations = {} -- aliens.json
 local AlienAttackRange = 5000
 local AlienSpawnInterval = 30 * 60 * 1000 -- spawn aliens every 30 mins
+local AlienAttackDamage = 33
 
 -- TODO remove
 AddCommand("apos", function(playerid)
@@ -154,22 +155,38 @@ function OnNPCReachTarget(npc)
     local target = GetNPCPropertyValue(npc, 'target')
     if target ~= nil then
         if (not IsPlayerDead(target)) then
-            -- insta-kill
-            SetNPCAnimation(npc, "KUNGFU", true)
-            SetPlayerHealth(target, 0)
+            -- attack player
+            SetNPCAnimation(npc, "KUNGFU", false)
+            ApplyPlayerDamage(target)
+            Delay(1000, function()
+                SetNPCFollowPlayer(npc, target, 350)
+            end)
+        else
+            -- player already dead, go home
             Delay(2000, function()
                 SetNPCAnimation(npc, "DANCE12", true)
             end)
             Delay(8000, function()
                 AlienReturn(npc)
             end)
-        else
-            -- player already dead, go home
-            AlienReturn(npc)
         end
     end
 end
 AddEvent("OnNPCReachTarget", OnNPCReachTarget)
+
+function ApplyPlayerDamage(player)
+    local armor = GetPlayerArmor(player)
+    local health = GetPlayerHealth(player)
+
+    if armor > 0 then
+        -- absorb damage
+        SetPlayerArmor(player, armor - AlienAttackDamage)        
+        SetPlayerHealth(player, health - 10)
+    else
+        -- no armor, take full damage
+        SetPlayerHealth(player, health - AlienAttackDamage)
+    end
+end
 
 -- return alien back to starting position
 function AlienReturn(npc)

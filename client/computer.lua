@@ -15,6 +15,7 @@ AddEvent("OnKeyPress", function(key)
         local x,y,z = GetPlayerLocation(player)
         if GetDistance2D(x, y, ComputerLoc.x, ComputerLoc.y) <= 200 then
             SetSoundVolume(CreateSound("client/sounds/modem.mp3"), 0.7)
+
             ExecuteWebJS(ComputerUI, "ShowComputer()")
             SetWebVisibility(ComputerUI, WEB_VISIBLE)
 

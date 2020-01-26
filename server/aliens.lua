@@ -191,6 +191,8 @@ function ApplyPlayerDamage(player)
         -- no armor, take full damage
         SetPlayerHealth(player, health - AlienAttackDamage)
     end
+
+    CallRemoteEvent(player, "OnAlienHit") 
 end
 
 -- return alien back to starting position

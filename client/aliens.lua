@@ -18,3 +18,7 @@ AddRemoteEvent('AlienNoLongerAttacking', function()
     AddPlayerChat('You are safe for now.')
     DestroySound(AmbientSound)
 end)
+
+AddRemoteEvent("OnAlienHit", function(player)
+    SetSoundVolume(CreateSound("client/sounds/pain.mp3"), 1)
+end)

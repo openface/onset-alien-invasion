@@ -2,7 +2,7 @@ local ScoreboardData = {}
 
 function Scoreboard_RequestUpdate(player)
   local _send = {}
-  for _, v in ipairs(GetAllPlayers()) do
+  for _,v in ipairs(GetAllPlayers()) do
     local kills = ScoreboardData[v]['kills'] or 0
     local alien_kills = ScoreboardData[v]['alien_kills'] or 0
     local deaths = ScoreboardData[v]['deaths'] or 0
@@ -23,7 +23,7 @@ function Scoreboard_RequestUpdate(player)
       ['ping'] = GetPlayerPing(v)
     }
   end
-
+  print(json_encode(_send))
   CallRemoteEvent(player, 'OnServerScoreboardUpdate', json_encode(_send))
 end
 AddRemoteEvent('RequestScoreboardUpdate', Scoreboard_RequestUpdate)

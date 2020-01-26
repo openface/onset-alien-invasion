@@ -29,6 +29,11 @@ function SetupLootPickups()
 end
 
 function SpawnLootArea(pos)
+    local players = GetAllPlayers()
+    if next(players) == nil then
+        return
+    end
+
     print 'Spawning loot pickup...'
 
     -- destroy any existing loot pickups

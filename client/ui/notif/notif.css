@@ -1,0 +1,31 @@
+#banner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 600px;
+    text-align: center;
+    text-shadow: 10px 10px rgba(0,0,0,0.2);
+    color: #fff;
+    font-size:150px;
+    font-weight:bold;
+    font-family: Impact;
+    text-transform:uppercase;
+}
+
+#message {
+    position:absolute;
+    bottom:16vh;
+    width:90%;
+    margin:0;
+    text-align: center;
+}
+#message > span {
+    padding:10px 25px;
+    text-shadow: 3px 3px rgba(0,0,0,0.2);
+    background:rgba(0,0,0,0.2);
+    color: #fff;
+    font-size:36px;
+    font-weight:normal;
+    font-family: Impact;
+}

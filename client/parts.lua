@@ -1,5 +1,4 @@
 AddRemoteEvent('PartPickedup', function(pickup)
-    SetSoundVolume(CreateSound("client/sounds/health_pickup.wav"), 1)
-
-
+    SetSoundVolume(CreateSound("client/sounds/part_pickup.wav"), 1)
+    ShowMessage("You have found a computer part.  Use this part on the satellite computer!", 10000)
 end)

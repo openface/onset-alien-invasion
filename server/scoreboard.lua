@@ -2,7 +2,7 @@ local ScoreboardData = {}
 
 function Scoreboard_RequestUpdate(player)
   local _send = {}
-  for _,v in ipairs(GetAllPlayers()) do
+  for index,v in ipairs(GetAllPlayers()) do
     local kills = ScoreboardData[v]['kills'] or 0
     local alien_kills = ScoreboardData[v]['alien_kills'] or 0
     local deaths = ScoreboardData[v]['deaths'] or 0
@@ -14,7 +14,8 @@ function Scoreboard_RequestUpdate(player)
       joined = GetTimeSeconds() - ScoreboardData[v]['joined']
     end
 
-    _send[v] = {
+    -- key by index to avoid sparse array issue with json_encode
+    _send[index] = {
       ['name'] = GetPlayerName(v),
       ['kills'] = kills,
       ['alien_kills'] = alien_kills,

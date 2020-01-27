@@ -18,7 +18,7 @@
 	],
 	"client_scripts": [
 		"client/client.lua",
-		"client/banner.lua",
+		"client/notif.lua",
 		"client/aliens.lua",
 		"client/loot.lua",
 		"client/parts.lua",
@@ -32,6 +32,7 @@
 	"files": [
 		"client/sounds/alien.wav",
 		"client/sounds/health_pickup.wav",
+		"client/sounds/part_pickup.wav",
 		"client/sounds/flyby.mp3",
 		"client/sounds/ambience.mp3",
 		"client/sounds/mothership.mp3",
@@ -46,9 +47,10 @@
 		"client/ui/scoreboard/scoreboard.css",
 		"client/ui/scoreboard/scoreboard.js",
 
-		"client/ui/banner/banner.html",
-		"client/ui/banner/banner.css",
-		"client/ui/banner/banner.js",
+		"client/ui/notif/notif.html",
+		"client/ui/notif/notif.css",
+		"client/ui/notif/notif.js",
+		
 		"client/ui/boss/boss.html",
 		"client/ui/boss/boss.css",
 		"client/ui/boss/boss.js",

@@ -33,7 +33,7 @@ function OnPlayerPickupHit(player, pickup)
     end
         
     CallRemoteEvent(player, "PartPickedup", pickup)
-    AddPlayerChatAll(GetPlayerName(player)..' has picked up a part!')
+    AddPlayerChatAll(GetPlayerName(player)..' has found up a computer part!')
     
     -- hide part pickup for 5 mins from player
     SetPickupVisibility(pickup, player, false)

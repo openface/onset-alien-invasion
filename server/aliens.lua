@@ -65,14 +65,12 @@ end
 
 function SpawnAlien(x, y, z)
     --CreateObject(303, x, y, z+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
---[[
     local npc = CreateNPC(x, y, z+100, 90)
     SetNPCHealth(npc, AlienHealth)
     SetNPCRespawnTime(npc, AlienRespawnTime)
     SetNPCPropertyValue(npc, 'clothing', math.random(23, 24))
     SetNPCPropertyValue(npc, 'type', 'alien')
     SetNPCPropertyValue(npc, 'location', { x, y, z })
---]]
 end
 
 function OnNPCSpawn(npc)

@@ -8,6 +8,7 @@
 		"server/vehicles.lua",
 		"server/parts.lua",
 		"server/boss.lua",
+		"server/computer.lua",
 		"server/util.lua",
 		"server/time.lua",
 		"server/world.lua",

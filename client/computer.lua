@@ -1,5 +1,7 @@
 local ComputerUI
-local ComputerLoc = { x = -106279.4140625, y = 193854.59375 }
+local ComputerLoc = { x = -106279.4140625, y = 193854.59375, z = 1399.1424560547 }
+
+local SatelliteLoc = { x = -101970.984375, y = 194300.09375, z = 2211.4655761719 }
 
 AddEvent("OnPackageStart", function()
     ComputerUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
@@ -13,7 +15,9 @@ AddEvent("OnKeyPress", function(key)
     if key == "E" then
         local player = GetPlayerId()
         local x,y,z = GetPlayerLocation(player)
-        if GetDistance2D(x, y, ComputerLoc.x, ComputerLoc.y) <= 200 then
+
+        if GetDistance3D(x, y, z, ComputerLoc.x, ComputerLoc.y, ComputerLoc.z) <= 200 then
+            -- interacting with garage computer
             SetSoundVolume(CreateSound("client/sounds/modem.mp3"), 0.7)
 
             ExecuteWebJS(ComputerUI, "ShowComputer()")
@@ -26,6 +30,13 @@ AddEvent("OnKeyPress", function(key)
                     SetWebVisibility(ComputerUI, WEB_HIDDEN)
                 end
             end, 2000)
+        elseif GetDistance3D(x, y, z, SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z) <= 200 then
+            -- interacting with satellite computer
+            if GetPlayerPropertyValue(player, 'carryingPart') == true then
+                CallRemoteEvent("InteractSatelliteComputer")
+            else
+                AddPlayerChat("You are missing a vital computer part!")
+            end
         end
     end
 end)

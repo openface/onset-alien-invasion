@@ -15,7 +15,7 @@ function ShowBanner(msg, duration)
 
     Delay(duration, function()
         ExecuteWebJS(NotifUI, "HideBanner()")
---        SetWebVisibility(NotifUI, WEB_HIDDEN)
+        SetWebVisibility(NotifUI, WEB_HIDDEN)
     end)
 end
 AddFunctionExport("ShowBanner", ShowBanner)
@@ -31,7 +31,7 @@ function ShowMessage(msg, duration)
 
     Delay(duration, function()
         ExecuteWebJS(NotifUI, "HideMessage()")
---        SetWebVisibility(NotifUI, WEB_HIDDEN)
+        SetWebVisibility(NotifUI, WEB_HIDDEN)
     end)
 end
 AddFunctionExport("ShowMessage", ShowMessage)

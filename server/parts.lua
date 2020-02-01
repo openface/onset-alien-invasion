@@ -31,19 +31,17 @@ function OnPlayerPickupHit(player, pickup)
 
     if (GetPlayerPropertyValue(player, 'carryingPart') ~= nil) then
         -- already carrying a part
+        CallRemoteEvent(player, "ShowMessage", "Take your part to the satellite computer!")
         return
     end
-        
-    CallRemoteEvent(player, "PartPickedup", pickup)
-    AddPlayerChatAll(GetPlayerName(player)..' has found up a computer part!')
-    
+         
+    EquipPart(player)
+
     -- hide part pickup for 5 mins from player
     SetPickupVisibility(pickup, player, false)
     Delay(5 * 60 * 1000, function()
         SetPickupVisibility(pickup, player, true)
     end)
-
-    EquipPart(player)
 end
 AddEvent("OnPlayerPickupHit", OnPlayerPickupHit)
 
@@ -53,7 +51,9 @@ function EquipPart(player)
     local object = CreateObject(PartObjectID, x, y, z)
     SetObjectAttached(object, ATTACH_PLAYER, player, 10, -5, 0, 0, 0, 90, "hand_l")
 
-    SetPlayerPropertyValue(player, 'carryingPart', object, true)        
+    SetPlayerPropertyValue(player, 'carryingPart', object, true)
+    AddPlayerChatAll(GetPlayerName(player)..' has found up a computer part!')
+    CallRemoteEvent(player, "PartPickedup", pickup)
 end
 
 -- TODO remove me

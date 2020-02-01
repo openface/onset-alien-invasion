@@ -11,7 +11,6 @@ end
 
 AddEvent("OnPackageStart", function()
 	Delay(5000, function()
-		checkTimer = CreateTimer(Check, 5000)
-		CheckUndermap()
+		checkTimer = CreateTimer(CheckUndermap, 5000)
 	end)
 end)

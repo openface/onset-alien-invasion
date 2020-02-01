@@ -29,7 +29,8 @@ function OnPlayerPickupHit(player, pickup)
         return
     end
 
-    if (GetPlayerPropertyValue(player, 'carryingPart') == true) then
+    if (GetPlayerPropertyValue(player, 'carryingPart') ~= nil) then
+        -- already carrying a part
         return
     end
         

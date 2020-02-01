@@ -5,13 +5,13 @@ AddEvent("OnPackageStart", function()
     LoadWebFile(NotifUI, "http://asset/"..GetPackageName().."/client/ui/notif/notif.html")
     SetWebAlignment(NotifUI, 0.0, 0.0)
     SetWebAnchors(NotifUI, 0.0, 0.0, 1.0, 1.0)
-    SetWebVisibility(NotifUI, WEB_VISIBLE)
+    SetWebVisibility(NotifUI, WEB_HIDDEN)
 end)
 
 -- banners
 function ShowBanner(msg, duration)
     ExecuteWebJS(NotifUI, "ShowBanner('"..msg.."')")
-    SetWebVisibility(NotifUI, WEB_VISIBLE)
+    SetWebVisibility(NotifUI, WEB_HITINVISIBLE)
 
     Delay(duration, function()
         ExecuteWebJS(NotifUI, "HideBanner()")
@@ -27,7 +27,7 @@ end)
 -- messages
 function ShowMessage(msg, duration)
     ExecuteWebJS(NotifUI, "ShowMessage('"..msg.."')")
-    SetWebVisibility(NotifUI, WEB_VISIBLE)
+    SetWebVisibility(NotifUI, WEB_HITINVISIBLE)
 
     Delay(duration, function()
         ExecuteWebJS(NotifUI, "HideMessage()")

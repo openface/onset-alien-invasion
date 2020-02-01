@@ -8,12 +8,13 @@ end
 AddEvent("OnPackageStart", OnPackageStart)
 
 AddRemoteEvent("InteractSatelliteComputer", function(player, parts)
-    SetPlayerAnimation(player, "COMBINE")
-    AddPlayerChatAll(GetPlayerName(player) .. " acquired satellite part "..parts.." / 10")
     local object = GetPlayerPropertyValue(player, 'carryingPart')
-    if object ~= nil then
+    if IsValidObject(object) then
+        SetPlayerAnimation(player, "COMBINE")
+        AddPlayerChatAll(GetPlayerName(player) .. " acquired satellite part "..parts.." / 10")
+        print(GetPlayerName(player).. " acquired satellite part "..parts.." / 10")
+        SetPlayerPropertyValue(player, 'carryingPart', nil, true)
         SetObjectDetached(object)
         DestroyObject(object)
     end
-    print(GetPlayerName(player).. " acquired satellite part "..parts.." / 10")
 end)

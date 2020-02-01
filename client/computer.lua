@@ -37,7 +37,7 @@ AddEvent("OnKeyPress", function(key)
         elseif GetDistance3D(x, y, z, SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z) <= 200 then
             -- interacting with satellite computer
             if GetPlayerPropertyValue(player, 'carryingPart') == nil then
-                ShowMessage("You are missing a vital computer part!", 5000)
+                ShowMessage("You are missing a critical computer part!", 5000)
             else
                 SetSoundVolume(CreateSound("client/sounds/satellite.mp3"), 1)
 

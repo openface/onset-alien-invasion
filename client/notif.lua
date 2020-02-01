@@ -1,5 +1,4 @@
 local NotifUI
-local timer
 
 AddEvent("OnPackageStart", function()
     NotifUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
@@ -30,14 +29,10 @@ function ShowMessage(msg, duration)
     ExecuteWebJS(NotifUI, "ShowMessage('"..msg.."')")
     SetWebVisibility(NotifUI, WEB_HITINVISIBLE)
 
-    if IsValidTimer(timer) then
-		DestroyTimer(timer)
-	end
-    timer = CreateTimer(function()
+    Delay(duration, function()
         ExecuteWebJS(NotifUI, "HideMessage()")
         SetWebVisibility(NotifUI, WEB_HIDDEN)
-        DestroyTimer(timer)
-    end, duration)
+    end)
 end
 AddFunctionExport("ShowMessage", ShowMessage)
     

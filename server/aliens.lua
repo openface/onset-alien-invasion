@@ -2,7 +2,8 @@ local AlienHealth = 999
 local AlienRespawnTime = 20 * 1000
 local AlienAttackRange = 5000
 local AlienAttackDamage = 50
-local SpawnLocation = { x = -102037, y = 194299, z = 1400 }
+local SafeLocation = { x = -102037, y = 194299, z = 1400 }
+local SafeRange = 8000
 
 -- TODO remove
 AddCommand("alien", function(player)
@@ -48,9 +49,10 @@ function SpawnAliens()
 end
 
 function SpawnAlienNearPlayer(player)
+    -- no spawning aliens if player is in safe distance
     local x,y,z = GetPlayerLocation(player)
-    local distance = GetDistance3D(x, y, z, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z)
-    if distance < 3000 then
+    local distance = GetDistance3D(x, y, z, SafeLocation.x, SafeLocation.y, SafeLocation.z)
+    if distance < SafeRange then
         print("Player "..GetPlayerName(player).." in safe zone")
         return
     end

@@ -109,8 +109,8 @@ function ResetAlien(npc)
     if (player~=0 and not IsPlayerDead(player)) then
 
         local x,y,z = GetPlayerLocation(player)
-        local distance_to_spawn = GetDistance3D(x, y, z, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z)
-        if (nearest_dist < AlienAttackRange and distance_to_spawn > 3000) then
+        local distance_to_safety = GetDistance3D(x, y, z, SafeLocation.x, SafeLocation.y, SafeLocation.z)
+        if (nearest_dist < AlienAttackRange and distance_to_safety > SafeRange) then
             print("Alien targets player: "..GetPlayerName(player))
             SetNPCPropertyValue(npc, 'target', player, true)
 

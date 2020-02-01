@@ -1,7 +1,6 @@
 local AlienHealth = 999
 local AlienRespawnTime = 20 * 1000
 local AlienAttackRange = 5000
-local AlienSpawnInterval = 3 * 60 * 1000
 local AlienAttackDamage = 50
 local SpawnLocation = { x = -102037, y = 194299, z = 1400 }
 
@@ -14,7 +13,7 @@ function OnPackageStart()
     -- re-spawn on a timer
     CreateTimer(function()
         SpawnAliens()
-    end, AlienSpawnInterval)
+    end, 60000) -- alien spawn tick every 1 minute
 
     -- process timer for all aliens
     CreateTimer(function()
@@ -23,7 +22,7 @@ function OnPackageStart()
                 ResetAlien(npc)
             end
         end
-    end, 10000)
+    end, 10000) -- alien attack tick every 10 seconds
 end
 AddEvent("OnPackageStart", OnPackageStart)
 
@@ -33,6 +32,7 @@ function SpawnAliens()
         if (GetNPCPropertyValue(npc, 'type') == 'alien') then
             -- only destroy aliens not currently attacking
             if (GetNPCPropertyValue(npc, 'target') == nil) then
+                print "Despawning alien"
                 DestroyNPC(npc)
             end
         end
@@ -40,7 +40,10 @@ function SpawnAliens()
 
     -- create alien npcs
     for _,ply in pairs(GetAllPlayers()) do
-        SpawnAlienNearPlayer(ply)
+        if math.random(1,3) == 1 then
+            -- 1/2 chance to spawn
+            SpawnAlienNearPlayer(ply)
+        end
     end
 end
 
@@ -53,7 +56,8 @@ function SpawnAlienNearPlayer(player)
     end
 
     print("Spawning alien near player "..GetPlayerName(player))
-    local x,y = randomPointInCircle(x, y, 10000)
+    local x,y = randomPointInCircle(x, y, AlienAttackRange + 1000) -- 1000 buffer
+    --CreateObject(303, x, y, z+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
     local npc = CreateNPC(x, y, z+100, 90)
     SetNPCHealth(npc, AlienHealth)
     SetNPCRespawnTime(npc, AlienRespawnTime)
@@ -111,7 +115,7 @@ function ResetAlien(npc)
             local veh = GetPlayerVehicle(player)
             if veh == 0 then
                 -- alien has a new target
-                SetNPCFollowPlayer(npc, player, 350)
+                SetNPCFollowPlayer(npc, player, math.random(325,360)) -- random speed
             else
                 -- alien has a new target vehicle
                 SetNPCFollowVehicle(npc, veh, 400)
@@ -135,7 +139,7 @@ function ResetAlien(npc)
             -- wait a bit then walk back home, little alien
             Delay(15000, function()
                 local location = GetNPCPropertyValue(npc, 'location')
-                SetNPCTargetLocation(npc, location[1], location[2], location[3], 100)
+                SetNPCTargetLocation(npc, location[1], location[2], location[3], 200)
             end)
         end
     end
@@ -203,7 +207,7 @@ end
 function GetNearestPlayer(npc)
 	local plys = GetAllPlayers()
 	local found = 0
-	local nearest_dist = AlienAttackRange + 5000
+	local nearest_dist = 999999.9
 	local x, y, z = GetNPCLocation(npc)
 
 	for _,v in pairs(plys) do

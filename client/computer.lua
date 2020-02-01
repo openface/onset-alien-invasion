@@ -34,7 +34,7 @@ AddEvent("OnKeyPress", function(key)
             if GetPlayerPropertyValue(player, 'carryingPart') == true then
                 CallRemoteEvent("InteractSatelliteComputer")
             else
-                AddPlayerChat("You are missing a vital computer part!")
+                ShowMessage("You are missing a vital computer part!", 5000)
             end
         end
     end

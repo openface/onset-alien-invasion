@@ -52,7 +52,7 @@ function EquipPart(player)
     local object = CreateObject(PartObjectID, x, y, z)
     SetObjectAttached(object, ATTACH_PLAYER, player, 10, -5, 0, 0, 0, 90, "hand_l")
 
-    SetPlayerPropertyValue(player, 'carryingPart', true, true)        
+    SetPlayerPropertyValue(player, 'carryingPart', object, true)        
 end
 
 -- TODO remove me

@@ -2,6 +2,7 @@ local ComputerUI
 local ComputerLoc = { x = -106279.4140625, y = 193854.59375, z = 1399.1424560547 }
 local SatelliteLoc = { x = -103004.5234375, y = 201067.09375, z = 2203.3188476563 }
 local computer_timer
+local PartsCollected = 0
 
 AddEvent("OnPackageStart", function()
     ComputerUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
@@ -35,13 +36,16 @@ AddEvent("OnKeyPress", function(key)
             computer_timer = CreateTimer(ShowComputerTimer, 2000, ComputerLoc)
         elseif GetDistance3D(x, y, z, SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z) <= 200 then
             -- interacting with satellite computer
-            if GetPlayerPropertyValue(player, 'carryingPart') == true then
-                CallRemoteEvent("InteractSatelliteComputer")
-                ExecuteWebJS(ComputerUI, "ShowSatelliteComputer()")
+            if GetPlayerPropertyValue(player, 'carryingPart') == nil then
+                ShowMessage("You are missing a vital computer part!", 5000)
+            else
+                SetSoundVolume(CreateSound("client/sounds/satellite.mp3"), 1)
+
+                PartsCollected = PartsCollected + 1
+                ExecuteWebJS(ComputerUI, "ShowSatelliteComputer("..PartsCollected..")")
+                CallRemoteEvent("InteractSatelliteComputer", PartsCollected)
                 SetWebVisibility(ComputerUI, WEB_HITINVISIBLE)
                 computer_timer = CreateTimer(ShowComputerTimer, 2000, SatelliteLoc)
-            else
-                ShowMessage("You are missing a vital computer part!", 5000)
             end
         end
     end

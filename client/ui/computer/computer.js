@@ -25,9 +25,9 @@ NO CARRIER
     $('#terminal-box').show();
 }
 
-function ShowSatelliteComputer() {
+function ShowSatelliteComputer(parts) {
     $('#terminal-box #content').html(`
-Part acquired!
+Part ${parts} of 10 acquired!
     `);
     $('#terminal-box').show();
 }

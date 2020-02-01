@@ -38,6 +38,7 @@
 		"client/sounds/mothership.mp3",
 		"client/sounds/pain.mp3",
 		"client/sounds/modem.mp3",
+		"client/sounds/satellite.mp3",
 		"client/sounds/laser.mp3",
 
 		"client/ui/jquery.js",
@@ -50,7 +51,7 @@
 		"client/ui/notif/notif.html",
 		"client/ui/notif/notif.css",
 		"client/ui/notif/notif.js",
-		
+
 		"client/ui/boss/boss.html",
 		"client/ui/boss/boss.css",
 		"client/ui/boss/boss.js",

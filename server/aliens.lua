@@ -44,6 +44,8 @@ function SpawnAliens()
         if math.random(1,3) == 1 then
             -- 1/2 chance to spawn
             SpawnAlienNearPlayer(ply)
+        else
+            print(GetPlayerName(ply) .. " got lucky.")
         end
     end
 end

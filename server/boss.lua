@@ -14,12 +14,13 @@ AddCommand("boss", function(player)
     SpawnBoss()
 end)
 
-function SetupBoss()
+function OnPackageStart()
     -- process timer for the boss
     CreateTimer(function()
         SpawnBoss()        
     end, BossSpawnInterval)
 end
+AddEvent("OnPackageStart", OnPackageStart)
 
 function SpawnBoss()
     if Boss ~= nil then

@@ -12,7 +12,7 @@ AddCommand("vpos", function(player)
     File_SaveJSONTable("packages/"..GetPackageName().."/server/data/vehicles.json", VehicleLocations)
 end)
 
-function SetupVehicles()
+function OnPackageStart()
     VehicleLocations = File_LoadJSONTable("packages/"..GetPackageName().."/server/data/vehicles.json")
     print "Spawning vehicles..."
 
@@ -21,3 +21,4 @@ function SetupVehicles()
         SetVehicleRespawnParams(veh, true, VehicleRespawnTime, true)
     end
 end
+AddEvent("OnPackageStart", OnPackageStart)

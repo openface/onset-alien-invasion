@@ -19,7 +19,7 @@ AddCommand("lpos", function(playerid)
     File_SaveJSONTable("packages/"..GetPackageName().."/server/data/lootpickups.json", LootLocations)
 end)
 
-function SetupLootPickups()
+function OnPackageStart()
     LootLocations = File_LoadJSONTable("packages/"..GetPackageName().."/server/data/lootpickups.json")
 
     -- spawn random loot area
@@ -27,6 +27,7 @@ function SetupLootPickups()
         SpawnLootArea(LootLocations[ math.random(#LootLocations) ])
     end, LootDropInterval)
 end
+AddEvent("OnPackageStart", OnPackageStart)
 
 function SpawnLootArea(pos)
     local players = GetAllPlayers()

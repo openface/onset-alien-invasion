@@ -1,7 +1,6 @@
 local ComputerUI
 local ComputerLoc = { x = -106279.4140625, y = 193854.59375, z = 1399.1424560547 }
-
-local SatelliteLoc = { x = -101970.984375, y = 194300.09375, z = 2211.4655761719 }
+local SatelliteLoc = { x = -103004.5234375, y = 201067.09375, z = 2203.3188476563 }
 
 AddEvent("OnPackageStart", function()
     ComputerUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
@@ -21,7 +20,7 @@ AddEvent("OnKeyPress", function(key)
             SetSoundVolume(CreateSound("client/sounds/modem.mp3"), 0.7)
 
             ExecuteWebJS(ComputerUI, "ShowComputer()")
-            SetWebVisibility(ComputerUI, WEB_VISIBLE)
+            SetWebVisibility(ComputerUI, WEB_HITINVISIBLE)
 
             computer_timer = CreateTimer(function()
                 local x,y,z = GetPlayerLocation(GetPlayerId())

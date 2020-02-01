@@ -1,36 +1,19 @@
 local AlienHealth = 999
 local AlienRespawnTime = 20 * 1000
-local AlienLocations = {} -- aliens.json
 local AlienAttackRange = 5000
-local AlienSpawnInterval = 30 * 60 * 1000 -- spawn aliens every 30 mins
+local AlienSpawnInterval = 3 * 60 * 1000
 local AlienAttackDamage = 50
-
--- TODO remove
-AddCommand("apos", function(playerid)
-    local x, y, z = GetPlayerLocation(playerid)
-    string = "Location: "..x.." "..y.." "..z
-    AddPlayerChat(playerid, string)
-    print(string)
-    table.insert(AlienLocations, { x, y, z })
-
-    File_SaveJSONTable("packages/"..GetPackageName().."/server/data/aliens.json", AlienLocations)
-end)
+local SpawnLocation = { x = -102037, y = 194299, z = 1400 }
 
 -- TODO remove
 AddCommand("alien", function(player)
-    local x, y, z = GetPlayerLocation(player)
-    SpawnAlien(x+2000, y, z)
+    SpawnAlienNearPlayer(player)
 end)
 
-function SetupAliens()
-    AlienLocations = File_LoadJSONTable("packages/"..GetPackageName().."/server/data/aliens.json")
-
-    -- spawn all aliens
-    SpawnAlienAreas()
-
+function OnPackageStart()
     -- re-spawn on a timer
     CreateTimer(function()
-        SpawnAlienAreas()
+        SpawnAliens()
     end, AlienSpawnInterval)
 
     -- process timer for all aliens
@@ -42,8 +25,9 @@ function SetupAliens()
         end
     end, 10000)
 end
+AddEvent("OnPackageStart", OnPackageStart)
 
-function SpawnAlienAreas()
+function SpawnAliens()
     -- destroy any existing aliens
     for _,npc in pairs(GetAllNPC()) do
         if (GetNPCPropertyValue(npc, 'type') == 'alien') then
@@ -54,17 +38,22 @@ function SpawnAlienAreas()
         end
     end
 
-    print "Spawning aliens..."
-
     -- create alien npcs
-    for _,pos in pairs(AlienLocations) do
-        local x,y = randomPointInCircle(pos[1], pos[2], 10000)
-        SpawnAlien(x, y, pos[3]+100)
+    for _,ply in pairs(GetAllPlayers()) do
+        SpawnAlienNearPlayer(ply)
     end
 end
 
-function SpawnAlien(x, y, z)
-    --CreateObject(303, x, y, z+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
+function SpawnAlienNearPlayer(player)
+    local x,y,z = GetPlayerLocation(player)
+    local distance = GetDistance3D(x, y, z, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z)
+    if distance < 3000 then
+        print("Player "..GetPlayerName(player).." in safe zone")
+        return
+    end
+
+    print("Spawning alien near player "..GetPlayerName(player))
+    local x,y = randomPointInCircle(x, y, 10000)
     local npc = CreateNPC(x, y, z+100, 90)
     SetNPCHealth(npc, AlienHealth)
     SetNPCRespawnTime(npc, AlienRespawnTime)
@@ -103,25 +92,32 @@ AddEvent("OnNPCDeath", function(npc, killer)
     SetNPCPropertyValue(npc, 'target', nil, true)
 end)
 
+-- alien tick
 function ResetAlien(npc)
     health = GetNPCHealth(npc)
     if (health == false or health <= 0) then
         return
     end
 
-    local target, nearest_dist = GetNearestPlayer(npc)
-    if (target~=0 and not IsPlayerDead(target)) then
-        if (nearest_dist < AlienAttackRange) then
-            SetNPCPropertyValue(npc, 'target', target, true)
+    local player, nearest_dist = GetNearestPlayer(npc)
+    if (player~=0 and not IsPlayerDead(player)) then
 
-            local veh = GetPlayerVehicle(target)
+        local x,y,z = GetPlayerLocation(player)
+        local distance_to_spawn = GetDistance3D(x, y, z, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z)
+        if (nearest_dist < AlienAttackRange and distance_to_spawn > 3000) then
+            print("Alien targets player: "..GetPlayerName(player))
+            SetNPCPropertyValue(npc, 'target', player, true)
+
+            local veh = GetPlayerVehicle(player)
             if veh == 0 then
-                SetNPCFollowPlayer(npc, target, 350)
+                -- alien has a new target
+                SetNPCFollowPlayer(npc, player, 350)
             else
+                -- alien has a new target vehicle
                 SetNPCFollowVehicle(npc, veh, 400)
                 if (nearest_dist < 2000) then
-                    -- force player out of vehicle and disable it
-                    RemovePlayerFromVehicle(target)
+                    -- force player out of vehicle and damage it
+                    RemovePlayerFromVehicle(player)
                     SetVehicleDamage(veh, math.random(1,8), 1.0)
                     -- remove it from game
                     Delay(60000, function()
@@ -129,13 +125,13 @@ function ResetAlien(npc)
                     end)
                 end
             end
-            CallRemoteEvent(target, 'AlienAttacking', npc)
-        elseif (GetNPCPropertyValue(npc, 'target') == target) then
+            CallRemoteEvent(player, 'AlienAttacking', npc)
+        elseif (GetNPCPropertyValue(npc, 'target') == player) then
             -- target is out of range, alien is sad
             local x, y, z = GetNPCLocation(npc)
             SetNPCTargetLocation(npc, x, y, z)
             SetNPCPropertyValue(npc, 'target', nil, true)
-            CallRemoteEvent(target, 'AlienNoLongerAttacking', npc)
+            CallRemoteEvent(player, 'AlienNoLongerAttacking', npc)
             -- wait a bit then walk back home, little alien
             Delay(15000, function()
                 local location = GetNPCPropertyValue(npc, 'location')
@@ -207,7 +203,7 @@ end
 function GetNearestPlayer(npc)
 	local plys = GetAllPlayers()
 	local found = 0
-	local nearest_dist = 999999.9
+	local nearest_dist = AlienAttackRange + 5000
 	local x, y, z = GetNPCLocation(npc)
 
 	for _,v in pairs(plys) do

@@ -53,12 +53,6 @@ AddEvent("OnPlayerDeath", OnPlayerDeath)
 
 -- Setup world
 function OnPackageStart()
-    SetupAliens()
-    SetupBoss()
-    SetupLootPickups()
-    SetupVehicles()
-    SetupParts()
-
     -- pistol pickup near spawn
     local pickup = CreatePickup(1006, -103693.2421875, 192599.9375, 1250)
     SetPickupPropertyValue(pickup, 'type', 'pistol')   

@@ -10,7 +10,7 @@ end)
 AddEvent('OnKeyPress', function(key)
   if key == 'Tab' then
     CallRemoteEvent('RequestScoreboardUpdate')
-    SetWebVisibility(ScoreboardUI, WEB_VISIBLE)
+    SetWebVisibility(ScoreboardUI, WEB_HITINVISIBLE)
   end
 end)
 

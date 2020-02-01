@@ -12,7 +12,7 @@ AddCommand("ppos", function(playerid)
     File_SaveJSONTable("packages/"..GetPackageName().."/server/data/parts.json", PartsLocations)
 end)
 
-function SetupParts()
+function OnPackageStart()
     PartsLocations = File_LoadJSONTable("packages/"..GetPackageName().."/server/data/parts.json")
 
     -- spawn all parts
@@ -21,6 +21,7 @@ function SetupParts()
         SetPickupPropertyValue(pickup, 'type', 'part')
     end
 end
+AddEvent("OnPackageStart", OnPackageStart)
 
 -- pickup loot
 function OnPlayerPickupHit(player, pickup)

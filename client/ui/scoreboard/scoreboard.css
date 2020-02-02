@@ -48,25 +48,26 @@ table {
   border-collapse: separate;
 }
 
-table tr {
-  height: 65px;
+table td {
+  padding: 7px 3px;
+  text-align:center;
 }
 
-table td {
-  padding: 7px 14px;
+table td.stats {
+  font-size:75%;
 }
 
 table tr:nth-child(even)  {
   background: #343434;
 }
 
-table thead tr, table thead tr th {
-  height: 30px;
-  text-align: left;
+table thead tr th {
+  text-align: center;
   background: #3684ff;
   text-transform: uppercase;
   font-weight:normal;
   text-shadow: 1px 1px #000;
+  padding:3px 3px;
 }
 
 table thead tr td:first-child {

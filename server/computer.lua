@@ -16,5 +16,6 @@ AddRemoteEvent("InteractSatelliteComputer", function(player, parts)
         SetPlayerPropertyValue(player, 'carryingPart', nil, true)
         SetObjectDetached(object)
         DestroyObject(object)
+        BumpPlayerStat(player, 'parts_returned')
     end
 end)

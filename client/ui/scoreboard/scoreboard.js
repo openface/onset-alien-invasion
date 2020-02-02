@@ -3,9 +3,13 @@ function LoadOnlinePlayers(players) {
   jQuery.each(players, function (i, p) {
     $('#online table tbody').append(`<tr>
       <td>${p.name}</td>
-      <td>
-        ${p.kills} players<br />
-        ${p.alien_kills} aliens
+      <td class="stats">
+        <span>${p.kills}</span> players<br />
+        <span>${p.alien_kills}</span> aliens<br />
+      </td>
+      <td class="stats">
+        <span>${p.parts_found}</span> found<br />
+        <span>${p.parts_returned}</span> returned
       </td>
       <td>${p.deaths}</td>
       <td>${SecondsToTime(p.joined)}</td>
@@ -38,6 +42,8 @@ $(function () {
           "name": "foobar",
           "kills": 0,
           "alien_kills": 0,
+          "parts_found": 2,
+          "parts_returned": 0,
           "deaths": 0,
           "joined": 82398,
           "ping": 1

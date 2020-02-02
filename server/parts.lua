@@ -24,7 +24,7 @@ function OnPackageStart()
 end
 AddEvent("OnPackageStart", OnPackageStart)
 
--- pickup loot
+-- pickup part
 function OnPlayerPickupHit(player, pickup)
     if (GetPickupPropertyValue(pickup, 'type') ~= 'part') then
         return
@@ -55,6 +55,7 @@ function EquipPart(player)
     SetPlayerPropertyValue(player, 'carryingPart', object, true)
     AddPlayerChatAll(GetPlayerName(player)..' has found up a computer part!')
     CallRemoteEvent(player, "PartPickedup", pickup)
+    BumpPlayerStat(player, 'parts_found')
 end
 
 -- TODO remove me

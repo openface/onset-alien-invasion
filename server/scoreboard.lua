@@ -1,12 +1,10 @@
+-- indexed by player, but the scoreboard indexed by index
 local ScoreboardData = {}
 
-function Scoreboard_RequestUpdate(player)
+function RequestScoreboardUpdate(player)
   local _send = {}
   for index,v in ipairs(GetAllPlayers()) do
-    local kills = ScoreboardData[v]['kills'] or 0
-    local alien_kills = ScoreboardData[v]['alien_kills'] or 0
-    local deaths = ScoreboardData[v]['deaths'] or 0
-
+    -- determine playtime
     local joined = 0
     if ScoreboardData[v]['joined'] == nil then 
       joined = GetTimeSeconds() 
@@ -17,9 +15,11 @@ function Scoreboard_RequestUpdate(player)
     -- key by index to avoid sparse array issue with json_encode
     _send[index] = {
       ['name'] = GetPlayerName(v),
-      ['kills'] = kills,
-      ['alien_kills'] = alien_kills,
-      ['deaths'] = deaths,
+      ['kills'] = ScoreboardData[v]['kills'],
+      ['alien_kills'] = ScoreboardData[v]['alien_kills'],
+      ['parts_found'] = ScoreboardData[v]['parts_found'],
+      ['parts_returned'] = ScoreboardData[v]['parts_returned'],
+      ['deaths'] = ScoreboardData[v]['deaths'],
       ['joined'] = joined,
       ['ping'] = GetPlayerPing(v)
     }
@@ -27,21 +27,15 @@ function Scoreboard_RequestUpdate(player)
   print(json_encode(_send))
   CallRemoteEvent(player, 'OnServerScoreboardUpdate', json_encode(_send))
 end
-AddRemoteEvent('RequestScoreboardUpdate', Scoreboard_RequestUpdate)
-
-function Scoreboard_UpdateAllClients()
-  for _, v in pairs(GetAllPlayers()) do
-    if v ~= nil then
-      Scoreboard_RequestUpdate(v)
-    end
-  end
-end
+AddRemoteEvent('RequestScoreboardUpdate', RequestScoreboardUpdate)
 
 AddEvent('OnPlayerJoin', function(player)
   if ScoreboardData[player] == nil then
     local _new = {
       ['kills'] = 0,
       ['alien_kills'] = 0,
+      ['parts_found'] = 0,
+      ['parts_returned'] = 0,
       ['deaths'] = 0,
       ['joined'] = GetTimeSeconds()
     }
@@ -61,31 +55,28 @@ AddEvent('OnPlayerQuit', function(player)
 
     if _index ~= 0 then
       table.remove(ScoreboardData, _index)
-      Scoreboard_UpdateAllClients()
     end
   end
 end)
 
-AddEvent('OnPlayerDeath', function(player, killer)
-
+-- increment stats from elsewhere
+function BumpPlayerStat(player, stat)
   if ScoreboardData[player] ~= nil then
-    ScoreboardData[player]['deaths'] = ScoreboardData[player]['deaths'] + 1
+    ScoreboardData[player][stat] = ScoreboardData[player][stat] + 1
   end
+end
+AddFunctionExport("BumpPlayerStat", BumpPlayerStat)
 
-  -- killed by player
-  if (ScoreboardData[killer] ~= nil and killer ~= player) then
-    ScoreboardData[killer]['kills'] = ScoreboardData[killer]['kills'] + 1
-  end
-
-  Scoreboard_UpdateAllClients()
-end)
-
-AddEvent("OnNPCDeath", function(npc, killer)
-    if killer == 0 or killer == nil then return end
-    if GetNPCPropertyValue(npc, 'type') ~= 'alien' then return end
-    
-    -- player kills alien
-    if ScoreboardData[killer] ~= nil then
-      ScoreboardData[killer]['alien_kills'] = ScoreboardData[killer]['alien_kills'] + 1
-    end
-end)
+-- debug helper
+function dump(o)
+   if type(o) == 'table' then
+      local s = '{ '
+      for k,v in pairs(o) do
+         if type(k) ~= 'number' then k = '"'..k..'"' end
+         s = s .. '['..k..'] = ' .. dump(v) .. ','
+      end
+      return s .. '} '
+   else
+      return tostring(o)
+   end
+end

@@ -40,12 +40,15 @@ end)
 -- if player is killed by themselves, assume it's an alien?
 function OnPlayerDeath(player, killer)
     if player ~= killer then
+        BumpPlayerStat(killer, 'kills')
         print(GetPlayerName(player)..' has been killed by '..GetPlayerName(killer)..'!')
         AddPlayerChatAll(GetPlayerName(player)..' has been killed by '..GetPlayerName(killer)..'!')
     else
         AddPlayerChatAll(GetPlayerName(player)..' has been taken!')
         print(GetPlayerName(player)..' has been taken')
     end
+
+    BumpPlayerStat(player, 'deaths')
     AddPlayerChat(player, "DEAD!  You must wait ".. PlayerRespawnSecs .." seconds to respawn...")
 end
 AddEvent("OnPlayerDeath", OnPlayerDeath)

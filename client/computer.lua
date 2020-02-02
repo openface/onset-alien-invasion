@@ -21,7 +21,7 @@ function ShowComputerTimer(loc)
     end
 end
 
-AddEvent("OnKeyPress", function(key)
+AddEvent("OnKeyRelease", function(key)
     if key == "E" then
         local player = GetPlayerId()
         local x,y,z = GetPlayerLocation(player)

@@ -19,6 +19,7 @@ function OnPackageStart()
     for _,pos in pairs(PartsLocations) do
         local pickup = CreatePickup(PartObjectID, pos[1], pos[2], pos[3])
         SetPickupPropertyValue(pickup, 'type', 'part')
+        SetPickupScale(pickup, 3, 3, 3)
     end
 end
 AddEvent("OnPackageStart", OnPackageStart)

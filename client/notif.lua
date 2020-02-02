@@ -1,22 +1,21 @@
 local NotifUI
+local timer = 0
 
 AddEvent("OnPackageStart", function()
     NotifUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
     LoadWebFile(NotifUI, "http://asset/"..GetPackageName().."/client/ui/notif/notif.html")
     SetWebAlignment(NotifUI, 0.0, 0.0)
     SetWebAnchors(NotifUI, 0.0, 0.0, 1.0, 1.0)
-    SetWebVisibility(NotifUI, WEB_HIDDEN)
+    SetWebVisibility(NotifUI, WEB_HITINVISIBLE)
 end)
 
 -- banners
 function ShowBanner(msg, duration)
+  	if IsValidTimer(timer) then
+		DestroyTimer(timer)
+	end
+    timer = CreateTimer(HideNotifs, duration)
     ExecuteWebJS(NotifUI, "ShowBanner('"..msg.."')")
-    SetWebVisibility(NotifUI, WEB_HITINVISIBLE)
-
-    Delay(duration, function()
-        ExecuteWebJS(NotifUI, "HideBanner()")
-        SetWebVisibility(NotifUI, WEB_HIDDEN)
-    end)
 end
 AddFunctionExport("ShowBanner", ShowBanner)
     
@@ -26,13 +25,11 @@ end)
 
 -- messages
 function ShowMessage(msg, duration)
+  	if IsValidTimer(timer) then
+		DestroyTimer(timer)
+	end
+    timer = CreateTimer(HideNotifs, duration)
     ExecuteWebJS(NotifUI, "ShowMessage('"..msg.."')")
-    SetWebVisibility(NotifUI, WEB_HITINVISIBLE)
-
-    Delay(duration, function()
-        ExecuteWebJS(NotifUI, "HideMessage()")
-        SetWebVisibility(NotifUI, WEB_HIDDEN)
-    end)
 end
 AddFunctionExport("ShowMessage", ShowMessage)
     
@@ -40,8 +37,12 @@ AddRemoteEvent("ShowMessage", function(msg, duration)
     ShowMessage(msg, duration)
 end)
 
+function HideNotifs()
+    ExecuteWebJS(NotifUI, "HideNotifs()")
+end
+
+
 -- TODO remove me
---[[
 function OnKeyRelease(key)
 	if key == "F1" then
 		ShowBanner("YOU HAVE DIED", 5000)
@@ -50,4 +51,3 @@ function OnKeyRelease(key)
     end
 end
 AddEvent("OnKeyRelease", OnKeyRelease)
---]]

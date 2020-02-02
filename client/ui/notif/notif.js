@@ -6,10 +6,6 @@ function ShowBanner(message) {
     $('#banner').show();
 }
 
-function HideBanner() {
-    $('#banner').fadeOut();
-}
-
 // message
 function ShowMessage(message) {
     $("#notif").children().hide();
@@ -18,6 +14,6 @@ function ShowMessage(message) {
     $('#message').show();
 }
 
-function HideMessage() {
-    $('#message').fadeOut();
+function HideNotifs() {
+    $("#notif").children().fadeOut(250);
 }

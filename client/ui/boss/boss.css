@@ -8,11 +8,11 @@
     width: 500px;
     margin: auto;
     border: solid 5px rgba(0,0,0,0.1);
-    border-radius: 2px;
+    border-radius: 3px;
 }
 
 .health-bar {
-    background-color: rgba(138,3,3,0.9);
+    background-image: linear-gradient(#a71d31 20%, #3f0d12);
     width: inherit;
     height: 29px;
     position: relative;

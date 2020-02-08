@@ -40,7 +40,7 @@
 		"client/sounds/modem.mp3",
 		"client/sounds/satellite.mp3",
 		"client/sounds/laser.mp3",
-		"client/sounds/error.mp3"
+		"client/sounds/error.mp3",
 
 		"client/ui/jquery.js",
 		"client/ui/ui.js",

@@ -17,8 +17,7 @@ function UpdateScoreboardData(player)
       ['name'] = GetPlayerName(v),
       ['kills'] = ScoreboardData[v]['kills'],
       ['alien_kills'] = ScoreboardData[v]['alien_kills'],
-      ['parts_found'] = ScoreboardData[v]['parts_found'],
-      ['parts_returned'] = ScoreboardData[v]['parts_returned'],
+      ['parts'] = ScoreboardData[v]['parts'],
       ['deaths'] = ScoreboardData[v]['deaths'],
       ['joined'] = joined,
       ['ping'] = GetPlayerPing(v)
@@ -34,8 +33,7 @@ AddEvent('OnPlayerJoin', function(player)
     local _new = {
       ['kills'] = 0,
       ['alien_kills'] = 0,
-      ['parts_found'] = 0,
-      ['parts_returned'] = 0,
+      ['parts'] = 0,
       ['deaths'] = 0,
       ['joined'] = GetTimeSeconds()
     }

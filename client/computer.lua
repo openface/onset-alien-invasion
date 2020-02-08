@@ -2,22 +2,22 @@ local ComputerUI
 local ComputerLoc = { x = -106279.4140625, y = 193854.59375, z = 1399.1424560547 }
 local SatelliteLoc = { x = -103004.5234375, y = 201067.09375, z = 2203.3188476563 }
 local computer_timer
-local PartsCollected = 0
 
 AddEvent("OnPackageStart", function()
     ComputerUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
     LoadWebFile(ComputerUI, "http://asset/"..GetPackageName().."/client/ui/computer/computer.html")
     SetWebAlignment(ComputerUI, 0.0, 0.0)
     SetWebAnchors(ComputerUI, 0.0, 0.0, 1.0, 1.0)
-    SetWebVisibility(ComputerUI, WEB_HIDDEN)
+    SetWebVisibility(ComputerUI, WEB_HITINVISIBLE)
 end)
 
 function ShowComputerTimer(loc)
     local x,y,z = GetPlayerLocation(GetPlayerId())
     if GetDistance3D(x, y, z, loc.x, loc.y, loc.z) > 200 then
-        ExecuteWebJS(ComputerUI, "HideComputer()")
-        SetWebVisibility(ComputerUI, WEB_HIDDEN)
-        DestroyTimer(computer_timer)
+        Delay(1000, function()
+            ExecuteWebJS(ComputerUI, "HideComputer()")
+            DestroyTimer(computer_timer)
+        end)
     end
 end
 
@@ -31,7 +31,6 @@ AddEvent("OnKeyPress", function(key)
             SetSoundVolume(CreateSound("client/sounds/modem.mp3"), 0.7)
 
             ExecuteWebJS(ComputerUI, "ShowGarageComputer()")
-            SetWebVisibility(ComputerUI, WEB_HITINVISIBLE)
 
             computer_timer = CreateTimer(ShowComputerTimer, 2000, ComputerLoc)
         elseif GetDistance3D(x, y, z, SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z) <= 200 then
@@ -41,14 +40,15 @@ AddEvent("OnKeyPress", function(key)
                 SetSoundVolume(CreateSound("client/sounds/error.mp3"), 1)
             else
                 SetSoundVolume(CreateSound("client/sounds/satellite.mp3"), 1)
-
-                PartsCollected = PartsCollected + 1
-                ExecuteWebJS(ComputerUI, "ShowSatelliteComputer("..PartsCollected..")")
-                CallRemoteEvent("InteractSatelliteComputer", PartsCollected)
-                SetWebVisibility(ComputerUI, WEB_HITINVISIBLE)
-                computer_timer = CreateTimer(ShowComputerTimer, 2000, SatelliteLoc)
+                CallRemoteEvent("InteractSatelliteComputer")
             end
         end
     end
 end)
+
+AddRemoteEvent("OnShowSatelliteComputer", function(PartsCollected)
+    ExecuteWebJS(ComputerUI, "ShowSatelliteComputer("..PartsCollected..")")
+    computer_timer = CreateTimer(ShowComputerTimer, 2000, SatelliteLoc)
+end)
+
 

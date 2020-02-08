@@ -55,7 +55,6 @@ function EquipPart(player)
     SetPlayerPropertyValue(player, 'carryingPart', object, true)
     AddPlayerChatAll(GetPlayerName(player)..' has found up a computer part!')
     CallRemoteEvent(player, "PartPickedup", pickup)
-    BumpPlayerStat(player, 'parts_found')
 end
 
 -- TODO remove me

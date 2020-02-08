@@ -1,3 +1,6 @@
+local PartsCollected = 0
+local PartsRequired = 10
+
 function OnPackageStart()
     -- central computer
     CreateText3D("Press E to Interact", 15, -106279.4140625, 193854.59375, 1399.1424560547 + 130, 0,0,0)
@@ -7,15 +10,22 @@ function OnPackageStart()
 end
 AddEvent("OnPackageStart", OnPackageStart)
 
-AddRemoteEvent("InteractSatelliteComputer", function(player, parts)
+AddRemoteEvent("InteractSatelliteComputer", function(player)
     local object = GetPlayerPropertyValue(player, 'carryingPart')
     if IsValidObject(object) then
         SetPlayerAnimation(player, "COMBINE")
-        AddPlayerChatAll(GetPlayerName(player) .. " acquired satellite part "..parts.." / 10")
-        print(GetPlayerName(player).. " acquired satellite part "..parts.." / 10")
+
+        PartsCollected = PartsCollected + 1
+
+        AddPlayerChatAll(GetPlayerName(player) .. " acquired satellite part "..PartsCollected.." / "..PartsRequired)
+        print(GetPlayerName(player).. " acquired satellite part "..PartsCollected.." / "..PartsRequired)
+
         SetPlayerPropertyValue(player, 'carryingPart', nil, true)
         SetObjectDetached(object)
         DestroyObject(object)
-        BumpPlayerStat(player, 'parts_returned')
+        BumpPlayerStat(player, 'parts')
+
+        CallRemoteEvent(player, "OnShowSatelliteComputer", PartsCollected)
+        
     end
 end)

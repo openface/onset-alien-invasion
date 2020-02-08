@@ -7,10 +7,7 @@ function LoadOnlinePlayers(players) {
         <span>${p.kills}</span> players<br />
         <span>${p.alien_kills}</span> aliens<br />
       </td>
-      <td class="stats">
-        <span>${p.parts_found}</span> found<br />
-        <span>${p.parts_returned}</span> returned
-      </td>
+      <td>${p.parts}</td>
       <td>${p.deaths}</td>
       <td>${SecondsToTime(p.joined)}</td>
       <td>${p.ping}ms</td>
@@ -42,8 +39,7 @@ $(function () {
           "name": "foobar",
           "kills": 0,
           "alien_kills": 0,
-          "parts_found": 2,
-          "parts_returned": 0,
+          "parts": 2,
           "deaths": 0,
           "joined": 82398,
           "ping": 1

@@ -32,7 +32,7 @@ function OnPlayerPickupHit(player, pickup)
 
     if (GetPlayerPropertyValue(player, 'carryingPart') ~= nil) then
         -- already carrying a part
-        CallRemoteEvent(player, "ShowMessage", "Take your part to the satellite computer!")
+        CallRemoteEvent(player, "ShowMessage", "Take your part to the satellite computer!", 5000)
         return
     end
          

@@ -30,6 +30,8 @@ AddRemoteEvent("InteractSatelliteComputer", function(player)
         if PartsCollected >= PartsRequired then
             print(GetPlayerName(player).." completed the satellite transmission")
             AddPlayerChatAll(GetPlayerName(player).." completed the satellite transmission!")
+
+            PartsCollected = 0
             CallRemoteEvent(player, "SatelliteTransmission")
             Delay(15000, function()
                 CallEvent("SpawnBoss")

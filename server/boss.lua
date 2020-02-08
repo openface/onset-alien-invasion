@@ -1,4 +1,3 @@
-local BossSpawnInterval = 10 * 60 * 1000 -- spawn boss every 10 mins
 local BossDespawnDelay = 35 * 1000 -- how long does boss stay around
 local BossInitialHealth = 999
 local BossDamageInterval = 5 * 1000 -- hurts players every 5 seconds
@@ -13,14 +12,6 @@ local BossRotationTimer
 AddCommand("boss", function(player)
     SpawnBoss()
 end)
-
-function OnPackageStart()
-    -- process timer for the boss
-    CreateTimer(function()
-        SpawnBoss()        
-    end, BossSpawnInterval)
-end
-AddEvent("OnPackageStart", OnPackageStart)
 
 function SpawnBoss()
     if Boss ~= nil then
@@ -80,6 +71,7 @@ function SpawnBoss()
         end
     end, 2500, 14, x, y, z)
 end
+AddEvent("SpawnBoss", SpawnBoss)
 
 function DespawnBoss()
     if Boss == nil then

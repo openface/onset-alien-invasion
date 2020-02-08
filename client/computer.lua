@@ -46,9 +46,17 @@ AddEvent("OnKeyPress", function(key)
     end
 end)
 
-AddRemoteEvent("OnShowSatelliteComputer", function(PartsCollected)
-    ExecuteWebJS(ComputerUI, "ShowSatelliteComputer("..PartsCollected..")")
-    computer_timer = CreateTimer(ShowComputerTimer, 2000, SatelliteLoc)
+AddRemoteEvent("ShowSatelliteComputer", function(PartsCollected, PartsRequired)
+    if PartsCollected >= PartsRequired then
+        ExecuteWebJS(ComputerUI, "ShowSatelliteComputerComplete()")
+    else
+        ExecuteWebJS(ComputerUI, "ShowSatelliteComputer("..PartsCollected..","..PartsRequired..")")
+        computer_timer = CreateTimer(ShowComputerTimer, 2000, SatelliteLoc)
+    end
+end)
+
+AddRemoteEvent("SatelliteTransmission", function()
+    SetSoundVolume(CreateSound3D("client/sounds/transmission.mp3", SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z, 10000), 1)
 end)
 
 

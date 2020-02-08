@@ -1,35 +1,51 @@
 function ShowGarageComputer() {
     $('#terminal-box #content').html(`
-The surrounding area has been invaded by alien lifeform. If you are
-reading this message, you may be the last of the remaining human
-survivors. Please read these instructions carefully!
+        <p>The surrounding area has been invaded by alien lifeform. If you are
+        reading this message, you may be the last of the remaining human
+        survivors. Please read these instructions carefully!</p>
 
-The mainland has been infected with radiation. DO NOT ENTER THE OCEAN!
+        <p>The mainland has been infected with radiation. DO NOT ENTER THE OCEAN!</p>
 
-THERE ARE ALIENS ON THIS ISLAND! If you are being chased, RUN TO SAFETY! 
-WATCH FOR SUPPLY DROPS. THEY CONTAIN WEAPONS, ARMOR, AND HEALTH. You 
-will see flares indicating where they drop.
+        <p>THERE ARE ALIENS ON THIS ISLAND! If you are being chased, RUN TO SAFETY! 
+        WATCH FOR SUPPLY DROPS. THEY CONTAIN WEAPONS, ARMOR, AND HEALTH. You 
+        will see flares indicating where they drop.</p>
 
-The mothership is on it's way to this island! You will need supplies
-before you can fight back!
+        <p>The mothership is on it's way to this island! You will need supplies
+        before you can fight back!</p>
 
-YOUR MISSION IS TO DESTROY THE MOTHERSHIP.  Scavenge the area to find
-parts and bring them back to the satellite base.  The satellite, once
-operational, can be used to draw the mothership.
+        <p>YOUR MISSION IS TO DESTROY THE MOTHERSHIP.  Scavenge the area to find
+        parts and bring them back to the satellite base.  The satellite, once
+        operational, can be used to draw the mothership.</p>
 
-Hit the TAB key for the scoreboard.
+        <p>Hit the TAB key for the scoreboard.</p>
 
-Good luc+++ATH0
-NO CARRIER
+        <p>Good luc+++ATH0<br />
+        NO CARRIER</p>
     `);
     $('#terminal-box').show();
 }
 
-function ShowSatelliteComputer(parts) {
+function ShowSatelliteComputer(collected, required) {
     $('#terminal-box #content').html(`
-Part ${parts} of 10 acquired!
+        <p>Access granted.</p>
+
+        <p>Part ${collected} of ${required} has been acquired!</p>
+
+        <p>Continue collecting satellite parts to initiate transmission
+        from the satellite.  Once enough parts are acquired, the satellite
+        will be operational.</p>
     `);
     $('#terminal-box').show();
+}
+
+function ShowSatelliteComputerComplete() {
+    $('#terminal-box #content').html(`
+        <p>Commencing satellite transmission...  OK<br />
+        Waiting for signal acknowledgement... OK</p>
+
+        <p>Signal received.  Standby for response.</p>
+    `);
+    $('#terminal-box').show().delay(3000).fadeOut('fast');;
 }
 
 function HideComputer() {

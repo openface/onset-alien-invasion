@@ -25,7 +25,15 @@ AddRemoteEvent("InteractSatelliteComputer", function(player)
         DestroyObject(object)
         BumpPlayerStat(player, 'parts')
 
-        CallRemoteEvent(player, "OnShowSatelliteComputer", PartsCollected)
-        
+        CallRemoteEvent(player, "ShowSatelliteComputer", PartsCollected, PartsRequired)
+
+        if PartsCollected >= PartsRequired then
+            print(GetPlayerName(player).." completed the satellite transmission")
+            AddPlayerChatAll(GetPlayerName(player).." completed the satellite transmission!")
+            CallRemoteEvent(player, "SatelliteTransmission")
+            Delay(15000, function()
+                CallEvent("SpawnBoss")
+            end)
+        end
     end
 end)

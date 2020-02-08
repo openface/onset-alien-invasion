@@ -1,18 +1,15 @@
 local LootNearbyRange = 50000 -- distance to loot that is considered nearby
+local LootWaypoint
 
 AddRemoteEvent('LootPickedup', function(pickup)
     SetSoundVolume(CreateSound("client/sounds/health_pickup.wav"), 1)
 
-    local waypoints = GetAllWaypoints()
-    for _,w in pairs(waypoints) do
-        DestroyWaypoint(w)
-    end
+    DestroyWaypoint(LootWaypoint)
 end)
 
 AddRemoteEvent('LootSpawned', function(pos, pickup)
-    local waypoints = GetAllWaypoints()
-    for _,w in pairs(waypoints) do
-        DestroyWaypoint(w)
+    if LootWaypoint ~= nil then
+        DestroyWaypoint(LootWaypoint)
     end
 
     local x,y,z = GetPlayerLocation()
@@ -24,7 +21,7 @@ AddRemoteEvent('LootSpawned', function(pos, pickup)
     SetSoundVolume(LootSpawnSound, 1)
     AddPlayerChat('There is a supply drop nearby!')
 
-    CreateWaypoint(pos[1], pos[2], pos[3], "Supply Drop")
+    LootWaypoint = CreateWaypoint(pos[1], pos[2], pos[3] + 50, "Supply Drop")
 
     -- fireworks/flares
     CreateCountTimer(function(pos)

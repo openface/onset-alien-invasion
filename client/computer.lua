@@ -2,6 +2,7 @@ local ComputerUI
 local ComputerLoc = { x = -106279.4140625, y = 193854.59375, z = 1399.1424560547 }
 local SatelliteLoc = { x = -103004.5234375, y = 201067.09375, z = 2203.3188476563 }
 local computer_timer
+local SatelliteWaypoint
 
 AddEvent("OnPackageStart", function()
     ComputerUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
@@ -10,6 +11,12 @@ AddEvent("OnPackageStart", function()
     SetWebAnchors(ComputerUI, 0.0, 0.0, 1.0, 1.0)
     SetWebVisibility(ComputerUI, WEB_HITINVISIBLE)
 end)
+
+function ShowSatelliteWaypoint()
+    if SatelliteWaypoint == nil then
+        SatelliteWaypoint = CreateWaypoint(SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z+50, "Satellite Computer")
+    end
+end
 
 function ShowComputerTimer(loc)
     local x,y,z = GetPlayerLocation(GetPlayerId())
@@ -34,12 +41,16 @@ AddEvent("OnKeyPress", function(key)
 
             computer_timer = CreateTimer(ShowComputerTimer, 2000, ComputerLoc)
         elseif GetDistance3D(x, y, z, SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z) <= 200 then
+            if SatelliteWaypoint ~= nil then
+                DestroyWaypoint(SatelliteWaypoint)
+            end
+
             -- interacting with satellite computer
             if GetPlayerPropertyValue(player, 'carryingPart') == nil then
                 ShowMessage("You are missing a critical computer part!", 5000)
                 SetSoundVolume(CreateSound("client/sounds/error.mp3"), 1)
             else
-                SetSoundVolume(CreateSound("client/sounds/satellite.mp3"), 1)
+                SetSoundVolume(CreateSound("client/sounds/modem.mp3"), 1)
                 CallRemoteEvent("InteractSatelliteComputer")
             end
         end

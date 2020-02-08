@@ -14,7 +14,7 @@ end)
 
 function OnPackageStart()
     PartsLocations = File_LoadJSONTable("packages/"..GetPackageName().."/server/data/parts.json")
-
+    print("Spawning pickups: "..#PartsLocations)
     -- spawn all parts
     for _,pos in pairs(PartsLocations) do
         local pickup = CreatePickup(PartObjectID, pos[1], pos[2], pos[3])

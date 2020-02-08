@@ -41,11 +41,9 @@ function SpawnAliens()
 
     -- create alien npcs
     for _,ply in pairs(GetAllPlayers()) do
+        -- chance to spawn
         if math.random(1,3) == 1 then
-            -- 1/2 chance to spawn
             SpawnAlienNearPlayer(ply)
-        else
-            print(GetPlayerName(ply) .. " got lucky.")
         end
     end
 end
@@ -84,10 +82,11 @@ AddEvent("OnNPCSpawn", OnNPCSpawn)
 AddEvent("OnNPCDamage", function(npc, damagetype, amount)
     local health = GetNPCHealth(npc)
     if (health > 0) then
-        -- keep attacking if still alive
-        Delay(500, function(npc)
-            ResetAlien(npc)
-        end, npc)
+        local target = GetNPCPropertyValue(npc, 'target')
+        if target ~= nil then
+            SetNPCAnimation(npc, "STOP", false)
+            SetNPCFollowPlayer(npc, target, math.random(325,360))
+        end
     end
 end)
 
@@ -205,7 +204,9 @@ function AlienReturn(npc)
     SetNPCPropertyValue(npc, 'target', nil, true)
 
     local location = GetNPCPropertyValue(npc, 'location')
-    SetNPCTargetLocation(npc, location[1], location[2], location[3], 800)
+    if location ~= nil then
+        SetNPCTargetLocation(npc, location[1], location[2], location[3], 800)
+    end
 end
 
 -- get nearest player to npc

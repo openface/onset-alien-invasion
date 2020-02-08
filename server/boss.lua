@@ -1,5 +1,6 @@
 local BossDespawnDelay = 35 * 1000 -- how long does boss stay around
 local BossInitialHealth = 999
+local BossDamagePerHit = 5 -- amount of damage boss takes per player hit
 local BossDamageInterval = 5 * 1000 -- hurts players every 5 seconds
 local BossDamageAmount = 5 -- hurts players this much every interval
 local BossDamageRange = 8000
@@ -92,7 +93,7 @@ end
     
 function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, startx, starty, startz, normalx, normaly, normalz)
 	if (hittype == HIT_OBJECT and GetObjectPropertyValue(hitid, "type") == "boss") then
-        BossHealth = BossHealth - 10
+        BossHealth = BossHealth - BossDamagePerHit
 
         local players = GetAllPlayers()
         for _,ply in pairs(players) do

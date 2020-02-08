@@ -13,9 +13,10 @@ AddEvent("OnPackageStart", function()
 end)
 
 function ShowSatelliteWaypoint()
-    if SatelliteWaypoint == nil then
-        SatelliteWaypoint = CreateWaypoint(SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z+50, "Satellite Computer")
+    if SatelliteWaypoint ~= nil then
+        DestroyWaypoint(SatelliteWaypoint)
     end
+    SatelliteWaypoint = CreateWaypoint(SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z+50, "Satellite Computer")
 end
 
 function ShowComputerTimer(loc)

@@ -54,7 +54,12 @@ table td {
 }
 
 table td.stats {
+  text-align:left;
   font-size:75%;
+}
+
+table td.stats span {
+  font-weight:bold;
 }
 
 table tr:nth-child(even)  {
@@ -66,6 +71,7 @@ table thead tr th {
   background: #3684ff;
   text-transform: uppercase;
   font-weight:normal;
+  font-size:75%;
   text-shadow: 1px 1px #000;
   padding:3px 3px;
 }

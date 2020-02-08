@@ -15,9 +15,10 @@ function UpdateScoreboardData(player)
     -- key by index to avoid sparse array issue with json_encode
     table.insert(_send, {
       ['name'] = GetPlayerName(v),
-      ['kills'] = ScoreboardData[v]['kills'],
+      ['player_kills'] = ScoreboardData[v]['player_kills'],
       ['alien_kills'] = ScoreboardData[v]['alien_kills'],
-      ['parts'] = ScoreboardData[v]['parts'],
+      ['boss_kills'] = ScoreboardData[v]['boss_kills'],
+      ['parts_collected'] = ScoreboardData[v]['parts_collected'],
       ['deaths'] = ScoreboardData[v]['deaths'],
       ['joined'] = joined,
       ['ping'] = GetPlayerPing(v)
@@ -31,9 +32,10 @@ AddRemoteEvent('UpdateScoreboardData', UpdateScoreboardData)
 AddEvent('OnPlayerJoin', function(player)
   if ScoreboardData[player] == nil then
     local _new = {
-      ['kills'] = 0,
+      ['player_kills'] = 0,
       ['alien_kills'] = 0,
-      ['parts'] = 0,
+      ['boss_kills'] = 0,
+      ['parts_collected'] = 0,
       ['deaths'] = 0,
       ['joined'] = GetTimeSeconds()
     }
@@ -64,17 +66,3 @@ function BumpPlayerStat(player, stat)
   end
 end
 AddFunctionExport("BumpPlayerStat", BumpPlayerStat)
-
--- debug helper
-function dump(o)
-   if type(o) == 'table' then
-      local s = '{ '
-      for k,v in pairs(o) do
-         if type(k) ~= 'number' then k = '"'..k..'"' end
-         s = s .. '['..k..'] = ' .. dump(v) .. ','
-      end
-      return s .. '} '
-   else
-      return tostring(o)
-   end
-end

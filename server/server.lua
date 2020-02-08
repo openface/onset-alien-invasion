@@ -40,7 +40,7 @@ end)
 -- if player is killed by themselves, assume it's an alien?
 function OnPlayerDeath(player, killer)
     if player ~= killer then
-        BumpPlayerStat(killer, 'kills')
+        BumpPlayerStat(killer, 'player_kills')
         print(GetPlayerName(player)..' has been killed by '..GetPlayerName(killer)..'!')
         AddPlayerChatAll(GetPlayerName(player)..' has been killed by '..GetPlayerName(killer)..'!')
     else
@@ -93,3 +93,17 @@ AddRemoteEvent("UnderMapFix", function(player, terrain)
 	local x, y, z = GetPlayerLocation(player)
 	CallEvent("SafeTeleport", player, x, y, terrain + 200)
 end)
+
+-- debug helper
+function dump(o)
+   if type(o) == 'table' then
+      local s = '{ '
+      for k,v in pairs(o) do
+         if type(k) ~= 'number' then k = '"'..k..'"' end
+         s = s .. '['..k..'] = ' .. dump(v) .. ','
+      end
+      return s .. '} '
+   else
+      return tostring(o)
+   end
+end

@@ -4,10 +4,11 @@ function LoadOnlinePlayers(players) {
     $('#online table tbody').append(`<tr>
       <td>${p.name}</td>
       <td class="stats">
-        <span>${p.kills}</span> players<br />
+        <span>${p.player_kills}</span> players<br />
         <span>${p.alien_kills}</span> aliens<br />
+        <span>${p.boss_kills}</span> motherships<br />
       </td>
-      <td>${p.parts}</td>
+      <td>${p.parts_collected}</td>
       <td>${p.deaths}</td>
       <td>${SecondsToTime(p.joined)}</td>
       <td>${p.ping}ms</td>
@@ -37,9 +38,10 @@ $(function () {
       [
         {
           "name": "foobar",
-          "kills": 0,
+          "player_kills": 0,
           "alien_kills": 0,
-          "parts": 2,
+          "boss_kills": 1,
+          "parts_collected": 2,
           "deaths": 0,
           "joined": 82398,
           "ping": 1

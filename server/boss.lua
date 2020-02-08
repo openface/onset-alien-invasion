@@ -8,6 +8,7 @@ local BossDamageRange = 8000
 local BossHealth
 local Boss
 local BossRotationTimer
+local BossKillers = {}
 
 -- TODO remove
 AddCommand("boss", function(player)
@@ -17,11 +18,6 @@ end)
 function SpawnBoss()
     if Boss ~= nil then
         DespawnBoss()
-        return
-    end
-
-    local players = GetAllPlayers()
-    if #players == 0 then
         return
     end
 
@@ -95,6 +91,12 @@ function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, st
 	if (hittype == HIT_OBJECT and GetObjectPropertyValue(hitid, "type") == "boss") then
         BossHealth = BossHealth - BossDamagePerHit
 
+        -- anyone who fires on boss gets credit for the kill
+        if BossKillers[player] == nil then
+            BossKillers[player] = player
+        end
+
+        -- update boss health bar for everyone
         local players = GetAllPlayers()
         for _,ply in pairs(players) do
             CallRemoteEvent(ply, "UpdateBossHealth", BossHealth, BossInitialHealth)
@@ -105,10 +107,10 @@ function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, st
             CreateExplosion(6, hitx, hity, hitz, true)
         end
 
+        -- boss kill
         if BossHealth <= 0 then
-            local x,y,z = GetObjectLocation(hitid)
-
             -- explosions in the sky
+            local x,y,z = GetObjectLocation(hitid)
             CreateCountTimer(function()
                 local ex,ey = randomPointInCircle(x, y, 5000)
                 CreateExplosion(9, ex, ey, z, true)
@@ -116,6 +118,10 @@ function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, st
             
             DespawnBoss()
             BossHealth = nil
+
+            for _,ply in pairs(BossKillers) do
+                BumpPlayerStat(ply, "boss_kills")
+            end
 
             for _,ply in pairs(players) do
                 CallRemoteEvent(ply, "ShowBanner", "MOTHERSHIP IS DOWN!", 5000)

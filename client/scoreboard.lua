@@ -9,7 +9,7 @@ end)
 
 AddEvent('OnKeyPress', function(key)
   if key == 'Tab' then
-    CallRemoteEvent('RequestScoreboardUpdate')
+    CallRemoteEvent('UpdateScoreboardData')
     SetWebVisibility(ScoreboardUI, WEB_HITINVISIBLE)
   end
 end)
@@ -20,7 +20,7 @@ AddEvent('OnKeyRelease', function(key)
   end
 end)
 
-AddRemoteEvent('OnServerScoreboardUpdate', function(players)
+AddRemoteEvent('OnGetScoreboardData', function(players)
   if players == nil then 
     return 
   end

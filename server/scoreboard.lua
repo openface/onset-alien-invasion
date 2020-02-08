@@ -1,9 +1,9 @@
--- indexed by player, but the scoreboard indexed by index
+-- indexed by player id
 local ScoreboardData = {}
 
-function RequestScoreboardUpdate(player)
+function UpdateScoreboardData(player)
   local _send = {}
-  for index,v in ipairs(GetAllPlayers()) do
+  for _,v in ipairs(GetAllPlayers()) do
     -- determine playtime
     local joined = 0
     if ScoreboardData[v]['joined'] == nil then 
@@ -13,7 +13,7 @@ function RequestScoreboardUpdate(player)
     end
 
     -- key by index to avoid sparse array issue with json_encode
-    _send[index] = {
+    table.insert(_send, {
       ['name'] = GetPlayerName(v),
       ['kills'] = ScoreboardData[v]['kills'],
       ['alien_kills'] = ScoreboardData[v]['alien_kills'],
@@ -22,12 +22,12 @@ function RequestScoreboardUpdate(player)
       ['deaths'] = ScoreboardData[v]['deaths'],
       ['joined'] = joined,
       ['ping'] = GetPlayerPing(v)
-    }
+    })
   end
   print(json_encode(_send))
-  CallRemoteEvent(player, 'OnServerScoreboardUpdate', json_encode(_send))
+  CallRemoteEvent(player, 'OnGetScoreboardData', json_encode(_send))
 end
-AddRemoteEvent('RequestScoreboardUpdate', RequestScoreboardUpdate)
+AddRemoteEvent('UpdateScoreboardData', UpdateScoreboardData)
 
 AddEvent('OnPlayerJoin', function(player)
   if ScoreboardData[player] == nil then

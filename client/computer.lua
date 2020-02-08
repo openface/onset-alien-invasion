@@ -38,6 +38,7 @@ AddEvent("OnKeyPress", function(key)
             -- interacting with satellite computer
             if GetPlayerPropertyValue(player, 'carryingPart') == nil then
                 ShowMessage("You are missing a critical computer part!", 5000)
+                SetSoundVolume(CreateSound("client/sounds/error.mp3"), 1)
             else
                 SetSoundVolume(CreateSound("client/sounds/satellite.mp3"), 1)
 

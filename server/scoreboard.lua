@@ -19,6 +19,7 @@ function UpdateScoreboardData(player)
       ['alien_kills'] = ScoreboardData[v]['alien_kills'],
       ['boss_kills'] = ScoreboardData[v]['boss_kills'],
       ['parts_collected'] = ScoreboardData[v]['parts_collected'],
+      ['loot_collected'] = ScoreboardData[v]['loot_collected'],
       ['deaths'] = ScoreboardData[v]['deaths'],
       ['joined'] = joined,
       ['ping'] = GetPlayerPing(v)
@@ -36,6 +37,7 @@ AddEvent('OnPlayerJoin', function(player)
       ['alien_kills'] = 0,
       ['boss_kills'] = 0,
       ['parts_collected'] = 0,
+      ['loot_collected'] = 0,
       ['deaths'] = 0,
       ['joined'] = GetTimeSeconds()
     }

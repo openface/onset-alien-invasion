@@ -12,24 +12,11 @@ html {
 
 #container {
   height: 80%;
-  width: 80%;
+  width: 65%;
   height: 580px;
   overflow-y: hidden;
   color:#fff;
   font-family: Arial;
-}
-
-#online {
-  float:left;
-  width:45%;
-  background: rgba(0,0,0,0.9);
-  border: solid 10px rgba(0,0,0,0.2);
-  border-radius: 5px;
-}
-
-#highscores {
-  float:right;
-  width:45%;
   background: rgba(0,0,0,0.9);
   border: solid 10px rgba(0,0,0,0.2);
   border-radius: 5px;
@@ -49,17 +36,19 @@ table {
 }
 
 table td {
-  padding: 7px 3px;
-  text-align:center;
+  padding: 10px 5px;
+  font-size:16px;
 }
 
 table td.stats {
-  text-align:left;
-  font-size:75%;
+  font-size:12px;
+  color:#ddd;
 }
 
 table td.stats span {
   font-weight:bold;
+  font-size:16px;
+  color:#fff;
 }
 
 table tr:nth-child(even)  {
@@ -67,13 +56,13 @@ table tr:nth-child(even)  {
 }
 
 table thead tr th {
-  text-align: center;
+  text-align: left;
   background: #3684ff;
   text-transform: uppercase;
   font-weight:normal;
   font-size:75%;
   text-shadow: 1px 1px #000;
-  padding:3px 3px;
+  padding:5px;
 }
 
 table thead tr td:first-child {

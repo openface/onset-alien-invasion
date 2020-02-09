@@ -1,23 +1,22 @@
 function LoadOnlinePlayers(players) {
-  $('#online table > tbody').empty();
+  $('table > tbody').empty();
   jQuery.each(players, function (i, p) {
-    $('#online table tbody').append(`<tr>
+    $('table tbody').append(`<tr>
       <td>${p.name}</td>
       <td class="stats">
-        <span>${p.player_kills}</span> players<br />
-        <span>${p.alien_kills}</span> aliens<br />
-        <span>${p.boss_kills}</span> motherships<br />
+        <span>${p.player_kills}</span> players,
+        <span>${p.alien_kills}</span> aliens,
+        <span>${p.boss_kills}</span> motherships
       </td>
-      <td>${p.parts_collected}</td>
+      <td class="stats">
+        <span>${p.parts_collected}</span> parts,
+        <span>${p.loot_collected}</span> loot boxes
+      </td>
       <td>${p.deaths}</td>
       <td>${SecondsToTime(p.joined)}</td>
       <td>${p.ping}ms</td>
     </tr>`);
   });
-}
-
-function LoadHighscores(highscores) {
-
 }
 
 function SecondsToTime(d) {
@@ -42,6 +41,7 @@ $(function () {
           "alien_kills": 0,
           "boss_kills": 1,
           "parts_collected": 2,
+          "loot_collected": 0,
           "deaths": 0,
           "joined": 82398,
           "ping": 1

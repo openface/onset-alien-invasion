@@ -19,15 +19,3 @@ You will be backed by the reinforcements from the military.  They will drop supp
 
 The satellite computer has enough power to communicate with the mothership. Search the island for parts that can be used to operate the satellite computer to reach
 the end game.
-
-### TODO
-
-- Scoreboard
-    - loot pickups
-    - alien kills
-    - player kills
-    - killed by player
-    - killed by alien
-    - mothership kills
-- Smooth the mothership event
-- Satellite operation / waves

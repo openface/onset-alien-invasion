@@ -4,6 +4,7 @@ local AlienAttackRange = 5000
 local AlienAttackDamage = 50
 local SafeLocation = { x = -102037, y = 194299, z = 1400 }
 local SafeRange = 8000
+local AlienRetargetCooldown = {} -- aliens re-target on every weapon hit w/ cooldown period
 
 -- TODO remove
 AddCommand("alien", function(player)
@@ -81,7 +82,10 @@ AddEvent("OnNPCSpawn", OnNPCSpawn)
 -- damage aliens
 AddEvent("OnPlayerWeaponShot", function(player, weapon, hittype, hitid, hitx, hity, hitz, startx, starty, startz, normalx, normaly, normalz)
     if (hittype == HIT_NPC and GetNPCPropertyValue(hitid, "type") == "alien") then
-        SetAlienTarget(hitid, player)
+        if (os.time() - (AlienRetargetCooldown[hitid] or 0) > 10) then
+            SetAlienTarget(hitid, player)
+            AlienRetargetCooldown[hitid] = os.time()
+        end
     end
 end)
 

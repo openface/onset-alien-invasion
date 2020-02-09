@@ -10,7 +10,7 @@ function LoadOnlinePlayers(players) {
       </td>
       <td class="stats">
         <span>${p.parts_collected}</span> parts,
-        <span>${p.loot_collected}</span> loot boxes
+        <span>${p.loot_collected}</span> lootboxes
       </td>
       <td>${p.deaths}</td>
       <td>${SecondsToTime(p.joined)}</td>

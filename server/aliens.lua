@@ -1,5 +1,4 @@
 local AlienHealth = 999
-local AlienRespawnTime = 20 * 1000
 local AlienAttackRange = 5000
 local AlienAttackDamage = 50
 local SafeLocation = { x = -102037, y = 194299, z = 1400 }
@@ -63,7 +62,7 @@ function SpawnAlienNearPlayer(player)
     --CreateObject(303, x, y, z+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
     local npc = CreateNPC(x, y, z+100, 90)
     SetNPCHealth(npc, AlienHealth)
-    SetNPCRespawnTime(npc, AlienRespawnTime)
+    SetNPCRespawnTime(npc, 99999999) -- disable respawns
     SetNPCPropertyValue(npc, 'clothing', math.random(23, 24))
     SetNPCPropertyValue(npc, 'type', 'alien')
     SetNPCPropertyValue(npc, 'location', { x, y, z })
@@ -85,6 +84,10 @@ AddEvent("OnNPCSpawn", OnNPCSpawn)
 -- damage aliens
 AddEvent("OnPlayerWeaponShot", function(player, weapon, hittype, hitid, hitx, hity, hitz, startx, starty, startz, normalx, normaly, normalz)
     if (hittype == HIT_NPC and GetNPCPropertyValue(hitid, "type") == "alien") then
+        -- hack to get around a bug where OnNPCDeath 
+        -- doesn't always report the killer
+        SetNPCPropertyValue(hitid, "shotby", player)
+
         -- headshot bonus
         local x,y,z = GetNPCLocation(hitid)
         local zfloor = z - 90
@@ -102,20 +105,34 @@ AddEvent("OnPlayerWeaponShot", function(player, weapon, hittype, hitid, hitx, hi
 end)
 
 AddEvent("OnNPCDeath", function(npc, killer)
-    if killer ~= 0 then
-        CallRemoteEvent(killer, 'AlienNoLongerAttacking')
-        AddPlayerChatAll(GetPlayerName(killer) .. ' has killed an alien!')
-        print(GetPlayerName(killer) .. ' has killed an alien')
-        BumpPlayerStat(killer, 'alien_kills')
+    local shotby = GetNPCPropertyValue(npc, "shotby")
+    -- hack to get around a bug where OnNPCDeath 
+    -- doesn't always report the killer
+    if killer == 0 and shotby ~= nil then
+        adjusted_killer = shotby
+    else
+        adjusted_killer = killer
     end
-    SetNPCPropertyValue(npc, 'target', nil, true)
+    print("OnNPCDeath npc: "..npc.." killer: "..killer)
+    print("adjusted_killer: "..adjusted_killer)
+    if adjusted_killer ~= 0 then
+        CallRemoteEvent(adjusted_killer, 'AlienNoLongerAttacking')
+        AddPlayerChatAll(GetPlayerName(adjusted_killer) .. ' has killed an alien!')
+        print(GetPlayerName(adjusted_killer) .. ' has killed an alien')
+        BumpPlayerStat(adjusted_killer, 'alien_kills')
+    end
+    SetNPCRagdoll(npc, true)
+    Delay(120 * 1000, function()
+        print("Despawn dead npc "..npc)
+        DestroyNPC(npc)
+    end)
 end)
 
 function SetAlienTarget(npc, player)
     local vehicle = GetPlayerVehicle(player)
     if vehicle == 0 then
         -- target is on foot
-        print("Alien targets player: "..GetPlayerName(player))
+        print("NPC targets player: "..GetPlayerName(player))
         SetNPCPropertyValue(npc, 'target', player, true)
 
         -- alien has a new target
@@ -123,7 +140,7 @@ function SetAlienTarget(npc, player)
         CallRemoteEvent(player, 'AlienAttacking', npc)
     else
         -- target is in a vehicle
-        print("Alien targets player: "..GetPlayerName(player))
+        print("NPC targets player in vehicle: "..GetPlayerName(player))
         SetNPCPropertyValue(npc, 'target', player, true)
 
         -- alien has a new target vehicle
@@ -161,7 +178,7 @@ function ResetAlien(npc)
             -- we found a target
             SetAlienTarget(npc, player)
         elseif (GetNPCPropertyValue(npc, 'target') == player) then
-            print "target out of range"
+            print "NPC target out of range"
             -- target is out of range, alien is sad
             local x, y, z = GetNPCLocation(npc)
             SetNPCTargetLocation(npc, x, y, z)
@@ -215,6 +232,7 @@ function OnNPCReachTarget(npc)
 
     if dist < 200 then
         -- we're in close range, attack player
+        print "NPC hit player"
         SetNPCAnimation(npc, "KUNGFU", false)
         ApplyPlayerDamage(target)
 
@@ -231,11 +249,11 @@ function OnNPCReachTarget(npc)
             Delay(8000, function()
                 AlienReturn(npc)
             end)
+            return
         end
-    else
-        -- can happen if alien reaches vehicle but player is not in it
-        SetAlienTarget(npc, target)
     end
+
+    SetAlienTarget(npc, target)
 end
 AddEvent("OnNPCReachTarget", OnNPCReachTarget)
 

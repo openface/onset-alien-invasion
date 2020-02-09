@@ -29,13 +29,7 @@ function OnPlayerPickupHit(player, pickup)
     if (GetPickupPropertyValue(pickup, 'type') ~= 'part') then
         return
     end
-
-    if (GetPlayerPropertyValue(player, 'carryingPart') ~= nil) then
-        -- already carrying a part
-        CallRemoteEvent(player, "ShowMessage", "Take your part to the satellite computer!", 5000)
-        return
-    end
-         
+        
     EquipPart(player)
 
     -- hide part pickup for 5 mins from player
@@ -47,15 +41,31 @@ end
 AddEvent("OnPlayerPickupHit", OnPlayerPickupHit)
 
 function EquipPart(player)
+    if (GetPlayerPropertyValue(player, 'carryingPart') ~= nil) then
+        -- already carrying a part
+        CallRemoteEvent(player, "ShowMessage", "Take your part to the satellite computer!")
+        return
+    end
+
     -- carry with left hand
     local x,y,z = GetPlayerLocation(player)
-    local object = CreateObject(PartObjectID, x, y, z)
-    SetObjectAttached(object, ATTACH_PLAYER, player, 10, -5, 0, 0, 0, 90, "hand_l")
+    local part = CreateObject(PartObjectID, x, y, z)
+    SetObjectAttached(part, ATTACH_PLAYER, player, 10, -5, 0, 0, 0, 90, "hand_l")
 
-    SetPlayerPropertyValue(player, 'carryingPart', object, true)
+    SetPlayerPropertyValue(player, 'carryingPart', part, true)
     AddPlayerChatAll(GetPlayerName(player)..' has found up a computer part!')
     CallRemoteEvent(player, "PartPickedup", pickup)
 end
+
+-- drop part on death
+AddEvent("OnPlayerDeath", function(player, killer)
+    local part = GetPlayerPropertyValue(player, "carryingPart")
+    if part ~= nil then
+        DestroyObject(part)
+    end
+    SetPlayerPropertyValue(player, 'carryingPart', nil, true)
+    CallRemoteEvent(player, "HideSatelliteWaypoint")
+end)
 
 -- TODO remove me
 AddCommand("part", function(player)

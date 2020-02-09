@@ -62,7 +62,9 @@ function OnPlayerDeath(player, killer)
     if vest ~= nil then
         DestroyObject(vest)
     end
+    SetPlayerPropertyValue(player, 'equippedVest', nil, true)
     
+    -- stats
     BumpPlayerStat(player, 'deaths')
     AddPlayerChat(player, "YOU ARE DEAD!  You must wait ".. PlayerRespawnSecs .." seconds to respawn...")
 end

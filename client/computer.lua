@@ -13,11 +13,16 @@ AddEvent("OnPackageStart", function()
 end)
 
 function ShowSatelliteWaypoint()
+    HideSatelliteWaypoint()
+    SatelliteWaypoint = CreateWaypoint(SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z+50, "Satellite Computer")
+end
+
+function HideSatelliteWaypoint()
     if SatelliteWaypoint ~= nil then
         DestroyWaypoint(SatelliteWaypoint)
     end
-    SatelliteWaypoint = CreateWaypoint(SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z+50, "Satellite Computer")
 end
+AddRemoteEvent("HideSatelliteWaypoint", HideSatelliteWaypoint)
 
 function ShowComputerTimer(loc)
     local x,y,z = GetPlayerLocation(GetPlayerId())

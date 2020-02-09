@@ -4,7 +4,9 @@ local LootWaypoint
 AddRemoteEvent('LootPickedup', function(pickup)
     SetSoundVolume(CreateSound("client/sounds/health_pickup.wav"), 1)
 
-    DestroyWaypoint(LootWaypoint)
+    if LootWaypoint ~= nil then
+        DestroyWaypoint(LootWaypoint)
+    end
 end)
 
 AddRemoteEvent('LootSpawned', function(pos, pickup)

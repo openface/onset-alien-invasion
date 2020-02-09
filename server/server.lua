@@ -15,6 +15,14 @@ AddCommand("players", function(player)
     end
 end)
 
+-- Setup world
+function OnPackageStart()
+    -- pistol pickup near spawn
+    local pickup = CreatePickup(1006, -103693.2421875, 192599.9375, 1250)
+    SetPickupPropertyValue(pickup, 'type', 'pistol')   
+end
+AddEvent("OnPackageStart", OnPackageStart)
+
 -- welcome message
 function OnPlayerJoin(player)
     local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 3000)
@@ -54,20 +62,10 @@ function OnPlayerDeath(player, killer)
         DestroyObject(vest)
     end
     
-
     BumpPlayerStat(player, 'deaths')
     AddPlayerChat(player, "DEAD!  You must wait ".. PlayerRespawnSecs .." seconds to respawn...")
 end
 AddEvent("OnPlayerDeath", OnPlayerDeath)
-
-
--- Setup world
-function OnPackageStart()
-    -- pistol pickup near spawn
-    local pickup = CreatePickup(1006, -103693.2421875, 192599.9375, 1250)
-    SetPickupPropertyValue(pickup, 'type', 'pistol')   
-end
-AddEvent("OnPackageStart", OnPackageStart)
 
 -- Pickup for pistol
 function OnPlayerPickupHit(player, pickup)

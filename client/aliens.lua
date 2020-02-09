@@ -19,6 +19,10 @@ AddRemoteEvent('AlienNoLongerAttacking', function()
     DestroySound(AmbientSound)
 end)
 
+AddEvent("OnPlayerSpawn", function()
+    DestroySound(AmbientSound)
+end)
+
 AddRemoteEvent("OnAlienHit", function(player)
     SetSoundVolume(CreateSound("client/sounds/pain.mp3"), 1)
 end)

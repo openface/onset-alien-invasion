@@ -200,6 +200,10 @@ end
 
 -- return alien back to starting position
 function AlienReturn(npc)
+    if not IsValidNPC(npc) then
+        return
+    end
+
     SetNPCAnimation(npc, "STOP", true)
     SetNPCPropertyValue(npc, 'target', nil, true)
 

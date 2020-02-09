@@ -82,6 +82,15 @@ AddEvent("OnNPCSpawn", OnNPCSpawn)
 -- damage aliens
 AddEvent("OnPlayerWeaponShot", function(player, weapon, hittype, hitid, hitx, hity, hitz, startx, starty, startz, normalx, normaly, normalz)
     if (hittype == HIT_NPC and GetNPCPropertyValue(hitid, "type") == "alien") then
+        -- headshot bonus
+        local x,y,z = GetNPCLocation(hitid)
+        local zfloor = z - 90
+        local health = GetNPCHealth(hitid)
+        if hitz > zfloor + 150 then
+            SetNPCHealth(hitid, health - 35)
+		end
+
+        -- retarget w/ cooldown
         if (os.time() - (AlienRetargetCooldown[hitid] or 0) > 10) then
             SetAlienTarget(hitid, player)
             AlienRetargetCooldown[hitid] = os.time()

@@ -124,7 +124,7 @@ function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, st
             end
 
             for _,ply in pairs(players) do
-                CallRemoteEvent(ply, "ShowBanner", "MOTHERSHIP IS DOWN!", 5000)
+                CallRemoteEvent(ply, "ShowBanner", "MOTHERSHIP IS DOWN!")
             end
         end
     end

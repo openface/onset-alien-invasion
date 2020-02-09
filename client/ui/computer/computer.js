@@ -45,7 +45,7 @@ function ShowSatelliteComputerComplete() {
 
         <p>Signal received.  Standby for response.</p>
     `);
-    $('#terminal-box').show().delay(3000).fadeOut('fast');;
+    $('#terminal-box').show().delay(3000).fadeOut('fast');
 }
 
 function HideComputer() {

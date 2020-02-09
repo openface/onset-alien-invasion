@@ -29,5 +29,5 @@ AddEvent("SelectCharacter", function(preset)
     SetPlayerPropertyValue(player, 'clothing', preset, true)
     SetPlayerClothingPreset(player, preset)
 
-    ShowBanner("WELCOME TO THE<br />INVASION!", 5000)
+    ShowBanner("WELCOME TO THE<br />INVASION!")
 end)

@@ -13,7 +13,7 @@ end)
 
 AddEvent("OnPlayerDeath", function(player, killer)
     SetPostEffect("ImageEffects", "VignetteIntensity", 2.0)
-    ShowBanner("YOU HAVE DIED", 7000)
+    ShowBanner("YOU HAVE DIED")
     SetCameraShakeRotation(0.0, 0.0, 1.0, 10.0, 0.0, 0.0)
     SetCameraShakeFOV(5.0, 5.0)
     PlayCameraShake(100000.0, 2.0, 1.0, 1.1)
@@ -36,15 +36,6 @@ end)
 AddEvent("OnPlayerTalking", function(player)
     SetPlayerLipMovement(player)
 end)
-
---[[
-function OnKeyPress(key)
-	if key == "F1" then
-		ShowBanner("YOU HAVE DIED", 5000)
-	end
-end
-AddEvent("OnKeyPress", OnKeyPress)
---]]
 
 AddRemoteEvent("ClientSetTime", function(time)
 	SetTime(time)

@@ -3,16 +3,18 @@ local LootWaypoint
 
 AddRemoteEvent('LootPickedup', function(pickup)
     SetSoundVolume(CreateSound("client/sounds/health_pickup.wav"), 1)
-
-    if LootWaypoint ~= nil then
-        DestroyWaypoint(LootWaypoint)
-    end
+    HideLootWaypoint()
 end)
 
-AddRemoteEvent('LootSpawned', function(pos, pickup)
+function HideLootWaypoint()
     if LootWaypoint ~= nil then
         DestroyWaypoint(LootWaypoint)
     end
+end
+AddRemoteEvent("HideLootWaypoint", HideLootWaypoint)
+
+AddRemoteEvent('LootSpawned', function(pos, pickup)
+    HideLootWaypoint()
 
     local x,y,z = GetPlayerLocation()
     if GetDistance3D(x, y, z, pos[1], pos[2], pos[3]) > LootNearbyRange then

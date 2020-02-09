@@ -49,7 +49,6 @@ function SpawnLootArea(pos)
     SetPickupPropertyValue(pickup, 'type', 'loot')
 
     -- notify players
-    local players = GetAllPlayers()
     for _,p in pairs(players) do
         CallRemoteEvent(p, 'LootSpawned', pos, pickup)
     end
@@ -57,21 +56,28 @@ end
 
 -- pickup loot
 function OnPlayerPickupHit(player, pickup)
-    if (GetPickupPropertyValue(pickup, 'type') == 'loot') then
-        CallRemoteEvent(player, 'LootPickedup', pickup)
+    if (GetPickupPropertyValue(pickup, 'type') != 'loot') then
+        return
+    end
 
-        -- random weapon
-        SetPlayerWeapon(player, math.random(6,20), 450, true, 1, true)
-        SetPlayerHealth(player, 100)
+    CallRemoteEvent(player, 'LootPickedup', pickup)
 
-        -- full armor
-        SetPlayerArmor(player, 100)
-        EquipVest(player)       
+    -- random weapon
+    SetPlayerWeapon(player, math.random(6,20), 450, true, 1, true)
+    SetPlayerHealth(player, 100)
 
-        DestroyPickup(pickup)
+    -- full armor
+    SetPlayerArmor(player, 100)
+    EquipVest(player)       
 
-        BumpPlayerStat(player, "loot_collected")
-        AddPlayerChatAll(GetPlayerName(player)..' has picked up a lootbox!')        
+    DestroyPickup(pickup)
+
+    BumpPlayerStat(player, "loot_collected")
+    AddPlayerChatAll(GetPlayerName(player)..' has picked up a lootbox!')
+    
+    -- remove waypoint for others
+    for _,p in pairs(GetAllPlayers()) do
+        CallRemoteEvent(p, "HideLootWaypoint")
     end
 end
 AddEvent("OnPlayerPickupHit", OnPlayerPickupHit)

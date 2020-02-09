@@ -33,6 +33,7 @@ function OnPlayerJoin(player)
     SetPlayerRespawnTime(player, PlayerRespawnSecs * 1000)
 	AddPlayerChatAll('<span color="#eeeeeeaa">'..GetPlayerName(player)..' has joined the server</>')
 	AddPlayerChatAll('<span color="#eeeeeeaa">There are '..GetPlayerCount()..' players on the server</>')
+    AddPlayerChatAll('<span color="#eeeeeeaa">Hit [T] to chat and [TAB] for scoreboard</>')
     CallRemoteEvent(player, "ShowCharacterSelection")
 end
 AddEvent("OnPlayerJoin", OnPlayerJoin)
@@ -63,7 +64,7 @@ function OnPlayerDeath(player, killer)
     end
     
     BumpPlayerStat(player, 'deaths')
-    AddPlayerChat(player, "DEAD!  You must wait ".. PlayerRespawnSecs .." seconds to respawn...")
+    AddPlayerChat(player, "YOU ARE DEAD!  You must wait ".. PlayerRespawnSecs .." seconds to respawn...")
 end
 AddEvent("OnPlayerDeath", OnPlayerDeath)
 
@@ -83,8 +84,9 @@ AddEvent("OnPlayerSpawn", OnPlayerSpawn)
 
 -- Chat
 function OnPlayerChat(player, message)
-    local fullchatmessage = GetPlayerName(player)..' ('..player..'): '..message
-    AddPlayerChatAll(fullchatmessage)
+    local formatted_name = '<span color="#eeeeeeaa" size="16">'..GetPlayerName(player)..':</>'
+    local formatted_message = '<span size="16">'..message..'</>'
+    AddPlayerChatAll(formatted_name .. ' ' .. formatted_message)
 end
 AddEvent("OnPlayerChat", OnPlayerChat)
 

@@ -48,6 +48,13 @@ function OnPlayerDeath(player, killer)
         print(GetPlayerName(player)..' has been taken')
     end
 
+    -- destroy vest if equipped
+    local vest = GetPlayerPropertyValue(player, "equippedVest")
+    if vest ~= nil then
+        DestroyObject(vest)
+    end
+    
+
     BumpPlayerStat(player, 'deaths')
     AddPlayerChat(player, "DEAD!  You must wait ".. PlayerRespawnSecs .." seconds to respawn...")
 end

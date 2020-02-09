@@ -66,7 +66,7 @@ function OnPlayerPickupHit(player, pickup)
 
         -- full armor
         SetPlayerArmor(player, 100)
-        EquipVest(player)
+        EquipVest(player)       
 
         DestroyPickup(pickup)
 
@@ -79,4 +79,5 @@ function EquipVest(player)
     local x,y,z = GetPlayerLocation(player)
     local vest = CreateObject(843, x, y, z)
     SetObjectAttached(vest, ATTACH_PLAYER, player, -17, 0, 0, 270, 0, 0, "spine_02")
+    SetPlayerPropertyValue(player, "equippedVest", vest)
 end

@@ -121,7 +121,7 @@ end
 
 -- alien tick
 function ResetAlien(npc)
-    health = GetNPCHealth(npc)
+    local health = GetNPCHealth(npc)
     if (health == false or health <= 0) then
         return
     end
@@ -152,6 +152,11 @@ end
 -- kills players when reached
 function OnNPCReachTarget(npc)
     if GetNPCPropertyValue(npc, 'type') ~= 'alien' then
+        return
+    end
+
+    local health = GetNPCHealth(npc)
+    if (health == false or health <= 0) then
         return
     end
 

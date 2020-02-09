@@ -56,7 +56,7 @@ end
 
 -- pickup loot
 function OnPlayerPickupHit(player, pickup)
-    if (GetPickupPropertyValue(pickup, 'type') != 'loot') then
+    if (GetPickupPropertyValue(pickup, 'type') ~= 'loot') then
         return
     end
 

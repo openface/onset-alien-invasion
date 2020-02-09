@@ -73,7 +73,7 @@ end
 
 function OnNPCSpawn(npc)
     if GetNPCPropertyValue(npc, 'type') == 'alien' then
-        print "OnNPCSpawn"
+        print("OnNPCSpawn alien "..npc)
         SetNPCHealth(npc, AlienHealth)
 
         local x,y,z = GetNPCLocation(npc)
@@ -161,6 +161,7 @@ function ResetAlien(npc)
             -- we found a target
             SetAlienTarget(npc, player)
         elseif (GetNPCPropertyValue(npc, 'target') == player) then
+            print "target out of range"
             -- target is out of range, alien is sad
             local x, y, z = GetNPCLocation(npc)
             SetNPCTargetLocation(npc, x, y, z)

@@ -3,26 +3,27 @@ local ScoreboardData = {}
 
 function UpdateScoreboardData(player)
   local _send = {}
-  for _,v in ipairs(GetAllPlayers()) do
+  for _,ply in pairs(GetAllPlayers()) do
+
     -- determine playtime
     local joined = 0
-    if ScoreboardData[v]['joined'] == nil then 
+    if ScoreboardData[ply]['joined'] == nil then 
       joined = GetTimeSeconds() 
     else 
-      joined = GetTimeSeconds() - ScoreboardData[v]['joined']
+      joined = GetTimeSeconds() - ScoreboardData[ply]['joined']
     end
 
     -- key by index to avoid sparse array issue with json_encode
     table.insert(_send, {
-      ['name'] = GetPlayerName(v),
-      ['player_kills'] = ScoreboardData[v]['player_kills'],
-      ['alien_kills'] = ScoreboardData[v]['alien_kills'],
-      ['boss_kills'] = ScoreboardData[v]['boss_kills'],
-      ['parts_collected'] = ScoreboardData[v]['parts_collected'],
-      ['loot_collected'] = ScoreboardData[v]['loot_collected'],
-      ['deaths'] = ScoreboardData[v]['deaths'],
+      ['name'] = GetPlayerName(ply),
+      ['player_kills'] = ScoreboardData[ply]['player_kills'],
+      ['alien_kills'] = ScoreboardData[ply]['alien_kills'],
+      ['boss_kills'] = ScoreboardData[ply]['boss_kills'],
+      ['parts_collected'] = ScoreboardData[ply]['parts_collected'],
+      ['loot_collected'] = ScoreboardData[ply]['loot_collected'],
+      ['deaths'] = ScoreboardData[ply]['deaths'],
       ['joined'] = joined,
-      ['ping'] = GetPlayerPing(v)
+      ['ping'] = GetPlayerPing(ply)
     })
   end
   print(json_encode(_send))
@@ -32,7 +33,7 @@ AddRemoteEvent('UpdateScoreboardData', UpdateScoreboardData)
 
 AddEvent('OnPlayerJoin', function(player)
   if ScoreboardData[player] == nil then
-    local _new = {
+    ScoreboardData[player] = {
       ['player_kills'] = 0,
       ['alien_kills'] = 0,
       ['boss_kills'] = 0,
@@ -41,23 +42,12 @@ AddEvent('OnPlayerJoin', function(player)
       ['deaths'] = 0,
       ['joined'] = GetTimeSeconds()
     }
-
-    ScoreboardData[player] = _new
   end
 end)
 
 AddEvent('OnPlayerQuit', function(player)
   if ScoreboardData[player] ~= nil then
-    local _index = 0
-    for _i, v in pairs(ScoreboardData) do
-      if v == player then
-        _index = _i
-      end
-    end
-
-    if _index ~= 0 then
-      table.remove(ScoreboardData, _index)
-    end
+    ScoreboardData[player] = nil
   end
 end)
 

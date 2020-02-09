@@ -1,12 +1,13 @@
 local PartsCollected = 0
 local PartsRequired = 10
+local SatelliteComputerText
 
 function OnPackageStart()
     -- central computer
     CreateText3D("Press E to Interact", 15, -106279.4140625, 193854.59375, 1399.1424560547 + 130, 0,0,0)
 
     -- satellite computer
-    CreateText3D("Press E to Interact", 15, -103004.5234375, 201067.09375, 2203.3188476563 + 130, 0, 0, 0)
+    SatelliteComputerText = CreateText3D("Press E to Interact", 20, -103004.5234375, 201067.09375, 2203.3188476563 + 130, 0, 0, 0)
 end
 AddEvent("OnPackageStart", OnPackageStart)
 
@@ -17,7 +18,7 @@ AddRemoteEvent("InteractSatelliteComputer", function(player)
 
         PartsCollected = PartsCollected + 1
 
-        AddPlayerChatAll(GetPlayerName(player) .. " acquired satellite part "..PartsCollected.." / "..PartsRequired)
+        AddPlayerChatAll(GetPlayerName(player) .. " acquired satellite part "..PartsCollected.." of "..PartsRequired.."!")
         print(GetPlayerName(player).. " acquired satellite part "..PartsCollected.." / "..PartsRequired)
 
         SetPlayerPropertyValue(player, 'carryingPart', nil, true)
@@ -38,5 +39,7 @@ AddRemoteEvent("InteractSatelliteComputer", function(player)
                 CallEvent("SpawnBoss")
             end)
         end
+
+        SetText3DText(SatelliteComputerText, "Parts Collected ("..PartsCollected.."/"..PartsRequired..") ~ Press E to Interact")
     end
 end)

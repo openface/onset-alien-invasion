@@ -20,13 +20,17 @@ html {
   background: rgba(0,0,0,0.9);
   border: solid 10px rgba(0,0,0,0.2);
   border-radius: 5px;
+  box-shadow: 5px 5px 15px #000;
 }
 
 h3 {
   text-transform: uppercase;
   font-weight:normal;
   margin:0;
-  padding:5px 0;
+  padding:10px 0;
+  font-family: impact;
+  text-shadow: 3px 3px black;
+  text-align:center;
 }
 
 table {
@@ -45,10 +49,11 @@ table td.stats {
   color:#ddd;
 }
 
-table td.stats span {
+table td span {
   font-weight:bold;
-  font-size:16px;
+  font-size:20px;
   color:#fff;
+  vertical-align: middle;
 }
 
 table tr:nth-child(even)  {

@@ -12,7 +12,7 @@ function LoadOnlinePlayers(players) {
         <span>${p.parts_collected}</span> parts,
         <span>${p.loot_collected}</span> lootboxes
       </td>
-      <td>${p.deaths}</td>
+      <td><span>${p.deaths}</span></td>
       <td>${SecondsToTime(p.joined)}</td>
       <td>${p.ping}ms</td>
     </tr>`);

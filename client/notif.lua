@@ -29,6 +29,7 @@ AddRemoteEvent("ShowMessage", function(msg)
 end)
 
 -- TODO remove me
+--[[
 function OnKeyRelease(key)
 	if key == "F1" then
 		ShowBanner("YOU HAVE DIED")
@@ -37,3 +38,4 @@ function OnKeyRelease(key)
     end
 end
 AddEvent("OnKeyRelease", OnKeyRelease)
+]]--

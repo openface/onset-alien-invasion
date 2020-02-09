@@ -1,10 +1,6 @@
 # Alien Invasion Gamemode for Onset
 
-Alien Invasion is a simple gamemode for Onset (https://playonset.com/).
-
-## Installation
-
-Simply place the alien_invasion package into your onset packages directory and add it to your server_config.json.
+Alien Invasion is a gamemode for Onset (https://playonset.com/).
 
 ## The Game
 

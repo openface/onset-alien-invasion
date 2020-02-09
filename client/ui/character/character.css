@@ -1,9 +1,9 @@
 
 #container {
     width:600px;
-    margin:0 auto;
+    margin:50px auto;
     background: rgba(0,0,0,0.4);
-    padding:15px;
+    padding:5px 15px;
     border:10px solid rgba(0,0,0,0.1);
     border-radius:8px;
 }
@@ -55,3 +55,17 @@
     padding:7px;
     width:100%;
 }
+
+#info {
+    background:rgba(0,0,0,0.3);
+    border-radius:10px;
+    padding:5px;
+    width:93%;
+    margin:10px auto;
+    font-family:monospace;
+    font-size:14px;
+    color:#fff;
+    text-shadow: 1px 1px black;
+}
+#info h3 {margin-top:0;text-align:center;}
+#info ul {margin:0;}

@@ -1,7 +1,7 @@
 AddEvent("OnPlayerSpawn", function()
     StartCameraFade(1.0, 0.0, 13.0, "#000")
     local player = GetPlayerId()
-    local clothing = GetPlayerPropertyValue(player, 'clothing')
+    local clothing = GetPlayerPropertyValue(player, "clothing")
     if clothing == nil then
         clothing = 25
     end
@@ -20,10 +20,10 @@ AddEvent("OnPlayerDeath", function(player, killer)
 end)
 
 AddEvent("OnNPCStreamIn", function(npc)
-    local clothing = GetNPCPropertyValue(npc, 'clothing')
+    local clothing = GetNPCPropertyValue(npc, "clothing")
   	if (clothing ~= nil) then
         SetNPCClothingPreset(npc, clothing)
-    end  
+    end
 end)
 
 AddEvent("OnPlayerStreamIn", function(player)

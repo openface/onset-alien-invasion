@@ -59,7 +59,6 @@ function SpawnAlienNearPlayer(player)
         return
     end
 
-    print("Spawning alien near player "..GetPlayerName(player))
     local x,y = randomPointInCircle(x, y, AlienAttackRange + 1000) -- 1000 buffer
     --CreateObject(303, x, y, z+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
     local npc = CreateNPC(x, y, z+100, 90)
@@ -68,10 +67,13 @@ function SpawnAlienNearPlayer(player)
     SetNPCPropertyValue(npc, 'clothing', math.random(23, 24))
     SetNPCPropertyValue(npc, 'type', 'alien')
     SetNPCPropertyValue(npc, 'location', { x, y, z })
+
+    print("Spawned alien "..npc.." near player "..GetPlayerName(player))
 end
 
 function OnNPCSpawn(npc)
     if GetNPCPropertyValue(npc, 'type') == 'alien' then
+        print "OnNPCSpawn"
         SetNPCHealth(npc, AlienHealth)
 
         local x,y,z = GetNPCLocation(npc)
@@ -176,6 +178,7 @@ end
 
 -- kills players when reached
 function OnNPCReachTarget(npc)
+    print "NPC reached target"
     if GetNPCPropertyValue(npc, 'type') ~= 'alien' then
         return
     end
@@ -188,42 +191,49 @@ function OnNPCReachTarget(npc)
     local returning = GetNPCPropertyValue(npc, 'returning')
     if returning == true then
         -- alien is back in starting position
+        print "Despawning alien"
         DestroyNPC(npc)
         return
     end
 
     local target = GetNPCPropertyValue(npc, 'target')
     if target == nil then
+        print "no target"
         -- alien reached a target but there is no target property?
         return
     end
 
-    if (not IsPlayerDead(target)) then
-        local x, y, z = GetNPCLocation(npc)
-        local px, py, pz = GetPlayerLocation(target)
-        local dist = GetDistance3D(x, y, z, px, py, pz)
+    if IsPlayerDead(target) then
+        -- target was dead when we got here
+        return
+    end
 
-        if dist < 200 then
-            -- attack player
-            SetNPCAnimation(npc, "KUNGFU", false)
-            ApplyPlayerDamage(target)
-        else
-            -- can happen if alien reaches vehicle but player is not in it
-            SetAlienTarget(npc, target)
+    local x, y, z = GetNPCLocation(npc)
+    local px, py, pz = GetPlayerLocation(target)
+    local dist = GetDistance3D(x, y, z, px, py, pz)
+
+    if dist < 200 then
+        -- we're in close range, attack player
+        SetNPCAnimation(npc, "KUNGFU", false)
+        ApplyPlayerDamage(target)
+
+        if GetPlayerHealth(target) <= 0 then
+            -- critical hit, dance and go home
+            Delay(2000, function()
+                local dances = { 
+                    "DANCE01", "DANCE02", "DANCE03", "DANCE04", "DANCE05", "DANCE06", "DANCE07", "DANCE08",
+                    "DANCE09", "DANCE10", "DANCE11", "DANCE12", "DANCE13", "DANCE14", "DANCE15", "DANCE16",
+                    "DANCE17", "DANCE18", "DANCE19", "DANCE20"
+                }
+                SetNPCAnimation(npc, dances[ math.random(#dances) ], true)
+            end)
+            Delay(8000, function()
+                AlienReturn(npc)
+            end)
         end
     else
-        -- player already dead, dance and go home
-        Delay(2000, function()
-            local dances = { 
-                "DANCE01", "DANCE02", "DANCE03", "DANCE04", "DANCE05", "DANCE06", "DANCE07", "DANCE08",
-                "DANCE09", "DANCE10", "DANCE11", "DANCE12", "DANCE13", "DANCE14", "DANCE15", "DANCE16",
-                "DANCE17", "DANCE18", "DANCE19", "DANCE20"
-            }
-            SetNPCAnimation(npc, dances[ math.random(#dances) ], true)
-        end)
-        Delay(8000, function()
-            AlienReturn(npc)
-        end)
+        -- can happen if alien reaches vehicle but player is not in it
+        SetAlienTarget(npc, target)
     end
 end
 AddEvent("OnNPCReachTarget", OnNPCReachTarget)

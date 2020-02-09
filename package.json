@@ -26,7 +26,6 @@
 		"client/computer.lua",
 		"client/character.lua",
 		"client/scoreboard.lua",
-		"client/undermap.lua",
 		"client/water.lua"
 	],
 	"files": [

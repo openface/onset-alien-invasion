@@ -96,21 +96,3 @@ AddRemoteEvent("HandlePlayerInWater", function(player)
     SetPlayerHealth(player, GetPlayerHealth(player) - 10)
 end)
 
-AddRemoteEvent("UnderMapFix", function(player, terrain)
-	local x, y, z = GetPlayerLocation(player)
-	CallEvent("SafeTeleport", player, x, y, terrain + 200)
-end)
-
--- debug helper
-function dump(o)
-   if type(o) == 'table' then
-      local s = '{ '
-      for k,v in pairs(o) do
-         if type(k) ~= 'number' then k = '"'..k..'"' end
-         s = s .. '['..k..'] = ' .. dump(v) .. ','
-      end
-      return s .. '} '
-   else
-      return tostring(o)
-   end
-end

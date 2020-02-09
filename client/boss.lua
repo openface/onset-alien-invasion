@@ -1,4 +1,5 @@
 local BossUI
+local ClearWeather = 0
 
 AddEvent("OnPackageStart", function()
     BossUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
@@ -6,6 +7,7 @@ AddEvent("OnPackageStart", function()
     SetWebAlignment(BossUI, 0.0, 0.0)
     SetWebAnchors(BossUI, 0.0, 0.0, 1.0, 1.0)
     SetWebVisibility(BossUI, WEB_HIDDEN)
+    SetWeather(ClearWeather)
 end)
 
 AddEvent("OnObjectStreamIn", function(object)
@@ -31,7 +33,7 @@ AddEvent("OnObjectStreamIn", function(object)
 end)
 
 AddRemoteEvent("DespawnBoss", function()
-    SetWeather(4)
+    SetWeather(ClearWeather)
     SetPostEffect("ImageEffects", "VignetteIntensity", 0)
 
     ExecuteWebJS(BossUI, "HideBossHealth()")

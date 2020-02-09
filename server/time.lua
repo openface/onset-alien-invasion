@@ -1,4 +1,4 @@
-local time = 8
+local time = 10 -- server start time
 
 function SyncTime()
     for _,ply in pairs(GetAllPlayers()) do

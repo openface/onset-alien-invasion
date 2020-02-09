@@ -2,6 +2,7 @@
 	"author": "openface",
 	"version": "0.1",
 	"server_scripts": [
+		"server/util.lua",
 		"server/server.lua",
 		"server/aliens.lua",
 		"server/loot.lua",
@@ -9,7 +10,6 @@
 		"server/parts.lua",
 		"server/boss.lua",
 		"server/computer.lua",
-		"server/util.lua",
 		"server/time.lua",
 		"server/world.lua",
 		"server/scoreboard.lua",

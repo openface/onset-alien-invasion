@@ -18,7 +18,11 @@ AddRemoteEvent("InteractSatelliteComputer", function(player)
 
         PartsCollected = PartsCollected + 1
 
-        AddPlayerChatAll(GetPlayerName(player) .. " acquired satellite part "..PartsCollected.." of "..PartsRequired.."!")
+        local percentage_complete = math.floor(PartsCollected / PartsRequired * 100.0)
+
+        AddPlayerChatAll(GetPlayerName(player) .. " acquired a satellite part!")
+        AddPlayerChatAll("Satellite communications are now "..percentage_complete.."% operational!")
+
         print(GetPlayerName(player).. " acquired satellite part "..PartsCollected.." / "..PartsRequired)
 
         SetPlayerPropertyValue(player, 'carryingPart', nil, true)
@@ -27,7 +31,7 @@ AddRemoteEvent("InteractSatelliteComputer", function(player)
         
         BumpPlayerStat(player, 'parts_collected')
 
-        CallRemoteEvent(player, "ShowSatelliteComputer", PartsCollected, PartsRequired)
+        CallRemoteEvent(player, "ShowSatelliteComputer", percentage_complete)
 
         if PartsCollected >= PartsRequired then
             print(GetPlayerName(player).." completed the satellite transmission")
@@ -40,7 +44,7 @@ AddRemoteEvent("InteractSatelliteComputer", function(player)
             end)
             SetText3DText(SatelliteComputerText, "Press [E] to Interact")
         else
-            SetText3DText(SatelliteComputerText, "Parts Collected ("..PartsCollected.."/"..PartsRequired..") ~ Press [E] to Interact")
+            SetText3DText(SatelliteComputerText, "STATUS: "..percentage_complete.."% OPERATIONAL ~ Press [E] to Interact")
         end
     end
 end)

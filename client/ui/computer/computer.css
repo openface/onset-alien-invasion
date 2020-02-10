@@ -27,7 +27,7 @@ html {
     color: white;
     font: 1.3rem Inconsolata, monospace;
     text-shadow: 0 0 5px #C8C8C8;
-    padding:0 20px;
+    padding:20px 20px;
 }
 #terminal::after {
   content: "";

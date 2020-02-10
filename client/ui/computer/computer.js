@@ -25,11 +25,13 @@ function ShowGarageComputer() {
     $('#terminal-box').show();
 }
 
-function ShowSatelliteComputer(collected, required) {
+function ShowSatelliteComputer(percentage) {
     $('#terminal-box #content').html(`
+
+        login&gt; ************
         <p>Access granted.</p>
 
-        <p>Part ${collected} of ${required} has been acquired!</p>
+        <p>SATELLITE COMMUNICATIONS ARE NOW <b>${percentage}%</b> OPERATIONAL...</p>
 
         <p>Continue collecting satellite parts to initiate transmission
         from the satellite.  Once enough parts are acquired, the satellite

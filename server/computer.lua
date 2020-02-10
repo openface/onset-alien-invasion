@@ -1,13 +1,15 @@
 local PartsCollected = 0
 local PartsRequired = 10
-local SatelliteComputerText
+local Satellite3DText
 
 function OnPackageStart()
     -- central computer
     CreateText3D("Press [E] to Interact", 15, -106279.4140625, 193854.59375, 1399.1424560547 + 130, 0,0,0)
 
     -- satellite computer
-    SatelliteComputerText = CreateText3D("Press [E] to Interact", 20, -103004.5234375, 201067.09375, 2203.3188476563 + 130, 0, 0, 0)
+    CreateText3D("Press [E] to Interact", 15, -103004.5234375, 201067.09375, 2203.3188476563 + 130, 0, 0, 0)
+
+    Satellite3DText = CreateText3D("STATUS: 0% OPERATIONAL", 50, -103577.703125, 200838.734375, 2203.2883300781 + 200, 0, 0, 0)
 end
 AddEvent("OnPackageStart", OnPackageStart)
 
@@ -37,14 +39,17 @@ AddRemoteEvent("InteractSatelliteComputer", function(player)
             print(GetPlayerName(player).." completed the satellite transmission")
             AddPlayerChatAll(GetPlayerName(player).." completed the satellite transmission!")
 
+            -- reset satellite status
             PartsCollected = 0
+            SetText3DText(Satellite3DText, "STATUS: 0% OPERATIONAL")
             CallRemoteEvent(player, "SatelliteTransmission")
+
+            -- call mothership
             Delay(15000, function()
                 CallEvent("SpawnBoss")
             end)
-            SetText3DText(SatelliteComputerText, "Press [E] to Interact")
         else
-            SetText3DText(SatelliteComputerText, "STATUS: "..percentage_complete.."% OPERATIONAL ~ Press [E] to Interact")
+            SetText3DText(Satellite3DText, "STATUS: "..percentage_complete.."% OPERATIONAL")
         end
     end
 end)

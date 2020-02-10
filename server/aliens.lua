@@ -293,13 +293,16 @@ function GetNearestPlayer(npc)
 	local nearest_dist = 999999.9
 	local x, y, z = GetNPCLocation(npc)
 
-	for _,v in pairs(plys) do
-		local x2, y2, z2 = GetPlayerLocation(v)
-		local dist = GetDistance3D(x, y, z, x2, y2, z2)
-		if dist < nearest_dist then
-			nearest_dist = dist
-			found = v
-		end
+    for _,v in pairs(plys) do
+        local dim = GetPlayerDimension(v)
+        if dim == 0 then
+            local x2, y2, z2 = GetPlayerLocation(v)
+            local dist = GetDistance3D(x, y, z, x2, y2, z2)
+            if dist < nearest_dist then
+                nearest_dist = dist
+                found = v
+            end
+        end
 	end
 	return found, nearest_dist
 end

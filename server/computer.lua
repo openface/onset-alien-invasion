@@ -15,41 +15,43 @@ AddEvent("OnPackageStart", OnPackageStart)
 
 AddRemoteEvent("InteractSatelliteComputer", function(player)
     local object = GetPlayerPropertyValue(player, 'carryingPart')
-    if IsValidObject(object) then
-        SetPlayerAnimation(player, "COMBINE")
+    if not IsValidObject(object) then
+        return
+    end
 
-        PartsCollected = PartsCollected + 1
+    SetPlayerAnimation(player, "COMBINE")
 
-        local percentage_complete = math.floor(PartsCollected / PartsRequired * 100.0)
+    PartsCollected = PartsCollected + 1
 
-        AddPlayerChatAll(GetPlayerName(player) .. " acquired a satellite part!")
-        AddPlayerChatAll("Satellite communications are now "..percentage_complete.."% operational!")
+    local percentage_complete = math.floor(PartsCollected / PartsRequired * 100.0)
 
-        print(GetPlayerName(player).. " acquired satellite part "..PartsCollected.." / "..PartsRequired)
+    AddPlayerChatAll(GetPlayerName(player) .. " acquired a satellite part!")
+    AddPlayerChatAll("Satellite communications are now "..percentage_complete.."% operational!")
 
-        SetPlayerPropertyValue(player, 'carryingPart', nil, true)
-        SetObjectDetached(object)
-        DestroyObject(object)
-        
-        BumpPlayerStat(player, 'parts_collected')
+    print(GetPlayerName(player).. " acquired satellite part "..PartsCollected.." / "..PartsRequired)
 
-        CallRemoteEvent(player, "ShowSatelliteComputer", percentage_complete)
+    SetPlayerPropertyValue(player, 'carryingPart', nil, true)
+    SetObjectDetached(object)
+    DestroyObject(object)
+    
+    BumpPlayerStat(player, 'parts_collected')
 
-        if PartsCollected >= PartsRequired then
-            print(GetPlayerName(player).." completed the satellite transmission")
-            AddPlayerChatAll(GetPlayerName(player).." completed the satellite transmission!")
+    CallRemoteEvent(player, "ShowSatelliteComputer", percentage_complete)
 
-            -- reset satellite status
-            PartsCollected = 0
-            SetText3DText(Satellite3DText, "STATUS: 0% OPERATIONAL")
-            CallRemoteEvent(player, "SatelliteTransmission")
+    if PartsCollected >= PartsRequired then
+        print(GetPlayerName(player).." completed the satellite transmission")
+        AddPlayerChatAll(GetPlayerName(player).." completed the satellite transmission!")
 
-            -- call mothership
-            Delay(15000, function()
-                CallEvent("SpawnBoss")
-            end)
-        else
-            SetText3DText(Satellite3DText, "STATUS: "..percentage_complete.."% OPERATIONAL")
-        end
+        -- reset satellite status
+        PartsCollected = 0
+        SetText3DText(Satellite3DText, "STATUS: 0% OPERATIONAL")
+        CallRemoteEvent(player, "SatelliteTransmission")
+
+        -- call mothership
+        Delay(15000, function()
+            CallEvent("SpawnBoss")
+        end)
+    else
+        SetText3DText(Satellite3DText, "STATUS: "..percentage_complete.."% OPERATIONAL")
     end
 end)

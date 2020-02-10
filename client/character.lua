@@ -28,6 +28,4 @@ AddEvent("SelectCharacter", function(preset)
     local player = GetPlayerId()    
     SetPlayerPropertyValue(player, 'clothing', preset, true)
     SetPlayerClothingPreset(player, preset)
-
-    ShowBanner("WELCOME TO THE<br />INVASION!")
 end)

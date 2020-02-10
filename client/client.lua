@@ -46,6 +46,10 @@ AddEvent("OnPlayerSkydive", function()
     ShowMessage("Hit [SPACE] to open parachute")
 end)
 
+AddEvent("OnPlayerParachuteOpen", function()
+    ShowBanner("WELCOME TO THE<br />INVASION!")
+end)
+
 AddEvent("OnPlayerSkydiveCrash", function()
     CallRemoteEvent("DropParachute")
 end)

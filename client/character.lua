@@ -14,6 +14,8 @@ AddRemoteEvent("ShowCharacterSelection", function()
 	SetIgnoreMoveInput(true);
 	SetInputMode(INPUT_GAMEANDUI)
     SetWebVisibility(CharUI, WEB_VISIBLE)
+
+    SetSoundVolume(CreateSound("client/sounds/ambience.mp3"), 1)
 end)
 
 AddEvent("SelectCharacter", function(preset)
@@ -28,4 +30,6 @@ AddEvent("SelectCharacter", function(preset)
     local player = GetPlayerId()    
     SetPlayerPropertyValue(player, 'clothing', preset, true)
     SetPlayerClothingPreset(player, preset)
+
+    StartCameraFade(1.0, 0.0, 13.0, "#000")
 end)

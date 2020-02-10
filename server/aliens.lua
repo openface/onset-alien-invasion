@@ -28,23 +28,14 @@ end
 AddEvent("OnPackageStart", OnPackageStart)
 
 function SpawnAliens()
-    -- destroy any existing aliens
-    --[[
-    for _,npc in pairs(GetAllNPC()) do
-        if (GetNPCPropertyValue(npc, 'type') == 'alien') then
-            -- only destroy aliens not currently attacking
-            if (GetNPCPropertyValue(npc, 'target') == nil) then
-                print "Despawning alien"
-                DestroyNPC(npc)
-            end
-        end
-    end
-    --]]
     -- create alien npcs
     for _,ply in pairs(GetAllPlayers()) do
-        -- chance to spawn
-        if math.random(1,3) == 1 then
-            SpawnAlienNearPlayer(ply)
+        local dim = GetPlayerDimension(ply)
+        if dim == 0 then
+            -- chance to spawn
+            if math.random(1,3) == 1 then
+                SpawnAlienNearPlayer(ply)
+            end
         end
     end
 end

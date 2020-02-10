@@ -88,6 +88,12 @@ function OnPlayerSpawn(player)
 end
 AddEvent("OnPlayerSpawn", OnPlayerSpawn)
 
+-- Log auth
+function OnPlayerSteamAuth(player)
+    print("Player "..GetPlayerName(player).." (ID "..player..") authenticated with steam ID "..GetPlayerSteamId(player))
+end
+AddEvent("OnPlayerSteamAuth", OnPlayerSteamAuth)
+
 -- Chat
 function OnPlayerChat(player, message)
     local formatted_name = '<span color="#eeeeeeaa" size="16">'..GetPlayerName(player)..':</>'

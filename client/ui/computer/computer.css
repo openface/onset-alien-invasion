@@ -39,3 +39,14 @@ html {
   background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px);
   pointer-events: none;
 }
+
+.blinking {
+    animation: blinkingText 1.2s infinite;
+}
+@keyframes blinkingText {
+    0%{     color: #FFF;    }
+    49%{    color: #FFF; }
+    60%{    color: transparent; }
+    99%{    color:transparent;  }
+    100%{   color: #FFF;    }
+}

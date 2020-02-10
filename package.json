@@ -40,6 +40,7 @@
 		"client/sounds/transmission.mp3",
 		"client/sounds/laser.mp3",
 		"client/sounds/error.mp3",
+		"client/sounds/alert.mp3",
 
 		"client/ui/jquery.js",
 		"client/ui/ui.js",

@@ -1,5 +1,5 @@
 local PartsCollected = 0
-local PartsRequired = 10
+local PartsRequired = 1
 local Satellite3DText
 
 function OnPackageStart()
@@ -23,6 +23,7 @@ AddRemoteEvent("InteractSatelliteComputer", function(player)
 
     PartsCollected = PartsCollected + 1
 
+    -- calculate new percentage
     local percentage_complete = math.floor(PartsCollected / PartsRequired * 100.0)
 
     AddPlayerChatAll(GetPlayerName(player) .. " acquired a satellite part!")

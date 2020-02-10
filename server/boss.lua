@@ -22,6 +22,7 @@ function SpawnBoss()
     end
 
     -- random pick a player target
+    local players = GetAllPlayers()
     local target = players[ math.random(#players) ]
     local x,y,z = GetPlayerLocation(target)
 
@@ -80,8 +81,7 @@ function DespawnBoss()
     Boss = nil
 
     Delay(5000, function()
-        local players = GetAllPlayers()
-        for _,ply in pairs(players) do
+        for _,ply in pairs(GetAllPlayers()) do
             CallRemoteEvent(ply, "DespawnBoss")
         end
     end)

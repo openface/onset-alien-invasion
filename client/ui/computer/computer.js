@@ -31,7 +31,7 @@ function ShowSatelliteComputer(percentage) {
         login&gt; ************
         <p>Access granted.</p>
 
-        <p>SATELLITE COMMUNICATIONS ARE NOW <b>${percentage}%</b> OPERATIONAL...</p>
+        <p class="blinking">SATELLITE COMMUNICATIONS ARE NOW <b>${percentage}%</b> OPERATIONAL...</p>
 
         <p>Continue collecting satellite parts to initiate transmission
         from the satellite.  Once enough parts are acquired, the satellite

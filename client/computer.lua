@@ -67,17 +67,21 @@ AddEvent("OnKeyPress", function(key)
     end
 end)
 
-AddRemoteEvent("ShowSatelliteComputer", function(PartsCollected, PartsRequired)
-    if PartsCollected >= PartsRequired then
+AddRemoteEvent("ShowSatelliteComputer", function(percentage)
+    if percentage >= 100 then
         ExecuteWebJS(ComputerUI, "ShowSatelliteComputerComplete()")
     else
-        ExecuteWebJS(ComputerUI, "ShowSatelliteComputer("..PartsCollected..","..PartsRequired..")")
+        ExecuteWebJS(ComputerUI, "ShowSatelliteComputer("..percentage..")")
         computer_timer = CreateTimer(ShowComputerTimer, 2000, SatelliteLoc)
     end
 end)
 
+-- occurs just before boss arrives
 AddRemoteEvent("SatelliteTransmission", function()
     SetSoundVolume(CreateSound3D("client/sounds/transmission.mp3", SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z, 10000), 1)
+    Delay(7000, function()
+        SetSoundVolume(CreateSound3D("client/sounds/alert.mp3", SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z, 10000), 1)
+    end)
 end)
 
 

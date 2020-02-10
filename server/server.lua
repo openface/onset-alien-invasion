@@ -25,10 +25,10 @@ AddEvent("OnPackageStart", OnPackageStart)
 
 -- welcome message
 function OnPlayerJoin(player)
-    local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 3000)
-
     -- place player in separate dimension while character is selected
     SetPlayerDimension(player, math.random(1, 999))
+
+    local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 3000)
     SetPlayerSpawnLocation(player, x, y, SpawnLocation.z, 90.0)
     SetPlayerRespawnTime(player, PlayerRespawnSecs * 1000)
 	AddPlayerChatAll('<span color="#eeeeeeaa">'..GetPlayerName(player)..' has joined the server</>')
@@ -43,6 +43,11 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
 
     -- join the others
     SetPlayerDimension(player, 0)
+
+    -- parachute down to the island
+    local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 10000)
+    SetPlayerLocation(player, x, y, SpawnLocation.z + 30000)
+    AttachPlayerParachute(player, true)
 end)
 
 -- killer is never a NPC so we have to guess
@@ -98,3 +103,6 @@ AddRemoteEvent("HandlePlayerInWater", function(player)
     SetPlayerHealth(player, GetPlayerHealth(player) - 10)
 end)
 
+AddRemoteEvent("DropParachute", function(player)
+    AttachPlayerParachute(player, false)
+end)

@@ -40,3 +40,12 @@ end)
 AddRemoteEvent("ClientSetTime", function(time)
 	SetTime(time)
 end)
+
+-- skydive
+AddEvent("OnPlayerSkydive", function()
+    ShowMessage("Hit [SPACE] to open parachute")
+end)
+
+AddEvent("OnPlayerSkydiveCrash", function()
+    CallRemoteEvent("DropParachute")
+end)

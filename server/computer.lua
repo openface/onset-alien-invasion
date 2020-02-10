@@ -1,5 +1,5 @@
 local PartsCollected = 0
-local PartsRequired = 1
+local PartsRequired = 5
 local Satellite3DText
 
 function OnPackageStart()

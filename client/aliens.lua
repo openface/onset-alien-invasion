@@ -16,11 +16,15 @@ end)
 
 AddRemoteEvent('AlienNoLongerAttacking', function()
     AddPlayerChat('You are safe for now.')
-    DestroySound(AmbientSound)
+    if AmbientSound ~= nil then
+        DestroySound(AmbientSound)
+    end
 end)
 
 AddEvent("OnPlayerSpawn", function()
-    DestroySound(AmbientSound)
+    if AmbientSound ~= nil then
+        DestroySound(AmbientSound)
+    end
 end)
 
 AddRemoteEvent("OnAlienHit", function(player)

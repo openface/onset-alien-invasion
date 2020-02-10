@@ -8,9 +8,11 @@ end)
 
 function HideLootWaypoint()
     if LootWaypoint ~= nil then
+        print("destroy loot wp: "..LootWaypoint)
         DestroyWaypoint(LootWaypoint)
     end
 end
+AddEvent("HideLootWaypoint", HideLootWaypoint)
 AddRemoteEvent("HideLootWaypoint", HideLootWaypoint)
 
 AddRemoteEvent('LootSpawned', function(pos, pickup)

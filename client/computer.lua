@@ -16,12 +16,16 @@ function ShowSatelliteWaypoint()
     HideSatelliteWaypoint()
     SatelliteWaypoint = CreateWaypoint(SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z+50, "Satellite Computer")
 end
+AddEvent("ShowSatelliteWaypoint", ShowSatelliteWaypoint)
+AddRemoteEvent("ShowSatelliteWaypoint", ShowSatelliteWaypoint)
 
 function HideSatelliteWaypoint()
     if SatelliteWaypoint ~= nil then
+        print("destroy sat wp: "..SatelliteWaypoint)
         DestroyWaypoint(SatelliteWaypoint)
     end
 end
+AddEvent("HideSatelliteWaypoint", HideSatelliteWaypoint)
 AddRemoteEvent("HideSatelliteWaypoint", HideSatelliteWaypoint)
 
 function ShowComputerTimer(loc)

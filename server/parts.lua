@@ -53,7 +53,7 @@ function EquipPart(player)
     SetObjectAttached(part, ATTACH_PLAYER, player, 10, -5, 0, 0, 0, 90, "hand_l")
 
     SetPlayerPropertyValue(player, 'carryingPart', part, true)
-    AddPlayerChatAll(GetPlayerName(player)..' has found up a computer part!')
+    AddPlayerChatAll(GetPlayerName(player)..' has found a computer part!')
     CallRemoteEvent(player, "PartPickedup", pickup)
 end
 

@@ -18,9 +18,9 @@ the end game.
 
 ### Features
 
-* Character selection at spawn, skydive with parachute into the island
-* Garage computer with instructions/clues about the mission
-* Supply drops at random locations every few minutes provide health, armor, and a weapon (uses waypoints)
-* Computer parts hidden around the island that can be picked up and taken to the main satellite computer
-* Satellite computer requires parts to be fully operational.  Once 100%, the mothership lands
-* Mothership spawns for a short while on a random player target, hurts everyone within in range
+* Character selection at spawn, skydive with parachute into the island.
+* Garage computer with instructions/clues about the mission.
+* Supply drops at random locations every few minutes provide health, armor, and a weapon. (uses waypoints)
+* Computer parts hidden around the island that can be picked up and taken to the main satellite computer.
+* Satellite computer requires parts to be fully operational.  Once 100%, the mothership lands.
+* Mothership spawns for a short while on a random player target, hurts everyone within in range.

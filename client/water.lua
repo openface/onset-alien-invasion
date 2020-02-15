@@ -4,7 +4,7 @@ local PlayerInWater = false
 AddEvent("OnPlayerSpawn", function()
     PlayerInWater = false
 
-    SetOceanColor("0x3a0e0e", "0x4a1111", "0x630c0c", "0x630c0c", "0x3a0e0e")
+    SetOceanColor("0x0e7500", "0x0e7500", "0x0e7500", "0x0e7500", "0x0e7500")
 end)
 
 

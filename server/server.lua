@@ -45,6 +45,7 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
 
     -- parachute down to the island
     local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 10000)
+    SetPlayerSpawnLocation(player, x, y, SpawnLocation.z, 180)
     SetPlayerLocation(player, x, y, SpawnLocation.z + 30000)
     AttachPlayerParachute(player, true)
 end)

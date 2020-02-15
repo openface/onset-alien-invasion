@@ -1,5 +1,5 @@
 AddEvent("OnPlayerSpawn", function()
-    StartCameraFade(1.0, 0.0, 13.0, "#000")
+    StartCameraFade(1.0, 0.0, 5.0, RGB(0, 0, 0))
     local player = GetPlayerId()
     local clothing = GetPlayerPropertyValue(player, "clothing")
     if clothing == nil then

@@ -22,3 +22,9 @@ function OnPackageStart()
     end
 end
 AddEvent("OnPackageStart", OnPackageStart)
+
+AddEvent("OnPlayerEnterVehicle", function(player, vehicle, seat)
+    if seat == 1 then
+        SetVehicleLightEnabled(vehicle, true)
+    end
+end)

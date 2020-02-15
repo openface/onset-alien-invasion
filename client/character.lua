@@ -31,5 +31,5 @@ AddEvent("SelectCharacter", function(preset)
     SetPlayerPropertyValue(player, 'clothing', preset, true)
     SetPlayerClothingPreset(player, preset)
 
-    StartCameraFade(1.0, 0.0, 13.0, "#000")
+    StartCameraFade(1.0, 0.0, 13.0, RGB(0, 0, 0))
 end)

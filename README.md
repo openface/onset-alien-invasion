@@ -15,3 +15,12 @@ You will be backed by the reinforcements from the military.  They will drop supp
 
 The satellite computer has enough power to communicate with the mothership. Search the island for parts that can be used to operate the satellite computer to reach
 the end game.
+
+### Features
+
+* Character selection at spawn, skydive with parachute into the island
+* Garage computer with instructions/clues about the mission
+* Supply drops at random locations every few minutes provide health, armor, and a weapon (uses waypoints)
+* Computer parts hidden around the island that can be picked up and taken to the main satellite computer
+* Satellite computer requires parts to be fully operational.  Once 100%, the mothership lands
+* Mothership spawns for a short while on a random player target, hurts everyone within in range

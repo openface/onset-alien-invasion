@@ -2,7 +2,7 @@ local AlienHealth = 999
 local AlienAttackRange = 5000
 local AlienAttackDamage = 50
 local SafeLocation = { x = -102037, y = 194299, z = 1400 }
-local SafeRange = 8000
+local SafeRange = 5000
 local AlienRetargetCooldown = {} -- aliens re-target on every weapon hit w/ cooldown period
 
 -- TODO remove

@@ -4,12 +4,21 @@ local AlienAttackDamage = 50
 local SafeLocation = { x = -102037, y = 194299, z = 1400 }
 local SafeRange = 7000
 local AlienRetargetCooldown = {} -- aliens re-target on every weapon hit w/ cooldown period
+local AlienSpawnsEnabled = true
 
 AddCommand("alien", function(player)
     if not IsAdmin(player) then
         return
     end
     SpawnAlienNearPlayer(player)
+end)
+
+AddCommand("togaliens", function(player)
+    if not IsAdmin(player) then
+        return
+    end
+    AlienSpawnsEnabled = not AlienSpawnsEnabled
+    print("Alien spawning is now ",AlienSpawnsEnabled)
 end)
 
 function OnPackageStart()
@@ -30,6 +39,11 @@ end
 AddEvent("OnPackageStart", OnPackageStart)
 
 function SpawnAliens()
+    if AlienSpawnsEnabled ~= true then
+        print "Alien spawning disabled."
+        return
+    end
+
     -- create alien npcs
     for _,ply in pairs(GetAllPlayers()) do
         local dim = GetPlayerDimension(ply)

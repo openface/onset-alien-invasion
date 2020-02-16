@@ -1,13 +1,13 @@
-local BossDespawnDelay = 35 * 1000 -- how long does boss stay around
 local BossInitialHealth = 999
 local BossDamagePerHit = 5 -- amount of damage boss takes per player hit
-local BossDamageInterval = 5 * 1000 -- hurts players every 5 seconds
 local BossDamageAmount = 5 -- hurts players this much every interval
 local BossDamageRange = 8000
 
-local BossHealth
+local BossHealth = BossInitialHealth
 local Boss
 local BossRotationTimer
+local BossHurtTimer
+local BossBombTimer
 local BossKillers = {}
 
 AddCommand("boss", function(player)
@@ -36,40 +36,36 @@ function SpawnBoss()
     -- spawn boss around the target
     Boss = CreateObject(1164, x, y, z+10000, 0, 0, 0, 35, 35, 35)
     SetObjectPropertyValue(Boss, "type", "boss")
-    if BossHealth == nil then
-        BossHealth = BossInitialHealth
-    end
-    SetObjectPropertyValue(Boss, "health", BossHealth)
+    SetObjectPropertyValue(Boss, "health", BossInitialHealth)
 
-    print("Spawning boss with "..BossHealth.." health on target "..GetPlayerName(target))
+    print("Spawning boss on target "..GetPlayerName(target))
 
     -- spin
-    BossRotationTimer = CreateTimer(function(Boss)
+    BossRotationTimer = CreateTimer(function()
         local x,y,z = GetObjectRotation(Boss)
         SetObjectRotation(Boss, x, y+1, z)
-    end, 50, Boss)
+    end, 50)
 
-    -- hurt all targeted players
-    CreateCountTimer(function(targeted_players)
-        for _,ply in pairs(targeted_players) do
-            CallRemoteEvent(ply, "HurtPlayer")
-            SetPlayerHealth(ply, GetPlayerHealth(ply) - BossDamageAmount)
+    -- hurt all targeted players every 5 seconds
+    BossHurtTimer = CreateTimer(function(targeted_players)
+        if Boss ~= nil then
+            for _,ply in pairs(targeted_players) do
+                -- player may have disconnected
+                if IsValidPlayer(ply) and not IsPlayerDead(ply) then
+                    CallRemoteEvent(ply, "BossHurtPlayer")
+                    SetPlayerHealth(ply, GetPlayerHealth(ply) - BossDamageAmount)
+                end
+            end
         end
-    end, BossDamageInterval, math.floor(BossDespawnDelay / BossDamageInterval), targeted_players)
-
-    -- boss leaves after a while
-    Delay(BossDespawnDelay, function()
-        DespawnBoss()
-        AddPlayerChatAll("The mothership has left.")
-    end)
+    end, 5 * 1000, targeted_players)
 
     -- random explosions on the ground
-    CreateCountTimer(function(x, y, z)
+    BossBombTimer = CreateTimer(function(x, y, z)
         if Boss ~= nil then
             local ex,ey = randomPointInCircle(x, y, BossDamageRange)
             CreateExplosion(10, ex, ey, z, true, 15000, 1000000)
         end
-    end, 2500, 14, x, y, z)
+    end, 2500, x, y, z)
 end
 AddEvent("SpawnBoss", SpawnBoss)
 
@@ -79,6 +75,8 @@ function DespawnBoss()
     end
 
     DestroyTimer(BossRotationTimer)
+    DestroyTimer(BossHurtTimer)
+    DestroyTimer(BossBombTimer)
     DestroyObject(Boss)
     Boss = nil
 
@@ -100,9 +98,11 @@ function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, st
 
         -- update boss health bar for everyone
         local players = GetAllPlayers()
+
+        -- TODO: this is network intensive!
         for _,ply in pairs(players) do
             CallRemoteEvent(ply, "UpdateBossHealth", BossHealth, BossInitialHealth)
-	    end
+        end
 
         -- explosions in the sky
         if (math.random(1,5) == 1) then

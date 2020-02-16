@@ -32,7 +32,7 @@ function SecondsToTime(d) {
 }
 
 $(function () {
-  if (indev) {
+  if (typeof(indev) !== 'undefined') {
     LoadOnlinePlayers(
       [
         {

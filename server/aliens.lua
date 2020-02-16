@@ -223,7 +223,7 @@ function OnNPCReachTarget(npc)
 
     local target = GetNPCPropertyValue(npc, 'target')
     if target == nil then
-        print "no target"
+        print "NPC no longer has a target"
         -- alien reached a target but there is no target property?
         return
     end

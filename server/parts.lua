@@ -2,7 +2,7 @@ local PartsLocations = {} -- parts.json
 local PartObjectID = 1437
 
 AddCommand("ppos", function(player)
-    if not IsAdmin(playerid) then
+    if not IsAdmin(player) then
         return
     end
     local x, y, z = GetPlayerLocation(player)

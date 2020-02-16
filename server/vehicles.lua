@@ -1,8 +1,10 @@
 local VehicleLocations = {}
 local VehicleRespawnTime = 5 * 60 * 1000
 
--- TODO remove
 AddCommand("vpos", function(player)
+    if not IsAdmin(player) then
+        return
+    end
     local x, y, z = GetPlayerLocation(player)
     string = "Location: "..x.." "..y.." "..z
     AddPlayerChat(player, string)

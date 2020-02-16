@@ -1,3 +1,5 @@
+local Config = require("packages/" .. GetPackageName() .. "/config")
+
 function randomPointInCircle(x, y, radius)
 	local randX, randY
 	repeat
@@ -17,4 +19,14 @@ function dump(o)
    else
       return tostring(o)
    end
+end
+
+function IsAdmin(player)
+    steam_id = GetPlayerSteamId(player)
+    for _,id in ipairs(Config.admin_steam_ids) do
+        if id == steam_id then
+            return true
+        end
+    end
+    return false
 end

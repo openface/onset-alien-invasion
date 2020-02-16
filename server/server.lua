@@ -1,11 +1,13 @@
 local SpawnLocation = { x = -102037, y = 194299, z = 1400 }
 local PlayerRespawnSecs = 20 -- 20 secs
 
--- TODO remove
-AddCommand("pos", function(playerid)
-    local x, y, z = GetPlayerLocation(playerid)
+AddCommand("pos", function(player)
+    if not IsAdmin(player) then
+        return
+    end
+    local x, y, z = GetPlayerLocation(player)
     string = "Location: "..x.." "..y.." "..z
-    AddPlayerChat(playerid, string)
+    AddPlayerChat(player, string)
     print(string)
 end)
 

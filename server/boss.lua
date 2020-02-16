@@ -10,8 +10,10 @@ local Boss
 local BossRotationTimer
 local BossKillers = {}
 
--- TODO remove
 AddCommand("boss", function(player)
+    if not IsAdmin(player) then
+        return
+    end
     SpawnBoss()
 end)
 

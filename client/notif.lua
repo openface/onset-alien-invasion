@@ -27,15 +27,3 @@ AddFunctionExport("ShowMessage", ShowMessage)
 AddRemoteEvent("ShowMessage", function(msg)
     ShowMessage(msg)
 end)
-
--- TODO remove me
---[[
-function OnKeyRelease(key)
-	if key == "F1" then
-		ShowBanner("YOU HAVE DIED")
-    elseif key == "F2" then
-        ShowMessage("You have found a computer part!")
-    end
-end
-AddEvent("OnKeyRelease", OnKeyRelease)
-]]--

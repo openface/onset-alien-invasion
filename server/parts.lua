@@ -1,15 +1,24 @@
 local PartsLocations = {} -- parts.json
 local PartObjectID = 1437
 
--- TODO remove
-AddCommand("ppos", function(playerid)
-    local x, y, z = GetPlayerLocation(playerid)
+AddCommand("ppos", function(player)
+    if not IsAdmin(playerid) then
+        return
+    end
+    local x, y, z = GetPlayerLocation(player)
     string = "Location: "..x.." "..y.." "..z
-    AddPlayerChat(playerid, string)
+    AddPlayerChat(player, string)
     print(string)
     table.insert(PartsLocations, { x, y, z })
 
     File_SaveJSONTable("packages/"..GetPackageName().."/server/data/parts.json", PartsLocations)
+end)
+
+AddCommand("part", function(player)
+    if not IsAdmin(player) then
+        return
+    end
+    EquipPart(player)
 end)
 
 function OnPackageStart()
@@ -67,21 +76,4 @@ AddEvent("OnPlayerDeath", function(player, killer)
     CallRemoteEvent(player, "HideSatelliteWaypoint")
 end)
 
--- TODO remove me
-AddCommand("part", function(player)
-    EquipPart(player)
-end)
 
---[[
-AddCommand("p", function(player, x,y,z,rx,ry,rz)
-    if object ~= nil then
-        DestroyObject(object)
-    end        
-    
-    local px,py,pz = GetPlayerLocation(player)
-    object = CreateObject(PartObjectID, px, py, pz)
-    SetObjectAttached(object, ATTACH_PLAYER, player, x, y, z, rx, ry, rz, "hand_l")
-
-    SetPlayerPropertyValue(player, 'carryingPart', true, true) 
-end)
---]]

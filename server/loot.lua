@@ -1,18 +1,22 @@
 local LootLocations = {} -- lootpickups.json
 local LootDropInterval = 4 * 60 * 1000 -- drop loot every 4 min (if players are nearby)
 
--- TODO remove
 AddCommand("loot", function(player)
+    if not IsAdmin(player) then
+        return
+    end
     local x, y, z = GetPlayerLocation(player)
     local pos = { [1] = x, [2] = y, [3] = z }
     SpawnLootArea(pos)
 end)
 
--- TODO remove
-AddCommand("lpos", function(playerid)
-    local x, y, z = GetPlayerLocation(playerid)
+AddCommand("lpos", function(player)
+    if not IsAdmin(player) then
+        return
+    end
+    local x, y, z = GetPlayerLocation(player)
     string = "Location: "..x.." "..y.." "..z
-    AddPlayerChat(playerid, string)
+    AddPlayerChat(player, string)
     print(string)
     table.insert(LootLocations, { x, y, z })
 

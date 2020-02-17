@@ -49,6 +49,8 @@ AddEvent("OnKeyPress", function(key)
 
             ExecuteWebJS(ComputerUI, "ShowGarageComputer()")
 
+            CallEvent("GarageComputerInteraction")
+
             computer_timer = CreateTimer(ShowComputerTimer, 2000, ComputerLoc)
         elseif GetDistance3D(x, y, z, SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z) <= 200 then
             if SatelliteWaypoint ~= nil then

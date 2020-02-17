@@ -1,3 +1,5 @@
+local ComputerWaypoint
+
 AddEvent("OnPlayerSpawn", function()
     StartCameraFade(1.0, 0.0, 5.0, RGB(0, 0, 0))
     local player = GetPlayerId()
@@ -48,8 +50,15 @@ end)
 
 AddEvent("OnPlayerParachuteOpen", function()
     ShowBanner("WELCOME TO THE<br />INVASION!")
+    ComputerWaypoint = CreateWaypoint(-106279.4140625, 193854.59375, 1399.1424560547 + 50, "Computer Terminal")
 end)
 
 AddEvent("OnPlayerSkydiveCrash", function()
     CallRemoteEvent("DropParachute")
+end)
+
+AddEvent("GarageComputerInteraction", function(player)
+    if ComputerWaypoint ~= nil then
+        DestroyWaypoint(ComputerWaypoint)
+    end
 end)

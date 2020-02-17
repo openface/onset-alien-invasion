@@ -15,7 +15,7 @@ AddRemoteEvent("ShowCharacterSelection", function()
 	SetInputMode(INPUT_GAMEANDUI)
     SetWebVisibility(CharUI, WEB_VISIBLE)
 
-    SetSoundVolume(CreateSound("client/sounds/ambience.mp3"), 1)
+    SetSoundVolume(CreateSound("client/sounds/chopper.mp3"), 0.4)
 end)
 
 AddEvent("SelectCharacter", function(preset)

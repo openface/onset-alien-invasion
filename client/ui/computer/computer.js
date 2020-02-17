@@ -14,8 +14,8 @@ function ShowGarageComputer() {
         before you can fight back!</p>
 
         <p>YOUR MISSION IS TO DESTROY THE MOTHERSHIP.  Scavenge the area to find
-        parts and bring them back to the satellite base.  The satellite, once
-        operational, can be used to draw the mothership.</p>
+        parts and bring them back to the satellite computer terminal.  The 
+        satellite, once operational, can be used to draw the mothership.</p>
 
         <p>Hit the TAB key for the scoreboard.</p>
 

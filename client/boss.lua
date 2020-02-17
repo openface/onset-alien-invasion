@@ -52,8 +52,8 @@ AddRemoteEvent("DespawnBoss", function()
     SetWebVisibility(BossUI, WEB_HIDDEN)
 end)
 
-AddRemoteEvent("UpdateBossHealth", function(BossHealth, BossInitialHealth)
-    ExecuteWebJS(BossUI, "SetBossHealth("..BossHealth..", "..BossInitialHealth..")")
+AddRemoteEvent("UpdateBossHealth", function(HealthPercentage)
+    ExecuteWebJS(BossUI, "SetBossHealth("..HealthPercentage..")")
     SetWebVisibility(BossUI, WEB_VISIBLE)
 end)
 

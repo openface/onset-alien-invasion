@@ -88,46 +88,60 @@ function DespawnBoss()
 end
     
 function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, startx, starty, startz, normalx, normaly, normalz)
-	if (hittype == HIT_OBJECT and GetObjectPropertyValue(hitid, "type") == "boss") then
-        BossHealth = BossHealth - BossDamagePerHit
+	if (hittype == HIT_OBJECT and GetObjectPropertyValue(hitid, "type") ~= "boss") then
+        return
+    end
 
-        -- anyone who fires on boss gets credit for the kill
-        if BossKillers[player] == nil then
-            BossKillers[player] = player
-        end
+    if BossHealth == BossInitialHealth then
+        first_hit = true
+    else 
+        first_hit = false
+    end
 
-        -- update boss health bar for everyone
-        local players = GetAllPlayers()
+    -- apply damage to boss
+    BossHealth = BossHealth - BossDamagePerHit
 
-        -- TODO: this is network intensive!
+    -- anyone who fires on boss gets credit for the kill
+    if BossKillers[player] == nil then
+        BossKillers[player] = player
+    end
+
+    -- update boss health bar for everyone
+    local players = GetAllPlayers()
+
+    -- this is network intensive, so we only send health status
+    -- when percentage is divisible by 5
+    local percentage_health = math.floor(BossHealth / BossInitialHealth * 100.0)
+    if first_hit or math.fmod(percentage_health, 5) == 0.0 then
+        print("Mothership health: "..percentage_health.."%")
         for _,ply in pairs(players) do
-            CallRemoteEvent(ply, "UpdateBossHealth", BossHealth, BossInitialHealth)
+            CallRemoteEvent(ply, "UpdateBossHealth", percentage_health)
         end
+    end
 
+    -- explosions in the sky
+    if (math.random(1,5) == 1) then
+        CreateExplosion(6, hitx, hity, hitz, true)
+    end
+
+    -- boss kill
+    if BossHealth <= 0 then
         -- explosions in the sky
-        if (math.random(1,5) == 1) then
-            CreateExplosion(6, hitx, hity, hitz, true)
+        local x,y,z = GetObjectLocation(hitid)
+        CreateCountTimer(function()
+            local ex,ey = randomPointInCircle(x, y, 5000)
+            CreateExplosion(9, ex, ey, z, true)
+        end, 300, 20)
+        
+        DespawnBoss()
+        BossHealth = nil
+
+        for _,ply in pairs(BossKillers) do
+            BumpPlayerStat(ply, "boss_kills")
         end
 
-        -- boss kill
-        if BossHealth <= 0 then
-            -- explosions in the sky
-            local x,y,z = GetObjectLocation(hitid)
-            CreateCountTimer(function()
-                local ex,ey = randomPointInCircle(x, y, 5000)
-                CreateExplosion(9, ex, ey, z, true)
-            end, 300, 20)
-            
-            DespawnBoss()
-            BossHealth = nil
-
-            for _,ply in pairs(BossKillers) do
-                BumpPlayerStat(ply, "boss_kills")
-            end
-
-            for _,ply in pairs(players) do
-                CallRemoteEvent(ply, "ShowBanner", "MOTHERSHIP IS DOWN!")
-            end
+        for _,ply in pairs(players) do
+            CallRemoteEvent(ply, "ShowBanner", "MOTHERSHIP IS DOWN!")
         end
     end
 end

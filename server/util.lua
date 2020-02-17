@@ -1,5 +1,8 @@
 local Config = require("packages/" .. GetPackageName() .. "/config")
 
+-- generate randomness
+math.randomseed(os.time())
+
 function randomPointInCircle(x, y, radius)
 	local randX, randY
 	repeat

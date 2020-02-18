@@ -156,6 +156,7 @@ function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, st
             for _,ply in pairs(players) do
                 CallRemoteEvent(ply, "ShowBanner", "MOTHERSHIP HAS BEEN DESTROYED!")
             end
+            print "Mothership has been destroyed"
         end
     end
 end

@@ -35,6 +35,8 @@ function OnPlayerJoin(player)
 	AddPlayerChatAll('<span color="#eeeeeeaa">'..GetPlayerName(player)..' has joined the server</>')
 	AddPlayerChatAll('<span color="#eeeeeeaa">There are '..GetPlayerCount()..' players on the server</>')
     AddPlayerChatAll('<span color="#eeeeeeaa">Hit [T] to chat and [TAB] for scoreboard</>')
+    AddPlayerChatAll('<span color="#ffffffff">Welcome to Alien Invasion!</>')
+    AddPlayerChatAll('<span color="#ffffffff">Thanks for testing this gamemode.</>')
     CallRemoteEvent(player, "ShowCharacterSelection")
 end
 AddEvent("OnPlayerJoin", OnPlayerJoin)
@@ -100,9 +102,8 @@ AddEvent("OnPlayerSteamAuth", OnPlayerSteamAuth)
 
 -- Chat
 function OnPlayerChat(player, message)
-    local formatted_name = '<span color="#eeeeeeaa" size="16">'..GetPlayerName(player)..':</>'
-    local formatted_message = '<span size="16">'..message..'</>'
-    AddPlayerChatAll(formatted_name .. ' ' .. formatted_message)
+    AddPlayerChatAll('<span color="#eeeeeeaa"><'..GetPlayerName(player)..'></> '..message)
+    print("<"..GetPlayerName(player).."> "..message)
 end
 AddEvent("OnPlayerChat", OnPlayerChat)
 

@@ -101,7 +101,7 @@ function DespawnBoss()
 end
     
 function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, startx, starty, startz, normalx, normaly, normalz)
-    if (hittype == HIT_OBJECT or GetObjectPropertyValue(hitid, "type") == "boss") then
+    if (hittype == HIT_OBJECT and GetObjectPropertyValue(hitid, "type") == "boss") then
 
         if BossHealth == BossInitialHealth then
             first_hit = true

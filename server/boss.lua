@@ -3,12 +3,13 @@ local BossDamagePerHit = 5 -- amount of damage boss takes per player hit
 local BossDamageAmount = 5 -- hurts players this much every interval
 local BossDamageRange = 8000
 
-local BossHealth = BossInitialHealth
+local BossHealth
 local Boss
 local BossRotationTimer
 local BossHurtTimer
 local BossBombTimer
 local BossKillers = {}
+local BossTargets = {}
 
 AddCommand("boss", function(player)
     if not IsAdmin(player) then
@@ -31,12 +32,12 @@ function SpawnBoss()
     local x,y = randomPointInCircle(x, y, BossDamageRange)
 
     -- target all players in area
-    local targeted_players = GetPlayersInRange3D(x, y, z, BossDamageRange)
+    BossTargets = GetPlayersInRange3D(x, y, z, BossDamageRange)
 
     -- spawn boss around the target
     Boss = CreateObject(1164, x, y, z+10000, 0, 0, 0, 35, 35, 35)
     SetObjectPropertyValue(Boss, "type", "boss")
-    SetObjectPropertyValue(Boss, "health", BossInitialHealth)
+    BossHealth = BossInitialHealth
 
     print("Spawning boss on target "..GetPlayerName(target))
 
@@ -47,17 +48,26 @@ function SpawnBoss()
     end, 50)
 
     -- hurt all targeted players every 5 seconds
-    BossHurtTimer = CreateTimer(function(targeted_players)
+    BossHurtTimer = CreateTimer(function()
         if Boss ~= nil then
-            for _,ply in pairs(targeted_players) do
+            if next(BossTargets) == nil then
+                print "Mothership has no targets"
+                DespawnBoss()
+                return
+            end
+
+            for _,ply in pairs(BossTargets) do
                 -- player may have disconnected
-                if IsValidPlayer(ply) and not IsPlayerDead(ply) then
+                if IsValidPlayer(ply) and not IsPlayerDead(ply) and GetPlayerDimension(ply) == 0 then
                     CallRemoteEvent(ply, "BossHurtPlayer")
                     SetPlayerHealth(ply, GetPlayerHealth(ply) - BossDamageAmount)
+                else
+                    print("Mothership no longer targeting player "..ply)
+                    table.remove(BossTargets, ply)
                 end
             end
         end
-    end, 5 * 1000, targeted_players)
+    end, 5 * 1000)
 
     -- random explosions on the ground
     BossBombTimer = CreateTimer(function(x, y, z)
@@ -74,17 +84,20 @@ function DespawnBoss()
         return
     end
 
+    for _,ply in pairs(GetAllPlayers()) do
+        CallRemoteEvent(ply, "DespawnBoss")
+    end
+
     DestroyTimer(BossRotationTimer)
     DestroyTimer(BossHurtTimer)
     DestroyTimer(BossBombTimer)
     DestroyObject(Boss)
     Boss = nil
+    BossHealth = nil
+    BossTargets = {}
+    BossKillers = {}
 
-    Delay(5000, function()
-        for _,ply in pairs(GetAllPlayers()) do
-            CallRemoteEvent(ply, "DespawnBoss")
-        end
-    end)
+    print "Mothership despawned"
 end
     
 function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, startx, starty, startz, normalx, normaly, normalz)
@@ -101,6 +114,7 @@ function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, st
 
         -- anyone who fires on boss gets credit for the kill
         if BossKillers[player] == nil then
+            print("Adding boss killer "..player)
             BossKillers[player] = player
         end
 
@@ -128,18 +142,19 @@ function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, st
             local x,y,z = GetObjectLocation(hitid)
             CreateCountTimer(function()
                 local ex,ey = randomPointInCircle(x, y, 5000)
-                CreateExplosion(9, ex, ey, z, true)
+                CreateExplosion(9, ex, ey, z, true, 10000.0, 1000)
             end, 300, 20)
             
-            DespawnBoss()
-            BossHealth = nil
-
+            -- update scoreboard
             for _,ply in pairs(BossKillers) do
                 BumpPlayerStat(ply, "boss_kills")
             end
 
+            DespawnBoss()
+
+            AddPlayerChatAll("Mothership has been destroyed!")
             for _,ply in pairs(players) do
-                CallRemoteEvent(ply, "ShowBanner", "MOTHERSHIP IS DOWN!")
+                CallRemoteEvent(ply, "ShowBanner", "MOTHERSHIP HAS BEEN DESTROYED!")
             end
         end
     end

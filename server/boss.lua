@@ -3,7 +3,7 @@ local BossDamagePerHit = 5 -- amount of damage boss takes per player hit
 local BossDamageAmount = 5 -- hurts players this much every interval
 local BossDamageRange = 8000
 
-local BossHealth
+local BossHealth = BossInitialHealth
 local Boss
 local BossRotationTimer
 local BossHurtTimer
@@ -93,7 +93,7 @@ function DespawnBoss()
     DestroyTimer(BossBombTimer)
     DestroyObject(Boss)
     Boss = nil
-    BossHealth = nil
+    BossHealth = BossInitialHealth
     BossTargets = {}
     BossKillers = {}
 
@@ -101,7 +101,7 @@ function DespawnBoss()
 end
     
 function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, startx, starty, startz, normalx, normaly, normalz)
-	if (hittype == HIT_OBJECT or GetObjectPropertyValue(hitid, "type") == "boss") then
+    if (hittype == HIT_OBJECT and GetObjectPropertyValue(hitid, "type") == "boss") then
 
         if BossHealth == BossInitialHealth then
             first_hit = true

@@ -65,7 +65,7 @@ function SpawnAlienNearPlayer(player)
         return
     end
 
-    local x,y = randomPointInCircle(x, y, AlienAttackRange + 1000) -- 1000 buffer
+    local x,y = randomPointInCircle(x, y, AlienAttackRange + 500) -- some buffer
     --CreateObject(303, x, y, z+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
     local npc = CreateNPC(x, y, z+100, 90)
     SetNPCHealth(npc, AlienHealth)
@@ -158,10 +158,6 @@ function SetAlienTarget(npc, player)
             RemovePlayerFromVehicle(player)
             CreateExplosion(1, vx, vy, vz, true, 1500, 100000)
             SetVehicleDamage(vehicle, math.random(1,8), 1.0)
-            -- remove it from game
-            -- Delay(60000, function()
-            --  DestroyVehicle(veh)
-            -- end)
         end
         CallRemoteEvent(player, 'AlienAttacking', npc)
     end
@@ -192,7 +188,7 @@ function ResetAlien(npc)
             CallRemoteEvent(player, 'AlienNoLongerAttacking', npc)
 
             -- wait a bit then walk back home, little alien
-            Delay(15000, function()
+            Delay(60000, function()
                 AlienReturn(npc)
             end)
         end

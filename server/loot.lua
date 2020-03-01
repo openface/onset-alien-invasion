@@ -1,5 +1,5 @@
 local LootLocations = {} -- lootpickups.json
-local LootDropInterval = 4 * 60 * 1000 -- drop loot every 4 min (if players are nearby)
+local LootDropInterval = 3 * 60 * 1000 -- drop loot every 3 min (if players are nearby)
 
 AddCommand("loot", function(player)
     if not IsAdmin(player) then

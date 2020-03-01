@@ -226,8 +226,8 @@ function OnNPCReachTarget(npc)
         return
     end
 
-    if IsPlayerDead(target) then
-        -- target was dead when we got here
+    if IsPlayerDead(target) or not IsValidPlayer(target) then
+        -- target was dead or gone when we got here
         return
     end
 

@@ -1,13 +1,15 @@
 function ShowGarageComputer() {
     $('#terminal-box #content').html(`
+        <p>READ THESE INSTRUCTIONS CAREFULLY!</p>
+        
         <p>The surrounding area has been invaded by alien lifeform. If you are
         reading this message, you may be the last of the remaining human
         survivors. Please read these instructions carefully!</p>
 
         <p>The mainland has been infected with radiation. DO NOT ENTER THE OCEAN!</p>
 
-        <p>THERE ARE ALIENS ON THIS ISLAND! If you are being chased, RUN TO SAFETY! 
-        WATCH FOR SUPPLY DROPS. THEY CONTAIN WEAPONS, ARMOR, AND HEALTH. You 
+        <p>THERE ARE ALIENS ON THIS ISLAND! If you are being chased, RUN TO SAFETY!</p>
+        <p>WATCH FOR SUPPLY DROPS! THEY CONTAIN WEAPONS, ARMOR, AND HEALTH. You 
         will see flares indicating where they drop.</p>
 
         <p>The mothership is on it's way to this island! You will need supplies

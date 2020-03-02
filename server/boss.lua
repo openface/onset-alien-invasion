@@ -151,6 +151,7 @@ function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, st
             end
 
             DespawnBoss()
+            SpawnParts()
 
             AddPlayerChatAll("Mothership has been destroyed!")
             for _,ply in pairs(players) do

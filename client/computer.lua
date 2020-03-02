@@ -3,6 +3,7 @@ local ComputerLoc = { x = -106279.4140625, y = 193854.59375, z = 1399.1424560547
 local SatelliteLoc = { x = -103004.5234375, y = 201067.09375, z = 2203.3188476563 }
 local computer_timer
 local SatelliteWaypoint
+local SatelliteStatus
 
 AddEvent("OnPackageStart", function()
     ComputerUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
@@ -10,11 +11,15 @@ AddEvent("OnPackageStart", function()
     SetWebAlignment(ComputerUI, 0.0, 0.0)
     SetWebAnchors(ComputerUI, 0.0, 0.0, 1.0, 1.0)
     SetWebVisibility(ComputerUI, WEB_HITINVISIBLE)
+
+    SatelliteStatus = CreateTextBox(0, 0, "", "center")
+    SetTextBoxAnchors(SatelliteStatus, 0.0, 0.0, 1.0, 0.03)
+    SetTextBoxAlignment(SatelliteStatus, 1.0, 0.0)
 end)
 
 function ShowSatelliteWaypoint()
     HideSatelliteWaypoint()
-    SatelliteWaypoint = CreateWaypoint(SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z+50, "Satellite Computer")
+    SatelliteWaypoint = CreateWaypoint(SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z+50, "Satellite Terminal")
 end
 AddEvent("ShowSatelliteWaypoint", ShowSatelliteWaypoint)
 AddRemoteEvent("ShowSatelliteWaypoint", ShowSatelliteWaypoint)
@@ -86,4 +91,13 @@ AddRemoteEvent("SatelliteTransmission", function()
     end)
 end)
 
-
+-- shows satellite progress on player screen
+function SetSatelliteStatus(percent)
+    if percent == nil then
+        SetTextBoxText(SatelliteStatus, "")
+    else
+        SetTextBoxText(SatelliteStatus, "SATELLITE STATUS: "..percent.."% OPERATIONAL")
+    end
+end
+AddEvent("SetSatelliteStatus", SetSatelliteStatus)
+AddRemoteEvent("SetSatelliteStatus", SetSatelliteStatus)

@@ -1,6 +1,6 @@
 local PartsCollected = 0
 local PartsRequired = 5
-local Satellite3DText
+---local Satellite3DText
 
 function OnPackageStart()
     -- central computer
@@ -8,8 +8,6 @@ function OnPackageStart()
 
     -- satellite computer
     CreateText3D("Press [E] to Interact", 15, -103004.5234375, 201067.09375, 2203.3188476563 + 130, 0, 0, 0)
-
-    Satellite3DText = CreateText3D("STATUS: 0% OPERATIONAL", 50, -103577.703125, 200838.734375, 2203.2883300781 + 200, 0, 0, 0)
 end
 AddEvent("OnPackageStart", OnPackageStart)
 
@@ -24,7 +22,7 @@ AddRemoteEvent("InteractSatelliteComputer", function(player)
     PartsCollected = PartsCollected + 1
 
     -- calculate new percentage
-    local percentage_complete = math.floor(PartsCollected / PartsRequired * 100.0)
+    local percentage_complete = GetSatelliteStatus()
 
     AddPlayerChatAll(GetPlayerName(player) .. " acquired a satellite part!")
     AddPlayerChatAll("Satellite communications are now "..percentage_complete.."% operational!")
@@ -40,19 +38,38 @@ AddRemoteEvent("InteractSatelliteComputer", function(player)
     CallRemoteEvent(player, "ShowSatelliteComputer", percentage_complete)
 
     if PartsCollected >= PartsRequired then
+        -- part collection complete; spawn the mothership
         print(GetPlayerName(player).." completed the satellite transmission")
         AddPlayerChatAll(GetPlayerName(player).." completed the satellite transmission!")
 
         -- reset satellite status
         PartsCollected = 0
-        SetText3DText(Satellite3DText, "STATUS: 0% OPERATIONAL")
         CallRemoteEvent(player, "SatelliteTransmission")
+
+        -- update satellite status for everyone
+        UpdateAllPlayersSatelliteStatus()
 
         -- call mothership
         Delay(15000, function()
             CallEvent("SpawnBoss")
         end)
     else
-        SetText3DText(Satellite3DText, "STATUS: "..percentage_complete.."% OPERATIONAL")
+        -- update satellite status for everyone
+        UpdateAllPlayersSatelliteStatus(percentage_complete)
     end
+end)
+
+function UpdateAllPlayersSatelliteStatus(percentage_complete)
+    for _,ply in pairs(GetAllPlayers()) do
+        CallRemoteEvent(ply, "SetSatelliteStatus", percentage_complete)
+    end
+end
+
+function GetSatelliteStatus()
+    return math.floor(PartsCollected / PartsRequired * 100.0)
+end
+
+-- update satellite progress on client once they land on island
+AddRemoteEvent("DropParachute", function(player)
+    CallRemoteEvent(player, "SetSatelliteStatus", GetSatelliteStatus())
 end)

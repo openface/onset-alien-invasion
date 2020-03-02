@@ -37,7 +37,7 @@ function OnPlayerJoin(player)
     AddPlayerChatAll('<span color="#eeeeeeaa">Hit [T] to chat and [TAB] for scoreboard</>')
     AddPlayerChatAll('<span color="#ffffffff">Welcome to Alien Invasion by oweff!</>')
     AddPlayerChatAll('<span color="#ffffffff">Thanks for testing this gamemode.</>')
-    AddPlayerChatAll('<span color="#eeeeeeaa">Let\'s chat in Discord if you have feedback or suggestions.</>')
+    AddPlayerChatAll('<span color="#eeeeeeaa">Hit me up in Discord if you have feedback or suggestions.</>')
     CallRemoteEvent(player, "ShowCharacterSelection")
 end
 AddEvent("OnPlayerJoin", OnPlayerJoin)

@@ -26,7 +26,7 @@ function UpdateScoreboardData(player)
       ['ping'] = GetPlayerPing(ply)
     })
   end
-  print(json_encode(_send))
+  --print(json_encode(_send))
   CallRemoteEvent(player, 'OnGetScoreboardData', json_encode(_send))
 end
 AddRemoteEvent('UpdateScoreboardData', UpdateScoreboardData)

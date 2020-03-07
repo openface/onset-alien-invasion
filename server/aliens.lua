@@ -25,7 +25,7 @@ function OnPackageStart()
     -- re-spawn on a timer
     CreateTimer(function()
         SpawnAliens()
-    end, 30000) -- alien spawn tick
+    end, 45000) -- alien spawn tick
 
     -- process timer for all aliens
     CreateTimer(function()
@@ -44,18 +44,35 @@ function SpawnAliens()
         return
     end
 
-    -- max aliens to spawn based on satellite percentage
+    -- calculate spawn density based on satellite status
     local satellite_percentage = GetSatelliteStatus()
-    chance = (100 - satellite_percentage) / 20
-    --print("Spawn chance 1 in "..chance.." (satellite: "..satellite_percentage..")")
+    if satellite_percentage >= 80 then
+        chance = 1
+        multipler = 3
+    elseif satellite_percentage >= 60 then
+        chance = 1
+        multiplier = 2
+    elseif satellite_percentage >= 40 then
+        chance = 2
+        multipler = 2
+    elseif satellite_percentage >= 20 then
+        chance = 3
+        multiplier = 1
+    else
+        chance = 3
+        multiplier = 1
+    end
+    --print("Spawn: 1 in "..chance.." chance to spawn "..multiplier.." aliens (satellite: "..satellite_percentage..")")
 
     -- create alien npcs
     for _,ply in pairs(GetAllPlayers()) do
         local dim = GetPlayerDimension(ply)
         if dim == 0 then
-            -- chance to spawn
-            if math.random(1,chance) == 1 then
-                SpawnAlienNearPlayer(ply)
+            for i=1,multiplier do
+                -- chance to spawn
+                if math.random(1,chance) == 1 then
+                    SpawnAlienNearPlayer(ply)
+                end
             end
         end
     end

@@ -35,7 +35,7 @@ function ShowSatelliteComputer(percentage) {
 
         <p class="blinking">SATELLITE COMMUNICATIONS ARE NOW <b>${percentage}%</b> OPERATIONAL...</p>
 
-        <p>The risk of being attacked by aliens have INCREASED!</p>
+        <p>The chance of being attacked by aliens have INCREASED!</p>
 
         <p>Continue collecting satellite parts to initiate transmission
         from the satellite.  Once enough parts are acquired, the satellite

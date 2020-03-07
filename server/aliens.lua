@@ -25,7 +25,7 @@ function OnPackageStart()
     -- re-spawn on a timer
     CreateTimer(function()
         SpawnAliens()
-    end, 45000) -- alien spawn tick
+    end, 60000) -- alien spawn tick every minute
 
     -- process timer for all aliens
     CreateTimer(function()
@@ -48,19 +48,14 @@ function SpawnAliens()
     local satellite_percentage = GetSatelliteStatus()
     if satellite_percentage >= 80 then
         chance = 1
-        multipler = 3
     elseif satellite_percentage >= 60 then
-        chance = 1
-        multiplier = 2
+        chance = 2
     elseif satellite_percentage >= 40 then
         chance = 2
-        multipler = 2
     elseif satellite_percentage >= 20 then
         chance = 3
-        multiplier = 1
     else
         chance = 3
-        multiplier = 1
     end
     --print("Spawn: 1 in "..chance.." chance to spawn "..multiplier.." aliens (satellite: "..satellite_percentage..")")
 
@@ -68,11 +63,9 @@ function SpawnAliens()
     for _,ply in pairs(GetAllPlayers()) do
         local dim = GetPlayerDimension(ply)
         if dim == 0 then
-            for i=1,multiplier do
-                -- chance to spawn
-                if math.random(1,chance) == 1 then
-                    SpawnAlienNearPlayer(ply)
-                end
+            -- chance to spawn
+            if math.random(1,chance) == 1 then
+                SpawnAlienNearPlayer(ply)
             end
         end
     end
@@ -90,6 +83,7 @@ function SpawnAlienNearPlayer(player)
     local x,y = randomPointInCircle(x, y, AlienAttackRange + 500) -- some buffer
     --CreateObject(303, x, y, z+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
     local npc = CreateNPC(x, y, z+100, 90)
+    
     SetNPCHealth(npc, AlienHealth)
     SetNPCRespawnTime(npc, 99999999) -- disable respawns
     SetNPCPropertyValue(npc, 'clothing', math.random(23, 24))

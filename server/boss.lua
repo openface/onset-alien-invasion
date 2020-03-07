@@ -24,22 +24,20 @@ function SpawnBoss()
         return
     end
 
-    -- random pick a player target
+    -- randomly pick a target
     local players = GetAllPlayers()
     local target = players[ math.random(#players) ]
     local x,y,z = GetPlayerLocation(target)
 
+    -- spawn boss near the target
+    print("Spawning boss on target "..GetPlayerName(target))
     local x,y = randomPointInCircle(x, y, BossDamageRange)
-
-    -- target all players in area
-    BossTargets = GetPlayersInRange3D(x, y, z, BossDamageRange)
-
-    -- spawn boss around the target
     Boss = CreateObject(1164, x, y, z+10000, 0, 0, 0, 35, 35, 35)
     SetObjectPropertyValue(Boss, "type", "boss")
     BossHealth = BossInitialHealth
 
-    print("Spawning boss on target "..GetPlayerName(target))
+    -- target nearby players
+    BossTargets = GetPlayersInRange3D(x, y, z, BossDamageRange)
 
     -- spin
     BossRotationTimer = CreateTimer(function()
@@ -51,9 +49,17 @@ function SpawnBoss()
     BossHurtTimer = CreateTimer(function()
         if Boss ~= nil then
             if next(BossTargets) == nil then
-                print "Mothership has no targets"
-                DespawnBoss()
-                return
+                print "Setting targets for mothership"
+                -- boss loss its target, set new targets
+                local x,y,z = GetObjectLocation(Boss)
+                BossTargets = GetPlayersInRange3D(x, y, z-10000, BossDamageRange)
+
+                if next(BossTargets) == nil then
+                    -- no targets found, mothership leaves
+                    print "Mothership has no targets"
+                    DespawnBoss()
+                    return
+                end
             end
 
             for _,ply in pairs(BossTargets) do
@@ -62,7 +68,7 @@ function SpawnBoss()
                     CallRemoteEvent(ply, "BossHurtPlayer")
                     SetPlayerHealth(ply, GetPlayerHealth(ply) - BossDamageAmount)
                 else
-                    print("Mothership no longer targeting player "..ply)
+                    print("Mothership no longer targeting player "..GetPlayerName(ply))
                     table.remove(BossTargets, ply)
                 end
             end

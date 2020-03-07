@@ -72,7 +72,7 @@ function SpawnAlienNearPlayer(player)
 
     local x,y = randomPointInCircle(x, y, AlienAttackRange + 500) -- some buffer
     --CreateObject(303, x, y, z+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
-    local npc = CreateNPC(x, y, z+75, 90)
+    local npc = CreateNPC(x, y, z+100, 90)
     SetNPCHealth(npc, AlienHealth)
     SetNPCRespawnTime(npc, 99999999) -- disable respawns
     SetNPCPropertyValue(npc, 'clothing', math.random(23, 24))

@@ -8,16 +8,18 @@ function ShowGarageComputer() {
 
         <p>The mainland has been infected with radiation. DO NOT ENTER THE OCEAN!</p>
 
-        <p>THERE ARE ALIENS ON THIS ISLAND! If you are being chased, RUN TO SAFETY!</p>
-        <p>WATCH FOR SUPPLY DROPS! THEY CONTAIN WEAPONS, ARMOR, AND HEALTH. You 
+        <p>THERE ARE ALIENS ON THIS ISLAND! If you are being chased, RUN TO SAFETY
+        UNLESS YOU ARE ARMED!</p>
+
+        <p>WATCH FOR SUPPLY DROPS! They contain armor, health, and weapons. You 
         will see flares indicating where they drop.</p>
 
-        <p>The mothership is on it's way to this island! You will need supplies
-        before you can fight back!</p>
+        <p>The mothership is on it's way to this island! YOUR MISSION IS TO DESTROY 
+        THE MOTHERSHIP.You will need supplies before you can fight back!</p>
 
-        <p>YOUR MISSION IS TO DESTROY THE MOTHERSHIP.  Scavenge the area to find
-        parts and bring them back to the satellite computer terminal.  The 
-        satellite, once operational, can be used to draw the mothership.</p>
+        <p>FIND MISSING SATELLITE PARTS!  Scavenge the area to find computer
+        parts and bring them back to the satellite terminal. Once the satellite
+        is operational, it will draw the mothership in for an attack.</p>
 
         <p>Hit the TAB key for the scoreboard.</p>
 

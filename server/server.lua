@@ -18,15 +18,14 @@ AddCommand("players", function(player)
 end)
 
 -- Setup world
-function OnPackageStart()
+AddEvent("OnPackageStart", function()
     -- pistol pickup near spawn
     local pickup = CreatePickup(1006, -103693.2421875, 192599.9375, 1250)
     SetPickupPropertyValue(pickup, 'type', 'pistol')   
-end
-AddEvent("OnPackageStart", OnPackageStart)
+end)
 
 -- welcome message
-function OnPlayerJoin(player)
+AddEvent("OnPlayerJoin", function(player)
     -- place player in separate dimension while character is selected
     SetPlayerDimension(player, math.random(1, 999))
     -- temporary spawn point unless player selects a character
@@ -39,8 +38,7 @@ function OnPlayerJoin(player)
     AddPlayerChatAll('<span color="#ffffffff">Thanks for testing this gamemode.</>')
     AddPlayerChatAll('<span color="#eeeeeeaa">Hit me up in Discord if you have feedback or suggestions.</>')
     CallRemoteEvent(player, "ShowCharacterSelection")
-end
-AddEvent("OnPlayerJoin", OnPlayerJoin)
+end)
 
 AddRemoteEvent("SelectCharacter", function(player, preset)
     SetPlayerPropertyValue(player, 'clothing', preset, true)
@@ -58,7 +56,7 @@ end)
 
 -- killer is never a NPC so we have to guess
 -- if player is killed by themselves, assume it's an alien?
-function OnPlayerDeath(player, killer)
+AddEvent("OnPlayerDeath", function(player, killer)
     if player ~= killer then
         BumpPlayerStat(killer, 'player_kills')
         print(GetPlayerName(player)..' has been killed by '..GetPlayerName(killer)..'!')
@@ -68,45 +66,56 @@ function OnPlayerDeath(player, killer)
         print(GetPlayerName(player)..' has been taken')
     end
 
+    DestroyEquipment(player)
+    SetPlayerPropertyValue(player, 'equippedVest', nil, true)
+    SetPlayerPropertyValue(player, 'carryingPart', nil, true)
+
+    -- stats
+    BumpPlayerStat(player, 'deaths')
+    AddPlayerChat(player, "YOU ARE DEAD!  You must wait ".. PlayerRespawnSecs .." seconds to respawn...")
+end)
+
+-- destroy any equipped items
+function DestroyEquipment(player)
     -- destroy vest if equipped
     local vest = GetPlayerPropertyValue(player, "equippedVest")
     if vest ~= nil then
         DestroyObject(vest)
     end
-    SetPlayerPropertyValue(player, 'equippedVest', nil, true)
-    
-    -- stats
-    BumpPlayerStat(player, 'deaths')
-    AddPlayerChat(player, "YOU ARE DEAD!  You must wait ".. PlayerRespawnSecs .." seconds to respawn...")
+
+    -- destroy part if equipped
+    local part = GetPlayerPropertyValue(player, "carryingPart")
+    if part ~= nil then
+        DestroyObject(part)
+    end
 end
-AddEvent("OnPlayerDeath", OnPlayerDeath)
+
+AddEvent("OnPlayerQuit", function(player)
+    DestroyEquipment(player)
+end)
 
 -- Pickup for pistol
-function OnPlayerPickupHit(player, pickup)
+AddEvent("OnPlayerPickupHit", function(player, pickup)
     if GetPickupPropertyValue(pickup, 'type') == 'pistol' then
     	SetPlayerWeapon(player, math.random(2,5), 100, true, 2)
 	end
-end
-AddEvent("OnPlayerPickupHit", OnPlayerPickupHit)
+end)
 
 -- Player spawn
-function OnPlayerSpawn(player)
+AddEvent("OnPlayerSpawn", function(player)
     SetPlayerArmor(player, 0)
-end
-AddEvent("OnPlayerSpawn", OnPlayerSpawn)
+end)
 
 -- Log auth
-function OnPlayerSteamAuth(player)
+AddEvent("OnPlayerSteamAuth", function(player)
     print("Player "..GetPlayerName(player).." (ID "..player..") authenticated with steam ID "..GetPlayerSteamId(player))
-end
-AddEvent("OnPlayerSteamAuth", OnPlayerSteamAuth)
+end)
 
 -- Chat
-function OnPlayerChat(player, message)
+AddEvent("OnPlayerChat", function(player, message)
     AddPlayerChatAll('<span color="#eeeeeeaa"><'..GetPlayerName(player)..'></> '..message)
     print("<"..GetPlayerName(player).."> "..message)
-end
-AddEvent("OnPlayerChat", OnPlayerChat)
+end)
 
 -- Water is a killer
 AddRemoteEvent("HandlePlayerInWater", function(player)

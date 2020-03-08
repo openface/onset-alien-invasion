@@ -4,7 +4,7 @@ function ShowGarageComputer() {
         
         <p>The surrounding area has been invaded by alien lifeform. If you are
         reading this message, you may be the last of the remaining human
-        survivors. Please read these instructions carefully!</p>
+        survivors.</p>
 
         <p>The mainland has been infected with radiation. DO NOT ENTER THE OCEAN!</p>
 
@@ -15,7 +15,7 @@ function ShowGarageComputer() {
         will see flares indicating where they drop.</p>
 
         <p>The mothership is on it's way to this island! YOUR MISSION IS TO DESTROY 
-        THE MOTHERSHIP.You will need supplies before you can fight back!</p>
+        THE MOTHERSHIP. You will need supplies before you can fight back!</p>
 
         <p>FIND MISSING SATELLITE PARTS!  Scavenge the area to find computer
         parts and bring them back to the satellite terminal. Once the satellite

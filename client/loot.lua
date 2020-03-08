@@ -8,6 +8,7 @@ end)
 
 function HideLootWaypoint()
     if LootWaypoint ~= nil then
+        print("destroy loot wp: "..LootWaypoint)
         DestroyWaypoint(LootWaypoint)
     end
 end

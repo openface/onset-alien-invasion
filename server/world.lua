@@ -1,10 +1,5 @@
-local WorldLoaded
-
-function World_LoadWorld()
-  if WorldLoaded then return end
-  WorldLoaded = true
-
-  print('Server: Attempting to load world.')
+AddEvent("OnPackageStart", function()
+  print("Loading world...")
 
   local _table = File_LoadJSONTable("packages/"..GetPackageName().."/server/data/world.json")
   for _,v in pairs(_table) do
@@ -20,6 +15,5 @@ function World_LoadWorld()
     end
   end
 
-  print('Server: Alien Invasion World loaded!')
-end
-AddEvent('OnPackageStart', World_LoadWorld)
+  print("Alien Invasion world loaded!")
+end)

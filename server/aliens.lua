@@ -21,7 +21,7 @@ AddCommand("togaliens", function(player)
     print("Alien spawning is now ",AlienSpawnsEnabled)
 end)
 
-function OnPackageStart()
+AddEvent("OnPackageStart", function()
     -- re-spawn on a timer
     CreateTimer(function()
         SpawnAliens()
@@ -35,8 +35,7 @@ function OnPackageStart()
             end
         end
     end, 10000) -- alien attack tick every 10 seconds
-end
-AddEvent("OnPackageStart", OnPackageStart)
+end)
 
 function SpawnAliens()
     if AlienSpawnsEnabled ~= true then
@@ -57,7 +56,6 @@ function SpawnAliens()
     else
         chance = 3
     end
-    --print("Spawn: 1 in "..chance.." chance to spawn "..multiplier.." aliens (satellite: "..satellite_percentage..")")
 
     -- create alien npcs
     for _,ply in pairs(GetAllPlayers()) do
@@ -93,7 +91,7 @@ function SpawnAlienNearPlayer(player)
     print("NPC (ID "..npc..") spawned near player "..GetPlayerName(player))
 end
 
-function OnNPCSpawn(npc)
+AddEvent("OnNPCSpawn", function(npc)
     if GetNPCPropertyValue(npc, 'type') == 'alien' then
         print("OnNPCSpawn alien "..npc)
         SetNPCHealth(npc, AlienHealth)
@@ -101,8 +99,7 @@ function OnNPCSpawn(npc)
         local x,y,z = GetNPCLocation(npc)
         SetNPCPropertyValue(npc, 'location', { x, y, z })
     end
-end
-AddEvent("OnNPCSpawn", OnNPCSpawn)
+end)
 
 -- damage aliens
 AddEvent("OnPlayerWeaponShot", function(player, weapon, hittype, hitid, hitx, hity, hitz, startx, starty, startz, normalx, normaly, normalz)
@@ -212,7 +209,7 @@ function ResetAlien(npc)
 end
 
 -- kills players when reached
-function OnNPCReachTarget(npc)
+AddEvent("OnNPCReachTarget", function(npc)
     --print("NPC (ID "..npc..") reached target")
     if GetNPCPropertyValue(npc, 'type') ~= 'alien' then
         return
@@ -271,8 +268,7 @@ function OnNPCReachTarget(npc)
     end
 
     SetAlienTarget(npc, target)
-end
-AddEvent("OnNPCReachTarget", OnNPCReachTarget)
+end)
 
 function ApplyPlayerDamage(player)
     local armor = GetPlayerArmor(player)

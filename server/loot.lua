@@ -23,15 +23,14 @@ AddCommand("lpos", function(player)
     File_SaveJSONTable("packages/"..GetPackageName().."/server/data/lootpickups.json", LootLocations)
 end)
 
-function OnPackageStart()
+AddEvent("OnPackageStart", function()
     LootLocations = File_LoadJSONTable("packages/"..GetPackageName().."/server/data/lootpickups.json")
 
     -- spawn random loot area
 	local loot_timer = CreateTimer(function()
         SpawnLootArea(LootLocations[ math.random(#LootLocations) ])
     end, LootDropInterval)
-end
-AddEvent("OnPackageStart", OnPackageStart)
+end)
 
 function SpawnLootArea(pos)
     local players = GetAllPlayers()
@@ -59,7 +58,7 @@ function SpawnLootArea(pos)
 end
 
 -- pickup loot
-function OnPlayerPickupHit(player, pickup)
+AddEvent("OnPlayerPickupHit", function(player, pickup)
     if (GetPickupPropertyValue(pickup, 'type') ~= 'loot') then
         return
     end
@@ -83,8 +82,7 @@ function OnPlayerPickupHit(player, pickup)
     for _,p in pairs(GetAllPlayers()) do
         CallRemoteEvent(p, "HideLootWaypoint")
     end
-end
-AddEvent("OnPlayerPickupHit", OnPlayerPickupHit)
+end)
 
 function EquipVest(player)
     local x,y,z = GetPlayerLocation(player)

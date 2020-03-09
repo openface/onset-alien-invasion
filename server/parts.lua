@@ -30,11 +30,10 @@ AddCommand("part", function(player)
     EquipPart(player)
 end)
 
-function OnPackageStart()
+AddEvent("OnPackageStart", function()
     PartsLocations = File_LoadJSONTable("packages/"..GetPackageName().."/server/data/parts.json")
     SpawnParts()
-end
-AddEvent("OnPackageStart", OnPackageStart)
+end)
 
 function DespawnParts()
     for _,pickup in pairs(PartPickups) do
@@ -67,7 +66,7 @@ function SpawnParts()
 end
 
 -- pickup part
-function OnPlayerPickupHit(player, pickup)
+AddEvent("OnPlayerPickupHit", function(player, pickup)
     if (GetPickupPropertyValue(pickup, 'type') ~= 'part') then
         return
     end
@@ -80,8 +79,7 @@ function OnPlayerPickupHit(player, pickup)
     if PartPickups[pickup] ~= nil then
         PartPickups[pickup] = nil
     end
-end
-AddEvent("OnPlayerPickupHit", OnPlayerPickupHit)
+end)
 
 function EquipPart(player)
     if (GetPlayerPropertyValue(player, 'carryingPart') ~= nil) then

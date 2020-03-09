@@ -14,7 +14,7 @@ AddCommand("vpos", function(player)
     File_SaveJSONTable("packages/"..GetPackageName().."/server/data/vehicles.json", VehicleLocations)
 end)
 
-function OnPackageStart()
+AddEvent("OnPackageStart", function()
     VehicleLocations = File_LoadJSONTable("packages/"..GetPackageName().."/server/data/vehicles.json")
     print "Spawning vehicles..."
 
@@ -22,8 +22,7 @@ function OnPackageStart()
         local veh = CreateVehicle(23, pos[1], pos[2], pos[3])
         SetVehicleRespawnParams(veh, true, VehicleRespawnTime, true)
     end
-end
-AddEvent("OnPackageStart", OnPackageStart)
+end)
 
 AddEvent("OnPlayerEnterVehicle", function(player, vehicle, seat)
     if seat == 1 then

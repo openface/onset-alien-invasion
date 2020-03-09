@@ -106,7 +106,7 @@ function DespawnBoss()
     print "Mothership despawned"
 end
     
-function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, startx, starty, startz, normalx, normaly, normalz)
+AddEvent("OnPlayerWeaponShot", function(player, weapon, hittype, hitid, hitx, hity, hitz, startx, starty, startz, normalx, normaly, normalz)
     if (hittype == HIT_OBJECT and GetObjectPropertyValue(hitid, "type") == "boss") then
 
         if BossHealth == BossInitialHealth then
@@ -180,5 +180,4 @@ function OnPlayerWeaponShot(player, weapon, hittype, hitid, hitx, hity, hitz, st
             end)
         end
     end
-end
-AddEvent("OnPlayerWeaponShot", OnPlayerWeaponShot)
+end)

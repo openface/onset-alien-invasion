@@ -98,14 +98,22 @@ function EquipPart(player)
     CallRemoteEvent(player, "PartPickedup", pickup)
 end
 
+
 -- drop part on death
 AddEvent("OnPlayerDeath", function(player, killer)
     local part = GetPlayerPropertyValue(player, "carryingPart")
     if part ~= nil then
         DestroyObject(part)
+        SetPlayerPropertyValue(player, 'carryingPart', nil, true)
     end
-    SetPlayerPropertyValue(player, 'carryingPart', nil, true)
     CallRemoteEvent(player, "HideSatelliteWaypoint")
 end)
 
+-- destroy part on quit
+AddEvent("OnPlayerQuit", function(player)
+    local part = GetPlayerPropertyValue(player, "carryingPart")
+    if part ~= nil then
+        DestroyObject(part)
+    end
+end)
 

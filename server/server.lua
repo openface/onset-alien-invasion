@@ -65,32 +65,9 @@ AddEvent("OnPlayerDeath", function(player, killer)
         print(GetPlayerName(player)..' has been taken')
     end
 
-    DestroyEquipment(player)
-    SetPlayerPropertyValue(player, 'equippedVest', nil, true)
-    SetPlayerPropertyValue(player, 'carryingPart', nil, true)
-
     -- stats
     BumpPlayerStat(player, 'deaths')
     AddPlayerChat(player, "YOU ARE DEAD!  You must wait ".. PlayerRespawnSecs .." seconds to respawn...")
-end)
-
--- destroy any equipped items
-function DestroyEquipment(player)
-    -- destroy vest if equipped
-    local vest = GetPlayerPropertyValue(player, "equippedVest")
-    if vest ~= nil then
-        DestroyObject(vest)
-    end
-
-    -- destroy part if equipped
-    local part = GetPlayerPropertyValue(player, "carryingPart")
-    if part ~= nil then
-        DestroyObject(part)
-    end
-end
-
-AddEvent("OnPlayerQuit", function(player)
-    DestroyEquipment(player)
 end)
 
 -- Pickup for pistol

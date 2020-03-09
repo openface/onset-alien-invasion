@@ -90,3 +90,26 @@ function EquipVest(player)
     SetObjectAttached(vest, ATTACH_PLAYER, player, -17, 0, 0, 270, 0, 5, "spine_02")
     SetPlayerPropertyValue(player, "equippedVest", vest)
 end
+
+-- destroy vest on death
+AddEvent("OnPlayerDeath", function(player, killer)
+    -- destroy vest if equipped
+    local vest = GetPlayerPropertyValue(player, "equippedVest")
+    if vest ~= nil then
+        DestroyObject(vest)
+        SetPlayerPropertyValue(player, 'equippedVest', nil, true)
+    end
+end)
+
+-- destroy vest on quit
+AddEvent("OnPlayerQuit", function(player)
+    -- destroy vest if equipped
+    local vest = GetPlayerPropertyValue(player, "equippedVest")
+    if vest ~= nil then
+        DestroyObject(vest)
+    end
+end)
+
+AddCommand("die", function(player)
+    SetPlayerHealth(player, 0)
+end)

@@ -68,7 +68,7 @@ function SpawnBoss()
                     CallRemoteEvent(ply, "BossHurtPlayer")
                     SetPlayerHealth(ply, GetPlayerHealth(ply) - BossDamageAmount)
                 else
-                    print("Mothership no longer targeting player "..GetPlayerName(ply))
+                    print("Mothership no longer targeting player (ID "..ply..")")
                     table.remove(BossTargets, ply)
                 end
             end

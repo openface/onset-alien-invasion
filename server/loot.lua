@@ -77,7 +77,8 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
 
     BumpPlayerStat(player, "loot_collected")
     AddPlayerChatAll(GetPlayerName(player)..' has picked up a lootbox!')
-    
+    print(GetPlayerName(player)..' has picked up a lootbox')
+
     -- remove waypoint for others
     for _,p in pairs(GetAllPlayers()) do
         CallRemoteEvent(p, "HideLootWaypoint")
@@ -108,8 +109,4 @@ AddEvent("OnPlayerQuit", function(player)
     if vest ~= nil then
         DestroyObject(vest)
     end
-end)
-
-AddCommand("die", function(player)
-    SetPlayerHealth(player, 0)
 end)

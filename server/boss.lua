@@ -175,6 +175,9 @@ AddEvent("OnPlayerWeaponShot", function(player, weapon, hittype, hitid, hitx, hi
                 -- respawn all computer parts
                 SpawnParts()
 
+                -- respawn all vehicles
+                SpawnVehicles()
+                
                 -- reset satellite status for everyone
                 UpdateAllPlayersSatelliteStatus(0)
             end)

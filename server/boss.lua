@@ -62,6 +62,8 @@ function SpawnBoss()
                 end
             end
 
+            print(dump(BossTargets))
+
             for _,ply in pairs(BossTargets) do
                 -- player may have disconnected
                 if IsValidPlayer(ply) and not IsPlayerDead(ply) and GetPlayerDimension(ply) == 0 then

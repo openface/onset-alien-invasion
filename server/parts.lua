@@ -38,6 +38,7 @@ end)
 function DespawnParts()
     for _,pickup in pairs(PartPickups) do
         --print("Destroying pickup: "..pickup)
+        DestroyText3D(GetPickupPropertyValue(pickup, 'text3d'))
         DestroyPickup(pickup)
         PartPickups[pickup] = nil
     end
@@ -60,6 +61,7 @@ function SpawnParts()
         --CreateObject(303, pos[1], pos[2], pos[3], 0, 0, 0, 10, 10, 200) -- TODO remove me
         SetPickupPropertyValue(pickup, 'type', 'part')
         SetPickupScale(pickup, 3, 3, 3)
+        SetPickupPropertyValue(pickup, 'text3d', CreateText3D("Computer Part", 9, pos[1], pos[2], pos[3]+50, 0,0,0))
         PartPickups[pickup] = pickup
         --print("Spawning part: "..dump(pos).." pickup: "..pickup)
     end
@@ -72,7 +74,7 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
     end
         
     EquipPart(player)
-
+    DestroyText3D(GetPickupPropertyValue(pickup, 'text3d'))
     DestroyPickup(pickup)
 
     -- remove from part index if it exists

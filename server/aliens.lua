@@ -1,4 +1,4 @@
-local AlienHealth = 999
+local AlienHealth = 300
 local AlienAttackRange = 5000
 local AlienAttackDamage = 50
 local SafeLocation = { x = -102037, y = 194299, z = 1400 }

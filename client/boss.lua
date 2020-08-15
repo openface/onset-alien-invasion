@@ -1,5 +1,4 @@
 local BossUI
-local DefaultWeather = 0
 local DefaultFogDensity = 1.5
 local MothershipSpawnSound
 local MothershipSoundTimer
@@ -11,7 +10,6 @@ AddEvent("OnPackageStart", function()
     SetWebAnchors(BossUI, 0.0, 0.0, 1.0, 1.0)
     SetWebVisibility(BossUI, WEB_HIDDEN)
 
-    SetWeather(DefaultWeather)
     SetFogDensity(DefaultFogDensity)
 end)
 
@@ -36,7 +34,6 @@ AddEvent("OnObjectStreamIn", function(object)
         SetSoundVolume(MothershipSpawnSound, 2)
     end, 35 * 1000, x, y, z)
 
-    SetWeather(10)
     SetFogDensity(4.0)
     SetPostEffect("ImageEffects", "VignetteIntensity", 1)
 end)
@@ -49,7 +46,6 @@ AddRemoteEvent("DespawnBoss", function()
         DestroyTimer(MothershipSoundTimer)
     end
 
-    SetWeather(DefaultWeather)
     SetFogDensity(DefaultFogDensity)
     SetPostEffect("ImageEffects", "VignetteIntensity", 0)
 

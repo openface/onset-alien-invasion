@@ -1,6 +1,10 @@
 local AmbientSound
 
 AddRemoteEvent("AlienAttacking", function(npc)
+    if not IsValidNPC(npc) then
+        return
+    end
+
     AddPlayerChat('You are being attacked by an alien... RUN!')
 
     if AmbientSound ~= nil then

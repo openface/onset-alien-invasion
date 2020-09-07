@@ -36,10 +36,8 @@ AddRemoteEvent("HideSatelliteWaypoint", HideSatelliteWaypoint)
 function ShowComputerTimer(loc)
     local x,y,z = GetPlayerLocation(GetPlayerId())
     if GetDistance3D(x, y, z, loc.x, loc.y, loc.z) > 200 then
-        Delay(1000, function()
-            ExecuteWebJS(ComputerUI, "HideComputer()")
-            DestroyTimer(computer_timer)
-        end)
+        ExecuteWebJS(ComputerUI, "HideComputer()")
+        DestroyTimer(computer_timer)
     end
 end
 

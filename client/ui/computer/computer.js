@@ -35,6 +35,10 @@ function ShowSatelliteComputer(percentage) {
         login&gt; ************
         <p>Access granted.</p>
 
+        <div class="meter">
+            <span><span class="progress"></span></span>
+        </div>
+
         <p class="blinking">SATELLITE COMMUNICATIONS ARE NOW <b>${percentage}%</b> OPERATIONAL...</p>
 
         <p>The chance of being attacked by aliens has INCREASED!</p>

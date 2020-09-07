@@ -93,6 +93,7 @@ function SpawnAlienNearPlayer(player)
         return
     end
 
+    local x,y,z = GetPlayerLocation(player)
     local x,y = randomPointInCircle(x, y, AlienAttackRange + 500) -- some buffer
     --CreateObject(303, x, y, z+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
     local npc = CreateNPC(x, y, z+100, 90)

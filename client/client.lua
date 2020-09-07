@@ -1,7 +1,6 @@
 local ComputerWaypoint
 
 AddEvent("OnPlayerSpawn", function()
-    StartCameraFade(1.0, 0.0, 5.0, RGB(0, 0, 0))
     local player = GetPlayerId()
     local clothing = GetPlayerPropertyValue(player, "clothing")
     if clothing == nil then
@@ -53,7 +52,7 @@ AddEvent("OnPlayerParachuteOpen", function()
     ComputerWaypoint = CreateWaypoint(-106279.4140625, 193854.59375, 1399.1424560547 + 50, "Computer Terminal")
 end)
 
-AddEvent("OnPlayerSkydiveCrash", function()
+AddEvent("OnPlayerParachuteLand", function()
     CallRemoteEvent("DropParachute")
 end)
 

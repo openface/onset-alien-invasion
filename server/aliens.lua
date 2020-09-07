@@ -264,6 +264,13 @@ AddEvent("OnNPCReachTarget", function(npc)
         -- we're in close range, attack player
         print("NPC (ID "..npc..") hit player "..GetPlayerName(target))
         SetNPCAnimation(npc, "KUNGFU", false)
+
+        -- return home if attacking an admin
+        if IsAdmin(target) then
+            AlienReturn(npc)
+            return
+        end
+
         ApplyPlayerDamage(target)
 
         if GetPlayerHealth(target) <= 0 then

@@ -27,3 +27,13 @@ AddFunctionExport("ShowMessage", ShowMessage)
 AddRemoteEvent("ShowMessage", function(msg)
     ShowMessage(msg)
 end)
+
+-- overlay
+function ShowBlood()    
+    ExecuteWebJS(NotifUI, "ShowBlood()")
+end
+AddFunctionExport("ShowBlood", ShowBlood)
+
+AddRemoteEvent("ShowBlood", function()
+    ShowBlood()
+end)

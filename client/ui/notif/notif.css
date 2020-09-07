@@ -29,3 +29,14 @@
     font-weight:normal;
     font-family: Impact;
 }
+
+#overlay {
+    background:url('../images/blood_overlay.png') no-repeat center center fixed;
+    background-size: cover;
+    opacity: 0.5;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+}

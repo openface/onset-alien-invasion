@@ -61,3 +61,18 @@ AddEvent("GarageComputerInteraction", function(player)
         DestroyWaypoint(ComputerWaypoint)
     end
 end)
+
+-- toggle first-person view
+AddEvent("OnKeyPress", function(key)
+    if key == "V" then
+        if IsFirstPersonCamera() then
+            EnableFirstPersonCamera(false)
+            SetNearClipPlane(0)
+            SetCameraViewDistance(375)
+        else
+            EnableFirstPersonCamera(true)
+            SetNearClipPlane(15)
+            SetCameraViewDistance(350)
+        end
+    end
+end)

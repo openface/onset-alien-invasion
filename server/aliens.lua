@@ -68,17 +68,27 @@ function SpawnAliens()
 
             -- spawn boss randomly
             if satellite_percentage >= 60 and math.random(1,3) then
-                CallEvent("SpawnBoss")
+                if not IsPlayerInSafeZone(ply) then
+                    CallEvent("SpawnBoss")
+                end
             end
         end
     end
 end
 
-function SpawnAlienNearPlayer(player)
-    -- no spawning aliens if player is in safe distance
+function IsPlayerInSafeZone(player)
     local x,y,z = GetPlayerLocation(player)
     local distance = GetDistance3D(x, y, z, SafeLocation.x, SafeLocation.y, SafeLocation.z)
     if distance < SafeRange then
+        return true
+    else
+        return false
+    end
+end
+
+function SpawnAlienNearPlayer(player)
+    -- no spawning aliens if player is in safe distance
+    if IsPlayerInSafeZone(player) then
         print("Player "..GetPlayerName(player).." in safe zone")
         return
     end

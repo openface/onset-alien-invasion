@@ -2,7 +2,7 @@ local AlienHealth = 300
 local AlienAttackRange = 5000
 local AlienAttackDamage = 50
 local SafeLocation = { x = -102037, y = 194299, z = 1400 }
-local SafeRange = 7000
+local SafeRange = 5000
 local AlienRetargetCooldown = {} -- aliens re-target on every weapon hit w/ cooldown period
 local AlienSpawnsEnabled = true
 
@@ -64,6 +64,11 @@ function SpawnAliens()
             -- chance to spawn
             if math.random(1,chance) == 1 then
                 SpawnAlienNearPlayer(ply)
+            end
+
+            -- spawn boss randomly
+            if satellite_percentage >= 60 and math.random(1,3) then
+                CallEvent("SpawnBoss")
             end
         end
     end

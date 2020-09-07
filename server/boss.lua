@@ -1,7 +1,7 @@
 local BossInitialHealth = 999
 local BossDamagePerHit = 5 -- amount of damage boss takes per player hit
 local BossDamageAmount = 5 -- hurts players this much every interval
-local BossDamageRange = 8000
+local BossDamageRange = 10000
 
 local BossHealth = BossInitialHealth
 local Boss
@@ -9,7 +9,6 @@ local BossRotationTimer
 local BossHurtTimer
 local BossBombTimer
 local BossKillers = {}
-local BossTargets = {}
 
 AddCommand("boss", function(player)
     if not IsAdmin(player) then
@@ -20,7 +19,8 @@ end)
 
 function SpawnBoss()
     if Boss ~= nil then
-        DespawnBoss()
+        -- boss is already spawned
+        print "Mothership already spawned"
         return
     end
 
@@ -36,9 +36,6 @@ function SpawnBoss()
     SetObjectPropertyValue(Boss, "type", "boss")
     BossHealth = BossInitialHealth
 
-    -- target nearby players
-    BossTargets = GetPlayersInRange3D(x, y, z, BossDamageRange)
-
     -- spin
     BossRotationTimer = CreateTimer(function()
         local x,y,z = GetObjectRotation(Boss)
@@ -48,30 +45,23 @@ function SpawnBoss()
     -- hurt all targeted players every 5 seconds
     BossHurtTimer = CreateTimer(function()
         if Boss ~= nil then
-            if next(BossTargets) == nil then
-                print "Setting targets for mothership"
-                -- boss loss its target, set new targets
-                local x,y,z = GetObjectLocation(Boss)
-                BossTargets = GetPlayersInRange3D(x, y, z-10000, BossDamageRange)
+            local targets = GetPlayersInRange3D(x, y, z, BossDamageRange)
 
-                if next(BossTargets) == nil then
-                    -- no targets found, mothership leaves
-                    print "Mothership has no targets"
-                    DespawnBoss()
-                    return
-                end
+            if next(targets) == nil then
+                -- no targets found, mothership leaves
+                print "Mothership has no targets"
+                DespawnBoss()
+                return
             end
 
-            print(dump(BossTargets))
+            print(dump(targets))
 
-            for _,ply in pairs(BossTargets) do
+            for _,ply in pairs(targets) do
                 -- player may have disconnected
                 if IsValidPlayer(ply) and not IsPlayerDead(ply) and GetPlayerDimension(ply) == 0 then
+                    -- hurt player
                     CallRemoteEvent(ply, "BossHurtPlayer")
                     SetPlayerHealth(ply, GetPlayerHealth(ply) - BossDamageAmount)
-                else
-                    print("Mothership no longer targeting player (ID "..ply..")")
-                    table.remove(BossTargets, ply)
                 end
             end
         end
@@ -93,7 +83,7 @@ function DespawnBoss()
     end
 
     for _,ply in pairs(GetAllPlayers()) do
-        CallRemoteEvent(ply, "DespawnBoss")
+        CallRemoteEvent(ply, "DespawnBoss", Boss)
     end
 
     DestroyTimer(BossRotationTimer)

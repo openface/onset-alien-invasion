@@ -1,5 +1,4 @@
 local BossUI
-local DefaultFogDensity = 1.5
 local MothershipSpawnSound
 local MothershipSoundTimer
 
@@ -9,8 +8,6 @@ AddEvent("OnPackageStart", function()
     SetWebAlignment(BossUI, 0.0, 0.0)
     SetWebAnchors(BossUI, 0.0, 0.0, 1.0, 1.0)
     SetWebVisibility(BossUI, WEB_HIDDEN)
-
-    SetFogDensity(DefaultFogDensity)
 end)
 
 AddEvent("OnObjectStreamIn", function(object)
@@ -34,23 +31,26 @@ AddEvent("OnObjectStreamIn", function(object)
         SetSoundVolume(MothershipSpawnSound, 2)
     end, 35 * 1000, x, y, z)
 
-    SetFogDensity(4.0)
-    SetPostEffect("ImageEffects", "VignetteIntensity", 1)
+    SetPostEffect("ImageEffects", "VignetteIntensity", 1.5)
 end)
 
-AddRemoteEvent("DespawnBoss", function()
-    if MothershipSpawnSound ~= nil then
+AddRemoteEvent("DespawnBoss", function(boss)
+    local x,y,z = GetObjectLocation(boss)
+
+    MothershipFlybySound = CreateSound3D("client/sounds/mothership_flyby.mp3", x, y, z, 100000.0)
+    SetSoundVolume(MothershipFlybySound, 1)
+
+    Delay(5000, function()
         DestroySound(MothershipSpawnSound)
-    end
-    if MothershipSoundTimer ~= nil then
         DestroyTimer(MothershipSoundTimer)
-    end
 
-    SetFogDensity(DefaultFogDensity)
-    SetPostEffect("ImageEffects", "VignetteIntensity", 0)
+        SetPostEffect("ImageEffects", "VignetteIntensity", 0)
 
-    ExecuteWebJS(BossUI, "HideBossHealth()")
-    SetWebVisibility(BossUI, WEB_HIDDEN)
+        ExecuteWebJS(BossUI, "HideBossHealth()")
+        SetWebVisibility(BossUI, WEB_HIDDEN)
+
+        AddPlayerChat("The mothership has left your area.")
+    end)
 end)
 
 AddRemoteEvent("UpdateBossHealth", function(HealthPercentage)

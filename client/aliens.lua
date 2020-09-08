@@ -10,8 +10,10 @@ AddRemoteEvent("AlienAttacking", function(npc)
     SetSoundVolume(AmbientSound, 2)
 
     local x, y, z = GetNPCLocation(npc)
-    local AttackSound = CreateSound3D("client/sounds/alien.wav", x, y, z, 6000.0)
-    SetSoundVolume(AttackSound, 0.6)
+    if x ~= nil then
+        local AttackSound = CreateSound3D("client/sounds/alien.wav", x, y, z, 6000.0)
+        SetSoundVolume(AttackSound, 0.6)
+    end
 end)
 
 AddRemoteEvent('AlienNoLongerAttacking', function()

@@ -1,14 +1,17 @@
 local BossInitialHealth = 999
-local BossDamagePerHit = 5 -- amount of damage boss takes per player hit
 local BossDamageAmount = 5 -- hurts players this much every interval
 local BossDamageRange = 10000
-
+local WeaponData
 local BossHealth = BossInitialHealth
 local Boss
 local BossRotationTimer
 local BossHurtTimer
 local BossBombTimer
 local BossKillers = {}
+
+AddEvent("OnPackageStart", function()
+    WeaponData = File_LoadJSONTable("weapons.json")["weapons"]
+end)
 
 AddCommand("boss", function(player)
     if not IsAdmin(player) then
@@ -107,8 +110,8 @@ AddEvent("OnPlayerWeaponShot", function(player, weapon, hittype, hitid, hitx, hi
             first_hit = false
         end
 
-        -- apply damage to boss
-        BossHealth = BossHealth - BossDamagePerHit
+        -- apply weapon damage to boss
+        BossHealth = BossHealth - WeaponData[weapon]["Damage"]
 
         -- anyone who fires on boss gets credit for the kill
         if BossKillers[player] == nil then

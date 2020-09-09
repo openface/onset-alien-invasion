@@ -40,3 +40,45 @@
     left: 0;
     position: fixed;
 }
+
+#inventory {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-content: flex-start;
+    align-items: flex-start;
+    background:rgba(0,0,0,0.5);
+    position: fixed;
+    top:300px;
+    right: 20px;
+    border:5px solid rgba(0,0,0,0.1);
+    border-radius:5px;
+}
+.slot {
+    margin:5px;
+    flex: 0 1 auto;
+    align-self: auto;
+    background:rgba(0,0,0,0.2);
+    height:40px;
+    width:40px;
+    display: inline-block;
+    position:relative;
+}
+.slot img {
+    object-fit: scale-down;
+    width:40px;
+    height:40px;
+    opacity: 0.75;
+}
+.slot .quantity {
+    font-family: Impact;
+    position:absolute;
+    bottom:0;
+    right:0;
+    z-index: 1;
+    font-size:11px;
+    padding:2px;
+    background:rgba(255,255,255);
+    border:1px solid rgba(255,255,255);
+    border-radius: 20px;
+}

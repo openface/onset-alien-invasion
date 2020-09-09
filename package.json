@@ -10,6 +10,7 @@
 		"server/parts.lua",
 		"server/boss.lua",
 		"server/computer.lua",
+		"server/inventory.lua",
 		"server/time.lua",
 		"server/world.lua",
 		"server/scoreboard.lua",

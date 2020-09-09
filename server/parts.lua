@@ -90,32 +90,20 @@ function EquipPart(player)
         return
     end
 
-    -- carry with left hand
-    local x,y,z = GetPlayerLocation(player)
-    local part = CreateObject(PartObjectID, x, y, z)
-    SetObjectAttached(part, ATTACH_PLAYER, player, 10, -5, 0, 0, 0, 90, "hand_l")
+    SetPlayerPropertyValue(player, 'carryingPart', true, true)
+    CallEvent("SyncInventory", player)
 
-    SetPlayerPropertyValue(player, 'carryingPart', part, true)
     AddPlayerChatAll(GetPlayerName(player)..' has found a computer part!')
     CallRemoteEvent(player, "PartPickedup", pickup)
 end
-
 
 -- drop part on death
 AddEvent("OnPlayerDeath", function(player, killer)
     local part = GetPlayerPropertyValue(player, "carryingPart")
     if part ~= nil then
-        DestroyObject(part)
         SetPlayerPropertyValue(player, 'carryingPart', nil, true)
+        CallEvent("SyncInventory", player)
     end
     CallRemoteEvent(player, "HideSatelliteWaypoint")
-end)
-
--- destroy part on quit
-AddEvent("OnPlayerQuit", function(player)
-    local part = GetPlayerPropertyValue(player, "carryingPart")
-    if part ~= nil then
-        DestroyObject(part)
-    end
 end)
 

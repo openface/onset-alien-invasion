@@ -11,10 +11,13 @@ AddEvent("OnPackageStart", function()
 end)
 
 AddRemoteEvent("InteractSatelliteComputer", function(player)
-    local object = GetPlayerPropertyValue(player, 'carryingPart')
-    if not IsValidObject(object) then
+    if not GetPlayerPropertyValue(player, 'carryingPart') then
         return
     end
+
+    -- remove part from inventory
+    SetPlayerPropertyValue(player, 'carryingPart', nil)
+    CallEvent("SyncInventory", player)
 
     SetPlayerAnimation(player, "COMBINE")
 
@@ -29,8 +32,6 @@ AddRemoteEvent("InteractSatelliteComputer", function(player)
     print(GetPlayerName(player).. " acquired satellite part "..PartsCollected.." / "..PartsRequired)
 
     SetPlayerPropertyValue(player, 'carryingPart', nil, true)
-    SetObjectDetached(object)
-    DestroyObject(object)
     
     BumpPlayerStat(player, 'parts_collected')
 

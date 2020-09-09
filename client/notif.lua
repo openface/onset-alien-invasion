@@ -37,3 +37,8 @@ AddFunctionExport("ShowBlood", ShowBlood)
 AddRemoteEvent("ShowBlood", function()
     ShowBlood()
 end)
+
+-- inventory
+AddRemoteEvent("SetInventory", function(data)
+	ExecuteWebJS(NotifUI, "SetInventory('".. data .."')")
+end)

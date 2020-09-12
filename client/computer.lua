@@ -1,6 +1,8 @@
 local ComputerUI
-local ComputerLoc = { x = -106279.4140625, y = 193854.59375, z = 1399.1424560547 }
-local SatelliteLoc = { x = -103004.5234375, y = 201067.09375, z = 2203.3188476563 }
+local InteractiveLocs = {
+    ["InteractComputer"] = { x = -106279.4140625, y = 193854.59375, z = 1399.1424560547 },
+    ["InteractSatellite"] = { x = -103004.5234375, y = 201067.09375, z = 2203.3188476563 }
+}
 local computer_timer
 local SatelliteWaypoint
 local SatelliteStatus
@@ -17,9 +19,27 @@ AddEvent("OnPackageStart", function()
     SetTextBoxAlignment(SatelliteStatus, 1.0, 0.0)
 end)
 
+AddEvent("OnKeyPress", function(key)
+    if key == "E" then
+        local player = GetPlayerId()
+        local x,y,z = GetPlayerLocation(player)        
+        for event,pos in pairs(InteractiveLocs) do
+            if GetDistance3D(x, y, z, pos.x, pos.y, pos.z) <= 200 then
+                CallEvent(event, player, pos)
+                break
+            end
+        end
+    end
+end)
+
 function ShowSatelliteWaypoint()
     HideSatelliteWaypoint()
-    SatelliteWaypoint = CreateWaypoint(SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z+50, "Satellite Terminal")
+    SatelliteWaypoint = CreateWaypoint(
+        InteractiveLocs.InteractSatellite.x, 
+        InteractiveLocs.InteractSatellite.y, 
+        InteractiveLocs.InteractSatellite.z+50, 
+        "Satellite Terminal"
+    )
 end
 AddEvent("ShowSatelliteWaypoint", ShowSatelliteWaypoint)
 AddRemoteEvent("ShowSatelliteWaypoint", ShowSatelliteWaypoint)
@@ -41,34 +61,29 @@ function ShowComputerTimer(loc)
     end
 end
 
-AddEvent("OnKeyPress", function(key)
-    if key == "E" then
-        local player = GetPlayerId()
-        local x,y,z = GetPlayerLocation(player)
+AddEvent("InteractComputer", function(player, pos)
+    -- interacting with garage computer
+    SetSoundVolume(CreateSound("client/sounds/modem.mp3"), 0.7)
 
-        if GetDistance3D(x, y, z, ComputerLoc.x, ComputerLoc.y, ComputerLoc.z) <= 200 then
-            -- interacting with garage computer
-            SetSoundVolume(CreateSound("client/sounds/modem.mp3"), 0.7)
+    ExecuteWebJS(ComputerUI, "ShowGarageComputer()")
 
-            ExecuteWebJS(ComputerUI, "ShowGarageComputer()")
+    CallEvent("GarageComputerInteraction")
 
-            CallEvent("GarageComputerInteraction")
+    computer_timer = CreateTimer(ShowComputerTimer, 2000, pos)
+end)
 
-            computer_timer = CreateTimer(ShowComputerTimer, 2000, ComputerLoc)
-        elseif GetDistance3D(x, y, z, SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z) <= 200 then
-            if SatelliteWaypoint ~= nil then
-                DestroyWaypoint(SatelliteWaypoint)
-            end
+AddEvent("InteractSatellite", function(player)
+    if SatelliteWaypoint ~= nil then
+        DestroyWaypoint(SatelliteWaypoint)
+    end
 
-            -- interacting with satellite computer
-            if GetPlayerPropertyValue(player, 'carryingPart') == nil then
-                ShowMessage("You are missing a critical computer part!", 5000)
-                SetSoundVolume(CreateSound("client/sounds/error.mp3"), 1)
-            else
-                SetSoundVolume(CreateSound("client/sounds/modem.mp3"), 1)
-                CallRemoteEvent("InteractSatelliteComputer")
-            end
-        end
+    -- interacting with satellite computer
+    if GetPlayerPropertyValue(player, 'carryingPart') == nil then
+        ShowMessage("You are missing a critical computer part!", 5000)
+        SetSoundVolume(CreateSound("client/sounds/error.mp3"), 1)
+    else
+        SetSoundVolume(CreateSound("client/sounds/modem.mp3"), 1)
+        CallRemoteEvent("InteractSatelliteComputer")
     end
 end)
 
@@ -77,15 +92,15 @@ AddRemoteEvent("ShowSatelliteComputer", function(percentage)
         ExecuteWebJS(ComputerUI, "ShowSatelliteComputerComplete()")
     else
         ExecuteWebJS(ComputerUI, "ShowSatelliteComputer("..percentage..")")
-        computer_timer = CreateTimer(ShowComputerTimer, 2000, SatelliteLoc)
+        computer_timer = CreateTimer(ShowComputerTimer, 2000, InteractiveLocs.InteractSatellite)
     end
 end)
 
 -- occurs just before boss arrives
 AddRemoteEvent("SatelliteTransmission", function()
-    SetSoundVolume(CreateSound3D("client/sounds/transmission.mp3", SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z, 10000), 1)
+    SetSoundVolume(CreateSound3D("client/sounds/transmission.mp3", InteractiveLocs.InteractSatellite.x, InteractiveLocs.InteractSatellite.y, InteractiveLocs.InteractSatellite.z, 10000), 1)
     Delay(7000, function()
-        SetSoundVolume(CreateSound3D("client/sounds/alert.mp3", SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z, 10000), 1)
+        SetSoundVolume(CreateSound3D("client/sounds/alert.mp3", InteractiveLocs.InteractSatellite.x, InteractiveLocs.InteractSatellite.y, InteractiveLocs.InteractSatellite.z, 10000), 1)
     end)
 end)
 

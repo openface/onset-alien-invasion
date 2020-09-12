@@ -24,18 +24,22 @@ function SetInventory(data) {
     console.log(data);
     objects = JSON.parse(data);
 
-    // clear inventory slots
-    $('.slot').empty();
+    // remove inventory child nodes
+    $('#inventory').empty();
 
+    let html = "";
     // populate slot contents
     $.each(objects, function (i, object) {
         i = i + 1;
-        let html = `<img src="http://game/objects/${object['modelid']}"></img>`;
+        html += `<div class="slot" id="slot-${i}">`;
+        html += `<img src = "http://game/objects/${object['modelid']}" ></img>`;
         if (object['quantity'] > 1) {
             html += `<span class="quantity">${object['quantity']}</span>`;
         }
-        $('#slot-' + i).html(html);
+        html += `</div>`;
     });
+
+    $('#inventory').html(html);
 }
 
 $(document).ready(function () {

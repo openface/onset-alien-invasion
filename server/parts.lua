@@ -1,7 +1,7 @@
 local PartsLocations = {} -- parts.json
 local PartPickups = {}
 local PartObjectID = 1437
-local NumSpawnedParts = 25 -- number of parts to spawn
+local NumSpawnedParts = 25 -- maximum number of parts to spawn
 
 AddCommand("ppos", function(player)
     if not IsAdmin(player) then

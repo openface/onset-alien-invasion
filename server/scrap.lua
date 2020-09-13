@@ -1,5 +1,6 @@
 local ScrapLocations = {} -- scraps.json
-local NumSpawnedScrap = 25 -- number of scraps to spawn
+local NumSpawnedScrap = 25 -- maximum number of scrap spots to spawn
+local ScrapCooldown = 60000 * 5 -- can only search a scrap point every 10 minutes
 
 AddCommand("spos", function(player)
     if not IsAdmin(player) then
@@ -78,12 +79,17 @@ AddRemoteEvent("SearchForScrap", function(player)
                     SetPlayerAnimation(player, "PICKUP_LOWER")
                     Delay(4000, function()
                         CurrentlySearching[player] = nil
-                        
+
                         -- chance to find scrap
                         if math.random(1,5) == 1 then
-                            -- found; remove scrap from world
-                            DestroyText3D(text3d)
+                            -- found something
+                            SetText3DVisibility(text3d, player, false)
                             PickupScrap(player)
+
+                            -- hide from player for 10 minutes
+                            Delay(ScrapCooldown, function(text3d, player)
+                                SetText3DVisibility(text3d, player, true)
+                            end, text3d, player)
                         else
                             -- not found
                             AddPlayerChat(player, "You were unable to find anything useful.")

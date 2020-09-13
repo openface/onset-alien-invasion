@@ -42,6 +42,30 @@ AddEvent("AddItemToInventory", function(player, item)
     print(GetPlayerName(player).." PlayerInventory: "..dump(_inventory))
 end)
 
+-- deletes item from inventory
+-- deduces qty if carrying more than 1
+AddEvent("RemoveFromInventory", function(player, item)
+    _inventory = GetPlayerPropertyValue(player, "inventory")
+
+    for k,v in pairs(_inventory) do
+        if v['item'] == item then
+            -- found object
+            _qty = v['quantity'] - 1
+            if _qty > 0 then
+                -- decrease qty by 1
+                _inventory[k]['quantity'] = _qty
+            else
+                -- remove item from inventory
+                _inventory[k] = nil
+            end
+            SetPlayerPropertyValue(player, "inventory", _inventory)
+
+            CallEvent("SyncInventory", player)
+            break
+        end
+    end
+end)
+
 -- get carry count for given item
 function GetInventoryCount(player, item)
     local _inventory = GetPlayerPropertyValue(player, "inventory")

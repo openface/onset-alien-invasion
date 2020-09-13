@@ -24,8 +24,6 @@ AddRemoteEvent("InteractSatelliteComputer", function(player)
     AddPlayerChatAll("Satellite communications are now "..percentage_complete.."% operational!")
 
     print(GetPlayerName(player).. " acquired satellite part "..PartsCollected.." / "..PartsRequired)
-
-    SetPlayerPropertyValue(player, 'carryingPart', nil, true)
     
     BumpPlayerStat(player, 'parts_collected')
 

@@ -32,7 +32,7 @@ end)
 AddEvent("OnPlayerJoin", function(player)
     -- place player in separate dimension while character is selected
     SetPlayerDimension(player, math.random(1, 999))
-    -- temporary spawn point unless player selects a character
+    -- temporary spawn point until player selects a character
     SetPlayerSpawnLocation(player, 173454, 198906, 2496, 180)
     SetPlayerRespawnTime(player, PlayerRespawnSecs * 1000)
 	AddPlayerChatAll('<span color="#eeeeeeaa">'..GetPlayerName(player)..' has joined the server</>')

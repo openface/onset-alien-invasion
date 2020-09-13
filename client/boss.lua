@@ -32,25 +32,26 @@ AddEvent("OnObjectStreamIn", function(object)
         MothershipSpawnSound = CreateSound3D("client/sounds/mothership.mp3", x, y, z, 100000.0)
         SetSoundVolume(MothershipSpawnSound, 2)
     end, 35 * 1000, x, y, z)
+end)
 
+-- Boss is coming
+AddRemoteEvent("PrespawnBoss", function()
+    SetCloudDensity(4)
     SetPostEffect("ImageEffects", "VignetteIntensity", 1.5)
 end)
 
-AddRemoteEvent("PreSpawnBoss", function()
-    SetCloudDensity(1)
-end)
-
+-- Boss is leaving
 AddRemoteEvent("DespawnBoss", function(boss)
     local x,y,z = GetObjectLocation(boss)
 
     MothershipFlybySound = CreateSound3D("client/sounds/mothership_flyby.mp3", x, y, z, 100000.0)
     SetSoundVolume(MothershipFlybySound, 1)
-    SetCloudDensity(2)
 
     Delay(5000, function()
         DestroySound(MothershipSpawnSound)
         DestroyTimer(MothershipSoundTimer)
 
+        SetCloudDensity(1)
         SetPostEffect("ImageEffects", "VignetteIntensity", 0)
 
         ExecuteWebJS(BossUI, "HideBossHealth()")
@@ -68,6 +69,6 @@ end)
 -- mothership hurts player
 AddRemoteEvent("BossHurtPlayer", function()
     SetSoundVolume(CreateSound("client/sounds/pain.mp3"), 1)
-    ShowBlood();
+    ShowBlood()
     AddPlayerChat("You feel life leaving your body.")
 end)

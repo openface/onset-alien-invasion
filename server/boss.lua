@@ -1,4 +1,4 @@
-local BossInitialHealth = 999
+local BossInitialHealth = 3000
 local BossDamageAmount = 5 -- hurts players this much every interval
 local BossDamageRange = 10000
 local WeaponData
@@ -17,8 +17,15 @@ AddCommand("boss", function(player)
     if not IsAdmin(player) then
         return
     end
-    SpawnBoss()
+    PrespawnBoss()
 end)
+
+function PrespawnBoss()
+    for _,ply in pairs(GetAllPlayers()) do
+        CallRemoteEvent(ply, "PrespawnBoss")
+    end
+    Delay(5000, SpawnBoss)
+end
 
 function SpawnBoss()
     if Boss ~= nil then

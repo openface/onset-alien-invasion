@@ -31,6 +31,7 @@ AddEvent("OnKeyPress", function(key)
     end
  end)
 
+-- after computer_part is picked up, show waypoint to the satellite
 function ShowSatelliteWaypoint()
     HideSatelliteWaypoint()
     SatelliteWaypoint = CreateWaypoint(SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc+50, "Satellite Terminal")

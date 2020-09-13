@@ -28,8 +28,6 @@ end)
 
 AddEvent("SelectCharacter", function(preset)
     SetWebVisibility(CharUI, WEB_HIDDEN)
-	DestroyWebUI(CharUI)
-	CharUI = nil
 
     CallRemoteEvent("SelectCharacter", preset)
     ShowMouseCursor(false)

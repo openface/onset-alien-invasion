@@ -80,5 +80,6 @@ end
 -- drop all on death
 AddEvent("OnPlayerDeath", function(player, killer)
     SetPlayerPropertyValue(player, "inventory", {})
+    CallEvent("SyncInventory", player)
 end)
 

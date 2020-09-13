@@ -58,7 +58,6 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
     AddPlayerChat(player, '<span color="#eeeeeeaa">Hit [T] to chat and [TAB] for scoreboard</>')
     AddPlayerChat(player, '<span color="#ffffffff">Thanks for testing this gamemode.</>')
 
-
     -- parachute down to the island
     SetPlayerLocation(player, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z + 30000)
     AttachPlayerParachute(player, true)
@@ -108,3 +107,4 @@ end)
 AddRemoteEvent("DropParachute", function(player)
     AttachPlayerParachute(player, false)
 end)
+

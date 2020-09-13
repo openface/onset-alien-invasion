@@ -9,26 +9,38 @@ AddEvent("OnPackageStart", function()
 end)
 
 AddRemoteEvent("ShowCharacterSelection", function()
+    local sky = { x = -102037, y = 194299, z = 31400 }
+
+    SetIgnoreMoveInput(true)
+    SetIgnoreLookInput(true)
+    SetCameraLocation(sky.x, sky.y, sky.z, true)
+    SetCameraRotation(-90, 0, 0, true)
+
     ExecuteWebJS(CharUI, "ShowCharacterSelect()")
-  	ShowMouseCursor(true)
-	SetIgnoreMoveInput(true);
-	SetInputMode(INPUT_GAMEANDUI)
+   	ShowMouseCursor(true)
+    SetInputMode(INPUT_GAMEANDUI)
     SetWebVisibility(CharUI, WEB_VISIBLE)
 
-    local ChopperSound = CreateSound("client/sounds/chopper.mp3")
-    SetSoundVolume(ChopperSound, 0.3)
+    -- play chopper sound from initial spawn point in the sky
+    local ChopperSound = CreateSound3D("client/sounds/chopper.mp3", sky.x, sky.y, sky.z, 50000)
+    SetSoundVolume(ChopperSound, 0.5)
 end)
 
 AddEvent("SelectCharacter", function(preset)
-    CallRemoteEvent("SelectCharacter", preset)
     SetWebVisibility(CharUI, WEB_HIDDEN)
 	DestroyWebUI(CharUI)
 	CharUI = nil
-	ShowMouseCursor(false)
-	SetIgnoreMoveInput(false);
+
+    CallRemoteEvent("SelectCharacter", preset)
+    ShowMouseCursor(false)
+    SetIgnoreMoveInput(false)
+    SetIgnoreLookInput(false)
     SetInputMode(INPUT_GAME)
     
     local player = GetPlayerId()    
     SetPlayerPropertyValue(player, 'clothing', preset, true)
     SetPlayerClothingPreset(player, preset)
+
+    SetCameraLocation(0,0,0,false)
+    SetCameraRotation(0,0,0,false)
 end)

@@ -30,19 +30,23 @@ end)
 
 -- welcome message
 AddEvent("OnPlayerJoin", function(player)
+    local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 6000)
+    SetPlayerSpawnLocation(player, x, y, SpawnLocation.z, 180)
+
+    SetPlayerRespawnTime(player, PlayerRespawnSecs * 1000)
+
+    AddPlayerChatAll('<span color="#eeeeeeaa">'..GetPlayerName(player)..' has joined the server</>')
+    AddPlayerChat(player, '<span color="#ffffffff">Welcome to Alien Invasion by oweff!</>')
+end)
+
+-- Player spawn
+AddEvent("OnPlayerSpawn", function(player)
+    SetPlayerArmor(player, 0)
+    SetPlayerPropertyValue(player, "inventory", {})
+
     -- place player in separate dimension while character is selected
     SetPlayerDimension(player, math.random(1, 999))
-    -- temporary spawn point until player selects a character
-    SetPlayerSpawnLocation(player, 173454, 198906, 2496, 180)
-    SetPlayerRespawnTime(player, PlayerRespawnSecs * 1000)
-	AddPlayerChatAll('<span color="#eeeeeeaa">'..GetPlayerName(player)..' has joined the server</>')
-	AddPlayerChatAll('<span color="#eeeeeeaa">There are '..GetPlayerCount()..' players on the server</>')
-    AddPlayerChatAll('<span color="#eeeeeeaa">Hit [T] to chat and [TAB] for scoreboard</>')
-    AddPlayerChatAll('<span color="#ffffffff">Welcome to Alien Invasion by oweff!</>')
-    AddPlayerChatAll('<span color="#ffffffff">Thanks for testing this gamemode.</>')
     CallRemoteEvent(player, "ShowCharacterSelection")
-
-    SetPlayerPropertyValue(player, "inventory", {})
 end)
 
 AddRemoteEvent("SelectCharacter", function(player, preset)
@@ -51,11 +55,12 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
     -- join the others
     SetPlayerDimension(player, 0)
 
-    -- parachute down to the island
-    local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 8000)
+    AddPlayerChat(player, '<span color="#eeeeeeaa">Hit [T] to chat and [TAB] for scoreboard</>')
+    AddPlayerChat(player, '<span color="#ffffffff">Thanks for testing this gamemode.</>')
 
-    SetPlayerSpawnLocation(player, x, y, SpawnLocation.z, 180)
-    SetPlayerLocation(player, x, y, SpawnLocation.z + 30000)
+
+    -- parachute down to the island
+    SetPlayerLocation(player, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z + 30000)
     AttachPlayerParachute(player, true)
 end)
 
@@ -81,12 +86,6 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
     if GetPickupPropertyValue(pickup, 'type') == 'pistol' then
     	SetPlayerWeapon(player, math.random(2,5), 100, true, 2)
 	end
-end)
-
--- Player spawn
-AddEvent("OnPlayerSpawn", function(player)
-    SetPlayerArmor(player, 0)
-    SetPlayerPropertyValue(player, "inventory", {})
 end)
 
 -- Log auth

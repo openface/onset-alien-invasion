@@ -1,0 +1,66 @@
+
+#workbench {
+    width:600px;
+    margin:50px auto;
+    background: rgba(0,0,0,0.4);
+    padding:0px 15px;
+    padding-bottom:15px;
+    border:10px solid rgba(0,0,0,0.1);
+    border-radius:8px;
+    font-family:impact;
+}
+
+#title {
+    font-family:impact;
+    font-size:20px;
+    color:#fff;
+    text-align:center;
+    text-shadow: 1px 1px black;
+    margin:10px 0;
+}
+
+section {
+  display: table;
+  width: 100%;
+}
+
+section > * {
+  display: table-row;
+}
+
+section .col {
+  display: table-cell;
+  padding:5px;
+}
+
+header .col {
+  text-transform:uppercase;
+}
+
+.row {
+    width: 100%;
+    background:rgba(0,0,0,0.3);
+    border-radius:3px;
+    border:1px solid #000;
+}
+
+.row:hover, button:hover {
+    border:1px solid #fff;
+}
+.row img {
+    border-radius: 4px;
+    width: 100px;
+}
+.row button {
+    background:#1770ff;
+    color:#fff;
+    font-weight:bold;
+    border:0px;
+    padding:7px;
+    display:block;
+    width:100%;
+}
+.row button:hover {
+    cursor: pointer;
+    background:#3684ff;
+}

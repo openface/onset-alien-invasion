@@ -39,7 +39,7 @@ AddEvent("OnPlayerTalking", function(player)
 end)
 
 AddRemoteEvent("ClientSetTime", function(time)
-	SetTime(time)
+    SetTime(time)
 end)
 
 -- skydive

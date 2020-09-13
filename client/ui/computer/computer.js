@@ -62,3 +62,7 @@ function ShowSatelliteComputerComplete() {
 function HideComputer() {
     $('#terminal-box').fadeOut();
 }
+
+$(document).ready(function () {
+    /*ShowGarageComputer();*/
+});

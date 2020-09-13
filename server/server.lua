@@ -54,6 +54,7 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
 
     -- join the others
     SetPlayerDimension(player, 0)
+    SetPlayerPropertyValue(player, "inventory", {})
 
     AddPlayerChat(player, '<span color="#eeeeeeaa">Hit [T] to chat and [TAB] for scoreboard</>')
     AddPlayerChat(player, '<span color="#ffffffff">Thanks for testing this gamemode.</>')

@@ -8,6 +8,8 @@ AddEvent("OnPackageStart", function()
     SetWebAlignment(BossUI, 0.0, 0.0)
     SetWebAnchors(BossUI, 0.0, 0.0, 1.0, 1.0)
     SetWebVisibility(BossUI, WEB_HIDDEN)
+
+    SetCloudDensity(1)
 end)
 
 AddEvent("OnObjectStreamIn", function(object)
@@ -34,11 +36,16 @@ AddEvent("OnObjectStreamIn", function(object)
     SetPostEffect("ImageEffects", "VignetteIntensity", 1.5)
 end)
 
+AddRemoteEvent("PreSpawnBoss", function()
+    SetCloudDensity(1)
+end)
+
 AddRemoteEvent("DespawnBoss", function(boss)
     local x,y,z = GetObjectLocation(boss)
 
     MothershipFlybySound = CreateSound3D("client/sounds/mothership_flyby.mp3", x, y, z, 100000.0)
     SetSoundVolume(MothershipFlybySound, 1)
+    SetCloudDensity(2)
 
     Delay(5000, function()
         DestroySound(MothershipSpawnSound)

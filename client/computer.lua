@@ -1,9 +1,9 @@
 local ComputerUI
+
 local ComputerLoc = { x = -106279.4140625, y = 193854.59375, z = 1399.1424560547 }
 local computer_timer
 
 local SatelliteLoc = { x = -103004.5234375, y = 201067.09375, z = 2203.3188476563 }
-local computer_timer
 local SatelliteWaypoint
 local SatelliteStatus
 
@@ -24,7 +24,7 @@ AddEvent("OnKeyPress", function(key)
         local player = GetPlayerId()
         local x,y,z = GetPlayerLocation(player)
         if GetDistance3D(x, y, z, ComputerLoc.x, ComputerLoc.y, ComputerLoc.z) <= 200 then
-            CallEvent("InteractComputer", player, ComputerLoc)
+            CallEvent("InteractComputer", player)
         elseif GetDistance3D(x, y, z, SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z) <= 200 then
             CallEvent("InteractSatellite", player)
         end
@@ -47,6 +47,7 @@ end
 AddEvent("HideSatelliteWaypoint", HideSatelliteWaypoint)
 AddRemoteEvent("HideSatelliteWaypoint", HideSatelliteWaypoint)
 
+-- timer used to hide computer screen once player walks away
 function ShowComputerTimer(loc)
     local x,y,z = GetPlayerLocation(GetPlayerId())
     if GetDistance3D(x, y, z, loc.x, loc.y, loc.z) > 200 then
@@ -55,23 +56,20 @@ function ShowComputerTimer(loc)
     end
 end
 
-AddEvent("InteractComputer", function(player, pos)
-    -- interacting with garage computer
-    SetSoundVolume(CreateSound("client/sounds/modem.mp3"), 0.7)
-
+-- interacting with garage computer
+AddEvent("InteractComputer", function(player)
+    SetSoundVolume(CreateSound3D("client/sounds/modem.mp3", ComputerLoc.x, ComputerLoc.y, ComputerLoc.z, 1500), 0.7)
     ExecuteWebJS(ComputerUI, "ShowGarageComputer()")
-
     CallEvent("GarageComputerInteraction")
-
-    computer_timer = CreateTimer(ShowComputerTimer, 2000, pos)
+    computer_timer = CreateTimer(ShowComputerTimer, 1000, ComputerLoc)
 end)
 
+-- interacting with satellite computer requires computer_part
 AddEvent("InteractSatellite", function(player)
     if SatelliteWaypoint ~= nil then
         DestroyWaypoint(SatelliteWaypoint)
     end
 
-    -- interacting with satellite computer requires computer_part
     local _inventory = GetPlayerPropertyValue(player, "inventory")
     local part_count = 0
     for k,v in pairs(_inventory) do
@@ -80,11 +78,12 @@ AddEvent("InteractSatellite", function(player)
         end
     end
 
+    AddPlayerChat(part_count)
     if part_count < 1 then
         ShowMessage("You are missing a critical computer part!", 5000)
         SetSoundVolume(CreateSound("client/sounds/error.mp3"), 1)
     else
-        SetSoundVolume(CreateSound("client/sounds/modem.mp3"), 1)
+        SetSoundVolume(CreateSound3D("client/sounds/modem.mp3", SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z, 1500), 0.7)
         CallRemoteEvent("InteractSatelliteComputer")
     end
 end)
@@ -94,7 +93,7 @@ AddRemoteEvent("ShowSatelliteComputer", function(percentage)
         ExecuteWebJS(ComputerUI, "ShowSatelliteComputerComplete()")
     else
         ExecuteWebJS(ComputerUI, "ShowSatelliteComputer("..percentage..")")
-        computer_timer = CreateTimer(ShowComputerTimer, 2000, SatelliteLoc)
+        computer_timer = CreateTimer(ShowComputerTimer, 1000, SatelliteLoc)
     end
 end)
 

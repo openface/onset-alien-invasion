@@ -62,17 +62,23 @@ function SpawnScrap()
 end
 
 -- search for scrap
+local CurrentlySearching = {}
 AddRemoteEvent("SearchForScrap", function(player)
+    if CurrentlySearching[player] ~= nil then
+        return
+    end
+
     local x,y,z = GetPlayerLocation(player)
     for _,text3d in pairs(GetAllText3D()) do
         if GetText3DPropertyValue(text3d, 'scrap') ~= nil then
             if IsText3DStreamedIn(player, text3d) then
                 local sx, sy, sz = GetText3DLocation(text3d)
                 if GetDistance3D(x, y, z, sx, sy, sz) <= 300 then
-                    SetPlayerAnimation(player, "PICKUP_LOWER", true)
-                    Delay(5000, function()
-                        SetPlayerAnimation(player, "STOP")
-
+                    CurrentlySearching[player] = true
+                    SetPlayerAnimation(player, "PICKUP_LOWER")
+                    Delay(4000, function()
+                        CurrentlySearching[player] = nil
+                        
                         -- chance to find scrap
                         if math.random(1,5) == 1 then
                             -- found; remove scrap from world

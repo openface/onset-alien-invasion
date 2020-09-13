@@ -43,5 +43,5 @@ function SetInventory(data) {
 }
 
 $(document).ready(function () {
-    /*SetInventory('[{"quantity":2,"item":"scrap"}]');*/
+    SetInventory('[{"quantity":2,"item":"scrap"}]');
 });

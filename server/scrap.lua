@@ -113,13 +113,4 @@ function PickupScrap(player)
     CallRemoteEvent(player, "ScrapPickedup")
 end
 
--- drop scrap on death
-AddEvent("OnPlayerDeath", function(player, killer)
---    local part = GetPlayerPropertyValue(player, "carryingPart")
---    if part ~= nil then
---        SetPlayerPropertyValue(player, 'carryingPart', nil, true)
-        CallEvent("SyncInventory", player)
---  end
---    CallRemoteEvent(player, "HideSatelliteWaypoint")
-end)
 

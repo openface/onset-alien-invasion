@@ -41,6 +41,8 @@ AddEvent("OnPlayerJoin", function(player)
     AddPlayerChatAll('<span color="#ffffffff">Welcome to Alien Invasion by oweff!</>')
     AddPlayerChatAll('<span color="#ffffffff">Thanks for testing this gamemode.</>')
     CallRemoteEvent(player, "ShowCharacterSelection")
+
+    SetPlayerPropertyValue(player, "inventory", {})
 end)
 
 AddRemoteEvent("SelectCharacter", function(player, preset)
@@ -84,6 +86,7 @@ end)
 -- Player spawn
 AddEvent("OnPlayerSpawn", function(player)
     SetPlayerArmor(player, 0)
+    SetPlayerPropertyValue(player, "inventory", {})
 end)
 
 -- Log auth

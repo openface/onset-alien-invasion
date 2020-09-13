@@ -77,11 +77,7 @@ AddRemoteEvent("SearchForScrap", function(player)
                         if math.random(1,5) == 1 then
                             -- found; remove scrap from world
                             DestroyText3D(text3d)
-
-                            -- add to inventory
-                            CallEvent("SyncInventory", player)
-                            AddPlayerChatAll(GetPlayerName(player)..' has found scrap!')
-                            print("Player "..GetPlayerName(player).." has found scrap!")
+                            PickupScrap(player)
                         else
                             -- not found
                             AddPlayerChat(player, "You were unable to find anything useful.")
@@ -94,7 +90,16 @@ AddRemoteEvent("SearchForScrap", function(player)
     end
 end)
 
+-- add scrap to inventory
+function PickupScrap(player)
+    -- add to inventory
+    CallEvent("AddItemToInventory", player, "scrap")
 
+    AddPlayerChatAll(GetPlayerName(player)..' has found scrap!')
+    print("Player "..GetPlayerName(player).." has found scrap!")
+
+    CallRemoteEvent(player, "ScrapPickedup")
+end
 
 -- drop scrap on death
 AddEvent("OnPlayerDeath", function(player, killer)

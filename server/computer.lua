@@ -10,13 +10,8 @@ AddEvent("OnPackageStart", function()
 end)
 
 AddRemoteEvent("InteractSatelliteComputer", function(player)
-    if not GetPlayerPropertyValue(player, 'carryingPart') then
-        return
-    end
-
     -- remove part from inventory
-    SetPlayerPropertyValue(player, 'carryingPart', nil)
-    CallEvent("SyncInventory", player)
+    CallEvent("RemoveFromInventory", player, "computer_part")
 
     SetPlayerAnimation(player, "COMBINE")
 

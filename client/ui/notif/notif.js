@@ -22,19 +22,19 @@ function ShowBlood() {
 // inventory
 function SetInventory(data) {
     console.log(data);
-    objects = JSON.parse(data);
+    items = JSON.parse(data);
 
     // remove inventory child nodes
     $('#inventory').empty();
 
     let html = "";
     // populate slot contents
-    $.each(objects, function (i, object) {
+    $.each(items, function (i, item) {
         i = i + 1;
         html += `<div class="slot" id="slot-${i}">`;
-        html += `<img src = "http://game/objects/${object['modelid']}" ></img>`;
-        if (object['quantity'] > 1) {
-            html += `<span class="quantity">${object['quantity']}</span>`;
+        html += `<img src="../images/${item['item']}.png" />`;
+        if (item['quantity'] > 1) {
+            html += `<span class="quantity">${item['quantity']}</span>`;
         }
         html += `</div>`;
     });
@@ -43,5 +43,5 @@ function SetInventory(data) {
 }
 
 $(document).ready(function () {
-    /*SetInventory('[{"quantity":2,"modelid":662}]');*/
+    /*SetInventory('[{"quantity":2,"item":"scrap"}]');*/
 });

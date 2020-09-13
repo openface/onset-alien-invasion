@@ -51,6 +51,8 @@
 		"client/ui/ui.js",
 
 		"client/ui/images/blood_overlay.png",
+		"client/ui/images/computer_part.png",
+		"client/ui/images/scrap.png",
 
 		"client/ui/scoreboard/scoreboard.html",
 		"client/ui/scoreboard/scoreboard.css",

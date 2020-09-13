@@ -1,8 +1,8 @@
 local ComputerUI
-local InteractiveLocs = {
-    ["InteractComputer"] = { x = -106279.4140625, y = 193854.59375, z = 1399.1424560547 },
-    ["InteractSatellite"] = { x = -103004.5234375, y = 201067.09375, z = 2203.3188476563 }
-}
+local ComputerLoc = { x = -106279.4140625, y = 193854.59375, z = 1399.1424560547 }
+local computer_timer
+
+local SatelliteLoc = { x = -103004.5234375, y = 201067.09375, z = 2203.3188476563 }
 local computer_timer
 local SatelliteWaypoint
 local SatelliteStatus
@@ -22,15 +22,14 @@ end)
 AddEvent("OnKeyPress", function(key)
     if key == "E" then
         local player = GetPlayerId()
-        local x,y,z = GetPlayerLocation(player)        
-        for event,pos in pairs(InteractiveLocs) do
-            if GetDistance3D(x, y, z, pos.x, pos.y, pos.z) <= 200 then
-                CallEvent(event, player, pos)
-                break
-            end
+        local x,y,z = GetPlayerLocation(player)
+        if GetDistance3D(x, y, z, ComputerLoc.x, ComputerLoc.y, ComputerLoc.z) <= 200 then
+            CallEvent("InteractComputer", player, ComputerLoc)
+        elseif GetDistance3D(x, y, z, SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z) <= 200 then
+            CallEvent("InteractSatellite", player)
         end
     end
-end)
+ end)
 
 function ShowSatelliteWaypoint()
     HideSatelliteWaypoint()
@@ -77,14 +76,21 @@ AddEvent("InteractSatellite", function(player)
         DestroyWaypoint(SatelliteWaypoint)
     end
 
-    -- interacting with satellite computer
-    if GetPlayerPropertyValue(player, 'carryingPart') == nil then
-        ShowMessage("You are missing a critical computer part!", 5000)
-        SetSoundVolume(CreateSound("client/sounds/error.mp3"), 1)
-    else
-        SetSoundVolume(CreateSound("client/sounds/modem.mp3"), 1)
-        CallRemoteEvent("InteractSatelliteComputer")
+    -- interacting with satellite computer requires computer_part
+    local _inventory = GetPlayerPropertyValue(player, "inventory")
+    print(_inventory)
+    for k,v in pairs(_inventory) do
+        print(k,v)
+        if v['item'] == "computer_part" then
+            SetSoundVolume(CreateSound("client/sounds/modem.mp3"), 1)
+            CallRemoteEvent("InteractSatelliteComputer")
+            break
+        end
     end
+
+    -- computer part not found
+    ShowMessage("You are missing a critical computer part!", 5000)
+    SetSoundVolume(CreateSound("client/sounds/error.mp3"), 1)
 end)
 
 AddRemoteEvent("ShowSatelliteComputer", function(percentage)

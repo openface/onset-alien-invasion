@@ -27,7 +27,7 @@ AddCommand("part", function(player)
     if not IsAdmin(player) then
         return
     end
-    EquipPart(player)
+    PickupPart(player)
 end)
 
 AddEvent("OnPackageStart", function()
@@ -73,37 +73,25 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
         return
     end
         
-    EquipPart(player)
-    DestroyText3D(GetPickupPropertyValue(pickup, 'text3d'))
-    DestroyPickup(pickup)
+    PickupPart(player)
 
     -- remove from part index if it exists
     if PartPickups[pickup] ~= nil then
         PartPickups[pickup] = nil
     end
+    DestroyText3D(GetPickupPropertyValue(pickup, 'text3d'))
+    DestroyPickup(pickup)
 end)
 
-function EquipPart(player)
-    if (GetPlayerPropertyValue(player, 'carryingPart') ~= nil) then
-        -- already carrying a part
-        CallRemoteEvent(player, "ShowMessage", "Take your part to the satellite computer!")
-        return
-    end
-
-    SetPlayerPropertyValue(player, 'carryingPart', true, true)
-    CallEvent("SyncInventory", player)
+function PickupPart(player)
+    CallEvent("AddItemToInventory", player, "computer_part")
 
     AddPlayerChatAll(GetPlayerName(player)..' has found a computer part!')
     CallRemoteEvent(player, "PartPickedup", pickup)
 end
 
--- drop part on death
+-- clear satellite waypoint on death
 AddEvent("OnPlayerDeath", function(player, killer)
-    local part = GetPlayerPropertyValue(player, "carryingPart")
-    if part ~= nil then
-        SetPlayerPropertyValue(player, 'carryingPart', nil, true)
-        CallEvent("SyncInventory", player)
-    end
     CallRemoteEvent(player, "HideSatelliteWaypoint")
 end)
 

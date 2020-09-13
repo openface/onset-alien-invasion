@@ -75,8 +75,11 @@ AddRemoteEvent("SearchForScrap", function(player)
             if IsText3DStreamedIn(player, text3d) then
                 local sx, sy, sz = GetText3DLocation(text3d)
                 if GetDistance3D(x, y, z, sx, sy, sz) <= 300 then
+
+                    CallRemoteEvent(player, "SearchingScrap")
                     CurrentlySearching[player] = true
                     SetPlayerAnimation(player, "PICKUP_LOWER")
+
                     Delay(4000, function()
                         CurrentlySearching[player] = nil
 

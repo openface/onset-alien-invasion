@@ -11,6 +11,7 @@
 		"server/scrap.lua",
 		"server/boss.lua",
 		"server/computer.lua",
+		"server/workbench.lua",
 		"server/inventory.lua",
 		"server/time.lua",
 		"server/world.lua",
@@ -27,6 +28,7 @@
 		"client/scrap.lua",
 		"client/boss.lua",
 		"client/computer.lua",
+		"client/workbench.lua",
 		"client/character.lua",
 		"client/scoreboard.lua",
 		"client/water.lua"
@@ -46,6 +48,7 @@
 		"client/sounds/error.mp3",
 		"client/sounds/alert.mp3",
 		"client/sounds/chopper.mp3",
+		"client/sounds/search.mp3",
 
 		"client/ui/jquery.js",
 		"client/ui/ui.js",
@@ -70,6 +73,10 @@
 		"client/ui/computer/computer.css",
 		"client/ui/computer/computer.js",
 
+		"client/ui/workbench/workbench.html",
+		"client/ui/workbench/workbench.css",
+		"client/ui/workbench/workbench.js",
+				
 		"client/ui/character/character.html",
 		"client/ui/character/character.css",
 		"client/ui/character/character.js",

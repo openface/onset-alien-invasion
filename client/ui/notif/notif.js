@@ -21,7 +21,7 @@ function ShowBlood() {
 
 // inventory
 function SetInventory(data) {
-    console.log(data);
+    //console.log(data);
     items = JSON.parse(data);
 
     // remove inventory child nodes

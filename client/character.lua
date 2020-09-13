@@ -22,8 +22,8 @@ AddRemoteEvent("ShowCharacterSelection", function()
     SetWebVisibility(CharUI, WEB_VISIBLE)
 
     -- play chopper sound from initial spawn point in the sky
-    local ChopperSound = CreateSound3D("client/sounds/chopper.mp3", sky.x, sky.y, sky.z, 50000)
-    SetSoundVolume(ChopperSound, 0.5)
+    local ChopperSound = CreateSound3D("client/sounds/chopper.mp3", sky.x, sky.y, sky.z, 20000)
+    SetSoundVolume(ChopperSound, 0.4)
 end)
 
 AddEvent("SelectCharacter", function(preset)

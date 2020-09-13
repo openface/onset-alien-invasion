@@ -4,47 +4,46 @@ function ShowGarageComputer() {
         
         <p>The surrounding area has been invaded by alien lifeform. If you are
         reading this message, you may be the last of the remaining human
-        survivors.</p>
+        survivors. Follow these rules to stay alive:</p>
 
-        <p>The mainland has been infected with radiation. DO NOT ENTER THE OCEAN!</p>
+        <ul>
+            <li>This house and it's perimeter is a SAFE ZONE from alien attack.</li>
 
-        <p>THERE ARE ALIENS ON THIS ISLAND! If you are being chased, RUN TO SAFETY
-        UNLESS YOU ARE ARMED!</p>
+            <li>The mainland has been infected with radiation. DO NOT ENTER THE OCEAN!</li>
 
-        <p>WATCH FOR SUPPLY DROPS! They contain armor, health, and weapons. You 
-        will see flares indicating where they drop.</p>
+            <li>THERE ARE ALIENS ON THIS ISLAND! If you are being chased, RUN TO SAFETY
+            UNLESS YOU ARE ARMED!</li>
 
-        <p>The mothership is on it's way to this island! YOUR MISSION IS TO DESTROY 
-        THE MOTHERSHIP. You will need supplies before you can fight back!</p>
+            <li>WATCH FOR SUPPLY DROPS! They contain armor, health, and weapons. You 
+            will see flares indicating where they drop.  You can also craft supplies
+            from scrap parts found on the island.</li>
 
-        <p>FIND MISSING SATELLITE PARTS!  Scavenge the area to find computer
-        parts and bring them back to the satellite terminal. Once the satellite
-        is operational, it will draw the mothership in for an attack.</p>
+            <li>The mothership is on it's way to this island! YOUR MISSION IS TO DESTROY 
+            THE MOTHERSHIP. You will need supplies before you can fight back!</li>
 
-        <p>Hit the TAB key for the scoreboard.</p>
+            <li>FIND THE MISSING SATELLITE PARTS!  Scavenge the area to find computer
+            parts and bring them back to the satellite terminal. Once the satellite
+            is operational, it will draw the mothership in for an attack.</li>
+        </ul>
 
-        <p>Good luc+++ATH0<br />
-        NO CARRIER</p>
+        <p>Good luck</p>
     `);
     $('#terminal-box').show();
 }
 
 function ShowSatelliteComputer(percentage) {
     $('#terminal-box #content').html(`
-
-        login&gt; ************
-        <p>Access granted.</p>
-
+        <p>Installing new component...</p>
         <div class="meter">
             <span><span class="progress"></span></span>
         </div>
 
-        <p class="blinking">SATELLITE COMMUNICATIONS ARE NOW <b>${percentage}%</b> OPERATIONAL...</p>
+        <p class="blinking">SATELLITE COMMUNICATIONS WILL BE <b>${percentage}%</b> OPERATIONAL.</p>
 
-        <p>The chance of being attacked by aliens has INCREASED!</p>
+        <p><b>The chance of being attacked by aliens has INCREASED!</b></p>
 
-        <p>Continue collecting satellite parts to initiate transmission
-        from the satellite.  Once enough parts are acquired, the satellite
+        <p>Continue collecting satellite parts to initiate signal transmission
+        from this satellite.  Once enough parts are acquired, the satellite
         will be operational.</p>
     `);
     $('#terminal-box').show();

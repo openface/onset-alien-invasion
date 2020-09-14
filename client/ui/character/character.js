@@ -5,6 +5,6 @@ function ShowCharacterSelect() {
 $(function() {
     $('.character').click(function () {
         var value = $(this).data('value');
-        CallEvent("SelectCharacter", value)
+        CallEvent("SelectCharacter", value);
     });
 });

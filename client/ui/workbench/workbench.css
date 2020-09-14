@@ -1,44 +1,49 @@
 
+#container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80vh; 
+}
 #workbench {
-    width:600px;
-    margin:50px auto;
-    background: rgba(0,0,0,0.4);
+    width: 50%;
+    background: rgba(0,0,0,0.5);
     padding:0px 15px;
     padding-bottom:15px;
     border:10px solid rgba(0,0,0,0.1);
     border-radius:8px;
     font-family:impact;
+    font-size:16px;
+    color:#ccc;
+    text-shadow: 3px black;
 }
 
 #title {
-    font-family:impact;
-    font-size:20px;
     color:#fff;
+    font-size:28px;
     text-align:center;
-    text-shadow: 1px 1px black;
     margin:10px 0;
 }
 
 section {
-  display: table;
-  width: 100%;
+    display: table;
+    width: 100%;
 }
 
 section > * {
-  display: table-row;
+    display: table-row;
 }
 
 section .col {
-  display: table-cell;
-  padding:5px;
+    display: table-cell;
+    padding:5px;
 }
 
 header .col {
-  text-transform:uppercase;
+    text-transform:uppercase;
 }
 
 .row {
-    width: 100%;
     background:rgba(0,0,0,0.3);
     border-radius:3px;
     border:1px solid #000;

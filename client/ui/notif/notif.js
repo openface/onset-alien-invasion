@@ -29,10 +29,11 @@ function SetInventory(data) {
 
     let html = "";
     // populate slot contents
+    // name, modelid, quantity
     $.each(items, function (i, item) {
         i = i + 1;
         html += `<div class="slot" id="slot-${i}">`;
-        html += `<img src="../images/${item['item']}.png" />`;
+        html += `<img src="http://game/objects/${item['modelid']}" />`;
         if (item['quantity'] > 1) {
             html += `<span class="quantity">${item['quantity']}</span>`;
         }
@@ -43,5 +44,5 @@ function SetInventory(data) {
 }
 
 $(document).ready(function () {
-    /*SetInventory('[{"quantity":2,"item":"scrap"}]');*/
+    /*SetInventory('[{"quantity":2,"name":"scrap","modelid":694}]');*/
 });

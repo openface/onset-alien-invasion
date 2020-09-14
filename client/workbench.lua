@@ -24,14 +24,14 @@ AddEvent("OnKeyPress", function(key)
 -- interacting with workbench
 AddEvent("InteractWorkbench", function(player)
     local _inventory = GetPlayerPropertyValue(player, "inventory")
-    local part_count = 0
+    local scrap_count = 0
     for k,v in pairs(_inventory) do
-        if v['item'] == "scrap" then
-            part_count = v['quantity']
+        if v['name'] == "scrap" then
+            scrap_count = v['quantity']
         end
     end
 
-    if part_count < 1 then
+    if scrap_count < 1 then
         ShowMessage("You have nothing useful to work with!", 5000)
         SetSoundVolume(CreateSound("client/sounds/error.mp3"), 1)
     else
@@ -55,3 +55,9 @@ function ShowWorkbenchTimer(loc)
         DestroyTimer(workbench_timer)
     end
 end
+
+-- selected item to build
+AddEvent("SelectBuildItem", function(name)
+    SetSoundVolume(CreateSound3D("client/sounds/workbench.mp3", WorkbenchLoc.x, WorkbenchLoc.y, WorkbenchLoc.z, 1500), 1.0)
+    AddPlayerChat("You build a "..name)
+end)

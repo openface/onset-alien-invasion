@@ -7,8 +7,8 @@ function HideWorkbench() {
 }
 
 $(function() {
-    $('.row').click(function () {
+    $('#workbench .build').click(function () {
         var value = $(this).data('value');
-        CallEvent("SelectBuild", value)
+        CallEvent("SelectBuildItem", value);
     });
 });

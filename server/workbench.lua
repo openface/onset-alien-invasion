@@ -1,6 +1,8 @@
 local WorkbenchLoc = { x = -105858.1328125, y = 193734.21875, z = 1396.1424560547 }
 local WorkbenchData = {
-    { ['key'] = 'armor', ['name'] = 'Kevlar Vest', ['modelid'] = 843, ['scrap_needed'] = 15 }
+    { ['key'] = 'armor', ['name'] = 'Kevlar Vest', ['modelid'] = 843, ['scrap_needed'] = 15 },
+    { ['key'] = 'flashlight', ['name'] = 'Flashlight', ['modelid'] = 1271, ['scrap_needed'] = 10 },
+    { ['key'] = 'medkit', ['name'] = 'Medical Kit', ['modelid'] = 796, ['scrap_needed'] = 5 },
 }
 
 AddEvent("OnPackageStart", function()

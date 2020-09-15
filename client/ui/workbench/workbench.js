@@ -7,27 +7,28 @@ function LoadWorkbenchData(items) {
         <div class="name">${item.name}</div>
         <div class="info">${item.scrap_needed} scrap needed</div>
       </td>
-      <td class="action"><button class="build" onClick="SelectItem('${item.key}');">BUILD</button></td>
+      <td class="action" id="action_${item.key}"><button class="build" onClick="SelectItem('${item.key}');">BUILD</button></td>
     </tr>`);
     });
 }
 
 function SelectItem(key) {
     CallEvent('SelectBuildItem', key);
-    $('td.action').html(`
+    $('td.action > button').prop('disabled', true);
+    $('#action_' + key).html(`
         <div class="meter">
             <span><span class="progress"></span></span>
         </div>
     `);
     setTimeout(function () {
-        $('td.action').html(`
+        $('td.action > button').prop('disabled', false);
+        $('#action_'+key).html(`
             <button class="build" onClick="SelectItem('${key}');">BUILD</button>
         `);
     }, 15000);
 }
 
 $(function () {
-    /*
     LoadWorkbenchData(
         [
             {
@@ -35,8 +36,14 @@ $(function () {
                 "key": "foobar",
                 "scrap_needed": 15,
                 "modelid": 843
+            },
+            {
+                "name": "Foobar2",
+                "key": "foobar2",
+                "scrap_needed": 15,
+                "modelid": 843
             }
+
         ]
     )
-    */
 });

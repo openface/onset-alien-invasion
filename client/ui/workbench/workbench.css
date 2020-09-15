@@ -40,7 +40,7 @@ table tr {
     border:1px solid #000;
 }
 table tr:nth-child(even)  {
-    background: #343434;
+    background:rgba(0,0,0,0.6);
 }
 table tr td:first-child {
     width: 100px;
@@ -81,6 +81,10 @@ button.build {
 button.build:hover {
     cursor: pointer;
     background:#3684ff;
+}
+button.build:disabled, button.build[disabled] {
+    background-color: #333;
+    color: #666666;
 }
 
 /* Progress Meter */

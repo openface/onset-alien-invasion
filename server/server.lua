@@ -6,7 +6,8 @@ AddCommand("pos", function(player)
         return
     end
     local x, y, z = GetPlayerLocation(player)
-    string = "Location: "..x.." "..y.." "..z
+    local heading = GetPlayerHeading(player)
+    string = "Location: "..x.." "..y.." "..z.." Heading: "..heading
     AddPlayerChat(player, string)
     print(string)
 end)

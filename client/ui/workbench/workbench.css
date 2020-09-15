@@ -5,17 +5,19 @@
     justify-content: center;
     height: 60vh; 
 }
+
 #workbench {
     width: 50%;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0,0,0,0.9);
     padding:0px 15px;
     padding-bottom:15px;
-    border:10px solid rgba(0,0,0,0.1);
-    border-radius:8px;
+    border:10px solid rgba(0,0,0,0.2);
     font-family:impact;
     font-size:16px;
     color:#ccc;
     text-shadow: 3px black;
+    border-radius: 5px;
+    box-shadow: 5px 5px 15px #000;
 }
 
 #title {
@@ -25,57 +27,84 @@
     margin:10px 0;
 }
 
-section {
-    display: table;
-    width: 100%;
+table {
+    width:100%;
+    border-spacing: 0;
+    border-collapse: separate;
 }
 
-.row {
+table tr {
     display: table-row;
     background:rgba(0,0,0,0.5);
     border-radius:3px;
     border:1px solid #000;
 }
-
-.row:hover, button:hover {
-    border:1px solid #fff;
+table tr:nth-child(even)  {
+    background: #343434;
 }
-
-.col {
-    display: table-cell;
-    vertical-align: middle;
-    padding:5px;
-}
-
-.col.pic {
+table tr td:first-child {
     width: 100px;
 }
+table td {
+    padding: 10px;
+}
 
-.col img {
+table td img {
     border-radius: 4px;
     width: 100px;
 }
 
-.col .name {
+table td .name {
     font-weight:bold;
     font-size:20px;
     color:#fff;
 }
 
-.col .info {
+table td .info {
     font-size:12px;
 }
 
-.row button {
+table td.action {
+    width: 200px;
+    font-size:18px;
+}
+button.build {
     background:#1770ff;
     color:#fff;
     font-weight:bold;
     border:0px;
     padding:7px;
     display:block;
+    font-size:18px;
     width:100%;
 }
-.row button:hover {
+button.build:hover {
     cursor: pointer;
     background:#3684ff;
+}
+
+/* Progress Meter */
+.meter { 
+    height:30px;
+    width:100%;
+    display:block;
+    position: relative;
+    background: #1770ff;
+    overflow: hidden;
+}
+
+.meter span {
+    display: block;
+    height: 100%;
+}
+
+.progress {
+    background-color: #fff;
+    animation: progressBar 15s ease-in-out;
+    animation-fill-mode:both; 
+}
+
+@keyframes progressBar {
+    0% { width: 0; }
+    100% { width: 100%; }
 }

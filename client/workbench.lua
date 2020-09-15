@@ -35,20 +35,24 @@ AddEvent("InteractWorkbench", function(player)
         ShowMessage("You have nothing useful to work with!", 5000)
         SetSoundVolume(CreateSound("client/sounds/error.mp3"), 1)
     else
-        --SetSoundVolume(CreateSound3D("client/sounds/workbench.mp3", WorkbenchLoc.x, WorkbenchLoc.y, WorkbenchLoc.z, 1500), 0.7)
-        ExecuteWebJS(WorkbenchUI, "ShowWorkbench()")
-    	ShowMouseCursor(true)
-        SetInputMode(INPUT_GAMEANDUI)
-        SetWebVisibility(WorkbenchUI, WEB_VISIBLE)
-        workbench_timer = CreateTimer(ShowWorkbenchTimer, 1000, WorkbenchLoc)
+        CallRemoteEvent("GetWorkbenchData")
     end
+end)
+
+AddRemoteEvent("OnGetWorkbenchData", function(data)
+    ShowMouseCursor(true)
+    SetInputMode(INPUT_GAMEANDUI)
+    SetWebVisibility(WorkbenchUI, WEB_VISIBLE)
+
+    ExecuteWebJS(WorkbenchUI, "LoadWorkbenchData("..data..")")
+
+    workbench_timer = CreateTimer(ShowWorkbenchTimer, 1000, WorkbenchLoc)
 end)
 
 -- timer used to hide workbench screen once player walks away
 function ShowWorkbenchTimer(loc)
     local x,y,z = GetPlayerLocation(GetPlayerId())
     if GetDistance3D(x, y, z, loc.x, loc.y, loc.z) > 200 then
-        ExecuteWebJS(WorkbenchUI, "HideWorkbench()")
         ShowMouseCursor(false)
         SetInputMode(INPUT_GAME)
         SetWebVisibility(WorkbenchUI, WEB_HIDDEN)
@@ -59,5 +63,5 @@ end
 -- selected item to build
 AddEvent("SelectBuildItem", function(name)
     SetSoundVolume(CreateSound3D("client/sounds/workbench.mp3", WorkbenchLoc.x, WorkbenchLoc.y, WorkbenchLoc.z, 1500), 1.0)
-    AddPlayerChat("You build a "..name)
+    CallRemoteEvent("BuildPart", name)    
 end)

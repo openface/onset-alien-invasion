@@ -16,29 +16,12 @@ AddEvent("OnKeyPress", function(key)
         local player = GetPlayerId()
         local x,y,z = GetPlayerLocation(player)
         if GetDistance3D(x, y, z, WorkbenchLoc.x, WorkbenchLoc.y, WorkbenchLoc.z) <= 200 then
-            CallEvent("InteractWorkbench", player)
+            CallRemoteEvent("GetWorkbenchData")
         end
     end
  end)
 
--- interacting with workbench
-AddEvent("InteractWorkbench", function(player)
-    local _inventory = GetPlayerPropertyValue(player, "inventory")
-    local scrap_count = 0
-    for k,v in pairs(_inventory) do
-        if v['name'] == "scrap" then
-            scrap_count = v['quantity']
-        end
-    end
-
-    if scrap_count < 1 then
-        ShowMessage("You have nothing useful to work with!", 5000)
-        SetSoundVolume(CreateSound("client/sounds/error.mp3"), 1)
-    else
-        CallRemoteEvent("GetWorkbenchData")
-    end
-end)
-
+-- workbench data from server
 AddRemoteEvent("OnGetWorkbenchData", function(data)
     ShowMouseCursor(true)
     SetInputMode(INPUT_GAMEANDUI)
@@ -60,8 +43,18 @@ function ShowWorkbenchTimer(loc)
     end
 end
 
--- selected item to build
-AddEvent("SelectBuildItem", function(name)
+-- selected item to build from UI
+AddEvent("SelectBuildItem", function(key)
+    CallRemoteEvent("BuildItem", key)    
+end)
+
+AddRemoteEvent("StartBuild", function(key)
+    ExecuteWebJS(WorkbenchUI, "StartBuild('"..key.."')")
     SetSoundVolume(CreateSound3D("client/sounds/workbench.mp3", WorkbenchLoc.x, WorkbenchLoc.y, WorkbenchLoc.z, 1500), 1.0)
-    CallRemoteEvent("BuildPart", name)    
+end)
+
+AddRemoteEvent("NeedMoreScrap", function(key)
+    ExecuteWebJS(WorkbenchUI, "NotEnoughScrap('"..key.."')")
+    ShowMessage("You need more scrap to work with!", 5000)
+    SetSoundVolume(CreateSound("client/sounds/error.mp3"), 1)
 end)

@@ -1,4 +1,6 @@
 
+body { user-select: none; }
+
 #container {
     display: flex;
     align-items: center;
@@ -68,9 +70,7 @@ table td.action {
     width: 200px;
     font-size:18px;
 }
-button.build {
-    background:#1770ff;
-    color:#fff;
+button {
     font-weight:bold;
     border:0px;
     padding:7px;
@@ -78,12 +78,20 @@ button.build {
     font-size:18px;
     width:100%;
 }
+button.need_scrap {
+    background: #333;
+    color: #666666;
+}
+button.build {
+    background:#1770ff;
+    color:#fff;
+}
 button.build:hover {
     cursor: pointer;
     background:#3684ff;
 }
-button.build:disabled, button.build[disabled] {
-    background-color: #333;
+button:disabled, button[disabled] {
+    background: #333;
     color: #666666;
 }
 

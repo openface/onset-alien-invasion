@@ -86,7 +86,7 @@ button.build {
     background:#1770ff;
     color:#fff;
 }
-button.build:hover {
+button.build:hover:not([disabled]) {
     cursor: pointer;
     background:#3684ff;
 }

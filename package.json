@@ -51,6 +51,8 @@
 		"client/sounds/search.mp3",
 		"client/sounds/workbench.mp3",
 
+		"client/ui/vue.min.js",
+		"client/ui/vue-onset.js",
 		"client/ui/jquery.js",
 		"client/ui/ui.js",
 

@@ -4,22 +4,32 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-
     <link href="./workbench.css" rel="stylesheet">
-    <script src="../jquery.js"></script>
-    <script src="../ui.js"></script>
-    <script src="./workbench.js"></script>
 </head>
 
 <body>
     <div id="container">
-    <div id="workbench">
-        <div id="title">WORKBENCH</div>
-        <table>
-            <tbody></tbody>
-        </table>
+        <div id="workbench">
+            <div id="title">WORKBENCH</div>
+            <table>
+                <tbody>
+                    <tr v-for="item in items">
+                        <td class="pic"><img v-bind:src="'http://game/objects/' + item.modelid" /></td>
+                        <td>
+                            <div class="name">{{ item.name }}</div>
+                            <div class="info">{{ item.scrap_needed }} scrap needed</div>
+                        </td>
+                        <td class="action">
+                            <build-button :scrap_needed="item.scrap_needed" :item_name="item.name"></build-button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-    </div>
+    <script src="../vue.min.js" type="text/javascript"></script>
+    <script src="../vue-onset.js" type="text/javascript"></script>
+    <script src="./workbench.js" type="text/javascript"></script>
 </body>
 
 </html>

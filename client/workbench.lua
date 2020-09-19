@@ -27,7 +27,7 @@ AddRemoteEvent("OnGetWorkbenchData", function(data)
     SetInputMode(INPUT_GAMEANDUI)
     SetWebVisibility(WorkbenchUI, WEB_VISIBLE)
 
-    ExecuteWebJS(WorkbenchUI, "LoadWorkbenchData("..data..")")
+    ExecuteWebJS(WorkbenchUI, "EmitEvent('LoadWorkbenchData',"..data..")")
 
     workbench_timer = CreateTimer(ShowWorkbenchTimer, 1000, WorkbenchLoc)
 end)
@@ -44,17 +44,16 @@ function ShowWorkbenchTimer(loc)
 end
 
 -- selected item to build from UI
-AddEvent("SelectBuildItem", function(key)
-    CallRemoteEvent("BuildItem", key)    
+AddEvent("BuildItem", function(name)
+    CallRemoteEvent("BuildItem", name)    
 end)
 
-AddRemoteEvent("StartBuild", function(key)
-    ExecuteWebJS(WorkbenchUI, "StartBuild('"..key.."')")
+AddRemoteEvent("StartBuilding", function(name)
     SetSoundVolume(CreateSound3D("client/sounds/workbench.mp3", WorkbenchLoc.x, WorkbenchLoc.y, WorkbenchLoc.z, 1500), 1.0)
 end)
 
-AddRemoteEvent("NeedMoreScrap", function(key)
-    ExecuteWebJS(WorkbenchUI, "NotEnoughScrap('"..key.."')")
+AddRemoteEvent("NeedMoreScrap", function(name)
+    ExecuteWebJS(WorkbenchUI, "EmitEvent('NotEnoughScrap')")
     ShowMessage("You need more scrap to work with!", 5000)
     SetSoundVolume(CreateSound("client/sounds/error.mp3"), 1)
 end)

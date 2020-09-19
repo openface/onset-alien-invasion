@@ -10,17 +10,21 @@ AddRemoteEvent("GetWorkbenchData", function(player)
     CallRemoteEvent(player, "OnGetWorkbenchData", json_encode(WorkbenchData))
 end)
 
-AddRemoteEvent("BuildItem", function(player, key)
-    if GetPlayerScrapCount(player) < WorkbenchData[key]['scrap_needed'] then
-        print("Player "..GetPlayerName(player).." needs more scrap to build "..key)
-        CallRemoteEvent(player, "NeedMoreScrap", key)
+AddRemoteEvent("BuildItem", function(player, name)
+    local item = GetItemByName(name)
+    print(player)
+    print(name)
+
+    if GetPlayerScrapCount(player) < item['scrap_needed'] then
+        print("Player "..GetPlayerName(player).." needs more scrap to build "..name)
+        CallRemoteEvent(player, "NeedMoreScrap", name)
         return
     end
 
     -- start the build
-    print("Player "..GetPlayerName(player).." builds item "..key)
+    print("Player "..GetPlayerName(player).." builds item "..name)
 
-    CallRemoteEvent(player, "StartBuild", key)
+    CallRemoteEvent(player, "StartBuilding", name)
     SetPlayerLocation(player, -105738.5859375, 193734.59375, 1396.1424560547) 
     SetPlayerHeading(player, -92.786437988281)   
     SetPlayerAnimation(player, "BARCLEAN01")
@@ -32,11 +36,18 @@ end)
 
 function GetPlayerScrapCount(player)
     local _inventory = GetPlayerPropertyValue(player, "inventory")
-    local scrap_count = 0
     for k,v in pairs(_inventory) do
         if v['name'] == "scrap" then
-            scrap_count = v['quantity']
+            return v['quantity']
         end
     end
-    return scrap_count
+    return 0
+end
+
+function GetItemByName(name)
+    for _,item in pairs(WorkbenchData) do
+        if item['name'] == name then
+            return item
+        end
+    end
 end

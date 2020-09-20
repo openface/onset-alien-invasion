@@ -1,8 +1,4 @@
-local Items = {
-    ["computer_part"] = { modelid = 1437 },
-    ["armor"] = { modelid = 843 },
-    ["scrap"] = { modelid = 694 }
-}
+local ItemData = require("packages/" .. GetPackageName() .. "/server/data/items")
 
 -- get inventory data and send to UI
 function SyncInventory(player)
@@ -12,7 +8,7 @@ function SyncInventory(player)
     for k,v in pairs(_inventory) do
         table.insert(_send, {
             name = v['name'],
-            modelid = Items[v['name']].modelid,
+            modelid = GetItemByName(v['name']).modelid,
             quantity = v['quantity']
         })
     end
@@ -82,6 +78,14 @@ function GetInventoryCount(player, name)
         end
     end
     return 0
+end
+
+function GetItemByName(name)
+    for _,item in pairs(ItemData) do
+        if item['name'] == name then
+            return item
+        end
+    end
 end
 
 -- drop all on death

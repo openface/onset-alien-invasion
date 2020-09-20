@@ -84,7 +84,7 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
 end)
 
 function PickupPart(player)
-    CallEvent("AddItemToInventory", player, "computer_part")
+    CallEvent("AddItemToInventory", player, "Computer Part")
 
     AddPlayerChatAll(GetPlayerName(player)..' has found a computer part!')
     CallRemoteEvent(player, "PartPickedup", pickup)

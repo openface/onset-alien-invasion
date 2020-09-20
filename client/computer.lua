@@ -74,7 +74,7 @@ AddEvent("InteractSatellite", function(player)
     local _inventory = GetPlayerPropertyValue(player, "inventory")
     local part_count = 0
     for k,v in pairs(_inventory) do
-        if v['item'] == "computer_part" then
+        if v['item'] == "Computer Part" then
             part_count = v['quantity']
         end
     end

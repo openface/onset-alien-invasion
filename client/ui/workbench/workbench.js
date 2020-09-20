@@ -48,7 +48,7 @@ new Vue({
     },
     created() {
         EventBus.$on('LoadWorkbenchData', (data) => {
-            this.items = data['workbench_data']
+            this.items = data['item_data']
             this.player_scrap = data['player_scrap']
         });
         EventBus.$on('SetPlayerScrap', (player_scrap) => {
@@ -62,7 +62,7 @@ new Vue({
     if (typeof indev !== 'undefined') {
         EmitEvent('LoadWorkbenchData', {
             "player_scrap": 5,
-            "workbench_data": [
+            "item_data": [
                 {
                     name: "Foobar",
                     scrap_needed: 15,

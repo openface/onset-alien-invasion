@@ -22,11 +22,14 @@ AddCommand("respawnscrap", function(player)
     SpawnScrap()
 end)
 
-AddCommand("scrap", function(player)
+AddCommand("scrap", function(player, amt)
     if not IsAdmin(player) then
         return
     end
-    PickupScrap(player)
+    local amt = amt or 1
+    for i=1,amt do
+        PickupScrap(player)
+    end
 end)
 
 AddEvent("OnPackageStart", function()
@@ -108,7 +111,7 @@ end)
 -- add scrap to inventory
 function PickupScrap(player)
     -- add to inventory
-    CallEvent("AddItemToInventory", player, "scrap")
+    CallEvent("AddItemToInventory", player, "Scrap")
 
     AddPlayerChatAll(GetPlayerName(player)..' has found scrap!')
     print("Player "..GetPlayerName(player).." has found scrap!")

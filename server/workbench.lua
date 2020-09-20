@@ -1,4 +1,4 @@
-local WorkbenchData = require("packages/" .. GetPackageName() .. "/server/data/workbench")
+local ItemData = require("packages/" .. GetPackageName() .. "/server/data/items")
 local WorkbenchLoc = { x = -105858.1328125, y = 193734.21875, z = 1396.1424560547 }
 
 AddEvent("OnPackageStart", function()
@@ -8,7 +8,7 @@ end)
 
 AddRemoteEvent("GetWorkbenchData", function(player)
     CallRemoteEvent(player, "OnGetWorkbenchData", json_encode({
-        ["workbench_data"] = WorkbenchData,
+        ["item_data"] = ItemData,
         ["player_scrap"] = GetPlayerScrapCount(player)
     }))
 end)
@@ -25,7 +25,7 @@ AddRemoteEvent("BuildItem", function(player, name)
     print("Player "..GetPlayerName(player).." builds item "..name)
 
     -- remove scrap from inventory
-    CallEvent("RemoveFromInventory", player, "scrap", item['scrap_needed'])
+    CallEvent("RemoveFromInventory", player, "Scrap", item['scrap_needed'])
 
     CallRemoteEvent(player, "StartBuilding", name, GetPlayerScrapCount(player))
 
@@ -34,14 +34,14 @@ AddRemoteEvent("BuildItem", function(player, name)
     SetPlayerAnimation(player, "BARCLEAN01")
     Delay(15000, function()
         SetPlayerAnimation(player, "STOP")
-        AddPlayerChat(player, "You have built something!")
+        CallEvent("AddItemToInventory", player, name)
     end)
 end)
 
 function GetPlayerScrapCount(player)
     local _inventory = GetPlayerPropertyValue(player, "inventory")
     for k,v in pairs(_inventory) do
-        if v['name'] == "scrap" then
+        if v['name'] == "Scrap" then
             return v['quantity']
         end
     end
@@ -49,7 +49,7 @@ function GetPlayerScrapCount(player)
 end
 
 function GetItemByName(name)
-    for _,item in pairs(WorkbenchData) do
+    for _,item in pairs(ItemData) do
         if item['name'] == name then
             return item
         end

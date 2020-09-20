@@ -20,7 +20,7 @@
                             <div class="info">{{ item.scrap_needed }} scrap needed</div>
                         </td>
                         <td class="action">
-                            <build-button :scrap_needed="item.scrap_needed" :item_name="item.name"></build-button>
+                            <build-button :scrap_needed="item.scrap_needed" :player_scrap="player_scrap" :item_name="item.name"></build-button>
                         </td>
                     </tr>
                 </tbody>

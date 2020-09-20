@@ -49,14 +49,15 @@ AddEvent("AddItemToInventory", function(player, name)
 end)
 
 -- deletes item from inventory
--- deduces qty if carrying more than 1
-AddEvent("RemoveFromInventory", function(player, name)
+-- deduces by quantity if carrying more than 1
+AddEvent("RemoveFromInventory", function(player, name, quantity)
     _inventory = GetPlayerPropertyValue(player, "inventory")
+    quantity = quantity or 1
 
     for k,v in pairs(_inventory) do
         if v['name'] == name then
             -- found object
-            _qty = v['quantity'] - 1
+            _qty = v['quantity'] - quantity
             if _qty > 0 then
                 -- decrease qty by 1
                 _inventory[k]['quantity'] = _qty

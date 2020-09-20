@@ -7,24 +7,28 @@ AddEvent("OnPackageStart", function()
 end)
 
 AddRemoteEvent("GetWorkbenchData", function(player)
-    CallRemoteEvent(player, "OnGetWorkbenchData", json_encode(WorkbenchData))
+    CallRemoteEvent(player, "OnGetWorkbenchData", json_encode({
+        ["workbench_data"] = WorkbenchData,
+        ["player_scrap"] = GetPlayerScrapCount(player)
+    }))
 end)
 
 AddRemoteEvent("BuildItem", function(player, name)
     local item = GetItemByName(name)
-    print(player)
-    print(name)
 
     if GetPlayerScrapCount(player) < item['scrap_needed'] then
         print("Player "..GetPlayerName(player).." needs more scrap to build "..name)
-        CallRemoteEvent(player, "NeedMoreScrap", name)
         return
     end
 
     -- start the build
     print("Player "..GetPlayerName(player).." builds item "..name)
 
-    CallRemoteEvent(player, "StartBuilding", name)
+    -- remove scrap from inventory
+    CallEvent("RemoveFromInventory", player, "scrap", item['scrap_needed'])
+
+    CallRemoteEvent(player, "StartBuilding", name, GetPlayerScrapCount(player))
+
     SetPlayerLocation(player, -105738.5859375, 193734.59375, 1396.1424560547) 
     SetPlayerHeading(player, -92.786437988281)   
     SetPlayerAnimation(player, "BARCLEAN01")

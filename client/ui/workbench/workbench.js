@@ -18,7 +18,7 @@ Vue.component('build-button', {
             <div class="meter"><span><span class="progress"></span></span></div>
         </div>
         <div v-else-if="player_scrap >= scrap_needed">
-            <button class="build" :disabled="isDisabled" @click="build">BUILD {{item_name}}</button>
+            <button class="build" :disabled="isDisabled" @click="build">BUILD</button>
         </div>
         <div v-else>
             <button class="need_scrap" disabled="true">NEED {{ scrap_needed }} SCRAP</button>
@@ -63,6 +63,26 @@ new Vue({
         EmitEvent('LoadWorkbenchData', {
             "player_scrap": 5,
             "item_data": [
+                {
+                    name: "Foobar",
+                    scrap_needed: 15,
+                    modelid: 843
+                },
+                {
+                    name: "Foobar",
+                    scrap_needed: 15,
+                    modelid: 843
+                },                
+                {
+                    name: "Foobar",
+                    scrap_needed: 15,
+                    modelid: 843
+                },
+                {
+                    name: "Foobar",
+                    scrap_needed: 15,
+                    modelid: 843
+                },
                 {
                     name: "Foobar",
                     scrap_needed: 15,

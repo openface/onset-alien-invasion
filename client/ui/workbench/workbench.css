@@ -5,28 +5,24 @@ body { user-select: none; }
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 60vh; 
+    height: 80vh; 
 }
 
 #workbench {
     width: 50%;
     background: rgba(0,0,0,0.9);
-    padding:0px 15px;
-    padding-bottom:15px;
-    border:10px solid rgba(0,0,0,0.2);
+    border:25px solid rgba(0,0,0,0.9);
     font-family:impact;
     font-size:16px;
     color:#ccc;
     text-shadow: 3px black;
-    border-radius: 5px;
-    box-shadow: 5px 5px 15px #000;
 }
 
 #title {
     color:#fff;
     font-size:28px;
     text-align:center;
-    margin:10px 0;
+    margin:0;
 }
 
 table {
@@ -37,12 +33,10 @@ table {
 
 table tr {
     display: table-row;
-    background:rgba(0,0,0,0.5);
-    border-radius:3px;
-    border:1px solid #000;
+    background:rgba(0,0,0,0.8);
 }
 table tr:nth-child(even)  {
-    background:rgba(0,0,0,0.6);
+    background:rgba(0,0,0,0.5);
 }
 table tr td:first-child {
     width: 100px;
@@ -53,7 +47,7 @@ table td {
 
 table td img {
     border-radius: 4px;
-    width: 100px;
+    width: 75px;
 }
 
 table td .name {

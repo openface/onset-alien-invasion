@@ -14,7 +14,10 @@
             <table>
                 <tbody>
                     <tr v-for="item in items">
-                        <td class="pic"><img v-bind:src="'http://game/objects/' + item.modelid" /></td>
+                        <td class="pic">
+                            <!--<img src="https://via.placeholder.com/100" />-->
+                            <img v-bind:src="'http://game/objects/' + item.modelid" />
+                        </td>
                         <td>
                             <div class="name">{{ item.name }}</div>
                             <div class="info">{{ item.scrap_needed }} scrap needed</div>

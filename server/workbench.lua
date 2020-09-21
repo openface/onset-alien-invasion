@@ -13,29 +13,33 @@ AddRemoteEvent("GetWorkbenchData", function(player)
     }))
 end)
 
-AddRemoteEvent("BuildItem", function(player, name)
-    local item = GetItemByName(name)
+AddRemoteEvent("BuildItem", function(player, item_key)
+    local item = ItemData[item_key]
+
+    if item == nil then
+        return
+    end
 
     if GetPlayerScrapCount(player) < item['scrap_needed'] then
-        print("Player "..GetPlayerName(player).." needs more scrap to build "..name)
+        print("Player "..GetPlayerName(player).." needs more scrap to build "..item['name'])
         return
     end
 
     -- start the build
-    print("Player "..GetPlayerName(player).." builds item "..name)
+    print("Player "..GetPlayerName(player).." builds item "..item['name'])
 
     -- remove scrap from inventory
-    CallEvent("RemoveFromInventory", player, "Scrap", item['scrap_needed'])
+    CallEvent("RemoveFromInventory", player, "scrap", item['scrap_needed'])
 
-    CallRemoteEvent(player, "StartBuilding", name, GetPlayerScrapCount(player))
+    CallRemoteEvent(player, "StartBuilding", item_key, GetPlayerScrapCount(player))
 
     SetPlayerLocation(player, -105738.5859375, 193734.59375, 1396.1424560547) 
     SetPlayerHeading(player, -92.786437988281)   
     SetPlayerAnimation(player, "BARCLEAN01")
     Delay(15000, function()
         SetPlayerAnimation(player, "STOP")
-        AddPlayerChat(player, name.." has been added to your inventory.")
-        CallEvent("AddItemToInventory", player, name)
+        AddPlayerChat(player, item['name'].." has been added to your inventory.")
+        CallEvent("AddItemToInventory", player, item_key)
     end)
 end)
 
@@ -47,12 +51,4 @@ function GetPlayerScrapCount(player)
         end
     end
     return 0
-end
-
-function GetItemByName(name)
-    for _,item in pairs(ItemData) do
-        if item['name'] == name then
-            return item
-        end
-    end
 end

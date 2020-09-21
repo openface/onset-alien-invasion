@@ -44,5 +44,7 @@ function SetInventory(data) {
 }
 
 $(document).ready(function () {
-    /*SetInventory('[{"quantity":2,"name":"scrap","modelid":694}]');*/
+    if (typeof indev !== 'undefined') {
+        SetInventory('[{"quantity":2,"name":"scrap","modelid":694}]');
+    }
 });

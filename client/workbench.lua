@@ -43,11 +43,11 @@ function ShowWorkbenchTimer(loc)
 end
 
 -- selected item to build from UI
-AddEvent("BuildItem", function(name)
-    CallRemoteEvent("BuildItem", name)    
+AddEvent("BuildItem", function(item_key)
+    CallRemoteEvent("BuildItem", item_key)    
 end)
 
-AddRemoteEvent("StartBuilding", function(name, player_scrap)
+AddRemoteEvent("StartBuilding", function(item_key, player_scrap)
     ExecuteWebJS(WorkbenchUI, "EmitEvent('SetPlayerScrap',"..player_scrap..")")
     SetSoundVolume(CreateSound3D("client/sounds/workbench.mp3", WorkbenchLoc.x, WorkbenchLoc.y, WorkbenchLoc.z, 1500), 1.0)
 end)

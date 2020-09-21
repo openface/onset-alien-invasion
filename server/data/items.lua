@@ -1,25 +1,20 @@
 return {
-    [1] = {
+    armor = {
         ['name'] = 'Kevlar Vest', 
         ['modelid'] = 843, 
         ['scrap_needed'] = 15 
     },
-    [2] = {
-        ['name'] = 'Flashlight', 
-        ['modelid'] = 1271, 
-        ['scrap_needed'] = 10 
-    },
-    [3] = {
+    medkit = {
         ['name'] = 'Medical Kit', 
         ['modelid'] = 796, 
         ['scrap_needed'] = 5 
     },
-    [4] = {
+    scrap = {
         ['name'] = 'Scrap',
         ['modelid'] = 694,
         ['scrap_needed'] = 1
     },
-    [5] = {
+    computer_part = {
         ['name'] = 'Computer Part',
         ['modelid'] = 1437,
         ['scrap_needed'] = 20

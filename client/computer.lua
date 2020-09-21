@@ -71,16 +71,9 @@ AddEvent("InteractSatellite", function(player)
         DestroyWaypoint(SatelliteWaypoint)
     end
 
-    local _inventory = GetPlayerPropertyValue(player, "inventory")
-    local part_count = 0
-    for k,v in pairs(_inventory) do
-        if v['item'] == "Computer Part" then
-            part_count = v['quantity']
-        end
-    end
-
-    AddPlayerChat(part_count)
-    if part_count < 1 then
+    -- ensure player has computer_part
+    local inventory = GetPlayerPropertyValue(player, "inventory")
+    if not inventory['computer_part'] then
         ShowMessage("You are missing a critical computer part!", 5000)
         SetSoundVolume(CreateSound("client/sounds/error.mp3"), 1)
     else

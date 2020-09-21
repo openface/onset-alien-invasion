@@ -111,7 +111,7 @@ end)
 -- add scrap to inventory
 function PickupScrap(player)
     -- add to inventory
-    CallEvent("AddItemToInventory", player, "Scrap")
+    CallEvent("AddItemToInventory", player, "scrap")
 
     AddPlayerChatAll(GetPlayerName(player)..' has found scrap!')
     print("Player "..GetPlayerName(player).." has found scrap!")

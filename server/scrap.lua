@@ -1,6 +1,7 @@
 local ScrapLocations = {} -- scraps.json
 local NumSpawnedScrap = 25 -- maximum number of scrap spots to spawn
 local ScrapCooldown = 60000 * 5 -- can only search a scrap point every 10 minutes
+local CurrentlySearching = {}
 
 AddCommand("spos", function(player)
     if not IsAdmin(player) then
@@ -66,7 +67,6 @@ function SpawnScrap()
 end
 
 -- search for scrap
-local CurrentlySearching = {}
 AddRemoteEvent("SearchForScrap", function(player)
     if CurrentlySearching[player] ~= nil then
         return

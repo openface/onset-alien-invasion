@@ -21,7 +21,7 @@ Vue.component('build-button', {
             <button class="build" :disabled="isDisabled" @click="build">BUILD</button>
         </div>
         <div v-else>
-            <button class="need_scrap" disabled="true">NEED {{ scrap_needed }} SCRAP</button>
+            <button class="need_scrap" disabled="true">NEED SCRAP</button>
         </div>
     `,
     methods: {
@@ -61,36 +61,31 @@ new Vue({
 (function () {
     if (typeof indev !== 'undefined') {
         EmitEvent('LoadWorkbenchData', {
-            "player_scrap": 5,
+            "player_scrap": 15,
             "item_data": [
                 {
                     name: "Foobar",
-                    scrap_needed: 15,
-                    modelid: 843
-                },
-                {
-                    name: "Foobar",
-                    scrap_needed: 15,
-                    modelid: 843
-                },                
-                {
-                    name: "Foobar",
-                    scrap_needed: 15,
-                    modelid: 843
-                },
-                {
-                    name: "Foobar",
-                    scrap_needed: 15,
-                    modelid: 843
-                },
-                {
-                    name: "Foobar",
-                    scrap_needed: 15,
+                    scrap_needed: 25,
                     modelid: 843
                 },
                 {
                     name: "Foobar2",
-                    scrap_needed: 5,
+                    scrap_needed: 15,
+                    modelid: 843
+                },                
+                {
+                    name: "Foobar3",
+                    scrap_needed: 15,
+                    modelid: 843
+                },
+                {
+                    name: "Foobar4",
+                    scrap_needed: 15,
+                    modelid: 843
+                },
+                {
+                    name: "Foobar5",
+                    scrap_needed: 15,
                     modelid: 843
                 }
             ]

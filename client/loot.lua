@@ -32,5 +32,5 @@ AddRemoteEvent('LootSpawned', function(pos, pickup)
     -- fireworks/flares
     CreateCountTimer(function(pos)
         CreateFireworks(3, pos[1], pos[2], pos[3] + 150, 90, 0, 0)
-    end, 3000, 10, pos)
+    end, 5000, 5, pos)
 end)

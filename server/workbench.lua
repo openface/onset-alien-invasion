@@ -44,11 +44,9 @@ AddRemoteEvent("BuildItem", function(player, item_key)
 end)
 
 function GetPlayerScrapCount(player)
-    local _inventory = GetPlayerPropertyValue(player, "inventory")
-    for k,v in pairs(_inventory) do
-        if v['name'] == "Scrap" then
-            return v['quantity']
-        end
+    local inventory = GetPlayerPropertyValue(player, "inventory")
+    if inventory['scrap'] ~= nil then
+        return inventory['scrap']['quantity']
     end
     return 0
 end

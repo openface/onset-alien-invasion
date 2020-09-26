@@ -14,11 +14,6 @@ function ShowMessage(message) {
     $('#message').show().delay(5000).fadeOut('fast');
 }
 
-// overlay
-function ShowBlood() {
-    $("#overlay").show().delay(500).fadeOut('slow');
-}
-
 /*
  *
  */

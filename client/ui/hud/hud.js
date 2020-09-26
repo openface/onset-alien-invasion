@@ -24,15 +24,18 @@ Vue.component('notif', {
             show_blood: false
         }
     },
-    mounted() {
-        EventBus.$on('ShowBlood', () => {
+    methods: {
+        ShowBlood: function(event) {
             this.show_blood = true;
 
             var that = this;
             setTimeout(function () {
                 that.show_blood = false;
             }, 1000);
-        })
+        }
+    },
+    mounted() {
+        EventBus.$on('ShowBlood', this.ShowBlood);
     }
 })
 

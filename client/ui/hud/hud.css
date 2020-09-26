@@ -32,7 +32,10 @@ body { user-select: none; }
     font-family: Impact;
 }
 
-#overlay {
+/*
+ * Blood Splat
+ */
+#blood_overlay {
     background:url('../images/blood_overlay.png') no-repeat center center fixed;
     background-size: cover;
     opacity: 0.5;
@@ -42,7 +45,17 @@ body { user-select: none; }
     left: 0;
     position: fixed;
 }
+.splat-enter-active, .splat-leave-active {
+    animation: fadeSplat 3.5s;
+}
+@keyframes fadeSplat {
+    0% {opacity: 0.5;}
+    100% {opacity: 0;}
+}
 
+/*
+ * Inventory
+ */
 #slots {
     display: flex;
     flex-direction: column;

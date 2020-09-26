@@ -15,7 +15,9 @@
     </div>
 
     <script type="text/x-template" id="notif">
-        <div id="overlay"></div>
+        <transition name="splat">
+            <div id="blood_overlay" v-if="show_blood"></div>
+        </transition>
         <div id="banner"></div>
         <div id="messages"></div>
     </script>

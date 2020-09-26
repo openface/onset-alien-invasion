@@ -19,35 +19,26 @@ function ShowBlood() {
     $("#overlay").show().delay(500).fadeOut('slow');
 }
 
-// inventory
-function aSetInventory(data) {
-    //console.log(data);
-    items = JSON.parse(data);
-
-    // remove inventory child nodes
-    $('#inventory').empty();
-
-    let html = "";
-    // populate slot contents
-    // name, modelid, quantity
-    $.each(items, function (i, item) {
-        i = i + 1;
-        html += `<div class="slot" id="slot-${i}">`;
-        html += `<img src="http://game/objects/${item['modelid']}" />`;
-        if (item['quantity'] > 1) {
-            html += `<span class="quantity">${item['quantity']}</span>`;
-        }
-        html += `</div>`;
-    });
-
-    $('#inventory').html(html);
-}
-
 /*
  *
  */
 Vue.component('notif', {
-    template: '#notif'
+    template: '#notif',
+    data() {
+        return {
+            show_blood: false
+        }
+    },
+    mounted() {
+        EventBus.$on('ShowBlood', () => {
+            this.show_blood = true;
+
+            var that = this;
+            setTimeout(function () {
+                that.show_blood = false;
+            }, 1000);
+        })
+    }
 })
 
 Vue.component('inventory', {
@@ -61,13 +52,14 @@ new Vue({
     el: '#hud',
     data() {
         return {
-            items: []
+            items: [],
+            show_blood: false
         }
     },
     mounted() {
         EventBus.$on('SetInventory', (data) => {
             this.items = data
-        });
+        })
     }
 });
 
@@ -82,5 +74,7 @@ new Vue({
                 "quantity": 2
             }
         ]);
+
+        EmitEvent('ShowBlood');
     }
 })();

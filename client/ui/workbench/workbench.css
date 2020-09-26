@@ -11,16 +11,16 @@ body { user-select: none; }
 #workbench {
     width:700px;
     background: rgba(0,0,0,0.9);
-    border:25px solid rgba(0,0,0,0.9);
     font-family:impact;
     font-size:16px;
     color:#ccc;
     text-shadow: 3px black;
+    padding:20px;
 }
 
 #title {
     color:#fff;
-    font-size:28px;
+    font-size:40px;
     text-align:center;
     margin:0;
 }

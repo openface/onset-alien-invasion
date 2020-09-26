@@ -1,4 +1,5 @@
 local ItemData = require("packages/" .. GetPackageName() .. "/server/data/items")
+local ResourceData = require("packages/" .. GetPackageName() .. "/server/data/resources")
 
 -- get inventory data and send to UI
 function SyncInventory(player)
@@ -9,12 +10,21 @@ end
 AddRemoteEvent("SyncInventory", SyncInventory)
 AddEvent("SyncInventory", SyncInventory)
 
--- add object to inventory
 AddEvent("AddItemToInventory", function(player, item_key)
+    AddToInventory(player, "item", item_key)
+end)
+
+AddEvent("AddResourceToInventory", function(player, item_key)
+    AddToInventory(player, "resource", item_key)
+end)
+
+-- add object to inventory
+function AddToInventory(player, type, item_key)
     local inventory = GetPlayerPropertyValue(player, "inventory")
 
-    if not ItemData[item_key] then
-        print("Invalid item: "..item_key)
+    item = GetItemData(item_key)
+    if not item then
+        print("Invalid item "..item_key.. " must be item or resource!")
         return
     end
 
@@ -24,24 +34,37 @@ AddEvent("AddItemToInventory", function(player, item_key)
         SetPlayerPropertyValue(player, "inventory", inventory)
     else
         -- add new item to store
-        local item = ItemData[item_key]
         inventory[item_key] = {
-            name = item.name,
-            modelid = item.modelid,
+            type = item['type'],
+            name = item['name'],
+            modelid = item['modelid'],
             quantity = 1
         }
         SetPlayerPropertyValue(player, "inventory", inventory)
     end
 
     CallEvent("SyncInventory", player)
-end)
+end
+
+-- gets item or resource from data
+function GetItemData(item_key)
+    if ItemData[item_key] then
+        item = ItemData[item_key]
+        item['type'] = 'item'
+    elseif ResourceData[item_key] then
+        item = ResourceData[item_key]
+        item['type'] = 'resource'
+    end
+    return item
+end
 
 -- deletes item from inventory
 -- deduces by quantity if carrying more than 1
 AddEvent("RemoveFromInventory", function(player, item_key, amount)
     local inventory = GetPlayerPropertyValue(player, "inventory")
 
-    if not ItemData[item_key] then
+    local item = GetItemData(item_key)
+    if not item then
         print("Invalid item: "..item_key)
         return
     end
@@ -65,7 +88,8 @@ end)
 function GetInventoryCount(player, item_key)
     local inventory = GetPlayerPropertyValue(player, "inventory")
 
-    if not ItemData[item_key] then
+    local item = GetItemData(item_key)
+    if not item then
         print("Invalid item: "..item_key)
         return
     end

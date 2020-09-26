@@ -62,9 +62,9 @@
 		"client/ui/scoreboard/scoreboard.css",
 		"client/ui/scoreboard/scoreboard.js",
 
-		"client/ui/notif/notif.html",
-		"client/ui/notif/notif.css",
-		"client/ui/notif/notif.js",
+		"client/ui/hud/hud.html",
+		"client/ui/hud/hud.css",
+		"client/ui/hud/hud.js",
 
 		"client/ui/boss/boss.html",
 		"client/ui/boss/boss.css",

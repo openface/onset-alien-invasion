@@ -32,11 +32,13 @@ Vue.component('build-button', {
     
 new Vue({
     el: '#workbench',
-    props: {
-        items: { type: Array, default: [] },
-        player_scrap: { type: Number, default: 0 }
+    data() {
+        return {
+            items: [],
+            player_scrap: 0
+        }
     },
-    created() {
+    mounted() {
         EventBus.$on('LoadWorkbenchData', (data) => {
             this.items = data['item_data']
             this.player_scrap = data['player_scrap']

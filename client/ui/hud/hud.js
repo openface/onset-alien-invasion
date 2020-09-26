@@ -20,7 +20,7 @@ function ShowBlood() {
 }
 
 // inventory
-function SetInventory(data) {
+function aSetInventory(data) {
     //console.log(data);
     items = JSON.parse(data);
 
@@ -43,8 +43,44 @@ function SetInventory(data) {
     $('#inventory').html(html);
 }
 
-$(document).ready(function () {
-    if (typeof indev !== 'undefined') {
-        SetInventory('[{"quantity":2,"name":"scrap","modelid":694}]');
+/*
+ *
+ */
+Vue.component('notif', {
+    template: '#notif'
+})
+
+Vue.component('inventory', {
+    template: '#inventory',
+    props: {
+        items: { type: Array }
+    }
+})
+
+new Vue({
+    el: '#hud',
+    data() {
+        return {
+            items: []
+        }
+    },
+    mounted() {
+        EventBus.$on('SetInventory', (data) => {
+            this.items = data
+        });
     }
 });
+
+
+// dev seeding
+(function () {
+    if (typeof indev !== 'undefined') {
+        EmitEvent('SetInventory', [
+            {
+                "name": "scrap",
+                "modelid": 694,
+                "quantity": 2
+            }
+        ]);
+    }
+})();

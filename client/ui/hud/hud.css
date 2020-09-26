@@ -43,7 +43,7 @@ body { user-select: none; }
     position: fixed;
 }
 
-#inventory {
+#slots {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

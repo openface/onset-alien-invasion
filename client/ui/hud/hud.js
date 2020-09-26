@@ -25,7 +25,7 @@ Vue.component('notif', {
         }
     },
     methods: {
-        ShowBlood: function(event) {
+        ShowBlood: function() {
             this.show_blood = true;
 
             var that = this;

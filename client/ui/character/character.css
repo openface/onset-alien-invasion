@@ -9,23 +9,6 @@ body { user-select: none; }
     border-radius:10px;
 }
 
-#whatsnew {
-    width: 250px;
-    position:absolute;
-    right:150px;
-    top:20%;
-    background: rgba(0,0,0,0.6);
-    border-radius:10px;
-    padding:5px 15px;
-    padding-bottom:15px;
-}
-
-#whatsnew .info {
-    text-align:left;
-    font-size:12px;
-    line-height:1.5em;
-}
-
 .title {
     font-family:impact;
     font-size:80px;
@@ -52,7 +35,7 @@ body { user-select: none; }
     text-shadow: 1px 1px black;
     margin:20px 0;
 }
-#characters {
+#character-select {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;

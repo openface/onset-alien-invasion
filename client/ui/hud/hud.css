@@ -102,3 +102,28 @@ body { user-select: none; }
     border:1px solid rgba(0,0,0,0.1);
     border-radius: 200px;
 }
+
+/*
+ * Boss health
+ */
+#boss-health {
+    position:absolute;
+    bottom:50px;
+    left:0;
+    right:0;
+    background: rgba(0,0,0,0.7);
+    height: 40px;
+    width: 500px;
+    margin: auto;
+    border: solid 6px rgba(0,0,0,0.1);
+    border-radius: 10px;
+}
+
+#boss-health .health-bar {
+    background-image: linear-gradient(#cc243d 35%, #740a15);
+    width: inherit;
+    height: 39px;
+    position: relative;
+    border-radius: 10px;
+    transition: all 3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}

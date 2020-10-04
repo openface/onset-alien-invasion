@@ -66,10 +66,6 @@
 		"client/ui/hud/hud.css",
 		"client/ui/hud/hud.js",
 
-		"client/ui/boss/boss.html",
-		"client/ui/boss/boss.css",
-		"client/ui/boss/boss.js",
-
 		"client/ui/computer/computer.html",
 		"client/ui/computer/computer.css",
 		"client/ui/computer/computer.js",

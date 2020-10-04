@@ -135,7 +135,7 @@ AddEvent("OnPlayerWeaponShot", function(player, weapon, hittype, hitid, hitx, hi
         if first_hit or math.fmod(percentage_health, 5) == 0.0 then
             print("Mothership health: "..percentage_health.."%")
             for _,ply in pairs(players) do
-                CallRemoteEvent(ply, "UpdateBossHealth", percentage_health)
+                CallRemoteEvent(ply, "SetBossHealth", percentage_health)
             end
         end
 

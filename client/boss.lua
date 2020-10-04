@@ -3,12 +3,6 @@ local MothershipSpawnSound
 local MothershipSoundTimer
 
 AddEvent("OnPackageStart", function()
-    BossUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
-    LoadWebFile(BossUI, "http://asset/"..GetPackageName().."/client/ui/boss/boss.html")
-    SetWebAlignment(BossUI, 0.0, 0.0)
-    SetWebAnchors(BossUI, 0.0, 0.0, 1.0, 1.0)
-    SetWebVisibility(BossUI, WEB_HIDDEN)
-
     SetCloudDensity(1)
 end)
 
@@ -54,16 +48,8 @@ AddRemoteEvent("DespawnBoss", function(boss)
         SetCloudDensity(1)
         SetPostEffect("ImageEffects", "VignetteIntensity", 0)
 
-        ExecuteWebJS(BossUI, "HideBossHealth()")
-        SetWebVisibility(BossUI, WEB_HIDDEN)
-
         AddPlayerChat("The mothership has left your area.")
     end)
-end)
-
-AddRemoteEvent("UpdateBossHealth", function(HealthPercentage)
-    ExecuteWebJS(BossUI, "SetBossHealth("..HealthPercentage..")")
-    SetWebVisibility(BossUI, WEB_VISIBLE)
 end)
 
 -- mothership hurts player

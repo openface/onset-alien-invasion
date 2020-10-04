@@ -18,6 +18,9 @@
             <span class="message">{{ message }}</span>
         </div>
         <inventory></inventory>
+        <div id="boss-health" v-if="boss_health">
+            <div class="health-bar" :style="{ width: boss_health + '%' }"></div>
+        </div>
     </div>
 
     <script type="text/x-template" id="inventory">

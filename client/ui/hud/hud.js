@@ -20,7 +20,8 @@ new Vue({
         return {
             show_blood: false,
             message: null,
-            banner: null
+            banner: null,
+            boss_health: null,
         }
     },
     methods: {
@@ -47,13 +48,16 @@ new Vue({
             setTimeout(function () {
                 that.banner = null;
             }, 5000);
+        },
+        SetBossHealth: function (percentage) {
+            this.boss_health = percentage;
         }
-
     },
     mounted() {
-        EventBus.$on('ShowBlood', this.ShowBlood);
+        EventBus.$on('ShowBlood', this.ShowBlood)
         EventBus.$on('ShowMessage', this.ShowMessage)
         EventBus.$on('ShowBanner', this.ShowBanner)
+        EventBus.$on('SetBossHealth', this.SetBossHealth)
     }
 });
 
@@ -73,5 +77,11 @@ new Vue({
         EmitEvent('ShowMessage', 'You have found an important piece! Take this to the satellite!');
         EmitEvent('ShowBanner', 'Welcome to the invasion!');
 
+        EmitEvent('SetBossHealth', 100);
+        setTimeout(function () { EmitEvent('SetBossHealth', 80) }, 1000);
+        setTimeout(function () { EmitEvent('SetBossHealth', 60) }, 3000);
+        setTimeout(function () { EmitEvent('SetBossHealth', 40) }, 5000);
+        setTimeout(function () { EmitEvent('SetBossHealth', 20) }, 8000);
+        setTimeout(function () { EmitEvent('SetBossHealth', 1) }, 10000);
     }
 })();

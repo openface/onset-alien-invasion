@@ -38,6 +38,11 @@ AddRemoteEvent("ShowBlood", function()
     ShowBlood()
 end)
 
+-- boss health bar
+AddRemoteEvent("SetBossHealth", function(percentage)
+    ExecuteWebJS(HudUI, "EmitEvent('SetBossHealth',"..percentage..")")
+end)
+
 -- inventory
 AddRemoteEvent("SetInventory", function(data)
 	ExecuteWebJS(HudUI, "EmitEvent('SetInventory',".. data ..")")

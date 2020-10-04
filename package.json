@@ -53,8 +53,6 @@
 
 		"client/ui/vue.min.js",
 		"client/ui/vue-onset.js",
-		"client/ui/jquery.js",
-		"client/ui/ui.js",
 
 		"client/ui/images/blood_overlay.png",
 

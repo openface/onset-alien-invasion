@@ -12,7 +12,7 @@ AddEvent("OnPackageStart", function()
     LoadWebFile(ComputerUI, "http://asset/"..GetPackageName().."/client/ui/computer/computer.html")
     SetWebAlignment(ComputerUI, 0.0, 0.0)
     SetWebAnchors(ComputerUI, 0.0, 0.0, 1.0, 1.0)
-    SetWebVisibility(ComputerUI, WEB_HITINVISIBLE)
+    SetWebVisibility(ComputerUI, WEB_HIDDEN)
 
     SatelliteStatus = CreateTextBox(0, 0, "", "center")
     SetTextBoxAnchors(SatelliteStatus, 0.0, 0.0, 1.0, 0.03)
@@ -52,7 +52,7 @@ AddRemoteEvent("HideSatelliteWaypoint", HideSatelliteWaypoint)
 function ShowComputerTimer(loc)
     local x,y,z = GetPlayerLocation(GetPlayerId())
     if GetDistance3D(x, y, z, loc.x, loc.y, loc.z) > 200 then
-        ExecuteWebJS(ComputerUI, "HideComputer()")
+        SetWebVisibility(ComputerUI, WEB_HIDDEN)
         DestroyTimer(computer_timer)
     end
 end
@@ -60,7 +60,8 @@ end
 -- interacting with garage computer
 AddEvent("InteractComputer", function(player)
     SetSoundVolume(CreateSound3D("client/sounds/modem.mp3", ComputerLoc.x, ComputerLoc.y, ComputerLoc.z, 1500), 0.7)
-    ExecuteWebJS(ComputerUI, "ShowGarageComputer()")
+    SetWebVisibility(ComputerUI, WEB_HITINVISIBLE)
+    ExecuteWebJS(ComputerUI, "EmitEvent('ShowComputerScreen','garage')")
     CallEvent("GarageComputerInteraction")
     computer_timer = CreateTimer(ShowComputerTimer, 1000, ComputerLoc)
 end)
@@ -83,12 +84,9 @@ AddEvent("InteractSatellite", function(player)
 end)
 
 AddRemoteEvent("ShowSatelliteComputer", function(percentage)
-    if percentage >= 100 then
-        ExecuteWebJS(ComputerUI, "ShowSatelliteComputerComplete()")
-    else
-        ExecuteWebJS(ComputerUI, "ShowSatelliteComputer("..percentage..")")
-        computer_timer = CreateTimer(ShowComputerTimer, 1000, SatelliteLoc)
-    end
+    SetWebVisibility(ComputerUI, WEB_HITINVISIBLE)
+    ExecuteWebJS(ComputerUI, "EmitEvent('ShowComputerScreen','satellite',"..percentage..")")
+    computer_timer = CreateTimer(ShowComputerTimer, 1000, SatelliteLoc)
 end)
 
 -- occurs just before boss arrives

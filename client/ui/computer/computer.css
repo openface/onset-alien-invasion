@@ -1,6 +1,6 @@
 body { user-select: none; }
 
-#terminal-box {
+#container {
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -8,8 +8,8 @@ body { user-select: none; }
     height: 100%;
 }
 
-#terminal {
-    max-width: 60%;
+#computer {
+    width: 800px;
     background-color: black;
     background-image: radial-gradient(
         rgba(0, 150, 0, 0.75), black 120%
@@ -18,7 +18,7 @@ body { user-select: none; }
     border: 2px solid #73AD21;
     box-shadow: 5px 5px 15px #000;
     color: white;
-    font: 1.2rem Inconsolata, monospace;
+    font: 1.1rem Inconsolata, monospace;
     text-shadow: 0 0 5px #C8C8C8;
     padding:20px 20px;
     margin-top:50px;

@@ -17,9 +17,9 @@ Vue.component('build-button', {
     methods: {
         build() {
             EventBus.$emit('building_item', this.item)
-            Vue.CallEvent('BuildItem', this.item)
             setTimeout(function (scope) {
                 EventBus.$emit('building_item', false)
+                Vue.CallEvent('BuildItem', scope.item)
             }, 15000, this);
         }
     },
@@ -38,14 +38,18 @@ new Vue({
             player_scrap: 0
         }
     },
-    mounted() {
-        EventBus.$on('LoadWorkbenchData', (data) => {
+    methods: {
+        LoadWorkbenchData: function (data) {
             this.items = data['item_data']
             this.player_scrap = data['player_scrap']
-        });
-        EventBus.$on('SetPlayerScrap', (player_scrap) => {
+        },
+        SetPlayerScrap: function (player_scrap) {
             this.player_scrap = player_scrap
-        });
+        }
+    },
+    mounted() {
+        EventBus.$on('LoadWorkbenchData', this.LoadWorkbenchData);
+        EventBus.$on('SetPlayerScrap', this.SetPlayerScrap);
     }
 });
 

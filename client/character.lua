@@ -16,9 +16,10 @@ AddRemoteEvent("ShowCharacterSelection", function()
     SetCameraLocation(sky.x, sky.y, sky.z, true)
     SetCameraRotation(-90, 0, 0, true)
 
-    ExecuteWebJS(CharUI, "ShowCharacterSelect()")
    	ShowMouseCursor(true)
     SetInputMode(INPUT_GAMEANDUI)
+    
+    -- show
     SetWebVisibility(CharUI, WEB_VISIBLE)
 
     -- play chopper sound from initial spawn point in the sky
@@ -27,6 +28,7 @@ AddRemoteEvent("ShowCharacterSelection", function()
 end)
 
 AddEvent("SelectCharacter", function(preset)
+    -- hide
     SetWebVisibility(CharUI, WEB_HIDDEN)
 
     CallRemoteEvent("SelectCharacter", preset)

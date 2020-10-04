@@ -1,4 +1,3 @@
-local ItemData = require("packages/" .. GetPackageName() .. "/server/data/items")
 local WorkbenchLoc = { x = -105858.1328125, y = 193734.21875, z = 1396.1424560547 }
 
 AddEvent("OnPackageStart", function()
@@ -7,20 +6,31 @@ AddEvent("OnPackageStart", function()
 end)
 
 AddRemoteEvent("GetWorkbenchData", function(player)
+    local item_data = {}
+    for key,item in pairs(GetObjects()) do
+        if item['recipe'] ~= nil then
+            item_data[key] = {
+                name = item['name'],
+                modelid = item['modelid'],
+                scrap_needed = item['recipe']['scrap']
+            }
+        end
+    end
+
     CallRemoteEvent(player, "OnGetWorkbenchData", json_encode({
-        ["item_data"] = ItemData,
+        ["item_data"] = item_data,
         ["player_scrap"] = GetPlayerScrapCount(player)
     }))
 end)
 
 AddRemoteEvent("BuildItem", function(player, item_key)
-    local item = ItemData[item_key]
+    local item = GetObject(item_key)
 
     if item == nil then
         return
     end
 
-    if GetPlayerScrapCount(player) < item['scrap_needed'] then
+    if GetPlayerScrapCount(player) < item['recipe']['scrap'] then
         print("Player "..GetPlayerName(player).." needs more scrap to build "..item['name'])
         return
     end
@@ -29,7 +39,7 @@ AddRemoteEvent("BuildItem", function(player, item_key)
     print("Player "..GetPlayerName(player).." builds item "..item['name'])
 
     -- remove scrap from inventory
-    CallEvent("RemoveFromInventory", player, "scrap", item['scrap_needed'])
+    CallEvent("RemoveFromInventory", player, "scrap", item['recipe']['scrap'])
 
     CallRemoteEvent(player, "StartBuilding", item_key, GetPlayerScrapCount(player))
 

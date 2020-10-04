@@ -17,9 +17,9 @@ Vue.component('build-button', {
     methods: {
         build() {
             EventBus.$emit('building_item', this.item)
+            Vue.CallEvent('BuildItem', this.item)
             setTimeout(function (scope) {
                 EventBus.$emit('building_item', false)
-                Vue.CallEvent('BuildItem', scope.item)
             }, 15000, this);
         }
     },

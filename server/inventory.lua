@@ -1,6 +1,3 @@
-local ItemData = require("packages/" .. GetPackageName() .. "/server/data/items")
-local ResourceData = require("packages/" .. GetPackageName() .. "/server/data/resources")
-
 -- get inventory data and send to UI
 function SyncInventory(player)
     local inventory = GetPlayerPropertyValue(player, "inventory")
@@ -22,7 +19,7 @@ end)
 function AddToInventory(player, type, item_key)
     local inventory = GetPlayerPropertyValue(player, "inventory")
 
-    item = GetItemData(item_key)
+    item = GetObject(item_key)
     if not item then
         print("Invalid item "..item_key.. " must be item or resource!")
         return
@@ -46,24 +43,12 @@ function AddToInventory(player, type, item_key)
     CallEvent("SyncInventory", player)
 end
 
--- gets item or resource from data
-function GetItemData(item_key)
-    if ItemData[item_key] then
-        item = ItemData[item_key]
-        item['type'] = 'item'
-    elseif ResourceData[item_key] then
-        item = ResourceData[item_key]
-        item['type'] = 'resource'
-    end
-    return item
-end
-
 -- deletes item from inventory
 -- deduces by quantity if carrying more than 1
 AddEvent("RemoveFromInventory", function(player, item_key, amount)
     local inventory = GetPlayerPropertyValue(player, "inventory")
 
-    local item = GetItemData(item_key)
+    local item = GetObject(item_key)
     if not item then
         print("Invalid item: "..item_key)
         return
@@ -88,7 +73,7 @@ end)
 function GetInventoryCount(player, item_key)
     local inventory = GetPlayerPropertyValue(player, "inventory")
 
-    local item = GetItemData(item_key)
+    local item = GetObject(item_key)
     if not item then
         print("Invalid item: "..item_key)
         return

@@ -76,6 +76,4 @@ AddEvent("OnKeyPress", function(key)
         end
     end
 end)
-
-AddEvent("OnKeyPress", function(key)
     

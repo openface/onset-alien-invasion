@@ -20,10 +20,9 @@ body { user-select: none; }
  */
 #messages {
     position:fixed;
-    min-width:250px;
-    margin-left: -125px;
+    width:90%;
     bottom:16vh;
-    left:50%;
+    text-align:center;
 }
 #messages .message {
     padding:10px 25px;
@@ -52,10 +51,8 @@ body { user-select: none; }
     top: 0;
     left: 0;
     position: fixed;
-    z-index:-1;
-}
-.splat-enter-active, .splat-leave-active {
     animation: fadeSplat 3.5s;
+    z-index:-1;
 }
 @keyframes fadeSplat {
     0% {opacity: 0.5;}

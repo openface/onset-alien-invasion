@@ -21,7 +21,7 @@
 	],
 	"client_scripts": [
 		"client/client.lua",
-		"client/notif.lua",
+		"client/hud.lua",
 		"client/aliens.lua",
 		"client/loot.lua",
 		"client/parts.lua",

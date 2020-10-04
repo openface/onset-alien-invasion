@@ -1,11 +1,4 @@
-// banner
-function ShowBanner(message) {
-    $("#notif").children().hide();
-
-    $('#banner').html(message)
-    $('#banner').show().delay(5000).fadeOut('fast');
-}
-
+// Inventory component
 Vue.component('inventory', {
     template: '#inventory',
     data() {
@@ -20,12 +13,14 @@ Vue.component('inventory', {
     }
 })
 
+// Hud component
 new Vue({
     el: '#hud',
     data() {
         return {
             show_blood: false,
-            message: null
+            message: null,
+            banner: null
         }
     },
     methods: {
@@ -35,7 +30,7 @@ new Vue({
             var that = this;
             setTimeout(function () {
                 that.show_blood = false;
-            }, 1000);
+            }, 3500);
         },
         ShowMessage: function (message) {
             this.message = message;
@@ -44,11 +39,21 @@ new Vue({
             setTimeout(function () {
                 that.message = null;
             }, 5000);
+        },
+        ShowBanner: function (banner) {
+            this.banner = banner;
+
+            var that = this;
+            setTimeout(function () {
+                that.banner = null;
+            }, 5000);
         }
+
     },
     mounted() {
         EventBus.$on('ShowBlood', this.ShowBlood);
         EventBus.$on('ShowMessage', this.ShowMessage)
+        EventBus.$on('ShowBanner', this.ShowBanner)
     }
 });
 
@@ -65,8 +70,8 @@ new Vue({
         ]);
 
         EmitEvent('ShowBlood');
-        EmitEvent('ShowMessage', 'You have found it!');
-
+        EmitEvent('ShowMessage', 'You have found an important piece! Take this to the satellite!');
+        EmitEvent('ShowBanner', 'Welcome to the invasion!');
 
     }
 })();

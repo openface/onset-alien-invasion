@@ -25,5 +25,5 @@ AddRemoteEvent('OnGetScoreboardData', function(players)
     return 
   end
 
-  ExecuteWebJS(ScoreboardUI, "LoadOnlinePlayers("..players..")")
+  ExecuteWebJS(ScoreboardUI, "EmitEvent('LoadOnlinePlayers',"..players..")")
 end)

@@ -6,43 +6,17 @@ function ShowBanner(message) {
     $('#banner').show().delay(5000).fadeOut('fast');
 }
 
-// message
-function ShowMessage(message) {
-    $("#notif").children().hide();
-
-    $('#message').html(`<span>${message}</span>`);
-    $('#message').show().delay(5000).fadeOut('fast');
-}
-
-/*
- *
- */
-Vue.component('notif', {
-    template: '#notif',
+Vue.component('inventory', {
+    template: '#inventory',
     data() {
         return {
-            show_blood: false
-        }
-    },
-    methods: {
-        ShowBlood: function() {
-            this.show_blood = true;
-
-            var that = this;
-            setTimeout(function () {
-                that.show_blood = false;
-            }, 1000);
+            items: []
         }
     },
     mounted() {
-        EventBus.$on('ShowBlood', this.ShowBlood);
-    }
-})
-
-Vue.component('inventory', {
-    template: '#inventory',
-    props: {
-        items: { type: Array }
+        EventBus.$on('SetInventory', (data) => {
+            this.items = data
+        })
     }
 })
 
@@ -50,14 +24,31 @@ new Vue({
     el: '#hud',
     data() {
         return {
-            items: [],
-            show_blood: false
+            show_blood: false,
+            message: null
+        }
+    },
+    methods: {
+        ShowBlood: function () {
+            this.show_blood = true;
+
+            var that = this;
+            setTimeout(function () {
+                that.show_blood = false;
+            }, 1000);
+        },
+        ShowMessage: function (message) {
+            this.message = message;
+
+            var that = this;
+            setTimeout(function () {
+                that.message = null;
+            }, 5000);
         }
     },
     mounted() {
-        EventBus.$on('SetInventory', (data) => {
-            this.items = data
-        })
+        EventBus.$on('ShowBlood', this.ShowBlood);
+        EventBus.$on('ShowMessage', this.ShowMessage)
     }
 });
 
@@ -74,5 +65,8 @@ new Vue({
         ]);
 
         EmitEvent('ShowBlood');
+        EmitEvent('ShowMessage', 'You have found it!');
+
+
     }
 })();

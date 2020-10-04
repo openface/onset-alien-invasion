@@ -15,14 +15,17 @@ body { user-select: none; }
     text-transform:uppercase;
 }
 
-#message {
-    position:absolute;
+/**
+ * Toast-like message
+ */
+#messages {
+    position:fixed;
+    min-width:250px;
+    margin-left: -125px;
     bottom:16vh;
-    width:90%;
-    margin:0;
-    text-align: center;
+    left:50%;
 }
-#message > span {
+#messages .message {
     padding:10px 25px;
     text-shadow: 3px 3px rgba(0,0,0,0.2);
     background:rgba(0,0,0,0.2);
@@ -30,6 +33,11 @@ body { user-select: none; }
     font-size:36px;
     font-weight:normal;
     font-family: Impact;
+    animation: fadeout 1s 4s;
+}
+@keyframes fadeout {
+  from {opacity: 1; }
+  to {opacity: 0; }
 }
 
 /*
@@ -44,6 +52,7 @@ body { user-select: none; }
     top: 0;
     left: 0;
     position: fixed;
+    z-index:-1;
 }
 .splat-enter-active, .splat-leave-active {
     animation: fadeSplat 3.5s;

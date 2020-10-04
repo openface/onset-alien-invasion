@@ -10,17 +10,15 @@
 
 <body>
     <div id="hud">
-        <notif></notif>
-        <inventory :items="items"></inventory>
-    </div>
-
-    <script type="text/x-template" id="notif">
         <transition name="splat">
             <div id="blood_overlay" v-if="show_blood"></div>
         </transition>
         <div id="banner"></div>
-        <div id="messages"></div>
-    </script>
+        <div id="messages" v-if="message">
+            <span class="message">{{ message }}</span>
+        </div>
+        <inventory></inventory>
+    </div>
 
     <script type="text/x-template" id="inventory">
         <div id="slots">

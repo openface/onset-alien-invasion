@@ -266,10 +266,10 @@ AddEvent("OnNPCReachTarget", function(npc)
         SetNPCAnimation(npc, "KUNGFU", false)
 
         -- return home if attacking an admin
-        if IsAdmin(target) then
-            AlienReturn(npc)
-            return
-        end
+        --if IsAdmin(target) then
+        --    AlienReturn(npc)
+        --    return
+        --end
 
         ApplyPlayerDamage(target)
 

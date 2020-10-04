@@ -6,20 +6,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
 
     <link href="./computer.css" rel="stylesheet">
-    <script src="../jquery.js"></script>
-    <script src="../ui.js"></script>
-    <script src="./computer.js"></script>
 </head>
 
 <body>
-    <div id="terminal-box" style="display:none;">
-        <div id="terminal">
-            **************** IMPORTANT EMERGENCY INFORMATION *******************
-            *********************** AUTHORIZED USE ONLY ************************
-            <br /><br />
-            <div id="content"></div>
+    <div id="container">
+        <div id="computer" v-if="screen">
+            %DECW-W-NODEVICE, No graphics device found on this system<br />
+            %SET-I-INTSET, login interactive limit = 64<br /><br />
+            %%%%%%%%% OPCOM 13-SEPT-2020 10:14:18.10 %%%%%%%%%<br />
+            Message from user DECNET<br /><br />
+            *********************** IMPORTANT EMERGENCY INFORMATION **************************<br />
+            ****************************** AUTHORIZED USE ONLY *******************************
+            <br />
+            <div id="content">
+                <div v-if="screen == 'garage'">
+                    <p>READ THESE INSTRUCTIONS CAREFULLY!</p>
+                    
+                    <p>The surrounding area has been invaded by alien lifeform. If you are
+                        reading this message, you may be the last of the remaining human
+                        survivors. Follow these rules to stay alive:</p>
+                    
+                    <ul>
+                        <li>This house and it's perimeter is a SAFE ZONE from alien attack.</li>
+                    
+                        <li>The mainland has been infected with radiation. DO NOT ENTER THE OCEAN!</li>
+                    
+                        <li>THERE ARE ALIENS ON THIS ISLAND! If you are being chased, RUN TO SAFETY
+                            UNLESS YOU ARE ARMED!</li>
+                    
+                        <li>WATCH FOR SUPPLY DROPS! They contain armor, health, and weapons. You
+                            will see flares indicating where they drop. You can also craft supplies
+                            from scrap parts found on the island.</li>
+                    
+                        <li>The mothership is on it's way to this island! YOUR MISSION IS TO DESTROY
+                            THE MOTHERSHIP. You will need supplies before you can fight back!</li>
+                    
+                        <li>FIND THE MISSING SATELLITE PARTS! Scavenge the area to find computer
+                            parts and bring them back to the satellite terminal. Once the satellite
+                            is operational, it will draw the mothership in for an attack.</li>
+                    </ul>
+                    
+                    <p>Good luck</p>
+                </div>
+
+                <div v-else-if="screen == 'satellite'">
+                    <div v-if="percentage == 100">
+                        <p><b>SATELLITE IS FULLY OPERATIONAL!</b></p>
+
+                        <p>Commencing satellite transmission... OK<br />
+                        Waiting for signal acknowledgement... OK</p>
+                        
+                        <p>Signal received. Standby for response.</p>
+                    </div>
+                    <div v-else>
+                        <p>Installing new component...</p>
+                        
+                        <p class="blinking">SATELLITE COMMUNICATIONS ARE NOW <b>{{ percentage }}%</b> OPERATIONAL.</p>
+                        
+                        <p><b>The chance of being attacked by aliens has INCREASED!</b></p>
+                        
+                        <p>Continue collecting satellite parts to initiate signal transmission
+                        from this satellite. Once enough parts are acquired, the satellite
+                        will be operational.</p>
+                    </div>
+                </div>
+
+                <div v-else-if="screen == 'satellite-transmission'">
+                    <p>Commencing satellite transmission... OK<br />
+                    Waiting for signal acknowledgement... OK</p>
+                    
+                    <p>Signal received. Standby for response...</p>
+                </div>
+            </div>
+            <p>NO CARRIER</p>
         </div>
     </div>
+
+    <script src="../vue.min.js" type="text/javascript"></script>
+    <script src="../vue-onset.js" type="text/javascript"></script>
+    <script src="./computer.js" type="text/javascript"></script>
 </body>
 
 </html>

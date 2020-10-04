@@ -1,4 +1,4 @@
-local BossInitialHealth = 999
+local BossInitialHealth = 3000
 local BossDamageAmount = 5 -- hurts players this much every interval
 local BossDamageRange = 10000
 local WeaponData
@@ -17,8 +17,15 @@ AddCommand("boss", function(player)
     if not IsAdmin(player) then
         return
     end
-    SpawnBoss()
+    PrespawnBoss()
 end)
+
+function PrespawnBoss()
+    for _,ply in pairs(GetAllPlayers()) do
+        CallRemoteEvent(ply, "PrespawnBoss")
+    end
+    Delay(5000, SpawnBoss)
+end
 
 function SpawnBoss()
     if Boss ~= nil then
@@ -128,7 +135,7 @@ AddEvent("OnPlayerWeaponShot", function(player, weapon, hittype, hitid, hitx, hi
         if first_hit or math.fmod(percentage_health, 5) == 0.0 then
             print("Mothership health: "..percentage_health.."%")
             for _,ply in pairs(players) do
-                CallRemoteEvent(ply, "UpdateBossHealth", percentage_health)
+                CallRemoteEvent(ply, "SetBossHealth", percentage_health)
             end
         end
 

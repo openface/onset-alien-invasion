@@ -1,26 +1,6 @@
-function LoadOnlinePlayers(players) {
-  $('table > tbody').empty();
-  jQuery.each(players, function (i, p) {
-    $('table tbody').append(`<tr>
-      <td>${p.name}</td>
-      <td class="stats">
-        <span>${p.player_kills}</span> players,
-        <span>${p.alien_kills}</span> aliens,
-        <span>${p.boss_kills}</span> motherships
-      </td>
-      <td class="stats">
-        <span>${p.parts_collected}</span> parts,
-        <span>${p.loot_collected}</span> lootboxes
-      </td>
-      <td><span>${p.deaths}</span></td>
-      <td>${SecondsToTime(p.joined)}</td>
-      <td>${p.ping}ms</td>
-    </tr>`);
-  });
-}
-
-function SecondsToTime(d) {
-  d = Number(d);
+//
+Vue.filter('elapsed_time', function (value) {
+  d = Number(value);
   var h = Math.floor(d / 3600);
   var m = Math.floor(d % 3600 / 60);
   var s = Math.floor(d % 3600 % 60);
@@ -29,24 +9,41 @@ function SecondsToTime(d) {
   var mDisplay = m > 0 ? m + "m " : "";
   var sDisplay = s > 0 ? s + "s" : "";
   return hDisplay + mDisplay + sDisplay; 
-}
+})
 
-$(function () {
-  if (typeof(indev) !== 'undefined') {
-    LoadOnlinePlayers(
-      [
-        {
-          "name": "foobar",
-          "player_kills": 0,
-          "alien_kills": 0,
-          "boss_kills": 1,
-          "parts_collected": 2,
-          "loot_collected": 0,
-          "deaths": 0,
-          "joined": 82398,
-          "ping": 1
-        }
-      ]
-    )
+new Vue({
+  el: '#scoreboard',
+  data() {
+    return {
+      players: []
+    }
+  },
+  methods: {
+    LoadOnlinePlayers: function (players) {
+      this.players = players
+      console.log(players)
+    }
+  },
+  mounted() {
+    EventBus.$on('LoadOnlinePlayers', this.LoadOnlinePlayers);
   }
 });
+
+// dev seeding
+(function () {
+  if (typeof indev !== 'undefined') {
+    EmitEvent('LoadOnlinePlayers', [
+      {
+        name: "foobar",
+        player_kills: 0,
+        alien_kills: 0,
+        boss_kills: 1,
+        parts_collected: 2,
+        loot_collected: 0,
+        deaths: 0,
+        joined: 82398,
+        ping: 1
+      }
+    ]);
+  }
+})();

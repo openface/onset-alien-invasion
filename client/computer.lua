@@ -1,7 +1,9 @@
 local ComputerUI
+
 local ComputerLoc = { x = -106279.4140625, y = 193854.59375, z = 1399.1424560547 }
-local SatelliteLoc = { x = -103004.5234375, y = 201067.09375, z = 2203.3188476563 }
 local computer_timer
+
+local SatelliteLoc = { x = -103004.5234375, y = 201067.09375, z = 2203.3188476563 }
 local SatelliteWaypoint
 local SatelliteStatus
 
@@ -10,16 +12,29 @@ AddEvent("OnPackageStart", function()
     LoadWebFile(ComputerUI, "http://asset/"..GetPackageName().."/client/ui/computer/computer.html")
     SetWebAlignment(ComputerUI, 0.0, 0.0)
     SetWebAnchors(ComputerUI, 0.0, 0.0, 1.0, 1.0)
-    SetWebVisibility(ComputerUI, WEB_HITINVISIBLE)
+    SetWebVisibility(ComputerUI, WEB_HIDDEN)
 
     SatelliteStatus = CreateTextBox(0, 0, "", "center")
     SetTextBoxAnchors(SatelliteStatus, 0.0, 0.0, 1.0, 0.03)
     SetTextBoxAlignment(SatelliteStatus, 1.0, 0.0)
 end)
 
+AddEvent("OnKeyPress", function(key)
+    if key == "E" then
+        local player = GetPlayerId()
+        local x,y,z = GetPlayerLocation(player)
+        if GetDistance3D(x, y, z, ComputerLoc.x, ComputerLoc.y, ComputerLoc.z) <= 200 then
+            CallEvent("InteractComputer", player)
+        elseif GetDistance3D(x, y, z, SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z) <= 200 then
+            CallEvent("InteractSatellite", player)
+        end
+    end
+ end)
+
+-- after computer_part is picked up, show waypoint to the satellite
 function ShowSatelliteWaypoint()
     HideSatelliteWaypoint()
-    SatelliteWaypoint = CreateWaypoint(SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z+50, "Satellite Terminal")
+    SatelliteWaypoint = CreateWaypoint(SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc+50, "Satellite Terminal")
 end
 AddEvent("ShowSatelliteWaypoint", ShowSatelliteWaypoint)
 AddRemoteEvent("ShowSatelliteWaypoint", ShowSatelliteWaypoint)
@@ -33,52 +48,45 @@ end
 AddEvent("HideSatelliteWaypoint", HideSatelliteWaypoint)
 AddRemoteEvent("HideSatelliteWaypoint", HideSatelliteWaypoint)
 
+-- timer used to hide computer screen once player walks away
 function ShowComputerTimer(loc)
     local x,y,z = GetPlayerLocation(GetPlayerId())
     if GetDistance3D(x, y, z, loc.x, loc.y, loc.z) > 200 then
-        ExecuteWebJS(ComputerUI, "HideComputer()")
+        SetWebVisibility(ComputerUI, WEB_HIDDEN)
         DestroyTimer(computer_timer)
     end
 end
 
-AddEvent("OnKeyPress", function(key)
-    if key == "E" then
-        local player = GetPlayerId()
-        local x,y,z = GetPlayerLocation(player)
+-- interacting with garage computer
+AddEvent("InteractComputer", function(player)
+    SetSoundVolume(CreateSound3D("client/sounds/modem.mp3", ComputerLoc.x, ComputerLoc.y, ComputerLoc.z, 1500), 0.7)
+    SetWebVisibility(ComputerUI, WEB_HITINVISIBLE)
+    ExecuteWebJS(ComputerUI, "EmitEvent('SetComputerScreen','garage')")
+    CallEvent("GarageComputerInteraction")
+    computer_timer = CreateTimer(ShowComputerTimer, 1000, ComputerLoc)
+end)
 
-        if GetDistance3D(x, y, z, ComputerLoc.x, ComputerLoc.y, ComputerLoc.z) <= 200 then
-            -- interacting with garage computer
-            SetSoundVolume(CreateSound("client/sounds/modem.mp3"), 0.7)
+-- interacting with satellite computer requires computer_part
+AddEvent("InteractSatellite", function(player)
+    if SatelliteWaypoint ~= nil then
+        DestroyWaypoint(SatelliteWaypoint)
+    end
 
-            ExecuteWebJS(ComputerUI, "ShowGarageComputer()")
-
-            CallEvent("GarageComputerInteraction")
-
-            computer_timer = CreateTimer(ShowComputerTimer, 2000, ComputerLoc)
-        elseif GetDistance3D(x, y, z, SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z) <= 200 then
-            if SatelliteWaypoint ~= nil then
-                DestroyWaypoint(SatelliteWaypoint)
-            end
-
-            -- interacting with satellite computer
-            if GetPlayerPropertyValue(player, 'carryingPart') == nil then
-                ShowMessage("You are missing a critical computer part!", 5000)
-                SetSoundVolume(CreateSound("client/sounds/error.mp3"), 1)
-            else
-                SetSoundVolume(CreateSound("client/sounds/modem.mp3"), 1)
-                CallRemoteEvent("InteractSatelliteComputer")
-            end
-        end
+    -- ensure player has computer_part
+    local inventory = GetPlayerPropertyValue(player, "inventory")
+    if not inventory['computer_part'] then
+        ShowMessage("You are missing a critical computer part!", 5000)
+        SetSoundVolume(CreateSound("client/sounds/error.mp3"), 1)
+    else
+        SetSoundVolume(CreateSound3D("client/sounds/modem.mp3", SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z, 1500), 0.7)
+        CallRemoteEvent("InteractSatelliteComputer")
     end
 end)
 
 AddRemoteEvent("ShowSatelliteComputer", function(percentage)
-    if percentage >= 100 then
-        ExecuteWebJS(ComputerUI, "ShowSatelliteComputerComplete()")
-    else
-        ExecuteWebJS(ComputerUI, "ShowSatelliteComputer("..percentage..")")
-        computer_timer = CreateTimer(ShowComputerTimer, 2000, SatelliteLoc)
-    end
+    SetWebVisibility(ComputerUI, WEB_HITINVISIBLE)
+    ExecuteWebJS(ComputerUI, "EmitEvent('SetComputerScreen','satellite',"..percentage..")")
+    computer_timer = CreateTimer(ShowComputerTimer, 1000, SatelliteLoc)
 end)
 
 -- occurs just before boss arrives

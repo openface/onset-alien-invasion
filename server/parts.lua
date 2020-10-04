@@ -1,7 +1,7 @@
 local PartsLocations = {} -- parts.json
 local PartPickups = {}
 local PartObjectID = 1437
-local NumSpawnedParts = 25 -- number of parts to spawn
+local NumSpawnedParts = 25 -- maximum number of parts to spawn
 
 AddCommand("ppos", function(player)
     if not IsAdmin(player) then
@@ -27,7 +27,7 @@ AddCommand("part", function(player)
     if not IsAdmin(player) then
         return
     end
-    EquipPart(player)
+    PickupPart(player)
 end)
 
 AddEvent("OnPackageStart", function()
@@ -73,49 +73,25 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
         return
     end
         
-    EquipPart(player)
-    DestroyText3D(GetPickupPropertyValue(pickup, 'text3d'))
-    DestroyPickup(pickup)
+    PickupPart(player)
 
     -- remove from part index if it exists
     if PartPickups[pickup] ~= nil then
         PartPickups[pickup] = nil
     end
+    DestroyText3D(GetPickupPropertyValue(pickup, 'text3d'))
+    DestroyPickup(pickup)
 end)
 
-function EquipPart(player)
-    if (GetPlayerPropertyValue(player, 'carryingPart') ~= nil) then
-        -- already carrying a part
-        CallRemoteEvent(player, "ShowMessage", "Take your part to the satellite computer!")
-        return
-    end
+function PickupPart(player)
+    CallEvent("AddItemToInventory", player, "computer_part")
 
-    -- carry with left hand
-    local x,y,z = GetPlayerLocation(player)
-    local part = CreateObject(PartObjectID, x, y, z)
-    SetObjectAttached(part, ATTACH_PLAYER, player, 10, -5, 0, 0, 0, 90, "hand_l")
-
-    SetPlayerPropertyValue(player, 'carryingPart', part, true)
     AddPlayerChatAll(GetPlayerName(player)..' has found a computer part!')
     CallRemoteEvent(player, "PartPickedup", pickup)
 end
 
-
--- drop part on death
+-- clear satellite waypoint on death
 AddEvent("OnPlayerDeath", function(player, killer)
-    local part = GetPlayerPropertyValue(player, "carryingPart")
-    if part ~= nil then
-        DestroyObject(part)
-        SetPlayerPropertyValue(player, 'carryingPart', nil, true)
-    end
     CallRemoteEvent(player, "HideSatelliteWaypoint")
-end)
-
--- destroy part on quit
-AddEvent("OnPlayerQuit", function(player)
-    local part = GetPlayerPropertyValue(player, "carryingPart")
-    if part ~= nil then
-        DestroyObject(part)
-    end
 end)
 

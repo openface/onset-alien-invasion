@@ -39,7 +39,7 @@ AddEvent("OnPlayerTalking", function(player)
 end)
 
 AddRemoteEvent("ClientSetTime", function(time)
-	SetTime(time)
+    SetTime(time)
 end)
 
 -- skydive
@@ -48,7 +48,7 @@ AddEvent("OnPlayerSkydive", function()
 end)
 
 AddEvent("OnPlayerParachuteOpen", function()
-    ShowBanner("WELCOME TO THE<br />INVASION!")
+    ShowBanner("WELCOME TO THE INVASION!")
     ComputerWaypoint = CreateWaypoint(-106279.4140625, 193854.59375, 1399.1424560547 + 50, "Computer Terminal")
 end)
 

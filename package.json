@@ -8,8 +8,11 @@
 		"server/loot.lua",
 		"server/vehicles.lua",
 		"server/parts.lua",
+		"server/scrap.lua",
 		"server/boss.lua",
 		"server/computer.lua",
+		"server/workbench.lua",
+		"server/inventory.lua",
 		"server/time.lua",
 		"server/world.lua",
 		"server/scoreboard.lua",
@@ -18,12 +21,14 @@
 	],
 	"client_scripts": [
 		"client/client.lua",
-		"client/notif.lua",
+		"client/hud.lua",
 		"client/aliens.lua",
 		"client/loot.lua",
 		"client/parts.lua",
+		"client/scrap.lua",
 		"client/boss.lua",
 		"client/computer.lua",
+		"client/workbench.lua",
 		"client/character.lua",
 		"client/scoreboard.lua",
 		"client/water.lua"
@@ -43,9 +48,11 @@
 		"client/sounds/error.mp3",
 		"client/sounds/alert.mp3",
 		"client/sounds/chopper.mp3",
+		"client/sounds/search.mp3",
+		"client/sounds/workbench.mp3",
 
-		"client/ui/jquery.js",
-		"client/ui/ui.js",
+		"client/ui/vue.min.js",
+		"client/ui/vue-onset.js",
 
 		"client/ui/images/blood_overlay.png",
 
@@ -53,18 +60,18 @@
 		"client/ui/scoreboard/scoreboard.css",
 		"client/ui/scoreboard/scoreboard.js",
 
-		"client/ui/notif/notif.html",
-		"client/ui/notif/notif.css",
-		"client/ui/notif/notif.js",
-
-		"client/ui/boss/boss.html",
-		"client/ui/boss/boss.css",
-		"client/ui/boss/boss.js",
+		"client/ui/hud/hud.html",
+		"client/ui/hud/hud.css",
+		"client/ui/hud/hud.js",
 
 		"client/ui/computer/computer.html",
 		"client/ui/computer/computer.css",
 		"client/ui/computer/computer.js",
 
+		"client/ui/workbench/workbench.html",
+		"client/ui/workbench/workbench.css",
+		"client/ui/workbench/workbench.js",
+				
 		"client/ui/character/character.html",
 		"client/ui/character/character.css",
 		"client/ui/character/character.js",

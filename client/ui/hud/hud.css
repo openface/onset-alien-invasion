@@ -1,0 +1,129 @@
+body { user-select: none; }
+
+#banner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 600px;
+    text-align: center;
+    text-shadow: 10px 10px rgba(0,0,0,0.2);
+    color: #fff;
+    font-size:150px;
+    font-weight:bold;
+    font-family: Impact;
+    text-transform:uppercase;
+}
+
+/**
+ * Toast-like message
+ */
+#messages {
+    position:fixed;
+    width:90%;
+    bottom:16vh;
+    text-align:center;
+}
+#messages .message {
+    padding:10px 25px;
+    text-shadow: 3px 3px rgba(0,0,0,0.2);
+    background:rgba(0,0,0,0.2);
+    color: #fff;
+    font-size:36px;
+    font-weight:normal;
+    font-family: Impact;
+    animation: fadeout 1s 4s;
+}
+@keyframes fadeout {
+  from {opacity: 1; }
+  to {opacity: 0; }
+}
+
+/*
+ * Blood Splat
+ */
+#blood_overlay {
+    background:url('../images/blood_overlay.png') no-repeat center center fixed;
+    background-size: cover;
+    opacity: 0.5;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    animation: fadeSplat 3.5s;
+    z-index:-1;
+}
+@keyframes fadeSplat {
+    0% {opacity: 0.5;}
+    100% {opacity: 0;}
+}
+
+/*
+ * Inventory
+ */
+#slots {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-content: flex-start;
+    align-items: flex-start;
+    position: fixed;
+    top:300px;
+    right: 20px;
+}
+.slot {
+    margin:5px;
+    flex: 0 1 auto;
+    align-self: auto;
+    background:rgba(0,0,0,0.3);
+    border:3px solid rgba(0,0,0,0.5);
+    border-radius:5px;
+    height:75px;
+    width:75px;
+    display: inline-block;
+    position:relative;
+}
+.slot img {
+    object-fit: scale-down;
+    width:75px;
+    height:75px;
+    opacity: 0.75;
+}
+.slot .quantity {
+    font-family: Impact;
+    position:absolute;
+    bottom:-5px;
+    right:-5px;
+    z-index: 1;
+    font-size:12px;
+    padding:5px 7px;
+    background:rgba(255,255,255);
+    border:1px solid rgba(0,0,0,0.1);
+    border-radius: 200px;
+}
+
+/*
+ * Boss health
+ */
+#boss-health {
+    position:absolute;
+    bottom:50px;
+    left:0;
+    right:0;
+    background: rgba(0,0,0,0.7);
+    height: 40px;
+    width: 500px;
+    margin: auto;
+    border: solid 6px rgba(0,0,0,0.1);
+    border-radius: 10px;
+}
+
+#boss-health .health-bar {
+    background-image: linear-gradient(#cc243d 35%, #740a15);
+    width: inherit;
+    height: 39px;
+    position: relative;
+    border-radius: 10px;
+    transition: all 3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}

@@ -6,7 +6,8 @@ AddCommand("pos", function(player)
         return
     end
     local x, y, z = GetPlayerLocation(player)
-    string = "Location: "..x.." "..y.." "..z
+    local heading = GetPlayerHeading(player)
+    string = "Location: "..x.." "..y.." "..z.." Heading: "..heading
     AddPlayerChat(player, string)
     print(string)
 end)
@@ -30,16 +31,22 @@ end)
 
 -- welcome message
 AddEvent("OnPlayerJoin", function(player)
+    local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 6000)
+    SetPlayerSpawnLocation(player, x, y, SpawnLocation.z, 180)
+
+    SetPlayerRespawnTime(player, PlayerRespawnSecs * 1000)
+
+    AddPlayerChatAll('<span color="#eeeeeeaa">'..GetPlayerName(player)..' has joined the server</>')
+    AddPlayerChat(player, '<span color="#ffffffff">Welcome to Alien Invasion by oweff!</>')
+end)
+
+-- Player spawn
+AddEvent("OnPlayerSpawn", function(player)
+    SetPlayerArmor(player, 0)
+    SetPlayerPropertyValue(player, "inventory", {})
+
     -- place player in separate dimension while character is selected
     SetPlayerDimension(player, math.random(1, 999))
-    -- temporary spawn point unless player selects a character
-    SetPlayerSpawnLocation(player, 173454, 198906, 2496, 180)
-    SetPlayerRespawnTime(player, PlayerRespawnSecs * 1000)
-	AddPlayerChatAll('<span color="#eeeeeeaa">'..GetPlayerName(player)..' has joined the server</>')
-	AddPlayerChatAll('<span color="#eeeeeeaa">There are '..GetPlayerCount()..' players on the server</>')
-    AddPlayerChatAll('<span color="#eeeeeeaa">Hit [T] to chat and [TAB] for scoreboard</>')
-    AddPlayerChatAll('<span color="#ffffffff">Welcome to Alien Invasion by oweff!</>')
-    AddPlayerChatAll('<span color="#ffffffff">Thanks for testing this gamemode.</>')
     CallRemoteEvent(player, "ShowCharacterSelection")
 end)
 
@@ -48,12 +55,12 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
 
     -- join the others
     SetPlayerDimension(player, 0)
+    SetPlayerPropertyValue(player, "inventory", {})
+
+    AddPlayerChat(player, '<span color="#eeeeeeaa">Hit [T] to chat and [TAB] for scoreboard</>')
 
     -- parachute down to the island
-    local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 8000)
-
-    SetPlayerSpawnLocation(player, x, y, SpawnLocation.z, 180)
-    SetPlayerLocation(player, x, y, SpawnLocation.z + 30000)
+    SetPlayerLocation(player, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z + 30000)
     AttachPlayerParachute(player, true)
 end)
 
@@ -81,11 +88,6 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
 	end
 end)
 
--- Player spawn
-AddEvent("OnPlayerSpawn", function(player)
-    SetPlayerArmor(player, 0)
-end)
-
 -- Log auth
 AddEvent("OnPlayerSteamAuth", function(player)
     print("Player "..GetPlayerName(player).." (ID "..player..") authenticated with steam ID "..GetPlayerSteamId(player))
@@ -106,3 +108,4 @@ end)
 AddRemoteEvent("DropParachute", function(player)
     AttachPlayerParachute(player, false)
 end)
+

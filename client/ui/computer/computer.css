@@ -1,13 +1,6 @@
-body,
-html {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    background: transparent;
-}
+body { user-select: none; }
 
-#terminal-box {
+#container {
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -15,7 +8,7 @@ html {
     height: 100%;
 }
 
-#terminal {
+#computer {
     width: 800px;
     background-color: black;
     background-image: radial-gradient(
@@ -25,52 +18,20 @@ html {
     border: 2px solid #73AD21;
     box-shadow: 5px 5px 15px #000;
     color: white;
-    font: 1.3rem Inconsolata, monospace;
+    font: 1.1rem Inconsolata, monospace;
     text-shadow: 0 0 5px #C8C8C8;
     padding:20px 20px;
-}
-#terminal::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px);
-  pointer-events: none;
+    margin-top:50px;
 }
 
 .blinking {
     animation: blinkingText 1.2s infinite;
 }
+
 @keyframes blinkingText {
     0%{     color: #FFF;    }
     49%{    color: #FFF; }
     60%{    color: transparent; }
-    99%{    color:transparent;  }
+    99%{    color: transparent;  }
     100%{   color: #FFF;    }
-}
-
-/* Progress Meter */
-.meter { 
-    height: 15px;
-    position: relative;
-    background: #73AD21;
-    overflow: hidden;
-}
-
-.meter span {
-    display: block;
-    height: 100%;
-}
-
-.progress {
-    background-color: #ffffff;
-    animation: progressBar 10s ease-in-out;
-    animation-fill-mode:both; 
-}
-
-@keyframes progressBar {
-  0% { width: 0; }
-  100% { width: 100%; }
 }

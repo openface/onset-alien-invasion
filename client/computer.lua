@@ -61,7 +61,7 @@ end
 AddEvent("InteractComputer", function(player)
     SetSoundVolume(CreateSound3D("client/sounds/modem.mp3", ComputerLoc.x, ComputerLoc.y, ComputerLoc.z, 1500), 0.7)
     SetWebVisibility(ComputerUI, WEB_HITINVISIBLE)
-    ExecuteWebJS(ComputerUI, "EmitEvent('ShowComputerScreen','garage')")
+    ExecuteWebJS(ComputerUI, "EmitEvent('SetComputerScreen','garage')")
     CallEvent("GarageComputerInteraction")
     computer_timer = CreateTimer(ShowComputerTimer, 1000, ComputerLoc)
 end)
@@ -85,7 +85,7 @@ end)
 
 AddRemoteEvent("ShowSatelliteComputer", function(percentage)
     SetWebVisibility(ComputerUI, WEB_HITINVISIBLE)
-    ExecuteWebJS(ComputerUI, "EmitEvent('ShowComputerScreen','satellite',"..percentage..")")
+    ExecuteWebJS(ComputerUI, "EmitEvent('SetComputerScreen','satellite',"..percentage..")")
     computer_timer = CreateTimer(ShowComputerTimer, 1000, SatelliteLoc)
 end)
 

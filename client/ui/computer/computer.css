@@ -32,30 +32,6 @@ body { user-select: none; }
     0%{     color: #FFF;    }
     49%{    color: #FFF; }
     60%{    color: transparent; }
-    99%{    color:transparent;  }
+    99%{    color: transparent;  }
     100%{   color: #FFF;    }
-}
-
-/* Progress Meter */
-.meter { 
-    height: 15px;
-    position: relative;
-    background: #73AD21;
-    overflow: hidden;
-}
-
-.meter span {
-    display: block;
-    height: 100%;
-}
-
-.progress {
-    background-color: #ffffff;
-    animation: progressBar 10s ease-in-out;
-    animation-fill-mode:both; 
-}
-
-@keyframes progressBar {
-  0% { width: 0; }
-  100% { width: 100%; }
 }

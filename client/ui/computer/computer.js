@@ -22,7 +22,7 @@ new Vue({
 // dev seeding
 (function () {
     if (typeof indev !== 'undefined') {
-//        EmitEvent('SetComputerScreen', 'satellite', 20);
-        EmitEvent('SetComputerScreen', 'garage');
+        EmitEvent('SetComputerScreen', 'satellite', 20);
+//        EmitEvent('SetComputerScreen', 'garage');
     }
 })();

@@ -16,7 +16,7 @@ Vue.component('build-button', {
     },
     methods: {
         build() {
-            this.$root.$emit('building_item', this.item)
+            EventBus.$emit('building_item', this.item)
             Vue.CallEvent('BuildItem', this.item)
             setTimeout(function (scope) {
                 EventBus.$emit('building_item', false)
@@ -24,7 +24,7 @@ Vue.component('build-button', {
         }
     },
     created() {
-        this.$root.$on('building_item', (item) => {
+        EventBus.$on('building_item', (item) => {
             this.building_item = item
         })
     },

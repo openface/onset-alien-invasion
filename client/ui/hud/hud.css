@@ -108,22 +108,23 @@ body { user-select: none; }
  */
 #boss-health {
     position:absolute;
-    bottom:50px;
+    top:50px;
     left:0;
     right:0;
-    background: rgba(0,0,0,0.7);
-    height: 40px;
+    background: rgba(0,0,0,0.5);
+    height: 20px;
     width: 500px;
     margin: auto;
-    border: solid 6px rgba(0,0,0,0.1);
-    border-radius: 10px;
+    border: solid 2px rgba(0,0,0,0.1);
+    border-radius: 25px;
 }
 
 #boss-health .health-bar {
     background-image: linear-gradient(#cc243d 35%, #740a15);
     width: inherit;
-    height: 39px;
+    height: 20px;
     position: relative;
-    border-radius: 10px;
+    opacity: 0.9;
+    border-radius: 25px;
     transition: all 3s cubic-bezier(0.4, 0.0, 0.2, 1);
 }

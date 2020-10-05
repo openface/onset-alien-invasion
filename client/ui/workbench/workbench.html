@@ -20,9 +20,13 @@
                         </div>
                         <div class="details">
                             <div class="name">{{ item.name }}</div>
-                            <div class="info">{{ item.scrap_needed }} scrap needed</div>
+                            <div class="info">
+                                <span v-for="(qty, resource) in item.recipe">
+                                    <b>{{ qty }}</b> {{ resource }}
+                                </span>
+                            </div>
                             <div class="action">
-                                <build-button :scrap_needed="item.scrap_needed" :player_scrap="player_scrap" :item="key"></build-button>
+                                <build-button :recipe="item.recipe" :player_resources="player_resources" :item="key"></build-button>
                             </div>
                         </div>
                     </div>
@@ -34,7 +38,7 @@
             <div v-if="isBuilding">
                 <div class="meter"><span><span class="progress"></span></span></div>
             </div>
-            <div v-else-if="player_scrap >= scrap_needed">
+            <div v-else-if="hasEnoughResources">
                 <button class="build" :disabled="isDisabled" @click="build">BUILD</button>
             </div>
             <div v-else>

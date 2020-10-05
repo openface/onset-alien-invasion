@@ -30,12 +30,12 @@ body { user-select: none; }
 }
 #messages .message {
     padding:10px 25px;
-    text-shadow: 3px 3px rgba(0,0,0,0.5);
-    background:rgba(0,0,0,0.6);
+    text-shadow: 2px 2px rgba(0,0,0,0.5);
+    background:rgba(0,0,0,0.4);
     color: #fff;
-    font-size:36px;
+    font-size:22px;
     font-weight:normal;
-    font-family: Impact;
+    font-family: Helvetica;
     animation: fadeout 1s 4.5s;
     z-index:10;
 }
@@ -78,7 +78,7 @@ body { user-select: none; }
     right: 20px;
 }
 
-#usable_items {
+#equipable_items {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -89,7 +89,7 @@ body { user-select: none; }
     bottom: 13vh;
 }
 
-#equipable_items {
+#usable_items {
     display: flex;
     flex-direction: row;
     justify-content: center;

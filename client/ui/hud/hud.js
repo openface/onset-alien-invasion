@@ -8,6 +8,12 @@ Vue.component('inventory', {
             usable_items: [],
         }
     },
+    computed: {
+        AvailableSlots: function () {
+            // 1-3 reserved for weapons (10-3=7)
+            return 7 - this.usable_items.length;
+        }
+    },
     methods: {
         SetInventory: function (data) {
             this.resource_items = data.filter(item => item.type == 'resource')

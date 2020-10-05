@@ -11,7 +11,7 @@ body { user-select: none; }
 #workbench {
     width:700px;
     background: rgba(0,0,0,0.9);
-    font-family:impact;
+    font-family:helvetica;
     font-size:16px;
     color:#ccc;
     text-shadow: 3px black;
@@ -23,6 +23,8 @@ body { user-select: none; }
     font-size:40px;
     text-align:center;
     margin:0;
+    font-weight:bold;
+    font-family:impact;
 }
 
 .grid {

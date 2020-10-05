@@ -48,7 +48,7 @@ function SpawnLootArea(pos)
         end
     end
 
-    local pickup = CreatePickup(588, pos[1], pos[2], pos[3])
+    local pickup = CreatePickup(588, pos[1], pos[2], pos[3] - 50)
     SetPickupPropertyValue(pickup, 'type', 'loot')
 
     -- notify players

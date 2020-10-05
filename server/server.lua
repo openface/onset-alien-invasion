@@ -38,6 +38,7 @@ AddEvent("OnPlayerJoin", function(player)
 
     AddPlayerChatAll('<span color="#eeeeeeaa">'..GetPlayerName(player)..' has joined the server</>')
     AddPlayerChat(player, '<span color="#ffffffff">Welcome to Alien Invasion by oweff!</>')
+    AddPlayerChat(player, '<span color="#eeeeeeaa">Hit [T] to chat and [TAB] for scoreboard</>')
 end)
 
 -- Player spawn
@@ -47,6 +48,7 @@ AddEvent("OnPlayerSpawn", function(player)
 
     -- place player in separate dimension while character is selected
     SetPlayerDimension(player, math.random(1, 999))
+
     CallRemoteEvent(player, "ShowCharacterSelection")
 end)
 
@@ -57,11 +59,14 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
     SetPlayerDimension(player, 0)
     SetPlayerPropertyValue(player, "inventory", {})
 
-    AddPlayerChat(player, '<span color="#eeeeeeaa">Hit [T] to chat and [TAB] for scoreboard</>')
-
     -- parachute down to the island
     SetPlayerLocation(player, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z + 30000)
     AttachPlayerParachute(player, true)
+
+    local chopper = CreateObject(1847, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z + 31000)
+    Delay(20000, function(chopper)
+        DestroyObject(chopper)
+    end, chopper)
 end)
 
 -- killer is never a NPC so we have to guess

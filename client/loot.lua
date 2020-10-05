@@ -27,7 +27,7 @@ AddRemoteEvent('LootSpawned', function(pos, pickup)
     SetSoundVolume(LootSpawnSound, 1)
     AddPlayerChat('There is a supply drop nearby!')
 
-    LootWaypoint = CreateWaypoint(pos[1], pos[2], pos[3] + 50, "Supply Drop")
+    LootWaypoint = CreateWaypoint(pos[1], pos[2], pos[3] + 100, "Supply Drop")
 
     -- fireworks/flares
     CreateCountTimer(function(pos)

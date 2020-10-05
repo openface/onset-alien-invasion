@@ -15,8 +15,7 @@ We do not know much about these alien lifeforms.  We do know that they are very 
 
 You will be backed by the reinforcements from the military.  They will drop supplies (health, armor, and weapons) occasionally.  If you hear aircraft overhead or see fireworks, head towards the drop zone - but be warned, these areas are NOT safezones.  You MAY encounter conflict from other players while obtaining the loot box.  
 
-The satellite computer has enough power to communicate with the mothership. Search the island for parts that can be used to operate the satellite computer to reach
-the end game.
+The satellite computer has enough power to communicate with the mothership. Search the island for resources that can be used to operate the satellite computer to reach the end game.
 
 ### Features
 
@@ -26,3 +25,6 @@ the end game.
 * Computer parts hidden around the island that can be picked up and taken to the main satellite computer.
 * Satellite computer requires parts to be fully operational. Once 100% of the parts are recovered, the mothership will land. (cue the boss fight)
 * Mothership attacks players until everyone is dead or defeated.
+* Scrap heaps provide resources such as metal shards, plastic tarps, and computer parts.
+* Craft items at the workbench using resources you find at the scrap heaps.
+* Simple inventory system (More to come...)

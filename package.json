@@ -26,8 +26,10 @@
 		"server/objects/headphones.lua",
 		"server/objects/vest.lua",
 		"server/objects/mop.lua",
-		"server/objects/scrap.lua",
+		"server/objects/metal.lua",
 		"server/objects/computer_part.lua",
+		"server/objects/plastic.lua",
+		"server/objects/wood.lua",
 		"server/vendor/json.lua",
 		"server/vendor/file.lua"
 	],

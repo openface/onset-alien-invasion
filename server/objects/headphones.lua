@@ -4,7 +4,8 @@ RegisterObject("headphones", {
     modelid = 828,
     max_carry = 1,
     recipe = {
-        scrap = 13,
+        metal = 13,
+        computer_part = 1
     },
     attachment = { 
         x = 11, 

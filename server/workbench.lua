@@ -12,15 +12,17 @@ AddRemoteEvent("GetWorkbenchData", function(player)
             item_data[key] = {
                 name = item['name'],
                 modelid = item['modelid'],
-                scrap_needed = item['recipe']['scrap']
+                recipe = item['recipe']
             }
         end
     end
 
-    CallRemoteEvent(player, "OnGetWorkbenchData", json_encode({
+    local _send = {
         ["item_data"] = item_data,
-        ["player_scrap"] = GetPlayerScrapCount(player)
-    }))
+        ["player_resources"] = GetPlayerResources(player)
+    }
+    print(dump(json_encode(_send)))
+    CallRemoteEvent(player, "OnGetWorkbenchData", json_encode(_send))
 end)
 
 AddRemoteEvent("BuildItem", function(player, item_key)
@@ -30,18 +32,15 @@ AddRemoteEvent("BuildItem", function(player, item_key)
         return
     end
 
-    if GetPlayerScrapCount(player) < item['recipe']['scrap'] then
-        print("Player "..GetPlayerName(player).." needs more scrap to build "..item['name'])
-        return
-    end
-
     -- start the build
     print("Player "..GetPlayerName(player).." builds item "..item['name'])
 
     -- remove scrap from inventory
-    CallEvent("RemoveFromInventory", player, "scrap", item['recipe']['scrap'])
+    for resource,amount in pairs(item['recipe']) do
+        CallEvent("RemoveFromInventory", player, resource, amount)
+    end
 
-    CallRemoteEvent(player, "StartBuilding", item_key, GetPlayerScrapCount(player))
+    CallRemoteEvent(player, "StartBuilding", item_key, json_encode(GetPlayerResources(player)))
 
     SetPlayerLocation(player, -105738.5859375, 193734.59375, 1396.1424560547) 
     SetPlayerHeading(player, -92.786437988281)   
@@ -53,10 +52,14 @@ AddRemoteEvent("BuildItem", function(player, item_key)
     end)
 end)
 
-function GetPlayerScrapCount(player)
+function GetPlayerResources(player)
     local inventory = GetPlayerPropertyValue(player, "inventory")
-    if inventory['scrap'] ~= nil then
-        return inventory['scrap']['quantity']
+    local resources = {}
+    for k,item in pairs(inventory) do
+        if item['type'] == 'resource' then
+            resources[k] = item['quantity']
+        end
     end
-    return 0
+    print(dump(resources))
+    return resources
 end

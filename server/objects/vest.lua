@@ -8,7 +8,8 @@ RegisterObject("vest", {
     modelid = 843, 
     max_carry = 1,
     recipe = {
-        scrap = 15,
+        metal = 2,
+        plastic = 10
     },
     attachment = { 
         x = -15, 

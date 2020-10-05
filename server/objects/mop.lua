@@ -7,7 +7,7 @@ RegisterObject("mop", {
     modelid = 1673,
     max_carry = 1,
     recipe = {
-        scrap = 2,
+        wood = 2,
     },
     attachment = { 
 		x = 50, 

@@ -2,7 +2,8 @@ RegisterObject("armyhat", {
     name = "Officer Hat",
     type = 'equipable',
     recipe = {
-        scrap = 2,
+        metal = 2,
+        plastic = 1
     },
     modelid = 398,
     max_carry = 1,

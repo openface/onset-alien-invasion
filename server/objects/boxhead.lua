@@ -4,7 +4,7 @@ RegisterObject("boxhead", {
     modelid = 406,
     max_carry = 1,
     recipe = {
-        scrap = 2,
+        wood = 1,
     },
     attachment = { 
         x = 10, 

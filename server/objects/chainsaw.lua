@@ -8,7 +8,8 @@ RegisterObject("chainsaw", {
     modelid = 1047,
     max_carry = 1,
     recipe = {
-        scrap = 10,
+        metal = 10,
+        plastic = 2
     },
     attachment = { 
         x = -20, 

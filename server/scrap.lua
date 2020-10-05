@@ -110,11 +110,17 @@ end)
 
 -- add scrap to inventory
 function PickupScrap(player)
-    -- add to inventory
-    CallEvent("AddItemToInventory", player, "scrap")
+    -- random resource
+    local resources = { "metal", "wood", "computer_part", "plastic" }
+    local item_key = resources[math.random( #resources )]
 
-    AddPlayerChatAll(GetPlayerName(player)..' has found scrap!')
-    print("Player "..GetPlayerName(player).." has found scrap!")
+    local item = GetObject(item_key)
+
+    -- add to inventory
+    CallEvent("AddItemToInventory", player, item_key)
+
+    AddPlayerChat(player, "You have found "..item['name'])
+    print("Player "..GetPlayerName(player).." has found "..item['name'])
 
     CallRemoteEvent(player, "ScrapPickedup")
 end

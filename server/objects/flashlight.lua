@@ -4,7 +4,9 @@ RegisterObject("flashlight", {
     modelid = 1271, 
     max_carry = 2,
     recipe = {
-        scrap = 10,
+        metal = 10,
+        plastic = 5,
+        computer_part = 1
     },
     attachment = { 
         x = 33, 

@@ -27,7 +27,7 @@
         <div id="slots">
             <div class="slot" v-for="item in items">
                 <img v-bind:src="'http://game/objects/' + item.modelid" />
-                <span v-if="item.quantity > 1" class="quantity">{{ item.quantity }}</span>
+                <span v-if="item.quantity > 1" class="quantity">x{{ item.quantity }}</span>
             </div>
         </div>
     </script>

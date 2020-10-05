@@ -32,7 +32,7 @@ body { user-select: none; }
     font-size:36px;
     font-weight:normal;
     font-family: Impact;
-    animation: fadeout 1s 4s;
+    animation: fadeout 1s 4.5s;
 }
 @keyframes fadeout {
   from {opacity: 1; }
@@ -91,16 +91,17 @@ body { user-select: none; }
     opacity: 0.75;
 }
 .slot .quantity {
-    font-family: Impact;
+    font-family: Helvetica;
+    color:#fff;
+    font-weight:bold;
     position:absolute;
-    bottom:-5px;
-    right:-5px;
+    text-shadow: 2px 2px #000;
+    bottom:-3px;
+    right:-3px;
     z-index: 1;
     font-size:12px;
     padding:5px 7px;
-    background:rgba(255,255,255);
-    border:1px solid rgba(0,0,0,0.1);
-    border-radius: 200px;
+    background: rgba(0,0,0,0.5);
 }
 
 /*
@@ -116,7 +117,7 @@ body { user-select: none; }
     width: 500px;
     margin: auto;
     border: solid 2px rgba(0,0,0,0.1);
-    border-radius: 25px;
+    border-radius: 15px;
 }
 
 #boss-health .health-bar {
@@ -125,6 +126,6 @@ body { user-select: none; }
     height: 20px;
     position: relative;
     opacity: 0.9;
-    border-radius: 25px;
+    border-radius: 20px;
     transition: all 3s cubic-bezier(0.4, 0.0, 0.2, 1);
 }

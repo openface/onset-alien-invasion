@@ -67,9 +67,14 @@ new Vue({
     if (typeof indev !== 'undefined') {
         EmitEvent('SetInventory', [
             {
-                "name": "scrap",
+                "name": "metal",
                 "modelid": 694,
                 "quantity": 2
+            },
+            {
+                "name": "plastic",
+                "modelid": 627,
+                "quantity": 1
             }
         ]);
 
@@ -82,6 +87,6 @@ new Vue({
         setTimeout(function () { EmitEvent('SetBossHealth', 60) }, 3000);
         setTimeout(function () { EmitEvent('SetBossHealth', 40) }, 5000);
         setTimeout(function () { EmitEvent('SetBossHealth', 20) }, 8000);
-        setTimeout(function () { EmitEvent('SetBossHealth', 1) }, 10000);
+        setTimeout(function () { EmitEvent('SetBossHealth', 0) }, 10000);
     }
 })();

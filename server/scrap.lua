@@ -1,6 +1,14 @@
 local ScrapLocations = {} -- scraps.json
 local NumSpawnedScrap = 25 -- maximum number of scrap spots to spawn
 local ScrapCooldown = 60000 * 5 -- can only search a scrap point every 10 minutes
+-- weighted resource loot
+-- higher weight == more common
+local Resources = {
+    computer_part = 1,
+    wood = 3,
+    plastic = 4,
+    metal = 5
+}
 local CurrentlySearching = {}
 
 AddCommand("spos", function(player)
@@ -110,9 +118,15 @@ end)
 
 -- add scrap to inventory
 function PickupScrap(player)
-    -- random resource
-    local resources = { "metal", "wood", "computer_part", "plastic" }
-    local item_key = resources[math.random( #resources )]
+    -- generate loot table
+	_resources = {}
+	for k,v in next, Resources do
+	  for i=1,v do
+	    _resources[#_resources+1] = k
+	  end
+	end
+
+    local item_key = _resources[math.random(#_resources)]
 
     local item = GetObject(item_key)
 

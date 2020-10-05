@@ -1,5 +1,8 @@
 body { user-select: none; }
 
+/**
+ * Banner
+ */
 #banner {
     display: flex;
     flex-direction: column;
@@ -20,19 +23,21 @@ body { user-select: none; }
  */
 #messages {
     position:fixed;
-    width:90%;
-    bottom:16vh;
+    width:100%;
+    bottom:30vh;
     text-align:center;
+    z-index:10;
 }
 #messages .message {
     padding:10px 25px;
-    text-shadow: 3px 3px rgba(0,0,0,0.2);
-    background:rgba(0,0,0,0.2);
+    text-shadow: 3px 3px rgba(0,0,0,0.5);
+    background:rgba(0,0,0,0.6);
     color: #fff;
     font-size:36px;
     font-weight:normal;
     font-family: Impact;
     animation: fadeout 1s 4.5s;
+    z-index:10;
 }
 @keyframes fadeout {
   from {opacity: 1; }
@@ -62,32 +67,54 @@ body { user-select: none; }
 /*
  * Inventory
  */
-#slots {
+#resource_items {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-content: flex-start;
     align-items: flex-start;
     position: fixed;
-    top:300px;
+    top: 300px;
     right: 20px;
 }
+
+#usable_items {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    position: fixed;
+    bottom: 13vh;
+}
+
+#equipable_items {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    position: fixed;
+    bottom: 1vh;
+}
+
 .slot {
     margin:5px;
-    flex: 0 1 auto;
     align-self: auto;
     background:rgba(0,0,0,0.3);
-    border:2px solid rgba(0,0,0,0.5);
-    height:75px;
-    width:75px;
+    border:2px solid rgba(0,0,0,0.2);
+    height: 75px;
+    width: 75px;
     display: inline-block;
-    position:relative;
+    position: relative;
 }
 .slot img {
     object-fit: scale-down;
     width:75px;
     height:75px;
-    opacity: 0.75;
+    opacity: 0.5;
 }
 .slot .quantity {
     font-family: Helvetica;

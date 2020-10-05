@@ -3,13 +3,20 @@ Vue.component('inventory', {
     template: '#inventory',
     data() {
         return {
-            items: []
+            resource_items: [],
+            equipable_items: [],
+            usable_items: [],
+        }
+    },
+    methods: {
+        SetInventory: function (data) {
+            this.resource_items = data.filter(item => item.type == 'resource')
+            this.equipable_items = data.filter(item => item.type == 'equipable')
+            this.usable_items = data.filter(item => item.type == 'usable')
         }
     },
     mounted() {
-        EventBus.$on('SetInventory', (data) => {
-            this.items = data
-        })
+        EventBus.$on('SetInventory', this.SetInventory);
     }
 })
 
@@ -65,17 +72,37 @@ new Vue({
 // dev seeding
 (function () {
     if (typeof indev !== 'undefined') {
-        EmitEvent('SetInventory', [
-            {
-                "name": "metal",
-                "modelid": 694,
-                "quantity": 2
-            },
-            {
-                "name": "plastic",
-                "modelid": 627,
-                "quantity": 1
-            }
+        EmitEvent("SetInventory", [
+          {
+            name: "metal",
+            modelid: 694,
+            quantity: 2,
+            type: "resource",
+          },
+          {
+            name: "plastic",
+            modelid: 627,
+            quantity: 1,
+            type: "resource",
+          },
+          {
+            name: "vest",
+            modelid: 14,
+            quantity: 1,
+            type: "equipable",
+          },
+          {
+            name: "flashlight",
+            modelid: 14,
+            quantity: 2,
+            type: "equipable",
+          },
+          {
+            name: "beer",
+            modelid: 15,
+            quantity: 4,
+            type: "usable",
+          },
         ]);
 
         EmitEvent('ShowBlood');

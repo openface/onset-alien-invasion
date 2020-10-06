@@ -26,7 +26,7 @@
     <script type="text/x-template" id="inventory">
         <div>
             <div id="hotbar">
-                <div class="slot" v-for="item in items">
+                <div class="slot" v-for="(item,key) in inventory">
                     <img v-bind:src="'http://game/objects/' + item.modelid" />
                     <span v-if="item.quantity > 1" class="quantity">x{{ item.quantity }}</span>
                 </div>

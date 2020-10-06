@@ -2,7 +2,7 @@
 function SyncInventory(player)
     local inventory = GetPlayerPropertyValue(player, "inventory")
     CallRemoteEvent(player, "SetInventory", json_encode(inventory))
-    print(GetPlayerName(player).." inventory: "..json_encode(inventory))
+    print(GetPlayerName(player).." inventory: "..dump(inventory))
 end
 AddRemoteEvent("SyncInventory", SyncInventory)
 AddEvent("SyncInventory", SyncInventory)
@@ -21,7 +21,7 @@ function AddToInventory(player, type, item_key)
 
     item = GetObject(item_key)
     if not item then
-        print("Invalid item "..item_key.. " must be item or resource!")
+        print("Invalid item "..item_key)
         return
     end
 

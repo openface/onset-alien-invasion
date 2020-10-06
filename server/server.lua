@@ -38,7 +38,7 @@ AddEvent("OnPlayerJoin", function(player)
 
     AddPlayerChatAll('<span color="#eeeeeeaa">'..GetPlayerName(player)..' has joined the server</>')
     AddPlayerChat(player, '<span color="#ffffffff">Welcome to Alien Invasion by oweff!</>')
-    AddPlayerChat(player, '<span color="#eeeeeeaa">Hit [T] to chat and [TAB] for scoreboard</>')
+    AddPlayerChat(player, '<span color="#eeeeeeaa">Hit [T] to chat, [TAB] for inventory, [P] for player list</>')
 end)
 
 -- Player spawn

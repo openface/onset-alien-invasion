@@ -13,7 +13,6 @@ function RegisterObject(name, meta)
     Objects[name] = meta
     print("Registering object: "..name)
 end
-AddFunctionExport("RegisterObject", RegisterObject)
 
 function EquipObject(player, name)
     local object = GetObject(name)

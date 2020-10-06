@@ -45,6 +45,7 @@
 		"client/workbench.lua",
 		"client/character.lua",
 		"client/scoreboard.lua",
+		"client/inventory.lua",
 		"client/water.lua"
 	],
 	"files": [
@@ -77,6 +78,10 @@
 		"client/ui/hud/hud.html",
 		"client/ui/hud/hud.css",
 		"client/ui/hud/hud.js",
+
+		"client/ui/inventory/inventory.html",
+		"client/ui/inventory/inventory.css",
+		"client/ui/inventory/inventory.js",
 
 		"client/ui/computer/computer.html",
 		"client/ui/computer/computer.css",

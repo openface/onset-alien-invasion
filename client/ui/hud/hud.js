@@ -1,26 +1,3 @@
-// Inventory component
-Vue.component('inventory', {
-    template: '#inventory',
-    data() {
-        return {
-            inventory: []
-        }
-    },
-    computed: {
-        AvailableSlots: function () {
-            return 10 - Object.keys(this.inventory).length;
-        }
-    },
-    methods: {
-        SetInventory: function (data) {
-            this.inventory = data
-        }
-    },
-    mounted() {
-        EventBus.$on('SetInventory', this.SetInventory);
-    }
-})
-
 // Hud component
 new Vue({
     el: '#hud',
@@ -73,34 +50,6 @@ new Vue({
 // dev seeding
 (function () {
     if (typeof indev !== 'undefined') {
-        EmitEvent("SetInventory", {
-            metal: {
-                modelid: 694,
-                quantity: 2,
-                type: "resource",
-            },
-            plastic: {
-                modelid: 627,
-                quantity: 1,
-                type: "resource",
-            },
-            vest: {
-                modelid: 14,
-                quantity: 1,
-                type: "equipable",
-            },
-            flashlight: {
-                modelid: 14,
-                quantity: 2,
-                type: "equipable",
-            },
-            beer: {
-                modelid: 15,
-                quantity: 4,
-                type: "usable",
-            },
-        });
-
         EmitEvent('ShowBlood');
         EmitEvent('ShowMessage', 'You have found an important piece! Take this to the satellite!');
         EmitEvent('ShowBanner', 'Welcome to the invasion!');

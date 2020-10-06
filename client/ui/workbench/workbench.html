@@ -12,22 +12,21 @@
         
         <div id="workbench">
             <div id="title">WORKBENCH</div>
-                <div class="grid">
-                    <div class="item" v-for="(item, key) in items">
-                        <div class="pic">
-                            <!--<img src="https://via.placeholder.com/100" />-->
-                            <img v-bind:src="'http://game/objects/' + item.modelid" />
+            <div class="grid">
+                <div class="item" v-for="(item, key) in items">
+                    <div class="pic">
+                        <!--<img src="https://via.placeholder.com/100" />-->
+                        <img v-bind:src="'http://game/objects/' + item.modelid" />
+                    </div>
+                    <div class="details">
+                        <div class="name">{{ item.name }}</div>
+                        <div class="info">
+                            <span v-for="(qty, resource) in item.recipe">
+                                <b>{{ qty }}</b> {{ resource }}
+                            </span>
                         </div>
-                        <div class="details">
-                            <div class="name">{{ item.name }}</div>
-                            <div class="info">
-                                <span v-for="(qty, resource) in item.recipe">
-                                    <b>{{ qty }}</b> {{ resource }}
-                                </span>
-                            </div>
-                            <div class="action">
-                                <build-button :recipe="item.recipe" :player_resources="player_resources" :item="key"></build-button>
-                            </div>
+                        <div class="action">
+                            <build-button :recipe="item.recipe" :player_resources="player_resources" :item="key"></build-button>
                         </div>
                     </div>
                 </div>

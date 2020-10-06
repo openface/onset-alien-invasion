@@ -8,14 +8,14 @@ AddEvent("OnPackageStart", function()
 end)
 
 AddEvent('OnKeyPress', function(key)
-  if key == 'Tab' then
+  if key == 'P' then
     CallRemoteEvent('UpdateScoreboardData')
     SetWebVisibility(ScoreboardUI, WEB_HITINVISIBLE)
   end
 end)
 
 AddEvent('OnKeyRelease', function(key)
-  if key == 'Tab' then
+  if key == 'P' then
     SetWebVisibility(ScoreboardUI, WEB_HIDDEN)
   end
 end)

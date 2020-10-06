@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <link href="./inventory.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="inventory">
+        <div id="inventory_screen" v-if="inventory_visible">
+            <div v-if="Object.keys(inventory).length">
+                <div id="title">INVENTORY</div>
+                <div class="grid">
+                    <div class="slot" v-for="(item,key) in inventory">
+                        <img v-bind:src="'http://game/objects/' + item.modelid" />
+                        <span v-if="item.quantity > 1" class="quantity">x{{ item.quantity }}</span>
+                    </div>
+                    <div class="slot" v-for="n in FreeInventorySlots"></div>
+                </div>
+            </div>
+            <div v-else id="title">YOUR INVENTORY IS EMPTY</div>
+        </div>
+        <div id="hotbar" v-if="!inventory_visible">
+            <div class="slot" v-for="(item,key) in inventory">
+                <img v-bind:src="'http://game/objects/' + item.modelid" />
+                <span v-if="item.quantity > 1" class="quantity">x{{ item.quantity }}</span>
+            </div>
+            <div class="slot" v-for="n in FreeHotbarSlots"></div>
+        </div>
+    </div>    
+
+    <script src="../vue.min.js" type="text/javascript"></script>
+    <script src="../vue-onset.js" type="text/javascript"></script>
+    <script src="./inventory.js" type="text/javascript"></script>
+</body>
+</html>

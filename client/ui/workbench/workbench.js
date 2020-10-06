@@ -52,7 +52,7 @@ Vue.component('build-button', {
             }, 15000, this);
         }
     },
-    created() {
+    mounted() {
         EventBus.$on('building_item', (item) => {
             this.building_item = item
         })

@@ -17,17 +17,20 @@
         <div id="messages" v-if="message">
             <span class="message">{{ message }}</span>
         </div>
-        <inventory></inventory>
         <div id="boss-health" v-if="boss_health">
             <div class="health-bar" :style="{ width: boss_health + '%' }"></div>
         </div>
+        <inventory></inventory>
     </div>
 
     <script type="text/x-template" id="inventory">
-        <div id="slots">
-            <div class="slot" v-for="item in items">
-                <img v-bind:src="'http://game/objects/' + item.modelid" />
-                <span v-if="item.quantity > 1" class="quantity">{{ item.quantity }}</span>
+        <div>
+            <div id="hotbar">
+                <div class="slot" v-for="(item,key) in inventory">
+                    <img v-bind:src="'http://game/objects/' + item.modelid" />
+                    <span v-if="item.quantity > 1" class="quantity">x{{ item.quantity }}</span>
+                </div>
+                <div class="slot" v-for="n in AvailableSlots"></div>
             </div>
         </div>
     </script>

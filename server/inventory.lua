@@ -2,7 +2,7 @@
 function SyncInventory(player)
     local inventory = GetPlayerPropertyValue(player, "inventory")
     CallRemoteEvent(player, "SetInventory", json_encode(inventory))
-    print(GetPlayerName(player).." inventory: "..dump(inventory))
+    print(GetPlayerName(player).." inventory: "..json_encode(inventory))
 end
 AddRemoteEvent("SyncInventory", SyncInventory)
 AddEvent("SyncInventory", SyncInventory)

@@ -21,7 +21,6 @@ new Vue({
   methods: {
     LoadOnlinePlayers: function (players) {
       this.players = players
-      console.log(players)
     }
   },
   mounted() {

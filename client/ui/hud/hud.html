@@ -25,22 +25,8 @@
 
     <script type="text/x-template" id="inventory">
         <div>
-            <div id="resource_items">
-                <div class="slot" v-for="item in resource_items">
-                    <img v-bind:src="'http://game/objects/' + item.modelid" />
-                    <span v-if="item.quantity > 1" class="quantity">x{{ item.quantity }}</span>
-                </div>
-            </div>
-            <div id="equipable_items">
-                <div class="slot" v-for="item in equipable_items">
-                    <img v-bind:src="'http://game/objects/' + item.modelid" />
-                    <span v-if="item.quantity > 1" class="quantity">x{{ item.quantity }}</span>
-                </div>
-            </div>
-            <div id="usable_items">
-                <div class="slot" v-for="n in 3"></div>
-                <div class="slot" v-for="(item,i) in usable_items">
-                    <span class="hotkey">{{ i }}</span>
+            <div id="hotbar">
+                <div class="slot" v-for="item in items">
                     <img v-bind:src="'http://game/objects/' + item.modelid" />
                     <span v-if="item.quantity > 1" class="quantity">x{{ item.quantity }}</span>
                 </div>

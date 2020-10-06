@@ -67,29 +67,7 @@ body { user-select: none; }
 /*
  * Inventory
  */
-#resource_items {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-content: flex-start;
-    align-items: flex-start;
-    position: fixed;
-    top: 300px;
-    right: 20px;
-}
-
-#equipable_items {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-content: flex-start;
-    align-items: flex-start;
-    width: 100%;
-    position: fixed;
-    bottom: 13vh;
-}
-
-#usable_items {
+#hotbar {
     display: flex;
     flex-direction: row;
     justify-content: center;

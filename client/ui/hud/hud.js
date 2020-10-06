@@ -3,22 +3,17 @@ Vue.component('inventory', {
     template: '#inventory',
     data() {
         return {
-            resource_items: [],
-            equipable_items: [],
-            usable_items: [],
+            items: []
         }
     },
     computed: {
         AvailableSlots: function () {
-            // 1-3 reserved for weapons (10-3=7)
-            return 7 - this.usable_items.length;
+            return 10 - this.items.length;
         }
     },
     methods: {
         SetInventory: function (data) {
-            this.resource_items = data.filter(item => item.type == 'resource')
-            this.equipable_items = data.filter(item => item.type == 'equipable')
-            this.usable_items = data.filter(item => item.type == 'usable')
+            this.items = data
         }
     },
     mounted() {

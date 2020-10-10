@@ -20,6 +20,13 @@ AddCommand("boss", function(player)
     PrespawnBoss()
 end)
 
+AddCommand("noboss", function(player)
+    if not IsAdmin(player) then
+        return
+    end
+    DespawnBoss()
+end)
+
 function PrespawnBoss()
     for _,ply in pairs(GetAllPlayers()) do
         CallRemoteEvent(ply, "PrespawnBoss")

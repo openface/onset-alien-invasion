@@ -33,4 +33,4 @@ The satellite computer has enough power to communicate with the mothership. Sear
 ### Credits
 
 * UFO model by Billy Meier https://sketchfab.com/3d-models/billy-meier-ufo-b21083ba65824b4a9b1b4720b705b32e
-  Thanks to Volaism for PAK integration.
+  Thanks to Voltaism for PAK integration!

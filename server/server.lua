@@ -27,13 +27,6 @@ AddEvent("OnPackageStart", function()
     -- pistol pickup near spawn
     local pickup = CreatePickup(1006, -103693.2421875, 192599.9375, 1250)
     SetPickupPropertyValue(pickup, 'type', 'pistol')
-
-
-    -- testing
-    ufo = CreateObject(91212, -103175.8515625, 194244.84375, 1307.6507568359 + 200)
-
-    lamp = CreateObject(1164, -102863.46875, 193741.1875, 1307.6507568359 + 200)
-
 end)
 
 -- welcome message

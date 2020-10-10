@@ -54,6 +54,7 @@ function DespawnBoss(boss)
         DestroySound(MothershipSpawnSound)
         DestroyTimer(MothershipSoundTimer)
 
+        -- Removes the Boss Health from the HUD
         CallEvent("SetBossHealth", 0)
 
         SetCloudDensity(1)

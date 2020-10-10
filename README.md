@@ -28,3 +28,9 @@ The satellite computer has enough power to communicate with the mothership. Sear
 * Scrap heaps provide resources such as metal shards, plastic tarps, and computer parts.
 * Craft items at the workbench using resources you find at the scrap heaps.
 * Simple inventory system (More to come...)
+
+
+### Credits
+
+* UFO model by Billy Meier https://sketchfab.com/3d-models/billy-meier-ufo-b21083ba65824b4a9b1b4720b705b32e
+  Thanks to Volaism for PAK integration.

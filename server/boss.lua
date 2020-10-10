@@ -4,7 +4,6 @@ local BossDamageRange = 10000
 local WeaponData
 local BossHealth = BossInitialHealth
 local Boss
-local BossRotationTimer
 local BossHurtTimer
 local BossBombTimer
 local BossKillers = {}
@@ -49,15 +48,9 @@ function SpawnBoss()
     -- spawn boss near the target
     print("Spawning boss on target "..GetPlayerName(target))
     local x,y = randomPointInCircle(x, y, BossDamageRange)
-    Boss = CreateObject(1164, x, y, z+10000, 0, 0, 0, 35, 35, 35)
+    Boss = CreateObject(91212, x, y, z + 8000, 0, 0, 0, 35, 35, 35)
     SetObjectPropertyValue(Boss, "type", "boss")
     BossHealth = BossInitialHealth
-
-    -- spin
-    BossRotationTimer = CreateTimer(function()
-        local x,y,z = GetObjectRotation(Boss)
-        SetObjectRotation(Boss, x, y+1, z)
-    end, 50)
 
     -- hurt all targeted players every 5 seconds
     BossHurtTimer = CreateTimer(function()
@@ -103,7 +96,6 @@ function DespawnBoss()
         CallRemoteEvent(ply, "DespawnBoss", Boss)
     end
 
-    DestroyTimer(BossRotationTimer)
     DestroyTimer(BossHurtTimer)
     DestroyTimer(BossBombTimer)
     DestroyObject(Boss)

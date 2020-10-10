@@ -55,6 +55,7 @@ function SpawnBoss()
     -- hurt all targeted players every 5 seconds
     BossHurtTimer = CreateTimer(function()
         if Boss ~= nil then
+            -- find targets within 3d range of initial target
             local targets = GetPlayersInRange3D(x, y, z, BossDamageRange)
 
             if next(targets) == nil then
@@ -64,7 +65,7 @@ function SpawnBoss()
                 return
             end
 
-            print(dump(targets))
+            print("Boss targets: "..dump(targets))
 
             for _,ply in pairs(targets) do
                 -- player may have disconnected

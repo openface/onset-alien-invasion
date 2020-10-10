@@ -33,6 +33,10 @@ AddEvent("OnObjectStreamIn", function(object)
     end, 35 * 1000, x, y, z)
 end)
 
+AddEvent("OnObjectStreamOut", function (object)
+    DespawnBoss(object)
+end)
+
 -- Boss is coming
 AddRemoteEvent("PrespawnBoss", function()
     SetCloudDensity(4)
@@ -40,7 +44,7 @@ AddRemoteEvent("PrespawnBoss", function()
 end)
 
 -- Boss is leaving
-AddRemoteEvent("DespawnBoss", function(boss)
+function DespawnBoss(boss)
     local x,y,z = GetObjectLocation(boss)
 
     MothershipFlybySound = CreateSound3D("client/sounds/mothership_flyby.mp3", x, y, z, 100000.0)
@@ -50,12 +54,15 @@ AddRemoteEvent("DespawnBoss", function(boss)
         DestroySound(MothershipSpawnSound)
         DestroyTimer(MothershipSoundTimer)
 
+        CallEvent("SetBossHealth", 0)
+
         SetCloudDensity(1)
         SetPostEffect("ImageEffects", "VignetteIntensity", 0)
 
         AddPlayerChat("The mothership has left your area.")
     end)
-end)
+end
+AddRemoteEvent("DespawnBoss", DespawnBoss)
 
 -- mothership hurts player
 AddRemoteEvent("BossHurtPlayer", function()

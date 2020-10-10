@@ -8,7 +8,7 @@ AddEvent("OnPackageStart", function()
     -- Load UFO from MothershipBoss.pak
     -- Thanks Voltaism!
     LoadPak("MothershipBoss", "/MothershipBoss/", "../../../OnsetModding/Plugins/MothershipBoss/Content/")    
-  	ReplaceObjectModelMesh(1164, "/MothershipBoss/UFO")
+  	ReplaceObjectModelMesh(91212, "/MothershipBoss/UFO")
 end)
 
 AddEvent("OnObjectStreamIn", function(object)

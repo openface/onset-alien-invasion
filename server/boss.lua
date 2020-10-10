@@ -4,6 +4,7 @@ local BossDamageRange = 10000
 local WeaponData
 local BossHealth = BossInitialHealth
 local Boss
+local BossTargetedLocation
 local BossHurtTimer
 local BossBombTimer
 local BossKillers = {}
@@ -16,7 +17,7 @@ AddCommand("boss", function(player)
     if not IsAdmin(player) then
         return
     end
-    PrespawnBoss()
+    SpawnBoss()
 end)
 
 AddCommand("noboss", function(player)
@@ -25,13 +26,6 @@ AddCommand("noboss", function(player)
     end
     DespawnBoss()
 end)
-
-function PrespawnBoss()
-    for _,ply in pairs(GetAllPlayers()) do
-        CallRemoteEvent(ply, "PrespawnBoss")
-    end
-    Delay(5000, SpawnBoss)
-end
 
 function SpawnBoss()
     if Boss ~= nil then
@@ -43,20 +37,44 @@ function SpawnBoss()
     -- randomly pick a target
     local players = GetAllPlayers()
     local target = players[ math.random(#players) ]
+    
+    -- determine boss targeted location
     local x,y,z = GetPlayerLocation(target)
+    BossTargetedLocation = { x = x, y = y, z = z }
 
-    -- spawn boss near the target
+    -- spawn boss randomly near the target
     print("Spawning boss on target "..GetPlayerName(target))
-    local x,y = randomPointInCircle(x, y, BossDamageRange)
-    Boss = CreateObject(91212, x, y, z + 8000, 0, 0, 0, 35, 35, 35)
+    local r_x,r_y = randomPointInCircle(BossTargetedLocation.x, BossTargetedLocation.y, BossDamageRange)
+
+    Boss = CreateObject(91212, r_x, r_y, BossTargetedLocation.z+20000, 0, 0, 0, 25, 25, 25)
     SetObjectPropertyValue(Boss, "type", "boss")
+
+    -- move down to earth over targeted player, slowly
+    SetObjectMoveTo(Boss, BossTargetedLocation.x, BossTargetedLocation.y, BossTargetedLocation.z+8000, 1500)
+
+    -- reset boss health
     BossHealth = BossInitialHealth
 
-    -- hurt all targeted players every 5 seconds
+    for _,ply in pairs(GetAllPlayers()) do
+        CallRemoteEvent(ply, "SpawnBoss")
+    end
+
+    -- give it time for boss to land before attacking
+    Delay(6000, StartBossFight)
+end
+
+function StartBossFight()
+    if Boss == nil or BossTargetedLocation == nil then
+        -- boss is already spawned
+        print "Mothership not spawned"
+        return
+    end
+
+    -- hurt all players near the initial targeted player every 5 seconds
     BossHurtTimer = CreateTimer(function()
         if Boss ~= nil then
             -- find targets within 3d range of initial target
-            local targets = GetPlayersInRange3D(x, y, z, BossDamageRange)
+            local targets = GetPlayersInRange3D(BossTargetedLocation.x, BossTargetedLocation.y, BossTargetedLocation.z, BossDamageRange)
 
             if next(targets) == nil then
                 -- no targets found, mothership leaves
@@ -79,14 +97,14 @@ function SpawnBoss()
     end, 5 * 1000)
 
     -- random explosions on the ground
-    BossBombTimer = CreateTimer(function(x, y, z)
-        if Boss ~= nil then
-            local ex,ey = randomPointInCircle(x, y, BossDamageRange)
-            CreateExplosion(10, ex, ey, z, true, 15000, 1000000)
+    BossBombTimer = CreateTimer(function()
+        if BossTargetedLocation ~= nil then
+            local ex,ey = randomPointInCircle(BossTargetedLocation.x, BossTargetedLocation.y, BossDamageRange)
+            CreateExplosion(10, ex, ey, BossTargetedLocation.z, true, 15000, 1000000)
         end
-    end, 2500, x, y, z)
+    end, 2500)
 end
-AddEvent("SpawnBoss", SpawnBoss)
+AddEvent("StartBossFight", StartBossFight)
 
 function DespawnBoss()
     if Boss == nil then
@@ -101,6 +119,7 @@ function DespawnBoss()
     DestroyTimer(BossBombTimer)
     DestroyObject(Boss)
     Boss = nil
+    BossTargetedLocation = nil
     BossHealth = BossInitialHealth
     BossTargets = {}
     BossKillers = {}

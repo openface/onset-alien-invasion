@@ -16,7 +16,7 @@ AddEvent("OnObjectStreamIn", function(object)
         return
     end
 
-    AddPlayerChat("The mothership has landed in your area!")
+    AddPlayerChat("The mothership is approaching your area!")
 
     EnableObjectHitEvents(object, true)
     local x,y,z = GetObjectLocation(object)
@@ -38,7 +38,7 @@ AddEvent("OnObjectStreamOut", function (object)
 end)
 
 -- Boss is coming
-AddRemoteEvent("PrespawnBoss", function()
+AddRemoteEvent("SpawnBoss", function()
     SetCloudDensity(4)
     SetPostEffect("ImageEffects", "VignetteIntensity", 1.5)
 end)

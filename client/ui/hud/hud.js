@@ -16,7 +16,7 @@ new Vue({
             var that = this;
             setTimeout(function () {
                 that.show_blood = false;
-            }, 3500);
+            }, 3000);
         },
         ShowMessage: function (message) {
             this.message = message;

@@ -4,6 +4,11 @@ local MothershipSoundTimer
 
 AddEvent("OnPackageStart", function()
     SetCloudDensity(1)
+
+    -- Load UFO from MothershipBoss.pak
+    -- Thanks Voltaism!
+    LoadPak("MothershipBoss", "/MothershipBoss/", "../../../OnsetModding/Plugins/MothershipBoss/Content/")    
+  	ReplaceObjectModelMesh(1164, "/MothershipBoss/UFO")
 end)
 
 AddEvent("OnObjectStreamIn", function(object)

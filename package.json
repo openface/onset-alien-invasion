@@ -109,6 +109,8 @@
 		"client/ui/character/images/19.jpg",
 		"client/ui/character/images/20.jpg",
 		"client/ui/character/images/25.jpg",
-		"client/ui/character/images/30.jpg"
+		"client/ui/character/images/30.jpg",
+
+		"client/pak/MothershipBoss.pak"
 	]
 }

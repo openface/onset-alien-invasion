@@ -59,8 +59,7 @@ function SpawnAliens()
 
     -- create alien npcs
     for _,ply in pairs(GetAllPlayers()) do
-        local dim = GetPlayerDimension(ply)
-        if dim == 0 then
+        if IsPlayerAttackable(ply) then
             -- chance to spawn
             if math.random(1,chance) == 1 then
                 SpawnAlienNearPlayer(ply)
@@ -68,28 +67,33 @@ function SpawnAliens()
 
             -- spawn boss randomly
             if satellite_percentage >= 60 and math.random(1,3) then
-                if not IsPlayerInSafeZone(ply) then
-                    CallEvent("SpawnBoss")
-                end
+                CallEvent("SpawnBoss")
             end
         end
     end
 end
 
-function IsPlayerInSafeZone(player)
+function IsPlayerAttackable(player)
+    -- don't attack if player is in lobby (character selection)
+    if GetPlayerDimension(player) ~= 0 then
+        print(GetPlayerName(player).. " is in another dimension")
+        return false
+    end
+
+    -- don't attack if player is in safe zone
     local x,y,z = GetPlayerLocation(player)
     local distance = GetDistance3D(x, y, z, SafeLocation.x, SafeLocation.y, SafeLocation.z)
     if distance < SafeRange then
-        return true
-    else
+        print(GetPlayerName(player).. " is in safe zone")
         return false
     end
+
+    return true
 end
 
 function SpawnAlienNearPlayer(player)
     -- no spawning aliens if player is in safe distance
-    if IsPlayerInSafeZone(player) then
-        print("Player "..GetPlayerName(player).." in safe zone")
+    if not IsPlayerAttackable(player) then
         return
     end
 

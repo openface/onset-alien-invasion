@@ -15,22 +15,23 @@ end
 AddEvent("HideLootWaypoint", HideLootWaypoint)
 AddRemoteEvent("HideLootWaypoint", HideLootWaypoint)
 
-AddRemoteEvent('LootSpawned', function(pos, pickup)
+AddRemoteEvent('LootDropping', function(x, y, z)
     HideLootWaypoint()
+    SetSoundVolume(CreateSound3D("client/sounds/flyby.mp3", x, y, z + 10000, 100000.0), 1)
+end)
 
-    local x,y,z = GetPlayerLocation()
-    if GetDistance3D(x, y, z, pos[1], pos[2], pos[3]) > LootNearbyRange then
+AddRemoteEvent('LootSpawned', function(pickup, x, y, z)
+    local px,py,pz = GetPlayerLocation()
+    if GetDistance3D(px, py, pz, x, y, z) > LootNearbyRange then
         return
     end    
 
-    local LootSpawnSound = CreateSound3D("client/sounds/flyby.mp3", pos[1], pos[2], pos[3] + 10000, 100000.0)
-    SetSoundVolume(LootSpawnSound, 1)
     AddPlayerChat('There is a supply drop nearby!')
 
-    LootWaypoint = CreateWaypoint(pos[1], pos[2], pos[3] + 100, "Supply Drop")
+    LootWaypoint = CreateWaypoint(x, y, z + 200, "Supply Drop")
 
     -- fireworks/flares
-    CreateCountTimer(function(pos)
-        CreateFireworks(3, pos[1], pos[2], pos[3] + 150, 90, 0, 0)
-    end, 5000, 5, pos)
+    CreateCountTimer(function(px,py,pz)
+        CreateFireworks(3, x, y, z + 150, 90, 0, 0)
+    end, 5000, 3, x, y, z)
 end)

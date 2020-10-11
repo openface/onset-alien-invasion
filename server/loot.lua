@@ -1,5 +1,5 @@
 local LootLocations = {} -- lootpickups.json
-local LootDropInterval = 4 * 60 * 1000 -- drop loot every 4 min (if players are nearby)
+local LootDropInterval = 5 * 60 * 1000 -- drop loot every 5 min (if players are nearby)
 
 AddCommand("loot", function(player)
     if not IsAdmin(player) then
@@ -48,14 +48,46 @@ function SpawnLootArea(pos)
         end
     end
 
-    local pickup = CreatePickup(588, pos[1], pos[2], pos[3] - 50)
+    -- parachute is the lootdrop object
+    local lootdrop = CreateObject(819, pos[1], pos[2], pos[3]+20000)
+    SetObjectPropertyValue(lootdrop, 'type', 'lootdrop')
+
+    -- attach a crate
+    local box = CreateObject(588, pos[1], pos[2], pos[3]+30000)
+    SetObjectAttached(box, ATTACH_OBJECT, lootdrop, 0, 0, 10)
+
+    -- move parachute to location
+    SetObjectMoveTo(lootdrop, pos[1], pos[2], pos[3] - 50, 750)
+
+    -- notify players loot is dropping
+    for _,p in pairs(players) do
+        CallRemoteEvent(p, "LootDropping", pos[1], pos[2], pos[3])        
+    end
+end
+
+-- spawn pickup once lootbox lands
+AddEvent("OnObjectStopMoving", function(object)
+    if GetObjectPropertyValue(object, 'type') ~= 'lootdrop' then 
+        return 
+    end
+
+    -- get attached create
+    local attach_type, box = GetObjectAttachmentInfo(object)
+
+    local x,y,z = GetObjectLocation(object)
+
+    DestroyObject(object)
+    DestroyObject(box)
+
+    -- create pickup
+    local pickup = CreatePickup(588, x, y, z)
     SetPickupPropertyValue(pickup, 'type', 'loot')
 
     -- notify players
-    for _,p in pairs(players) do
-        CallRemoteEvent(p, 'LootSpawned', pos, pickup)
+    for _,p in pairs(GetAllPlayers()) do
+        CallRemoteEvent(p, 'LootSpawned', pickup, x, y, z)
     end
-end
+end)
 
 -- pickup loot
 AddEvent("OnPlayerPickupHit", function(player, pickup)

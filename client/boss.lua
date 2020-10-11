@@ -50,6 +50,7 @@ end)
 -- Boss is leaving
 function DespawnBoss(boss)
     local x,y,z = GetObjectLocation(boss)
+    if x == nil then return end
 
     MothershipFlybySound = CreateSound3D("client/sounds/mothership_flyby.mp3", x, y, z, 100000.0)
     SetSoundVolume(MothershipFlybySound, 1)

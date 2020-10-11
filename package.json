@@ -31,6 +31,8 @@
 		"server/objects/computer_part.lua",
 		"server/objects/plastic.lua",
 		"server/objects/wood.lua",
+		"server/objects/deagle.lua",
+		"server/objects/colt.lua",
 		"server/vendor/json.lua",
 		"server/vendor/file.lua"
 	],

@@ -8,6 +8,10 @@ AddEvent("OnPackageStart", function()
     SetWebVisibility(InventoryUI, WEB_HITINVISIBLE)
 end)
 
+AddEvent("OnPackageStop", function()
+    DestroyWebUI(InventoryUI)
+end)
+
 AddEvent('OnKeyPress', function(key)
   if key == 'Tab' then
     ShowMouseCursor(true)

@@ -11,6 +11,10 @@ AddEvent("OnPackageStart", function()
     SetWebVisibility(WorkbenchUI, WEB_HIDDEN)
 end)
 
+AddEvent("OnPackageStop", function()
+    DestroyWebUI(WorkbenchUI)
+end)
+
 AddEvent("OnKeyPress", function(key)
     if key == "E" then
         local player = GetPlayerId()

@@ -78,6 +78,7 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
     Delay(1000, function()
         -- remove pickup
         if GetPickupPropertyValue(pickup, '_claimedby') == player then
+            print("Player "..GetPlayerName(player).." picks up item "..item)
             CallEvent("items:"..item..":pickup", player, pickup)
 
             AddToInventory(player, item)

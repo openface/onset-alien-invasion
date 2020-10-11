@@ -7,6 +7,10 @@ AddEvent("OnPackageStart", function()
   SetWebVisibility(ScoreboardUI, WEB_HIDDEN)
 end)
 
+AddEvent("OnPackageStop", function()
+    DestroyWebUI(ScoreboardUI)
+end)
+
 AddEvent('OnKeyPress', function(key)
   if key == 'P' then
     CallRemoteEvent('UpdateScoreboardData')

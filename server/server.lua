@@ -92,13 +92,6 @@ AddEvent("OnPlayerDeath", function(player, killer)
     AddPlayerChat(player, "YOU ARE DEAD!  You must wait ".. PlayerRespawnSecs .." seconds to respawn...")
 end)
 
--- Pickup for pistol
-AddEvent("OnPlayerPickupHit", function(player, pickup)
-    if GetPickupPropertyValue(pickup, 'type') == 'pistol' then
-    	SetPlayerWeapon(player, math.random(2,5), 100, true, 2)
-	end
-end)
-
 -- Log auth
 AddEvent("OnPlayerSteamAuth", function(player)
     print("Player "..GetPlayerName(player).." (ID "..player..") authenticated with steam ID "..GetPlayerSteamId(player))

@@ -35,6 +35,8 @@
 		"server/objects/weapons/colt.lua",
 		"server/objects/weapons/glock.lua",
 		"server/objects/weapons/beretta.lua",
+		"server/objects/weapons/auto_shotgun.lua",
+		"server/objects/weapons/shotgun.lua",
 		"server/vendor/json.lua",
 		"server/vendor/file.lua"
 	],

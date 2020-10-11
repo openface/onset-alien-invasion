@@ -99,7 +99,7 @@ AddRemoteEvent("SearchForScrap", function(player)
                         CurrentlySearching[player] = nil
 
                         -- chance to find scrap
-                        if math.random(1,5) == 1 then
+                        if math.random(1,3) == 1 then
                             -- found something
                             SetText3DVisibility(text3d, player, false)
                             PickupScrap(player)

@@ -24,10 +24,15 @@ end)
 
 -- Setup world
 AddEvent("OnPackageStart", function()
-    -- pistol pickup near spawn
-    local pickup = CreatePickup(1006, -103693.2421875, 192599.9375, 1250)
-    SetPickupPropertyValue(pickup, 'type', 'pistol')
+
 end)
+
+AddEvent("OnPackageStop", function()
+    for _,p in pairs(GetAllPlayers()) do
+        SetPlayerPropertyValue(p, "inventory", {})
+    end
+end)
+
 
 -- welcome message
 AddEvent("OnPlayerJoin", function(player)

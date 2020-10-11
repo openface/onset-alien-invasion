@@ -1,4 +1,3 @@
-local BossUI
 local MothershipSpawnSound
 local MothershipSoundTimer
 
@@ -9,6 +8,11 @@ AddEvent("OnPackageStart", function()
     -- Thanks Voltaism!
     LoadPak("MothershipBoss", "/MothershipBoss/", "../../../OnsetModding/Plugins/MothershipBoss/Content/")    
   	ReplaceObjectModelMesh(91212, "/MothershipBoss/UFO")
+end)
+
+AddEvent("OnPackageStop", function()
+    DestroySound(MothershipSpawnSound)
+    DestroyTimer(MothershipSoundTimer)
 end)
 
 AddEvent("OnObjectStreamIn", function(object)

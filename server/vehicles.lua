@@ -20,6 +20,10 @@ AddEvent("OnPackageStart", function()
     SpawnVehicles()
 end)
 
+AddEvent("OnPackageStop", function()
+    DespawnVehicles()
+end)
+
 function DespawnVehicles()
     for _,veh in pairs(Vehicles) do
         --print("Destroying vehicle: "..veh)

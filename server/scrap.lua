@@ -46,6 +46,10 @@ AddEvent("OnPackageStart", function()
     SpawnScrap()
 end)
 
+AddEvent("OnPackageStop", function()
+    DespawnScrap()
+end)
+
 function DespawnScrap()
     for _,text3d in pairs(GetAllText3D()) do
         if GetText3DPropertyValue(text3d, 'scrap') ~= nil then

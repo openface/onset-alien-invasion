@@ -13,6 +13,10 @@ AddEvent("OnPackageStart", function()
     WeaponData = File_LoadJSONTable("weapons.json")["weapons"]
 end)
 
+AddEvent("OnPackageStop", function()
+    DespawnBoss()
+end)
+
 AddCommand("boss", function(player)
     if not IsAdmin(player) then
         return
@@ -159,7 +163,7 @@ AddEvent("OnPlayerWeaponShot", function(player, weapon, hittype, hitid, hitx, hi
         end
 
         -- explosions in the sky
-        if (math.random(1,5) == 1) then
+        if (math.random(1,3) == 1) then
             CreateExplosion(6, hitx, hity, hitz, true)
         end
 

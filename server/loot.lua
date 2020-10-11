@@ -32,6 +32,10 @@ AddEvent("OnPackageStart", function()
     end, LootDropInterval)
 end)
 
+AddEvent("OnPackageStop", function()
+
+end)
+
 function SpawnLootArea(pos)
     local players = GetAllPlayers()
     if next(players) == nil then

@@ -16,13 +16,6 @@ AddCommand("ppos", function(player)
     File_SaveJSONTable("packages/"..GetPackageName().."/server/data/parts.json", PartsLocations)
 end)
 
-AddCommand("respawnparts", function(player)
-    if not IsAdmin(player) then
-        return
-    end
-    SpawnParts()
-end)
-
 AddCommand("part", function(player)
     if not IsAdmin(player) then
         return
@@ -33,6 +26,9 @@ end)
 AddEvent("OnPackageStart", function()
     PartsLocations = File_LoadJSONTable("packages/"..GetPackageName().."/server/data/parts.json")
     SpawnParts()
+end)
+
+AddEvent("OnPackageStop", function()
 end)
 
 function DespawnParts()

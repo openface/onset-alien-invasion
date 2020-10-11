@@ -30,6 +30,7 @@ end)
 AddEvent("OnPackageStop", function()
     for _,p in pairs(GetAllPlayers()) do
         SetPlayerPropertyValue(p, "inventory", {})
+        SyncInventory(p)
     end
 end)
 

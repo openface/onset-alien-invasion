@@ -1,3 +1,11 @@
+Pickups = {}
+
+AddEvent("OnPackageStop", function()
+    for _,pickup in pairs(Pickups) do
+        DestroyObjectPickup(pickup)
+    end
+end)
+
 AddCommand("item", function(player, item)
     if not IsAdmin(player) then
         return
@@ -16,6 +24,28 @@ function CreateObjectPickup(item, x, y, z)
     local pickup = CreatePickup(object['modelid'], x, y, z)
     SetPickupPropertyValue(pickup, '_name', item)
     SetPickupPropertyValue(pickup, '_text', CreateText3D(item, 8, x, y, z+100, 0, 0, 0))
+    if object['scale'] ~= nil then
+        SetPickupScale(pickup, object['scale'].x, object['scale'].y, object['scale'].z)
+    end
+    Pickups[pickup] = pickup
+end
+
+function DestroyObjectPickup(pickup)
+    text3d = GetPickupPropertyValue(pickup, '_text')
+    if text3d ~= nil then
+        DestroyText3D(text3d)
+    end
+    DestroyPickup(pickup)
+    Pickups[pickup] = nil
+end
+
+function DestroyObjectPickupsByName(name)
+    print("Destroying object pickups by name ",name)
+    for _,pickup in pairs(Pickups) do
+        if GetPickupPropertyValue(pickup, '_name') == name then
+            DestroyObjectPickup(pickup)
+        end
+    end
 end
 
 -- creates a new object near given player
@@ -48,7 +78,7 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
     Delay(1000, function()
         -- remove pickup
         if GetPickupPropertyValue(pickup, '_claimedby') == player then
-            CallEvent("items:"..item..":pickup", player)
+            CallEvent("items:"..item..":pickup", player, pickup)
 
             AddToInventory(player, item)
 

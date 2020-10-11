@@ -4,6 +4,7 @@ local ComputerLoc = { x = -106279.4140625, y = 193854.59375, z = 1399.1424560547
 local computer_timer
 
 local SatelliteLoc = { x = -103004.5234375, y = 201067.09375, z = 2203.3188476563 }
+
 local SatelliteWaypoint
 local SatelliteStatus
 
@@ -17,6 +18,11 @@ AddEvent("OnPackageStart", function()
     SatelliteStatus = CreateTextBox(0, 0, "", "center")
     SetTextBoxAnchors(SatelliteStatus, 0.0, 0.0, 1.0, 0.03)
     SetTextBoxAlignment(SatelliteStatus, 1.0, 0.0)
+    SetSatelliteStatus(0)
+end)
+
+AddEvent("OnPackageStop", function()
+    DestroyTextBox(SatelliteStatus)
 end)
 
 AddEvent("OnKeyPress", function(key)

@@ -50,11 +50,11 @@ function SpawnBoss()
     print("Spawning boss on target "..GetPlayerName(target))
     local r_x,r_y = randomPointInCircle(BossTargetedLocation.x, BossTargetedLocation.y, BossDamageRange)
 
-    Boss = CreateObject(91212, r_x, r_y, BossTargetedLocation.z+20000, 0, 0, 0, 25, 25, 25)
+    Boss = CreateObject(91212, r_x, r_y, BossTargetedLocation.z+20000, 0, 0, 0, 20, 20, 20)
     SetObjectPropertyValue(Boss, "type", "boss")
 
     -- move down to earth over targeted player, slowly
-    SetObjectMoveTo(Boss, BossTargetedLocation.x, BossTargetedLocation.y, BossTargetedLocation.z+8000, 1500)
+    SetObjectMoveTo(Boss, BossTargetedLocation.x, BossTargetedLocation.y, BossTargetedLocation.z+7000, 1500)
 
     -- reset boss health
     BossHealth = BossInitialHealth

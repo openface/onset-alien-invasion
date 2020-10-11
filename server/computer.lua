@@ -18,7 +18,6 @@ AddEvent("OnPackageStop", function()
 
     DestroyText3D(GarageText3D)
     DestroyText3D(SatelliteText3D)
-    
 end)
 
 AddRemoteEvent("InteractSatelliteComputer", function(player)

@@ -7,34 +7,26 @@ end
 AddRemoteEvent("SyncInventory", SyncInventory)
 AddEvent("SyncInventory", SyncInventory)
 
-AddEvent("AddItemToInventory", function(player, item_key)
-    AddToInventory(player, "item", item_key)
-end)
-
-AddEvent("AddResourceToInventory", function(player, item_key)
-    AddToInventory(player, "resource", item_key)
-end)
-
 -- add object to inventory
-function AddToInventory(player, type, item_key)
+function AddToInventory(player, item)
     local inventory = GetPlayerPropertyValue(player, "inventory")
 
-    item = GetObject(item_key)
-    if not item then
-        print("Invalid item "..item_key)
+    object = GetObject(item)
+    if not object then
+        print("Invalid object "..item)
         return
     end
 
-    if GetInventoryCount(player, item_key) > 0 then
+    if GetInventoryCount(player, item) > 0 then
         -- update existing object quantity
-        inventory[item_key]['quantity'] = inventory[item_key]['quantity'] + 1
+        inventory[item]['quantity'] = inventory[item]['quantity'] + 1
         SetPlayerPropertyValue(player, "inventory", inventory)
     else
         -- add new item to store
-        inventory[item_key] = {
-            type = item['type'],
-            name = item['name'],
-            modelid = item['modelid'],
+        inventory[item] = {
+            type = object['type'],
+            name = object['name'],
+            modelid = object['modelid'],
             quantity = 1
         }
         SetPlayerPropertyValue(player, "inventory", inventory)
@@ -45,24 +37,24 @@ end
 
 -- deletes item from inventory
 -- deduces by quantity if carrying more than 1
-AddEvent("RemoveFromInventory", function(player, item_key, amount)
+AddEvent("RemoveFromInventory", function(player, item, amount)
     local inventory = GetPlayerPropertyValue(player, "inventory")
 
-    local item = GetObject(item_key)
-    if not item then
-        print("Invalid item: "..item_key)
+    local object = GetObject(item)
+    if not object then
+        print("Invalid item: "..item)
         return
     end
 
     local amount = amount or 1
 
-    local curr_qty = inventory[item_key]['quantity'] - amount
+    local curr_qty = inventory[item]['quantity'] - amount
     if curr_qty > 0 then
         -- decrease qty by 1
-        inventory[item_key]['quantity'] = curr_qty
+        inventory[item]['quantity'] = curr_qty
     else
         -- remove item from inventory
-        inventory[item_key] = nil
+        inventory[item] = nil
     end
     SetPlayerPropertyValue(player, "inventory", inventory)
 
@@ -70,20 +62,28 @@ AddEvent("RemoveFromInventory", function(player, item_key, amount)
 end)
 
 -- get carry count for given item
-function GetInventoryCount(player, item_key)
+function GetInventoryCount(player, item)
     local inventory = GetPlayerPropertyValue(player, "inventory")
 
-    local item = GetObject(item_key)
-    if not item then
-        print("Invalid item: "..item_key)
+    local object = GetObject(item)
+    if not object then
+        print("Invalid item: "..item)
         return
     end
 
-    if not inventory[item_key] then
+    if not inventory[item] then
         return 0
     end
 
-    return inventory[item_key]['quantity']
+    return inventory[item]['quantity']
+end
+
+function GetInventoryAvailableSlots(player)
+    local inventory = GetPlayerPropertyValue(player, "inventory")
+    local count = 0
+    for _ in pairs(inventory) do count = count + 1 end
+    -- max slots is hardcoded at 20
+    return (20 - count)
 end
 
 -- drop all on death

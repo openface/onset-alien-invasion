@@ -95,13 +95,15 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
         return
     end
 
-    CallRemoteEvent(player, 'LootPickedup', pickup)
+--    CallRemoteEvent(player, 'LootPickedup', pickup)
 
     -- random weapon
     SetPlayerWeapon(player, math.random(6,20), 450, true, 1, true)
     SetPlayerHealth(player, 100)
 
     -- full armor
+    CallEvent("AddItemToInventory", player, 'vest')
+
     SetPlayerArmor(player, 100)
     EquipVest(player)       
 

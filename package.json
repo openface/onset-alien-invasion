@@ -16,6 +16,7 @@
 		"server/time.lua",
 		"server/world.lua",
 		"server/scoreboard.lua",
+		"server/pickups.lua",
 		"server/objects.lua",
 		"server/objects/armyhat.lua",
 		"server/objects/banana.lua",

@@ -106,7 +106,7 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
     SetPlayerHealth(player, 100)
 
     -- full armor
-    CallEvent("AddItemToInventory", player, 'vest')
+    AddToInventory(player, 'vest')
 
     SetPlayerArmor(player, 100)
     EquipVest(player)       

@@ -7,11 +7,11 @@ body { user-select: none; }
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 80vh;
+    height: 120vh;
 }
 
 #inventory_screen {
-    width:720px;
+    width:640px;
     z-index:1000;
     background: rgba(0,0,0,0.9);
     font-family:helvetica;
@@ -77,4 +77,42 @@ body { user-select: none; }
     font-size:12px;
     padding:5px 7px;
     background: rgba(0,0,0,0.5);
+}
+
+.slot .name {
+    position:absolute;
+    bottom:1px;
+    left:1px;
+    font-size:12px;
+    text-shadow: 2px 2px #000;
+}
+
+.slot:hover .options {
+    display: block;
+    width:75px;
+}
+
+.slot .options {
+    display: none;
+    position:relative;
+    z-index: 1;
+    background:rgba(0,0,0,0.8);
+    padding:0 1px;
+    top:-3px;
+}
+
+.slot .options a {
+    color:#eee;
+    display:block;
+    padding:5px 5px;
+    text-decoration:none;
+    font-size:12px;
+    font-weight:bold;
+    text-transform:uppercase;
+    text-shadow:1px 1px rgba(0,0,0,0.4);
+}
+
+.slot .options a:hover {
+    background:rgba(0,0,0,0.9);
+    cursor: pointer;
 }

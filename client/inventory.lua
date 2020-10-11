@@ -16,12 +16,14 @@ AddEvent('OnKeyPress', function(key)
   if key == 'Tab' then
     ShowMouseCursor(true)
     SetInputMode(INPUT_GAMEANDUI)
+ 		SetWebVisibility(InventoryUI, WEB_VISIBLE)
     ExecuteWebJS(InventoryUI, "EmitEvent('ShowInventory')")
   end
 end)
 
 AddEvent('OnKeyRelease', function(key)
   if key == 'Tab' then
+    SetWebVisibility(InventoryUI, WEB_HITINVISIBLE)
     ExecuteWebJS(InventoryUI, "EmitEvent('HideInventory')")
     ShowMouseCursor(false)
     SetInputMode(INPUT_GAME)

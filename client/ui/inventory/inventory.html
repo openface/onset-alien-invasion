@@ -15,14 +15,20 @@
                 <div class="grid">
                     <div class="slot" v-for="(item,key) in inventory">
                         <img v-bind:src="'http://game/objects/' + item.modelid" />
+                        <span class="name">{{ item.name }}</span>
                         <span v-if="item.quantity > 1" class="quantity">x{{ item.quantity }}</span>
+                        <div class="options">
+                            <a>Equip</a> 
+                            <a>Unequip</a>
+                            <a>Drop</a>
+                        </div>
                     </div>
                     <div class="slot" v-for="n in FreeInventorySlots"></div>
                 </div>
             </div>
             <div v-else id="title">YOUR INVENTORY IS EMPTY</div>
         </div>
-        <div id="hotbar" v-if="!inventory_visible">
+        <div id="hotbar">
             <div class="slot" v-for="(item,key) in inventory">
                 <img v-bind:src="'http://game/objects/' + item.modelid" />
                 <span v-if="item.quantity > 1" class="quantity">x{{ item.quantity }}</span>

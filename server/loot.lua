@@ -99,7 +99,6 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
         return
     end
 
-
     AddToInventory(player, 'vest')    
 
     DestroyPickup(pickup)

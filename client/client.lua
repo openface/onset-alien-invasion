@@ -1,4 +1,3 @@
-local ComputerWaypoint
 
 AddEvent("OnPlayerSpawn", function()
     local player = GetPlayerId()
@@ -49,18 +48,12 @@ end)
 
 AddEvent("OnPlayerParachuteOpen", function()
     ShowBanner("WELCOME TO THE INVASION!")
-    ComputerWaypoint = CreateWaypoint(-106279.4140625, 193854.59375, 1399.1424560547 + 50, "Computer Terminal")
 end)
 
 AddEvent("OnPlayerParachuteLand", function()
     CallRemoteEvent("DropParachute")
 end)
 
-AddEvent("GarageComputerInteraction", function(player)
-    if ComputerWaypoint ~= nil then
-        DestroyWaypoint(ComputerWaypoint)
-    end
-end)
 
 -- toggle first-person view
 AddEvent("OnKeyPress", function(key)

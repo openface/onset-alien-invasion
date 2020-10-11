@@ -75,9 +75,11 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
     SetPickupPropertyValue(pickup, '_claimedby', player)
     SetPlayerAnimation(player, "PICKUP_LOWER")
 
-    Delay(1000, function()
+    Delay(2000, function()
         -- remove pickup
         if GetPickupPropertyValue(pickup, '_claimedby') == player then
+            SetPlayerAnimation(player, "STOP")
+
             print("Player "..GetPlayerName(player).." picks up item "..item)
             CallEvent("items:"..item..":pickup", player, pickup)
 

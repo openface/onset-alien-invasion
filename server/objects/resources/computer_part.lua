@@ -11,7 +11,7 @@ RegisterObject("computer_part", {
 AddEvent("items:computer_part:pickup", function(player, pickup)
     print "picked up a part!"
     AddPlayerChatAll(GetPlayerName(player)..' has found a computer part!')
-    CallRemoteEvent(player, "PartPickedup", pickup)
+    CallRemoteEvent(player, "ComputerPartPickedup", pickup)
 end)
 
 -- clear satellite waypoint on death

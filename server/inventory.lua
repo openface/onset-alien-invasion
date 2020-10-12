@@ -92,3 +92,7 @@ AddEvent("OnPlayerDeath", function(player, killer)
     CallEvent("SyncInventory", player)
 end)
 
+-- TODO
+AddRemoteEvent("UseObjectHotkey", function(player, key)
+    print("Using hotkey: "..key)
+end)

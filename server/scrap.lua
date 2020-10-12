@@ -135,12 +135,8 @@ function PickupScrap(player)
     local item = GetObject(item_key)
 
     -- add to inventory
-    CallEvent("AddItemToInventory", player, item_key)
-
-    AddPlayerChat(player, "You have found "..item['name'])
-    print("Player "..GetPlayerName(player).." has found "..item['name'])
-
-    CallRemoteEvent(player, "ScrapPickedup")
+    --AddItemToInventory(player, item_key)
+    CreateObjectPickupNearPlayer(player, item_key)
 end
 
 

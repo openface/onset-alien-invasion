@@ -33,7 +33,7 @@ AddEvent("OnPackageStart", function()
 end)
 
 AddEvent("OnPackageStop", function()
-
+    DestroyLootPickups()
 end)
 
 function SpawnLootArea(pos)
@@ -45,12 +45,7 @@ function SpawnLootArea(pos)
     print 'Spawning loot pickup...'
 
     -- destroy any existing loot pickups
-    local pickups = GetAllPickups()
-    for _,p in pairs(pickups) do
-        if (GetPickupPropertyValue(p, 'type') == 'loot') then
-            DestroyPickup(p)
-        end
-    end
+    DestroyLootPickups()
 
     -- parachute is the lootdrop object
     local lootdrop = CreateObject(819, pos[1], pos[2], pos[3]+20000)
@@ -66,6 +61,15 @@ function SpawnLootArea(pos)
     -- notify players loot is dropping
     for _,p in pairs(players) do
         CallRemoteEvent(p, "LootDropping", pos[1], pos[2], pos[3])        
+    end
+end
+
+function DestroyLootPickups()
+    local pickups = GetAllPickups()
+    for _,p in pairs(pickups) do
+        if (GetPickupPropertyValue(p, 'type') == 'loot') then
+            DestroyPickup(p)
+        end
     end
 end
 

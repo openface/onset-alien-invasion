@@ -18,6 +18,8 @@ AddEvent('OnKeyPress', function(key)
     SetInputMode(INPUT_GAMEANDUI)
  		SetWebVisibility(InventoryUI, WEB_VISIBLE)
     ExecuteWebJS(InventoryUI, "EmitEvent('ShowInventory')")
+  elseif key=='4' or key=='5' or key=='6' or key=='7' or key=='8' or key=='9' then
+    CallRemoteEvent("UseObjectHotkey", key)
   end
 end)
 

@@ -3,18 +3,18 @@ new Vue({
   el: "#inventory",
   data() {
     return {
-      inventory: [],
+      items: [],
       weapons: [],
       inventory_visible: false,
     };
   },
   computed: {
     FreeInventorySlots: function () {
-      return 21 - this.inventory.length;
+      return 21 - this.InventoryItems.length;
     },
-    FreeHotbarSlots: function () {
-      return 10 - this.inventory.length;
-    },
+    InventoryItems: function () {
+      return this.weapons.concat(this.items);
+    }
   },
   methods: {
     SetInventory: function (data) {

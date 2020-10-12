@@ -1,5 +1,9 @@
 local AmbientSound
 
+AddEvent("OnPackageStop", function()
+    DestroySound(AmbientSound)
+end)
+
 AddRemoteEvent("AlienAttacking", function(npc)
     AddPlayerChat('You are being attacked by an alien... RUN!')
 

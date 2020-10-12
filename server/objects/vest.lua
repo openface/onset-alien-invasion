@@ -21,3 +21,9 @@ RegisterObject("vest", {
         bone = "spine_02" 
     }
 })
+
+AddEvent("items:vest:pickup", function(player)
+    print "picked up a vest!"
+    SetPlayerArmor(player, 100)
+    EquipVest(player)   
+end)

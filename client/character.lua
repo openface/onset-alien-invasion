@@ -8,6 +8,10 @@ AddEvent("OnPackageStart", function()
     SetWebVisibility(CharUI, WEB_HIDDEN)
 end)
 
+AddEvent("OnPackageStop", function()
+    DestroyWebUI(CharUI)
+end)
+
 AddRemoteEvent("ShowCharacterSelection", function()
     local sky = { x = -102037, y = 194299, z = 31400 }
 

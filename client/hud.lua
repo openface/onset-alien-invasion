@@ -8,6 +8,10 @@ AddEvent("OnPackageStart", function()
     SetWebVisibility(HudUI, WEB_HITINVISIBLE)
 end)
 
+AddEvent("OnPackageStop", function()
+    DestroyWebUI(HudUI)
+end)
+
 -- banner
 function ShowBanner(msg)
     ExecuteWebJS(HudUI, "EmitEvent('ShowBanner','"..msg.."')")

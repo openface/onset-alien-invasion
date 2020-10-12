@@ -27,9 +27,13 @@ AddEvent("OnPackageStart", function()
     LootLocations = File_LoadJSONTable("packages/"..GetPackageName().."/server/data/lootpickups.json")
 
     -- spawn random loot area
-	local loot_timer = CreateTimer(function()
+	  local loot_timer = CreateTimer(function()
         SpawnLootArea(LootLocations[ math.random(#LootLocations) ])
     end, LootDropInterval)
+end)
+
+AddEvent("OnPackageStop", function()
+    DestroyLootPickups()
 end)
 
 function SpawnLootArea(pos)
@@ -41,12 +45,7 @@ function SpawnLootArea(pos)
     print 'Spawning loot pickup...'
 
     -- destroy any existing loot pickups
-    local pickups = GetAllPickups()
-    for _,p in pairs(pickups) do
-        if (GetPickupPropertyValue(p, 'type') == 'loot') then
-            DestroyPickup(p)
-        end
-    end
+    DestroyLootPickups()
 
     -- parachute is the lootdrop object
     local lootdrop = CreateObject(819, pos[1], pos[2], pos[3]+20000)
@@ -62,6 +61,15 @@ function SpawnLootArea(pos)
     -- notify players loot is dropping
     for _,p in pairs(players) do
         CallRemoteEvent(p, "LootDropping", pos[1], pos[2], pos[3])        
+    end
+end
+
+function DestroyLootPickups()
+    local pickups = GetAllPickups()
+    for _,p in pairs(pickups) do
+        if (GetPickupPropertyValue(p, 'type') == 'loot') then
+            DestroyPickup(p)
+        end
     end
 end
 
@@ -95,15 +103,7 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
         return
     end
 
-    CallRemoteEvent(player, 'LootPickedup', pickup)
-
-    -- random weapon
-    SetPlayerWeapon(player, math.random(6,20), 450, true, 1, true)
-    SetPlayerHealth(player, 100)
-
-    -- full armor
-    SetPlayerArmor(player, 100)
-    EquipVest(player)       
+    AddToInventory(player, 'vest')    
 
     DestroyPickup(pickup)
 

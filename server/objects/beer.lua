@@ -20,3 +20,7 @@ RegisterObject("beer", {
         bone = "hand_r" 
     }
 })
+
+AddEvent("items:beer:use", function(player)
+
+end)

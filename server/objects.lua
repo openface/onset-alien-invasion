@@ -1,29 +1,45 @@
+-- item configuration
 Objects = {}
 
 -- object factory
-function GetObject(name)
-    return Objects[name]
+function GetObject(item)
+    return Objects[item]
 end
 
 function GetObjects()
     return Objects
 end
 
-function RegisterObject(name, meta)
-    Objects[name] = meta
-    print("Registering object: "..name)
+function RegisterObject(item, meta)
+    Objects[item] = meta
+    print("Registering object: "..item)
 end
 
-function EquipObject(player, name)
-    local object = GetObject(name)
 
+AddEvent("OnPackageStop", function()
+    for _, player in pairs(GetAllPlayers()) do
+      for item,object in pairs(GetPlayerPropertyValue(player, 'equipped')) do
+        print("Destroying object for player "..GetPlayerName(player).." equipped item "..item)
+        DestroyObject(object)
+      end
+      SetPlayerPropertyValue(player, "equipped", {})
+    end
+end)
+
+function EquipObject(player, item)
+    local object = GetObject(item)
     if object['type'] ~= 'equipable' then
         print "not equipable"
         return
     end
 
-    if GetEquippedObject(player, name) ~= nil then
+    if GetEquippedObject(player, item) ~= nil then
         print "already equipped"
+        return
+    end
+
+    if object['attachment'] == nil then
+        print("Object "..item.." is type equipable but does not define attachment info")
         return
     end
 
@@ -34,11 +50,13 @@ function EquipObject(player, name)
         UnequipObject(player, equipped_object)
     end
 
-    PlayInteraction(player, name)
+    -- equipable animations
+    PlayInteraction(player, item)
 
     local x,y,z = GetPlayerLocation(player)
     local _object = CreateObject(object['modelid'], x, y, z)
-    SetObjectPropertyValue(_object, "_name", name)
+
+    SetObjectPropertyValue(_object, "_name", item)
     SetObjectPropertyValue(_object, "_bone", object['attachment']['bone'])
     SetObjectAttached(_object, ATTACH_PLAYER, player, 
         object['attachment']['x'],
@@ -49,14 +67,14 @@ function EquipObject(player, name)
         object['attachment']['rz'],
         object['attachment']['bone'])
 
-    local _equipped = GetPlayerPropertyValue(player, "_equipped")
-    _equipped[name] = _object
-    SetPlayerPropertyValue(player, "_equipped", _equipped)
+    local equipped = GetPlayerPropertyValue(player, "equipped")
+    equipped[item] = _object
+    SetPlayerPropertyValue(player, "equipped", equipped)
 end
 
-function UnequipObject(player, name)
+function UnequipObject(player, item)
     print "unequipping"
-    local _object = GetEquippedObject(player, name)
+    local _object = GetEquippedObject(player, item)
     if _object == nil then
         print "not equipped"
         return
@@ -66,21 +84,20 @@ function UnequipObject(player, name)
     SetPlayerAnimation(player, "STOP")
 
     -- remove from equipped list
-    local _equipped = GetPlayerPropertyValue(player, "_equipped")
-    _equipped[name] = nil
-    SetPlayerPropertyValue(player, "_equipped", _equipped)
+    local equipped = GetPlayerPropertyValue(player, "equipped")
+    equipped[item] = nil
+    SetPlayerPropertyValue(player, "equipped", equipped)
 
     DestroyObject(_object)
 end
 
-function GetEquippedObject(player, name)
-    local _equipped = GetPlayerPropertyValue(player, "_equipped")
-    return _equipped[name]
+function GetEquippedObject(player, item)
+    return GetPlayerPropertyValue(player, "equipped")[item] or nil
 end
 
 function GetEquippedObjectNameFromBone(player, bone)
-    local _equipped = GetPlayerPropertyValue(player, "_equipped")
-    for _,object in pairs(_equipped) do
+    local equipped = GetPlayerPropertyValue(player, "equipped")
+    for _,object in pairs(equipped) do
         if GetObjectPropertyValue(object, "_bone") == bone then
             print "found bone"
             return GetObjectPropertyValue(object, "_name")
@@ -88,8 +105,8 @@ function GetEquippedObjectNameFromBone(player, bone)
     end
 end
 
-function PlayInteraction(player, name)
-    local object = GetObject(name)
+function PlayInteraction(player, item)
+    local object = GetObject(item)
     if not object['interaction'] then
         return
     end

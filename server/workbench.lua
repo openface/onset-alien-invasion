@@ -1,8 +1,13 @@
+local WorkbenchTest3D
 local WorkbenchLoc = { x = -105858.1328125, y = 193734.21875, z = 1396.1424560547 }
 
 AddEvent("OnPackageStart", function()
     -- workbench
-    CreateText3D("Press [E] to Interact", 10, WorkbenchLoc.x, WorkbenchLoc.y, WorkbenchLoc.z + 130, 0,0,0)
+    WorkbenchText3D = CreateText3D("Press [E] to Interact", 10, WorkbenchLoc.x, WorkbenchLoc.y, WorkbenchLoc.z + 130, 0,0,0)
+end)
+
+AddEvent("OnPackageStop", function()
+    DestroyText3D(WorkbenchText3D)
 end)
 
 AddRemoteEvent("GetWorkbenchData", function(player)
@@ -37,7 +42,7 @@ AddRemoteEvent("BuildItem", function(player, item_key)
 
     -- remove scrap from inventory
     for resource,amount in pairs(item['recipe']) do
-        CallEvent("RemoveFromInventory", player, resource, amount)
+        RemoveFromInventory(player, resource, amount)
     end
 
     CallRemoteEvent(player, "StartBuilding", item_key, json_encode(GetPlayerResources(player)))
@@ -48,7 +53,7 @@ AddRemoteEvent("BuildItem", function(player, item_key)
     Delay(15000, function()
         SetPlayerAnimation(player, "STOP")
         AddPlayerChat(player, item['name'].." has been added to your inventory.")
-        CallEvent("AddItemToInventory", player, item_key)
+        AddToInventory(player, item_key)
     end)
 end)
 

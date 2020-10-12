@@ -46,6 +46,10 @@ AddEvent("OnPackageStart", function()
     SpawnScrap()
 end)
 
+AddEvent("OnPackageStop", function()
+    DespawnScrap()
+end)
+
 function DespawnScrap()
     for _,text3d in pairs(GetAllText3D()) do
         if GetText3DPropertyValue(text3d, 'scrap') ~= nil then
@@ -95,7 +99,7 @@ AddRemoteEvent("SearchForScrap", function(player)
                         CurrentlySearching[player] = nil
 
                         -- chance to find scrap
-                        if math.random(1,5) == 1 then
+                        if math.random(1,3) == 1 then
                             -- found something
                             SetText3DVisibility(text3d, player, false)
                             PickupScrap(player)
@@ -131,12 +135,8 @@ function PickupScrap(player)
     local item = GetObject(item_key)
 
     -- add to inventory
-    CallEvent("AddItemToInventory", player, item_key)
-
-    AddPlayerChat(player, "You have found "..item['name'])
-    print("Player "..GetPlayerName(player).." has found "..item['name'])
-
-    CallRemoteEvent(player, "ScrapPickedup")
+    --AddItemToInventory(player, item_key)
+    CreateObjectPickupNearPlayer(player, item_key)
 end
 
 

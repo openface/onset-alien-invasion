@@ -2,7 +2,7 @@ RegisterObject("flashlight", {
     name = "Flashlight",
     type = 'equipable',
     modelid = 1271, 
-    max_carry = 2,
+    max_carry = 1,
     recipe = {
         metal = 10,
         plastic = 5,

@@ -1,6 +1,11 @@
 local LootNearbyRange = 50000 -- distance to loot that is considered nearby
 local LootWaypoint
 
+AddEvent("OnPackageStop", function()
+    HideLootWaypoint()
+end)
+
+
 AddRemoteEvent('LootPickedup', function(pickup)
     SetSoundVolume(CreateSound("client/sounds/health_pickup.wav"), 1)
     HideLootWaypoint()
@@ -29,9 +34,4 @@ AddRemoteEvent('LootSpawned', function(pickup, x, y, z)
     AddPlayerChat('There is a supply drop nearby!')
 
     LootWaypoint = CreateWaypoint(x, y, z + 200, "Supply Drop")
-
-    -- fireworks/flares
-    CreateCountTimer(function(px,py,pz)
-        CreateFireworks(3, x, y, z + 150, 90, 0, 0)
-    end, 5000, 3, x, y, z)
 end)

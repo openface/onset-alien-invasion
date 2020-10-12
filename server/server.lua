@@ -24,10 +24,20 @@ end)
 
 -- Setup world
 AddEvent("OnPackageStart", function()
-    -- pistol pickup near spawn
-    local pickup = CreatePickup(1006, -103693.2421875, 192599.9375, 1250)
-    SetPickupPropertyValue(pickup, 'type', 'pistol')
+
 end)
+
+AddEvent("OnPackageStop", function()
+end)
+
+-- console input
+AddEvent("OnConsoleInput", function(input)
+    print("console: " .. input)
+    if input == "quit" or input == "exit" then
+        ServerExit("Exiting via console command")
+    end
+end)
+
 
 -- welcome message
 AddEvent("OnPlayerJoin", function(player)
@@ -58,6 +68,7 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
     -- join the others
     SetPlayerDimension(player, 0)
     SetPlayerPropertyValue(player, "inventory", {})
+    SetPlayerPropertyValue(player, "equipped", {})
 
     -- parachute down to the island
     SetPlayerLocation(player, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z + 30000)
@@ -84,13 +95,6 @@ AddEvent("OnPlayerDeath", function(player, killer)
     -- stats
     BumpPlayerStat(player, 'deaths')
     AddPlayerChat(player, "YOU ARE DEAD!  You must wait ".. PlayerRespawnSecs .." seconds to respawn...")
-end)
-
--- Pickup for pistol
-AddEvent("OnPlayerPickupHit", function(player, pickup)
-    if GetPickupPropertyValue(pickup, 'type') == 'pistol' then
-    	SetPlayerWeapon(player, math.random(2,5), 100, true, 2)
-	end
 end)
 
 -- Log auth

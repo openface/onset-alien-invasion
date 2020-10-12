@@ -1,4 +1,3 @@
-local BossUI
 local MothershipSpawnSound
 local MothershipSoundTimer
 
@@ -9,6 +8,11 @@ AddEvent("OnPackageStart", function()
     -- Thanks Voltaism!
     LoadPak("MothershipBoss", "/MothershipBoss/", "../../../OnsetModding/Plugins/MothershipBoss/Content/")    
   	ReplaceObjectModelMesh(91212, "/MothershipBoss/UFO")
+end)
+
+AddEvent("OnPackageStop", function()
+    DestroySound(MothershipSpawnSound)
+    DestroyTimer(MothershipSoundTimer)
 end)
 
 AddEvent("OnObjectStreamIn", function(object)
@@ -46,6 +50,7 @@ end)
 -- Boss is leaving
 function DespawnBoss(boss)
     local x,y,z = GetObjectLocation(boss)
+    if x == nil then return end
 
     MothershipFlybySound = CreateSound3D("client/sounds/mothership_flyby.mp3", x, y, z, 100000.0)
     SetSoundVolume(MothershipFlybySound, 1)

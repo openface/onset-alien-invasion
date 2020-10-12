@@ -13,6 +13,10 @@ AddEvent("OnPackageStart", function()
     WeaponData = File_LoadJSONTable("weapons.json")["weapons"]
 end)
 
+AddEvent("OnPackageStop", function()
+    DespawnBoss()
+end)
+
 AddCommand("boss", function(player)
     if not IsAdmin(player) then
         return
@@ -46,11 +50,11 @@ function SpawnBoss()
     print("Spawning boss on target "..GetPlayerName(target))
     local r_x,r_y = randomPointInCircle(BossTargetedLocation.x, BossTargetedLocation.y, BossDamageRange)
 
-    Boss = CreateObject(91212, r_x, r_y, BossTargetedLocation.z+20000, 0, 0, 0, 25, 25, 25)
+    Boss = CreateObject(91212, r_x, r_y, BossTargetedLocation.z+20000, 0, 0, 0, 20, 20, 20)
     SetObjectPropertyValue(Boss, "type", "boss")
 
     -- move down to earth over targeted player, slowly
-    SetObjectMoveTo(Boss, BossTargetedLocation.x, BossTargetedLocation.y, BossTargetedLocation.z+8000, 1500)
+    SetObjectMoveTo(Boss, BossTargetedLocation.x, BossTargetedLocation.y, BossTargetedLocation.z+7000, 1500)
 
     -- reset boss health
     BossHealth = BossInitialHealth
@@ -159,7 +163,7 @@ AddEvent("OnPlayerWeaponShot", function(player, weapon, hittype, hitid, hitx, hi
         end
 
         -- explosions in the sky
-        if (math.random(1,5) == 1) then
+        if (math.random(1,3) == 1) then
             CreateExplosion(6, hitx, hity, hitz, true)
         end
 

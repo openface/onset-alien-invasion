@@ -1,71 +1,98 @@
 // Inventory component
 new Vue({
-    el: '#inventory',
-    data() {
-        return {
-            inventory: [],
-            inventory_visible: false
-        }
+  el: "#inventory",
+  data() {
+    return {
+      items: [],
+      weapons: [],
+      inventory_visible: false,
+    };
+  },
+  computed: {
+    FreeInventorySlots: function () {
+      return 21 - this.InventoryItems.length;
     },
-    computed: {
-        FreeInventorySlots: function () {
-            return 20 - Object.keys(this.inventory).length;
-        },
-        FreeHotbarSlots: function () {
-            return 10 - Object.keys(this.inventory).length;
-        }
-    },
-    methods: {
-        SetInventory: function (data) {
-            this.inventory = data
-        },
-        ShowInventory: function () {
-            this.inventory_visible = true
-        },
-        HideInventory: function () {
-            this.inventory_visible = false;
-        }
-    },
-    mounted() {
-        EventBus.$on('SetInventory', this.SetInventory)
-        EventBus.$on('ShowInventory', this.ShowInventory)
-        EventBus.$on('HideInventory', this.HideInventory)
+    InventoryItems: function () {
+      return this.weapons.concat(this.items);
     }
+  },
+  methods: {
+    SetInventory: function (data) {
+      this.items = data.items;
+      this.weapons = data.weapons;
+    },
+    ShowInventory: function () {
+      this.inventory_visible = true;
+    },
+    HideInventory: function () {
+      this.inventory_visible = false;
+    },
+    range: function (start, end) {
+      return Array(end - start + 1)
+        .fill()
+        .map((_, idx) => start + idx);
+    },
+  },
+  mounted() {
+    EventBus.$on("SetInventory", this.SetInventory);
+    EventBus.$on("ShowInventory", this.ShowInventory);
+    EventBus.$on("HideInventory", this.HideInventory);
+  },
 });
-
 
 // dev seeding
 (function () {
-    if (typeof indev !== 'undefined') {
-        EmitEvent("SetInventory", {
-            metal: {
-                modelid: 694,
-                quantity: 2,
-                type: "resource",
-            },
-            plastic: {
-                modelid: 627,
-                quantity: 1,
-                type: "resource",
-            },
-            vest: {
-                modelid: 14,
-                quantity: 1,
-                type: "equipable",
-            },
-            flashlight: {
-                modelid: 14,
-                quantity: 2,
-                type: "equipable",
-            },
-            beer: {
-                modelid: 15,
-                quantity: 4,
-                type: "usable",
-            }
-        });
+  if (typeof indev !== "undefined") {
+    EmitEvent("SetInventory", {
+      weapons: [
+        {
+          item: "glock",
+          name: "Glock",
+          modelid: 2,
+          quantity: 1,
+          type: "weapon",
+        },
+      ],
+      items: [
+        {
+          item: "metal",
+          name: "Metal",
+          modelid: 694,
+          quantity: 2,
+          type: "resource",
+        },
+        {
+          item: "plastic",
+          name: "Plastic",
+          modelid: 627,
+          quantity: 1,
+          type: "resource",
+        },
+        {
+          item: "vest",
+          name: "Kevlar Vest",
+          modelid: 14,
+          quantity: 1,
+          type: "equipable",
+        },
+        {
+          item: "flashlight",
+          name: "Flashlight",
+          modelid: 14,
+          quantity: 2,
+          type: "equipable",
+        },
+        {
+          item: "beer",
+          name: "Beer",
+          modelid: 15,
+          quantity: 4,
+          type: "usable",
+        },
+      ],
+    });
 
-        EmitEvent("ShowInventory");
-        //setTimeout(function () { EmitEvent("HideInventory", 0); }, 7000);
-    }
+    EmitEvent("ShowInventory");
+    //setTimeout(function () { EmitEvent("HideInventory", 0); }, 7000);
+  }
 })();

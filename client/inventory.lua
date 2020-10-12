@@ -8,16 +8,24 @@ AddEvent("OnPackageStart", function()
     SetWebVisibility(InventoryUI, WEB_HITINVISIBLE)
 end)
 
+AddEvent("OnPackageStop", function()
+    DestroyWebUI(InventoryUI)
+end)
+
 AddEvent('OnKeyPress', function(key)
   if key == 'Tab' then
     ShowMouseCursor(true)
     SetInputMode(INPUT_GAMEANDUI)
+ 		SetWebVisibility(InventoryUI, WEB_VISIBLE)
     ExecuteWebJS(InventoryUI, "EmitEvent('ShowInventory')")
+  elseif key=='4' or key=='5' or key=='6' or key=='7' or key=='8' or key=='9' then
+    CallRemoteEvent("UseObjectHotkey", key)
   end
 end)
 
 AddEvent('OnKeyRelease', function(key)
   if key == 'Tab' then
+    SetWebVisibility(InventoryUI, WEB_HITINVISIBLE)
     ExecuteWebJS(InventoryUI, "EmitEvent('HideInventory')")
     ShowMouseCursor(false)
     SetInputMode(INPUT_GAME)

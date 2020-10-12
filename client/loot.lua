@@ -1,6 +1,11 @@
 local LootNearbyRange = 50000 -- distance to loot that is considered nearby
 local LootWaypoint
 
+AddEvent("OnPackageStop", function()
+    HideLootWaypoint()
+end)
+
+
 AddRemoteEvent('LootPickedup', function(pickup)
     SetSoundVolume(CreateSound("client/sounds/health_pickup.wav"), 1)
     HideLootWaypoint()

@@ -54,6 +54,11 @@ AddEvent("OnPlayerParachuteLand", function()
     CallRemoteEvent("DropParachute")
 end)
 
+-- console
+AddEvent("OnConsoleInput", function(input)
+    print("console: " .. input)
+end)
+
 
 -- toggle first-person view
 AddEvent("OnKeyPress", function(key)

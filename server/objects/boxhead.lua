@@ -16,3 +16,6 @@ RegisterObject("boxhead", {
         bone = "head" 
     }
 })
+
+AddEvent("items:boxhead:use", function(player, object)
+end)

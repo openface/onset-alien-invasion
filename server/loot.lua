@@ -27,7 +27,7 @@ AddEvent("OnPackageStart", function()
     LootLocations = File_LoadJSONTable("packages/"..GetPackageName().."/server/data/lootpickups.json")
 
     -- spawn random loot area
-	local loot_timer = CreateTimer(function()
+	  local loot_timer = CreateTimer(function()
         SpawnLootArea(LootLocations[ math.random(#LootLocations) ])
     end, LootDropInterval)
 end)

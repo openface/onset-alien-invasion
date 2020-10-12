@@ -28,9 +28,13 @@ AddEvent("OnPackageStart", function()
 end)
 
 AddEvent("OnPackageStop", function()
-    for _,p in pairs(GetAllPlayers()) do
-        SetPlayerPropertyValue(p, "inventory", {})
-        SyncInventory(p)
+end)
+
+-- console input
+AddEvent("OnConsoleInput", function(input)
+    print("console: " .. input)
+    if input == "quit" or input == "exit" then
+        ServerExit("Exiting via console command")
     end
 end)
 
@@ -64,6 +68,7 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
     -- join the others
     SetPlayerDimension(player, 0)
     SetPlayerPropertyValue(player, "inventory", {})
+    SetPlayerPropertyValue(player, "equipped", {})
 
     -- parachute down to the island
     SetPlayerLocation(player, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z + 30000)

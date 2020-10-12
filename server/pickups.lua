@@ -26,6 +26,7 @@ function CreateObjectPickup(item, x, y, z)
     SetPickupPropertyValue(pickup, '_text', CreateText3D(item, 8, x, y, z+100, 0, 0, 0))
     if object['scale'] ~= nil then
         SetPickupScale(pickup, object['scale'].x, object['scale'].y, object['scale'].z)
+        print(object['scale'].x)
     end
     Pickups[pickup] = pickup
 end
@@ -75,7 +76,7 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
     SetPickupPropertyValue(pickup, '_claimedby', player)
     SetPlayerAnimation(player, "PICKUP_LOWER")
 
-    Delay(2000, function()
+    Delay(3000, function()
         -- remove pickup
         if GetPickupPropertyValue(pickup, '_claimedby') == player then
             SetPlayerAnimation(player, "STOP")

@@ -2,7 +2,7 @@ RegisterObject("wood", {
     name = "Wood",
     type = 'resource',
     modelid = 297,
-    scale = { x=10, y=10, z=10 },
+    scale = { x = 0.5, y = 0.5, z = 0.5 },
     max_carry = 10,
     recipe = nil,
     attachment = nil

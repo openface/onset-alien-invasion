@@ -53,7 +53,7 @@ AddRemoteEvent("BuildItem", function(player, item_key)
     Delay(15000, function()
         SetPlayerAnimation(player, "STOP")
         AddPlayerChat(player, item['name'].." has been added to your inventory.")
-        CallEvent("AddItemToInventory", player, item_key)
+        AddToInventory(player, item_key)
     end)
 end)
 

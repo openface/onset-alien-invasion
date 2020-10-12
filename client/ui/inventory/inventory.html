@@ -10,10 +10,10 @@
 <body>
     <div id="inventory">
         <div id="inventory_screen" v-if="inventory_visible">
-            <div v-if="inventory.length > 0">
+            <div v-if="items.length > 0">
                 <div id="title">INVENTORY</div>
                 <div class="grid">
-                    <div class="slot" v-for="item in inventory">
+                    <div class="slot" v-for="item in items">
                         <img v-bind:src="'http://game/objects/' + item.modelid" />
                         <span class="name">{{ item.name }}</span>
                         <span v-if="item.quantity > 1" class="quantity">x{{ item.quantity }}</span>
@@ -28,7 +28,7 @@
             </div>
             <div v-else id="title">YOUR INVENTORY IS EMPTY</div>
         </div>
-        <div id="hotbar" v-if="!inventory_visible">
+        <div id="hotbar" v-if="inventory_visible">
             <div class="slot" v-for="n in 3" :key="n">
                 <div v-if="weapons[n-1]">
                     <img v-bind:src="'http://game/objects/' + weapons[n-1].modelid" />
@@ -38,11 +38,11 @@
                 </div>
             </div>
             <div class="slot" v-for="n in range(4,9)" :key="n">
-                <div v-if="inventory[n-4]">
-                    <img v-bind:src="'http://game/objects/' + inventory[n-4].modelid" />
+                <div v-if="items[n-4]">
+                    <img v-bind:src="'http://game/objects/' + items[n-4].modelid" />
                     <span class="keybind">{{ n }}</span>
-                    <span class="name">{{ inventory[n-4].name }}</span>
-                    <span v-if="inventory[n-4].quantity > 1" class="quantity">x{{ inventory[n-4].quantity }}</span>
+                    <span class="name">{{ items[n-4].name }}</span>
+                    <span v-if="items[n-4].quantity > 1" class="quantity">x{{ items[n-4].quantity }}</span>
                 </div>
             </div>
         </div>

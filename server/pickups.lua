@@ -26,7 +26,6 @@ function CreateObjectPickup(item, x, y, z)
     SetPickupPropertyValue(pickup, '_text', CreateText3D(item, 8, x, y, z+100, 0, 0, 0))
     if object['scale'] ~= nil then
         SetPickupScale(pickup, object['scale'].x, object['scale'].y, object['scale'].z)
-        print(object['scale'].x)
     end
     Pickups[pickup] = pickup
 end

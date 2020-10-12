@@ -42,7 +42,7 @@ AddRemoteEvent("BuildItem", function(player, item_key)
 
     -- remove scrap from inventory
     for resource,amount in pairs(item['recipe']) do
-        CallEvent("RemoveFromInventory", player, resource, amount)
+        RemoveFromInventory(player, resource, amount)
     end
 
     CallRemoteEvent(player, "StartBuilding", item_key, json_encode(GetPlayerResources(player)))

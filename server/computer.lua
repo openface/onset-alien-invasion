@@ -22,7 +22,7 @@ end)
 
 AddRemoteEvent("InteractSatelliteComputer", function(player)
     -- remove part from inventory
-    CallEvent("RemoveFromInventory", player, "computer_part")
+    RemoveFromInventory(player, "computer_part")
 
     SetPlayerAnimation(player, "COMBINE")
 

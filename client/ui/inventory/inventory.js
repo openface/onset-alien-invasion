@@ -1,36 +1,45 @@
 // Inventory component
 new Vue({
-    el: '#inventory',
-    data() {
-        return {
-            inventory: [],
-            inventory_visible: false,
-        }
+  el: "#inventory",
+  data() {
+    return {
+      inventory: [],
+      weapons: [],
+      inventory_visible: false,
+    };
+  },
+  computed: {
+    FreeInventorySlots: function () {
+      return 21 - this.inventory.length;
     },
-    computed: {
-        FreeInventorySlots: function () {
-            return 21 - Object.keys(this.inventory).length;
-        },
-        FreeHotbarSlots: function () {
-            return 10 - Object.keys(this.inventory).length;
-        }
-    },
-    methods: {
-        SetInventory: function (data) {
-            this.inventory = data
-        },
-        ShowInventory: function () {
-            this.inventory_visible = true
-        },
-        HideInventory: function () {
-            this.inventory_visible = false;
-        }
-    },
-    mounted() {
-        EventBus.$on('SetInventory', this.SetInventory)
-        EventBus.$on('ShowInventory', this.ShowInventory)
-        EventBus.$on('HideInventory', this.HideInventory)
+    FreeHotbarSlots: function () {
+      return 10 - this.inventory.length;
     }
+  },
+  methods: {
+    SetInventory: function (data) {
+        let items = [];
+        for (let [key, item] of Object.entries(data)) {
+            items.push({ name: key, ...item })
+        }
+        this.inventory = items.filter((item) => item.type != "weapon");
+        this.weapons = items.filter((item) => item.type == "weapon");
+    },
+    ShowInventory: function () {
+        this.inventory_visible = true;
+    },
+    HideInventory: function () {
+        this.inventory_visible = false;
+    },
+    range: function (start, end) {
+        return Array(end - start + 1).fill().map((_, idx) => start + idx);
+    },
+  },
+  mounted() {
+    EventBus.$on("SetInventory", this.SetInventory);
+    EventBus.$on("ShowInventory", this.ShowInventory);
+    EventBus.$on("HideInventory", this.HideInventory);
+  },
 });
 
 
@@ -38,42 +47,42 @@ new Vue({
 (function () {
     if (typeof indev !== 'undefined') {
         EmitEvent("SetInventory", {
-            glock: {
-                name: "Glock",
-                modelid: 2,
-                quantity: 1,
-                type: "weapon",
-            },
-            metal: {
-                name: "Metal",
-                modelid: 694,
-                quantity: 2,
-                type: "resource",
-            },
-            plastic: {
-                name: "Plastic",
-                modelid: 627,
-                quantity: 1,
-                type: "resource",
-            },
-            vest: {
-                name: "Kevlar Vest",
-                modelid: 14,
-                quantity: 1,
-                type: "equipable",
-            },
-            flashlight: {
-                name: "Flashlight",
-                modelid: 14,
-                quantity: 2,
-                type: "equipable",
-            },
-            beer: {
-                name: "Beer",
-                modelid: 15,
-                quantity: 4,
-                type: "usable",
-            }
+          glock: {
+            name: "Glock",
+            modelid: 2,
+            quantity: 1,
+            type: "weapon",
+          },
+          metal: {
+            name: "Metal",
+            modelid: 694,
+            quantity: 2,
+            type: "resource",
+          },
+          plastic: {
+            name: "Plastic",
+            modelid: 627,
+            quantity: 1,
+            type: "resource",
+          },
+          vest: {
+            name: "Kevlar Vest",
+            modelid: 14,
+            quantity: 1,
+            type: "equipable",
+          },
+          flashlight: {
+            name: "Flashlight",
+            modelid: 14,
+            quantity: 2,
+            type: "equipable",
+          },
+          beer: {
+            name: "Beer",
+            modelid: 15,
+            quantity: 4,
+            type: "usable",
+          },
         });
 
         EmitEvent("ShowInventory");

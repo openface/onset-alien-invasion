@@ -1,1 +1,6 @@
+.DS_Store
+node_modules
+.vscode
+ui/dist
 config.lua
+ui/.cache

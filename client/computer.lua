@@ -10,7 +10,7 @@ local SatelliteStatus
 
 AddEvent("OnPackageStart", function()
     ComputerUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
-    LoadWebFile(ComputerUI, "http://asset/"..GetPackageName().."/client/ui/computer/computer.html")
+    SetWebUrl(ComputerUI, "http://asset/"..GetPackageName().."/dist/ui/index.html#/computer/")
     SetWebAlignment(ComputerUI, 0.0, 0.0)
     SetWebAnchors(ComputerUI, 0.0, 0.0, 1.0, 1.0)
     SetWebVisibility(ComputerUI, WEB_HIDDEN)

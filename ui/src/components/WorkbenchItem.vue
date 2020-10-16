@@ -30,29 +30,9 @@
 export default {
   name: 'WorkbenchItem',
   props: {
-      player_resources: { 
-        type: Object, 
-        default() { 
-          return { 
-            metal: 0,
-            wood: 0,
-            computer_part: 0,
-            plastic: 0,
-          } 
-        } 
-      },
-      recipe: {
-        type: Object,
-        default() {
-          return {
-            metal: 0,
-            wood: 0,
-            computer_part: 0,
-            plastic: 0
-          }
-        }
-      },
-      item: String,
+      player_resources: {},
+      recipe: {},
+      item: {},
   },
   data() {
     return {
@@ -116,15 +96,16 @@ export default {
 .item {
     padding:10px;
     width:305px;
-    border:1px solid #333;
     margin:10px;
+    height:75px;
+    background:rgba(255,255,255,0.1);
 }
 .item .pic {
     float:left;
     width:90px;
 }
 .item .pic img {
-    border-radius: 4px;
+    border-radius: 3px;
     width: 75px;
 }
 .item .details {
@@ -154,10 +135,10 @@ button {
     display:block;
     font-size:14px;
     width:100%;
-    height:30px;
+    height:25px;
+    border:1px solid #111;
 }
 button.need_scrap {
-    background: #333;
     color: #666666;
 }
 button.build {
@@ -175,7 +156,7 @@ button:disabled, button[disabled] {
 
 /* Progress Meter */
 .meter { 
-    height:30px;
+    height:25px;
     width:100%;
     display:block;
     position: relative;
@@ -189,7 +170,7 @@ button:disabled, button[disabled] {
 }
 
 .progress {
-    background-color: #fff;
+    background-color: #669cf3;
     animation: progressBar 15s ease-in-out;
     animation-fill-mode:both; 
 }

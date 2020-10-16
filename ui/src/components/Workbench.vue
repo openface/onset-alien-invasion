@@ -4,7 +4,7 @@
             <div id="title">WORKBENCH</div>
             <div class="grid">
                 <div v-for="(item, key) in items" :key="key">
-                  <workbench-item :recipe="item.recipe" :player_resources="player_resources" :item="key"></workbench-item>
+                  <workbench-item :recipe="item.recipe" :player_resources="player_resources" :item="item"></workbench-item>
                 </div>
             </div>
         </div>

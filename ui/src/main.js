@@ -1,5 +1,9 @@
 import Vue from "vue";
 import App from "./App.vue";
+import VueRouter from "vue-router";
+
+import CharacterSelection from "./components/CharacterSelection.vue";
+
 
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
@@ -59,6 +63,16 @@ function EmitEvent(name, ...args) {
   }
 }
 
+/* 
+ * Routing
+ */
+Vue.use(VueRouter);
+
+const routes = [
+  { path: '/character-selection', component: CharacterSelection, name: 'CharacterSelection' }
+]
+const router = new VueRouter({ routes });
+
 // eslint-disable-next-line
-window.app = new Vue({ el: '#app', render: h => h(App) });
+window.app = new Vue({ el: "#app", router, render: (h) => h(App) });
 

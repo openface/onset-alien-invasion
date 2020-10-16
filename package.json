@@ -56,6 +56,8 @@
 		"client/water.lua"
 	],
 	"files": [
+ 		"client/pak/MothershipBoss.pak",
+
 		"client/sounds/alien.wav",
 		"client/sounds/health_pickup.wav",
 		"client/sounds/part_pickup.wav",
@@ -72,11 +74,6 @@
 		"client/sounds/chopper.mp3",
 		"client/sounds/search.mp3",
 		"client/sounds/workbench.mp3",
-
-		"client/ui/vue.min.js",
-		"client/ui/vue-onset.js",
-
-		"client/ui/images/blood_overlay.png",
 
 		"client/ui/scoreboard/scoreboard.html",
 		"client/ui/scoreboard/scoreboard.css",
@@ -102,23 +99,28 @@
 		"client/ui/character/character.css",
     "client/ui/character/character.js",
     
-		"ui/dist/public/1.jpg",
-		"ui/dist/public/2.jpg",
-		"ui/dist/public/4.jpg",
-		"ui/dist/public/5.jpg",
-		"ui/dist/public/6.jpg",
-		"ui/dist/public/7.jpg",
-		"ui/dist/public/9.jpg",
-		"ui/dist/public/10.jpg",
-		"ui/dist/public/14.jpg",
-		"ui/dist/public/15.jpg",
-		"ui/dist/public/16.jpg",
-		"ui/dist/public/18.jpg",
-		"ui/dist/public/19.jpg",
-		"ui/dist/public/20.jpg",
-		"ui/dist/public/25.jpg",
-		"ui/dist/public/30.jpg",
+    "ui/dist/index.html",
+    "ui/dist/js/app.js",
+    "ui/dist/js/chunk-vendors.js",
+    "ui/dist/css/app.css",
 
-		"client/pak/MothershipBoss.pak"
+		"ui/dist/img/blood_overlay.png",
+
+		"ui/dist/img/1.jpg",
+		"ui/dist/img/2.jpg",
+		"ui/dist/img/4.jpg",
+		"ui/dist/img/5.jpg",
+		"ui/dist/img/6.jpg",
+		"ui/dist/img/7.jpg",
+		"ui/dist/img/9.jpg",
+		"ui/dist/img/10.jpg",
+		"ui/dist/img/14.jpg",
+		"ui/dist/img/15.jpg",
+		"ui/dist/img/16.jpg",
+		"ui/dist/img/18.jpg",
+		"ui/dist/img/19.jpg",
+		"ui/dist/img/20.jpg",
+		"ui/dist/img/25.jpg",
+		"ui/dist/img/30.jpg"
 	]
 }

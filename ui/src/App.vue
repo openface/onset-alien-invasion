@@ -1,29 +1,13 @@
 <template>
-  <div id="container">
-    <h1>{{ msg }}</h1>
-    <component v-bind:is="component" />
-  </div>
+  <router-view></router-view>
 </template>
 
 <script>
-import CharacterSelection from './components/CharacterSelection.vue'
-
 export default {
-  name: 'app',
-  components: {
-    CharacterSelection
-  },
-  data() {
-    return {
-      component: "CharacterSelection",
-      msg: 'Welcome to the NEW Vue.js App!'
-    }
-  }
+  name: 'app'
 }
 </script>
 
 <style>
-  #container {
-    color: #56b983;
-  }
+body { user-select: none; }
 </style>

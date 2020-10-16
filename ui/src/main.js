@@ -2,11 +2,46 @@ import Vue from "vue";
 import App from "./App.vue";
 import VueRouter from "vue-router";
 
-import CharacterSelection from "./components/CharacterSelection.vue";
-
-
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
+
+/**
+ * For development outside of game, define
+ * the ue.game to call the console.log()
+ * and set an indev global variable.
+ */
+let InGame = true;
+if (typeof window.ue === "undefined") {
+  // for browser testing outside of game
+  // eslint-disable-next-line
+  window.ue = { game: { callevent: console.log } };
+  // eslint-disable-next-line
+  InGame = false;
+}
+
+/**
+ * GLobal EventBus provides communication from
+ * Lua client to Vue components and vice-versa.
+ */
+var EventBus = new Vue();
+
+/*
+ * Emit event from Lua client to Vue component
+ *
+ * EmitEvent('SomeEvent', data)
+ */
+// eslint-disable-next-line
+function EmitEvent(name, ...args) {
+  if (typeof name != "string") {
+    return;
+  }
+  if (args.length == 0) {
+    EventBus.$emit(name);
+  } else {
+    EventBus.$emit(name, ...args);
+  }
+}
+window.EmitEvent = EmitEvent;
 
 /*
  * Vue plugin to allow calling Lua client from Vue component
@@ -17,14 +52,6 @@ Vue.config.devtools = true;
 // eslint-disable-next-line
 var VueOnset = {
   install(Vue) {
-    if (typeof window.ue === "undefined") {
-      // for browser testing outside of game
-      // eslint-disable-next-line
-      window.ue = { game: { callevent: console.log } };
-      // eslint-disable-next-line
-      var indev = true;
-    }
-
     Vue.prototype.CallEvent = function (name, ...args) {
       if (typeof name != "string") {
         return;
@@ -39,37 +66,24 @@ var VueOnset = {
         window.ue.game.callevent(name, JSON.stringify(params));
       }
     }
+    Vue.prototype.EventBus = EventBus;
+    Vue.prototype.InGame = InGame;
   }
 }
 
 Vue.use(VueOnset);
-
-/*
- * Emit event from Lua client to Vue component
- *
- * EmitEvent('SomeEvent', data)
- */
-var EventBus = new Vue();
-
-// eslint-disable-next-line
-function EmitEvent(name, ...args) {
-  if (typeof name != "string") {
-    return;
-  }
-  if (args.length == 0) {
-    EventBus.$emit(name);
-  } else {
-    EventBus.$emit(name, ...args);
-  }
-}
 
 /* 
  * Routing
  */
 Vue.use(VueRouter);
 
+import CharacterSelection from "./components/CharacterSelection.vue";
+import Hud from "./components/Hud.vue";
+
 const routes = [
-  { path: '/character-selection', component: CharacterSelection, name: 'CharacterSelection' }
+  { path: '/character-selection', component: CharacterSelection, name: 'CharacterSelection' },
+  { path: '/hud', component: Hud, name: 'Hud' }
 ]
 const router = new VueRouter({ routes });
 

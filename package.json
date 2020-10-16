@@ -76,9 +76,6 @@
     "client/ui/scoreboard/scoreboard.html",
     "client/ui/scoreboard/scoreboard.css",
     "client/ui/scoreboard/scoreboard.js",
-    "client/ui/hud/hud.html",
-    "client/ui/hud/hud.css",
-    "client/ui/hud/hud.js",
     "client/ui/inventory/inventory.html",
     "client/ui/inventory/inventory.css",
     "client/ui/inventory/inventory.js",
@@ -88,9 +85,6 @@
     "client/ui/workbench/workbench.html",
     "client/ui/workbench/workbench.css",
     "client/ui/workbench/workbench.js",
-    "client/ui/character/character.html",
-    "client/ui/character/character.css",
-    "client/ui/character/character.js",
     "ui/dist/index.html",
     "ui/dist/js/app.js",
     "ui/dist/js/chunk-vendors.js",
@@ -110,7 +104,6 @@
     "ui/dist/img/18.jpg",
     "ui/dist/img/19.jpg",
     "ui/dist/img/20.jpg",
-    "ui/dist/img/25.jpg",
-    "ui/dist/img/30.jpg"
+    "ui/dist/img/25.jpg"
   ]
 }

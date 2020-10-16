@@ -5,7 +5,7 @@ local workbench_timer
 
 AddEvent("OnPackageStart", function()
     WorkbenchUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
-    SetWebUrl(WorkbenchUI, "http://asset/"..GetPackageName().."/ui/dist/index.html#/workbench/")
+    SetWebURL(WorkbenchUI, "http://asset/"..GetPackageName().."/ui/dist/index.html#/workbench/")
     SetWebAlignment(WorkbenchUI, 0.0, 0.0)
     SetWebAnchors(WorkbenchUI, 0.0, 0.0, 1.0, 1.0)
     SetWebVisibility(WorkbenchUI, WEB_HIDDEN)

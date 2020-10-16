@@ -4,12 +4,12 @@
       <div v-if="InventoryItems.length > 0">
         <div id="title">INVENTORY</div>
         <div class="grid">
-          <div class="slot" v-for="item in InventoryItems" :key="item">
+          <div class="slot" v-for="item in InventoryItems" :key="item.name">
             <img v-bind:src="'http://game/objects/' + item.modelid" />
             <span class="name">{{ item.name }}</span>
-            <span v-if="item.quantity > 1" class="quantity"
-              >x{{ item.quantity }}</span
-            >
+            <span v-if="item.quantity > 1" class="quantity">
+              x{{ item.quantity }}
+            </span>
             <div class="options">
               <a>Equip</a>
               <a>Unequip</a>
@@ -27,7 +27,9 @@
           <img v-bind:src="'http://game/objects/' + weapons[n - 1].modelid" />
           <span class="keybind">{{ n }}</span>
           <span class="name">{{ weapons[n - 1].name }}</span>
-          <span v-if="weapons[n - 1].quantity > 1" class="quantity">x{{ weapons[n - 1].quantity }}</span>
+          <span v-if="weapons[n - 1].quantity > 1" class="quantity">
+            x{{ weapons[n - 1].quantity }}
+          </span>
         </div>
       </div>
       <div class="slot" v-for="n in range(4, 9)" :key="n">
@@ -35,7 +37,9 @@
           <img v-bind:src="'http://game/objects/' + items[n - 4].modelid" />
           <span class="keybind">{{ n }}</span>
           <span class="name">{{ items[n - 4].name }}</span>
-          <span v-if="items[n - 4].quantity > 1" class="quantity">x{{ items[n - 4].quantity }}</span>
+          <span v-if="items[n - 4].quantity > 1" class="quantity">
+            x{{ items[n - 4].quantity }}
+          </span>
         </div>
       </div>
     </div>

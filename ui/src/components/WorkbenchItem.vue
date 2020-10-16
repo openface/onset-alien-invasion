@@ -1,13 +1,13 @@
 <template>
     <div class="item">
       <div class="pic">
-          <!--<img src="https://via.placeholder.com/100" />-->
-          <img v-bind:src="'http://game/objects/' + item.modelid" />
+          <img v-if="!InGame" src="https://via.placeholder.com/100" />
+          <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
       </div>
       <div class="details">
           <div class="name">{{ item.name }}</div>
           <div class="info">
-              <span v-for="(qty, resource) in item.recipe" :key="qty">
+              <span v-for="(qty, resource) in recipe" :key="resource">
                   <b>{{ qty }}</b> {{ resource }}
               </span>
           </div>
@@ -36,11 +36,22 @@ export default {
           return { 
             metal: 0,
             wood: 0,
-            computer_part: 0 
+            computer_part: 0,
+            plastic: 0,
           } 
         } 
       },
-      recipe: Object,
+      recipe: {
+        type: Object,
+        default() {
+          return {
+            metal: 0,
+            wood: 0,
+            computer_part: 0,
+            plastic: 0
+          }
+        }
+      },
       item: String,
   },
   data() {

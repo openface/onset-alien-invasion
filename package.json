@@ -45,7 +45,7 @@
     "client/hud.lua",
     "client/aliens.lua",
     "client/loot.lua",
-    "client/parts.lua",
+    "client/pickups.lua",
     "client/scrap.lua",
     "client/boss.lua",
     "client/computer.lua",
@@ -57,6 +57,7 @@
   ],
   "files": [
     "client/pak/MothershipBoss.pak",
+
     "client/sounds/alien.wav",
     "client/sounds/health_pickup.wav",
     "client/sounds/part_pickup.wav",
@@ -73,6 +74,11 @@
     "client/sounds/chopper.mp3",
     "client/sounds/search.mp3",
     "client/sounds/workbench.mp3",
+    "client/sounds/backpack.wav",
+    "client/sounds/chainsaw.wav",
+    "client/sounds/drink.wav",
+    "client/sounds/eat.wav",
+    "client/sounds/pickup.wav",
 
     "ui/dist/index.html",
     "ui/dist/js/app.js",

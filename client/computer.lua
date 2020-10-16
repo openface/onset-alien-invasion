@@ -9,11 +9,11 @@ local SatelliteWaypoint
 local SatelliteStatus
 
 AddEvent("OnPackageStart", function()
-    --ComputerUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
-    --SetWebUrl(ComputerUI, "http://asset/"..GetPackageName().."/dist/ui/index.html#/computer/")
-    --SetWebAlignment(ComputerUI, 0.0, 0.0)
-    --SetWebAnchors(ComputerUI, 0.0, 0.0, 1.0, 1.0)
-    --SetWebVisibility(ComputerUI, WEB_HIDDEN)
+    ComputerUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
+    SetWebURL(ComputerUI, "http://asset/"..GetPackageName().."/dist/ui/index.html#/computer/")
+    SetWebAlignment(ComputerUI, 0.0, 0.0)
+    SetWebAnchors(ComputerUI, 0.0, 0.0, 1.0, 1.0)
+    SetWebVisibility(ComputerUI, WEB_HIDDEN)
 
     SatelliteStatus = CreateTextBox(0, 0, "", "center")
     SetTextBoxAnchors(SatelliteStatus, 0.0, 0.0, 1.0, 0.03)

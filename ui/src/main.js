@@ -81,6 +81,8 @@ Vue.use(VueRouter);
 import CharacterSelection from "./components/CharacterSelection.vue";
 import Inventory from "./components/Inventory.vue";
 import Hud from "./components/Hud.vue";
+import Workbench from "./components/Workbench.vue";
+
 
 const routes = [
   {
@@ -88,12 +90,9 @@ const routes = [
     component: CharacterSelection,
     name: "CharacterSelection",
   },
-  {
-    path: "/inventory",
-    component: Inventory,
-    name: "Inventory",
-  },
+  { path: "/inventory", component: Inventory, name: "Inventory" },
   { path: "/hud", component: Hud, name: "Hud" },
+  { path: "/workbench", component: Workbench, name: "Workbench" },
 ];
 const router = new VueRouter({ routes });
 

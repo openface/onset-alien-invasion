@@ -73,9 +73,12 @@
     "client/sounds/chopper.mp3",
     "client/sounds/search.mp3",
     "client/sounds/workbench.mp3",
+
     "ui/dist/index.html",
     "ui/dist/js/app.js",
+    "ui/dist/js/app.js.map",
     "ui/dist/js/chunk-vendors.js",
+    "ui/dist/js/chunk-vendors.js.map",
     "ui/dist/css/app.css",
     "ui/dist/img/blood_overlay.png",
     "ui/dist/img/1.jpg",

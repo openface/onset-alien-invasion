@@ -79,12 +79,22 @@ Vue.use(VueOnset);
 Vue.use(VueRouter);
 
 import CharacterSelection from "./components/CharacterSelection.vue";
+import Inventory from "./components/Inventory.vue";
 import Hud from "./components/Hud.vue";
 
 const routes = [
-  { path: '/character-selection', component: CharacterSelection, name: 'CharacterSelection' },
-  { path: '/hud', component: Hud, name: 'Hud' }
-]
+  {
+    path: "/character-selection",
+    component: CharacterSelection,
+    name: "CharacterSelection",
+  },
+  {
+    path: "/inventory",
+    component: Inventory,
+    name: "Inventory",
+  },
+  { path: "/hud", component: Hud, name: "Hud" },
+];
 const router = new VueRouter({ routes });
 
 // eslint-disable-next-line

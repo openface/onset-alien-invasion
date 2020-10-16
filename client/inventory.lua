@@ -2,7 +2,7 @@ local InventoryUI
 
 AddEvent("OnPackageStart", function()
     InventoryUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
-    LoadWebFile(InventoryUI, "http://asset/"..GetPackageName().."/client/ui/inventory/inventory.html")
+    LoadWebFile(InventoryUI, "http://asset/"..GetPackageName().."/ui/dist/index.html#/inventory/")
     SetWebAlignment(InventoryUI, 0.0, 0.0)
     SetWebAnchors(InventoryUI, 0.0, 0.0, 1.0, 1.0)
     SetWebVisibility(InventoryUI, WEB_HITINVISIBLE)

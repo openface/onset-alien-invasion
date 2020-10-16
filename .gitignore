@@ -3,7 +3,7 @@
 .vscode
 
 node_modules/
-/dist/
+dist/
 config.lua
 
 # Log files

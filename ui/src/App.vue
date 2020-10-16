@@ -1,22 +1,29 @@
 <template>
-  <div id="app">
+  <div id="container">
     <h1>{{ msg }}</h1>
+    <component v-bind:is="component" />
   </div>
 </template>
 
 <script>
+import CharacterSelection from './components/CharacterSelection.vue'
+
 export default {
   name: 'app',
-  data () {
+  components: {
+    CharacterSelection
+  },
+  data() {
     return {
-      msg: 'Welcome to Your Vue.js App!'
+      component: "CharacterSelection",
+      msg: 'Welcome to the NEW Vue.js App!'
     }
   }
 }
 </script>
 
-<style lang="css">
-  #app {
+<style>
+  #container {
     color: #56b983;
   }
 </style>

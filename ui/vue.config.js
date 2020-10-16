@@ -19,4 +19,4 @@ module.exports = {
       chunkFilename: "[name].js",
     },
   },
-}
+};

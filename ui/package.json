@@ -1,8 +1,7 @@
 {
-  "name": "ui",
+  "name": "ai-ui",
   "version": "1.0.0",
   "description": "Alien Invasion UI",
-  "main": "index.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",

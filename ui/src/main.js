@@ -84,6 +84,7 @@ import Inventory from "./components/Inventory.vue";
 import Hud from "./components/Hud.vue";
 import Workbench from "./components/Workbench.vue";
 import Computer from "./components/Computer.vue";
+import Scoreboard from "./components/Scoreboard.vue";
 
 const routes = [
   {
@@ -95,6 +96,7 @@ const routes = [
   { path: "/hud", component: Hud, name: "Hud" },
   { path: "/workbench", component: Workbench, name: "Workbench" },
   { path: "/computer", component: Computer, name: "Computer" },
+  { path: "/scoreboard", component: Scoreboard, name: "Scoreboard" },
 ];
 const router = new VueRouter({ routes });
 

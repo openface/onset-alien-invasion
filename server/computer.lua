@@ -24,6 +24,8 @@ AddRemoteEvent("InteractSatelliteComputer", function(player)
     -- remove part from inventory
     RemoveFromInventory(player, "computer_part")
 
+    SetPlayerLocation(player, -102988.40625, 201117.9375, 2200.3193359375)
+    SetPlayerHeading(player, 77.734954833984)   
     SetPlayerAnimation(player, "COMBINE")
 
     PartsCollected = PartsCollected + 1

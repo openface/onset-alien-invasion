@@ -1,6 +1,6 @@
 # Alien Invasion Gamemode for Onset
 
-Alien Invasion is a gamemode for [Onset](https://playonset.com/).
+Alien Invasion is a gamemode for [Onset](https://playonset.com/) written in Lua and VueJS.
 
 [![ALIEN INVASION](https://i.imgur.com/vJQt3de.jpg?1)](https://i.imgur.com/vJQt3de.jpg?1)
 

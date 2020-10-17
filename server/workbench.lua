@@ -60,9 +60,9 @@ end)
 function GetPlayerResources(player)
     local inventory = GetPlayerPropertyValue(player, "inventory")
     local resources = {}
-    for k,item in pairs(inventory) do
+    for _,item in pairs(inventory) do
         if item['type'] == 'resource' then
-            resources[k] = item['quantity']
+            resources[item['item']] = item['quantity']
         end
     end
     print(dump(resources))

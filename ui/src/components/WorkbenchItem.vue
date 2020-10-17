@@ -1,7 +1,7 @@
 <template>
-  <div class="item">
+  <div class="item" :class="!isBuilding && isBusy ? 'blurred' : ''">
     <div class="pic">
-      <img v-if="!InGame" src="https://via.placeholder.com/100" />
+      <img v-if="!InGame" src="http://placekitten.com/100/100" />
       <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
     </div>
     <div class="details">
@@ -18,9 +18,7 @@
           </div>
         </div>
         <div v-else-if="hasEnoughResources">
-          <button class="build" :disabled="isDisabled" @click="build">
-            BUILD
-          </button>
+          <button class="build" @click="build">BUILD NOW</button>
         </div>
         <div v-else>
           <button class="need_scrap" disabled="true">NEED SCRAP</button>
@@ -47,7 +45,7 @@ export default {
     isBuilding() {
       return this.building_item === this.item;
     },
-    isDisabled() {
+    isBusy() {
       return this.building_item !== false;
     },
     numPlayerMetal() {
@@ -120,7 +118,7 @@ export default {
 }
 .item .details .name {
   font-weight: bold;
-  font-size: 20px;
+  font-size: 16px;
   color: #fff;
 }
 .item .details .info {
@@ -129,10 +127,13 @@ export default {
 .item .details .info b {
   font-weight: bold;
   color: #fff;
-  font-size: 16px;
+  font-size: 14px;
 }
 .item .details .action {
   margin-top: 10px;
+}
+.blurred {
+  filter: blur(3px) grayscale(100%);
 }
 button {
   font-weight: bold;
@@ -144,9 +145,6 @@ button {
   height: 25px;
   border: 1px solid #111;
 }
-button.need_scrap {
-  color: #666666;
-}
 button.build {
   background: #1770ff;
   color: #fff;
@@ -157,7 +155,7 @@ button.build:hover:not([disabled]) {
 }
 button:disabled,
 button[disabled] {
-  background: #333;
+  background: #444;
   color: #666666;
 }
 

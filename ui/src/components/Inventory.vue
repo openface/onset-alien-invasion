@@ -5,7 +5,8 @@
         <div id="title">INVENTORY</div>
         <div class="grid">
           <div class="slot" v-for="item in InventoryItems" :key="item.name">
-            <img v-bind:src="'http://game/objects/' + item.modelid" />
+            <img v-if="!InGame" src="http://placekitten.com/100/100" />
+            <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
             <span class="name">{{ item.name }}</span>
             <span v-if="item.quantity > 1" class="quantity">
               x{{ item.quantity }}
@@ -24,7 +25,8 @@
     <div id="hotbar" v-if="!inventory_visible">
       <div class="slot" v-for="n in 3" :key="n">
         <div v-if="weapons[n - 1]">
-          <img v-bind:src="'http://game/objects/' + weapons[n - 1].modelid" />
+          <img v-if="!InGame" src="http://placekitten.com/100/100" />
+          <img v-if="InGame" :src="'http://game/objects/' + weapons[n - 1].modelid" />
           <span class="keybind">{{ n }}</span>
           <span class="name">{{ weapons[n - 1].name }}</span>
           <span v-if="weapons[n - 1].quantity > 1" class="quantity">
@@ -34,7 +36,8 @@
       </div>
       <div class="slot" v-for="n in range(4, 9)" :key="n">
         <div v-if="items[n - 4]">
-          <img v-bind:src="'http://game/objects/' + items[n - 4].modelid" />
+          <img v-if="!InGame" src="http://placekitten.com/100/100" />
+          <img v-if="InGame" :src="'http://game/objects/' + items[n - 4].modelid" />
           <span class="keybind">{{ n }}</span>
           <span class="name">{{ items[n - 4].name }}</span>
           <span v-if="items[n - 4].quantity > 1" class="quantity">
@@ -136,7 +139,9 @@ export default {
         ],
       });
 
-      this.EventBus.$emit("ShowInventory");
+      //this.EventBus.$emit("ShowInventory");
+      this.EventBus.$emit("HideInventory");
+
     }
   },
 };

@@ -51,11 +51,11 @@ function AddToInventory(player, item)
         return
     end
 
-    local current_quantity = GetInventoryCount(player, item)
-    print("Curr qty",current_quantity)
-    if current_quantity > 0 then
+    local curr_qty = GetInventoryCount(player, item)
+    print("Curr qty",curr_qty)
+    if curr_qty > 0 then
         -- update existing object quantity
-        SetItemQuantity(player, item, current_quantity + 1)
+        SetItemQuantity(player, item, curr_qty + 1)
     else
         -- add new item to store
         table.insert(inventory, {
@@ -73,8 +73,8 @@ end
 
 function SetItemQuantity(player, item, quantity)
     local inventory = GetPlayerPropertyValue(player, "inventory")
-    for i, item in pairs(inventory) do
-        if item['item'] == item then
+    for i, _item in ipairs(inventory) do
+        if _item['item'] == item then
             if quantity > 0 then
               -- update quantity
               inventory[i]['quantity'] = quantity
@@ -117,7 +117,7 @@ end
 -- get carry count for given item
 function GetInventoryCount(player, item)
     local inventory = GetPlayerPropertyValue(player, "inventory")
-    for i, _item in pairs(inventory) do
+    for _, _item in pairs(inventory) do
         if _item['item'] == item then
             return _item['quantity']
         end

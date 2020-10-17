@@ -65,7 +65,47 @@ export default {
             },
             modelid: 843,
           },
-          food: {
+          food2: {
+            name: "Food",
+            recipe: {
+              plastic: 2,
+              wood: 2,
+            },
+            modelid: 843,
+          },
+          flashlight: {
+            name: "Flashlight",
+            recipe: {
+              computer_part: 1,
+              metal: 1,
+            },
+            modelid: 843,
+          },
+          food4: {
+            name: "Food",
+            recipe: {
+              plastic: 2,
+              wood: 2,
+            },
+            modelid: 843,
+          },
+          food5: {
+            name: "Food",
+            recipe: {
+              plastic: 2,
+              wood: 2,
+            },
+            modelid: 843,
+          },
+          food6: {
+            name: "Food",
+            recipe: {
+              plastic: 2,
+              wood: 2,
+            },
+            modelid: 843,
+          },
+          food7: {
             name: "Food",
             recipe: {
               plastic: 2,

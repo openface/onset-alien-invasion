@@ -14,7 +14,7 @@
             <div class="options">
               <a>Equip</a>
               <a>Unequip</a>
-              <a>Drop</a>
+              <a @click="DropItem(item.item)">Drop</a>
             </div>
           </div>
           <div class="slot" v-for="n in FreeInventorySlots" :key="n"></div>
@@ -78,6 +78,9 @@ export default {
     HideInventory: function() {
       this.inventory_visible = false;
     },
+    DropItem: function(item) {
+      this.CallEvent('DropItem', item);
+    },
     range: function(start, end) {
       return Array(end - start + 1)
         .fill()
@@ -139,8 +142,8 @@ export default {
         ],
       });
 
-      //this.EventBus.$emit("ShowInventory");
-      this.EventBus.$emit("HideInventory");
+      this.EventBus.$emit("ShowInventory");
+      //this.EventBus.$emit("HideInventory");
 
     }
   },

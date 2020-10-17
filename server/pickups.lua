@@ -51,7 +51,7 @@ end
 -- creates a new object near given player
 function CreateObjectPickupNearPlayer(player, item)
     local x,y,z = GetPlayerLocation(player)
-    local x,y = randomPointInCircle(x,y,100)
+    local x,y = randomPointInCircle(x,y,150)
     CreateObjectPickup(item, x, y, z-75)
 end
 

@@ -32,7 +32,11 @@ AddEvent('OnKeyRelease', function(key)
   end
 end)
 
--- inventory
+-- sync inventory
 AddRemoteEvent("SetInventory", function(data)
 	ExecuteWebJS(InventoryUI, "EmitEvent('SetInventory',".. data ..")")
+end)
+
+AddEvent("DropItem", function(item)
+  CallRemoteEvent("DropItemFromInventory", item)
 end)

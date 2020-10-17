@@ -9,63 +9,63 @@
     </div>
     <div class="subtitle">Select a character to join</div>
     <div id="character-select">
-      <div class="character" v-on:click="SelectCharacter(1)">
+      <div class="character" @click="SelectCharacter(1)">
         <img src="@/assets/images/1.jpg" />
         <button>SELECT</button>
       </div>
-      <div class="character" v-on:click="SelectCharacter(2)">
+      <div class="character" @click="SelectCharacter(2)">
         <img src="@/assets/images/2.jpg" />
         <button>SELECT</button>
       </div>
-      <div class="character" v-on:click="SelectCharacter(4)">
+      <div class="character" @click="SelectCharacter(4)">
         <img src="@/assets/images/4.jpg" />
         <button>SELECT</button>
       </div>
-      <div class="character" v-on:click="SelectCharacter(5)">
+      <div class="character" @click="SelectCharacter(5)">
         <img src="@/assets/images/5.jpg" />
         <button>SELECT</button>
       </div>
-      <div class="character" v-on:click="SelectCharacter(6)">
+      <div class="character" @click="SelectCharacter(6)">
         <img src="@/assets/images/6.jpg" />
         <button>SELECT</button>
       </div>
-      <div class="character" v-on:click="SelectCharacter(7)">
+      <div class="character" @click="SelectCharacter(7)">
         <img src="@/assets/images/7.jpg" />
         <button>SELECT</button>
       </div>
-      <div class="character" v-on:click="SelectCharacter(9)">
+      <div class="character" @click="SelectCharacter(9)">
         <img src="@/assets/images/9.jpg" />
         <button>SELECT</button>
       </div>
-      <div class="character" v-on:click="SelectCharacter(10)">
+      <div class="character" @click="SelectCharacter(10)">
         <img src="@/assets/images/10.jpg" />
         <button>SELECT</button>
       </div>
-      <div class="character" v-on:click="SelectCharacter(14)">
+      <div class="character" @click="SelectCharacter(14)">
         <img src="@/assets/images/14.jpg" />
         <button>SELECT</button>
       </div>
-      <div class="character" v-on:click="SelectCharacter(15)">
+      <div class="character" @click="SelectCharacter(15)">
         <img src="@/assets/images/15.jpg" />
         <button>SELECT</button>
       </div>
-      <div class="character" v-on:click="SelectCharacter(16)">
+      <div class="character" @click="SelectCharacter(16)">
         <img src="@/assets/images/16.jpg" />
         <button>SELECT</button>
       </div>
-      <div class="character" v-on:click="SelectCharacter(18)">
+      <div class="character" @click="SelectCharacter(18)">
         <img src="@/assets/images/18.jpg" />
         <button>SELECT</button>
       </div>
-      <div class="character" v-on:click="SelectCharacter(19)">
+      <div class="character" @click="SelectCharacter(19)">
         <img src="@/assets/images/19.jpg" />
         <button>SELECT</button>
       </div>
-      <div class="character" v-on:click="SelectCharacter(20)">
+      <div class="character" @click="SelectCharacter(20)">
         <img src="@/assets/images/20.jpg" />
         <button>SELECT</button>
       </div>
-      <div class="character" v-on:click="SelectCharacter(25)">
+      <div class="character" @click="SelectCharacter(25)">
         <img src="@/assets/images/25.jpg" />
         <button>SELECT</button>
       </div>

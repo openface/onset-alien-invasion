@@ -7,7 +7,6 @@ AddEvent("OnPackageStop", function()
     end
 end)
 
-
 -- get inventory data and send to UI
 function SyncInventory(player)
     local inventory = GetPlayerPropertyValue(player, "inventory")
@@ -16,7 +15,7 @@ function SyncInventory(player)
         items = {},
         weapons = {}
     }
-    for i, item in pairs(inventory) do
+    for _, item in pairs(inventory) do
         if item['type'] == 'weapon' then
             table.insert(_send.weapons, {
                 ['item'] = item['item'],
@@ -36,7 +35,7 @@ function SyncInventory(player)
         end
     end
     CallRemoteEvent(player, "SetInventory", json_encode(_send))
-    print(GetPlayerName(player) .. " inventory: " .. json_encode(_send))
+    print(GetPlayerName(player) .. " sync inventory: " .. json_encode(_send))
 end
 AddRemoteEvent("SyncInventory", SyncInventory)
 AddEvent("SyncInventory", SyncInventory)
@@ -52,7 +51,6 @@ function AddToInventory(player, item)
     end
 
     local curr_qty = GetInventoryCount(player, item)
-    print("Curr qty",curr_qty)
     if curr_qty > 0 then
         -- update existing object quantity
         SetItemQuantity(player, item, curr_qty + 1)
@@ -102,17 +100,29 @@ function RemoveFromInventory(player, item, amount)
     end
 
     local amount = amount or 1
-    local curr_qty = GetInventoryCount(player, item) - amount
+    local curr_qty = GetInventoryCount(player, item)
     if curr_qty > 0 then
         -- decrease qty by 1
-        SetItemQuantity(player, item, curr_qty)
+        SetItemQuantity(player, item, curr_qty - amount)
     else
         -- remove item from inventory
         SetItemQuantity(player, item, 0)
     end
-    SetPlayerPropertyValue(player, "inventory", inventory)
-    CallEvent("SyncInventory", player)
 end
+
+-- deletes from inventory and places on ground
+AddRemoteEvent("DropItemFromInventory", function(player, item, x, y, z)
+    print("Player " .. GetPlayerName(player) .. " drops item " .. item)
+
+    SetPlayerAnimation(player, "CARRY_SETDOWN")
+
+    Delay(1000, function()
+        RemoveFromInventory(player, item)
+
+        -- spawn object near player
+        CreateObjectPickupNearPlayer(player, item)
+    end)
+end)
 
 -- get carry count for given item
 function GetInventoryCount(player, item)

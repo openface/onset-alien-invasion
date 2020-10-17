@@ -30,12 +30,13 @@ end)
 AddEvent("OnPackageStop", function()
 end)
 
--- console input
-AddEvent("OnConsoleInput", function(input)
-    print("console: " .. input)
-    if input == "quit" or input == "exit" then
-        ServerExit("Exiting via console command")
+-- console input from client
+AddRemoteEvent("ConsoleInput", function(player, input)
+    if not IsAdmin(player) then
+      return
     end
+
+    print("console: " .. input)
 end)
 
 

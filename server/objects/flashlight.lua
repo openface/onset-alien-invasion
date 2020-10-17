@@ -1,5 +1,3 @@
-local lr = ImportPackage("lightstreamer")
-
 RegisterObject("flashlight", {
     name = "Flashlight",
     type = 'equipable',
@@ -16,32 +14,15 @@ RegisterObject("flashlight", {
         z = 0, 
         rx = 360, 
         ry = 260, 
-        rz = -110, 
+        rz = -130, 
         bone = "hand_l" 
-    }
+    },
 })
 
 AddEvent("items:flashlight:attach", function(player, object)
-  local x, y, z = GetPlayerLocation(player)
-  local light = lr.CreateLight("POINTLIGHT", x, y, z)
-  lr.SetLightAttached(light, ATTACH_OBJECT, object)
+  SetObjectPropertyValue(object, "pointlight", true)
 end)
 
 AddEvent("items:flashlight:detach", function(player, object)
-  DestroyLightsOnObject(object)
+  SetObjectPropertyValue(object, "pointlight", false)
 end)
-
-AddEvent("OnObjectDestroyed", function(object)
-  if GetObjectPropertyValue(object, "_name") ~= "flashlight" then
-    return
-  end
-  DestroyLightsOnObject(object)
-end)
-
-function DestroyLightsOnObject(object)
-  local attached_lights = lr.GetAttachedLights(ATTACH_OBJECT, object)
-  for _, light in pairs(attached_lights) do
-    lr.SetLightDetached(light)
-    lr.DestroyLight(light)
-  end
-end

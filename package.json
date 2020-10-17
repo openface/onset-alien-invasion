@@ -42,8 +42,8 @@
     "server/vendor/file.lua"
   ],
   "client_scripts": [
-    "client/inspect.lua",
     "client/client.lua",
+    "client/effects.lua",
     "client/hud.lua",
     "client/aliens.lua",
     "client/loot.lua",

@@ -14,7 +14,7 @@ RegisterObject("flashlight", {
         z = 0, 
         rx = 360, 
         ry = 260, 
-        rz = -130, 
+        rz = -110, 
         bone = "hand_l" 
     },
 })

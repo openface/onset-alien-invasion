@@ -29,9 +29,10 @@ function AttachPointlight(object)
 
     local actor = GetObjectActor(object)
     light = actor:AddComponent(USpotLightComponent.Class())
-    light:SetIntensity(10000 * 30)
+    light:SetIntensity(5000)
     light:SetLightColor(FLinearColor(255, 255, 255, 0), true)
-    light:SetRelativeRotation(FRotator(0.0, 270.0, 0.0))
+    light:SetRelativeLocation(FVector(0, 0, 0))
+    light:SetRelativeRotation(FRotator(0.0, -180, 0.0))
 
     Pointlights[object] = light
 end

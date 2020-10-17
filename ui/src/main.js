@@ -5,12 +5,12 @@ import VueRouter from "vue-router";
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
-/**
+/*
  * For development outside of game, define
  * the ue.game to call the console.log()
  * and set an indev global variable.
  */
-let InGame = true;
+var InGame = true;
 if (typeof window.ue === "undefined") {
   // for browser testing outside of game
   // eslint-disable-next-line
@@ -19,7 +19,7 @@ if (typeof window.ue === "undefined") {
   InGame = false;
 }
 
-/**
+/*
  * GLobal EventBus provides communication from
  * Lua client to Vue components and vice-versa.
  */
@@ -42,6 +42,7 @@ function EmitEvent(name, ...args) {
   }
 }
 window.EmitEvent = EmitEvent;
+
 
 /*
  * Vue plugin to allow calling Lua client from Vue component
@@ -82,7 +83,7 @@ import CharacterSelection from "./components/CharacterSelection.vue";
 import Inventory from "./components/Inventory.vue";
 import Hud from "./components/Hud.vue";
 import Workbench from "./components/Workbench.vue";
-
+import Computer from "./components/Computer.vue";
 
 const routes = [
   {
@@ -93,6 +94,7 @@ const routes = [
   { path: "/inventory", component: Inventory, name: "Inventory" },
   { path: "/hud", component: Hud, name: "Hud" },
   { path: "/workbench", component: Workbench, name: "Workbench" },
+  { path: "/computer", component: Computer, name: "Computer" },
 ];
 const router = new VueRouter({ routes });
 

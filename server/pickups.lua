@@ -72,21 +72,13 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
         return
     end
 
-    SetPickupPropertyValue(pickup, '_claimedby', player)
-    SetPlayerAnimation(player, "PICKUP_LOWER")
+    CallRemoteEvent(player, "PlayPickupSound", object['pickup_sound'] or "sounds/pickup.wav")
 
-    Delay(3000, function()
-        -- remove pickup
-        if GetPickupPropertyValue(pickup, '_claimedby') == player then
-            SetPlayerAnimation(player, "STOP")
+    print("Player "..GetPlayerName(player).." picks up item "..item)
+    CallEvent("items:"..item..":pickup", player, pickup)
 
-            print("Player "..GetPlayerName(player).." picks up item "..item)
-            CallEvent("items:"..item..":pickup", player, pickup)
+    AddToInventory(player, item)
 
-            AddToInventory(player, item)
-
-            DestroyText3D(GetPickupPropertyValue(pickup, '_text'))
-            DestroyPickup(pickup)
-        end
-    end)
+    DestroyText3D(GetPickupPropertyValue(pickup, '_text'))
+    DestroyPickup(pickup)
 end)

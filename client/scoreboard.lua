@@ -3,7 +3,7 @@ local ScoreboardUI
 AddEvent("OnPackageStart", function()
   ScoreboardUI = CreateWebUI(0.0, 0.0, 0.0, 0.0, 1, 60)
   SetWebAnchors(ScoreboardUI, 0.0, 0.0, 1.0, 1.0)
-  LoadWebFile(ScoreboardUI, 'http://asset/' .. GetPackageName() .. '/client/ui/scoreboard/scoreboard.html')
+  SetWebURL(ScoreboardUI, 'http://asset/' .. GetPackageName() .. '/ui/dist/index.html#/scoreboard/')
   SetWebVisibility(ScoreboardUI, WEB_HIDDEN)
 end)
 

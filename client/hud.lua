@@ -2,7 +2,7 @@ local HudUI
 
 AddEvent("OnPackageStart", function()
     HudUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
-    LoadWebFile(HudUI, "http://asset/"..GetPackageName().."/client/ui/hud/hud.html")
+    SetWebURL(HudUI, "http://asset/"..GetPackageName().."/ui/dist/index.html#/hud/")
     SetWebAlignment(HudUI, 0.0, 0.0)
     SetWebAnchors(HudUI, 0.0, 0.0, 1.0, 1.0)
     SetWebVisibility(HudUI, WEB_HITINVISIBLE)

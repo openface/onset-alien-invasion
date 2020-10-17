@@ -43,7 +43,7 @@ AddEvent("SyncInventory", SyncInventory)
 -- add object to inventory
 function AddToInventory(player, item)
     local inventory = GetPlayerPropertyValue(player, "inventory")
-    print("Adding to inv",item)
+
     object = GetObject(item)
     if not object then
         print("Invalid object " .. item)
@@ -110,13 +110,15 @@ function RemoveFromInventory(player, item, amount)
     end
 end
 
--- deletes from inventory and places on ground
+-- unequips item, removes from inventory, and places on ground
 AddRemoteEvent("DropItemFromInventory", function(player, item, x, y, z)
     print("Player " .. GetPlayerName(player) .. " drops item " .. item)
 
     SetPlayerAnimation(player, "CARRY_SETDOWN")
 
     Delay(1000, function()
+        UnequipObject(player, item)
+
         RemoveFromInventory(player, item)
 
         -- spawn object near player
@@ -192,6 +194,8 @@ end)
 -- Hotkeys
 AddRemoteEvent("UseObjectHotkey", function(player, key)
     local inventory = GetPlayerPropertyValue(player, "inventory")
-    local item = inventory[key - 3].item
-    UseObjectFromInventory(player, item)
+    local item = inventory[key - 3]
+    if item ~= nil then
+      UseObjectFromInventory(player, item['item'])
+    end
 end)

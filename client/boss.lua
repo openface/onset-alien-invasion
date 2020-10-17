@@ -11,8 +11,12 @@ AddEvent("OnPackageStart", function()
 end)
 
 AddEvent("OnPackageStop", function()
-    DestroySound(MothershipSpawnSound)
-    DestroyTimer(MothershipSoundTimer)
+    if MothershipSpawnSound ~= nil then
+      DestroySound(MothershipSpawnSound)
+    end
+    if MothershipSoundTimer ~= nil then
+      DestroyTimer(MothershipSoundTimer)
+    end
 end)
 
 AddEvent("OnObjectStreamIn", function(object)

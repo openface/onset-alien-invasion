@@ -1,7 +1,9 @@
 local AmbientSound
 
 AddEvent("OnPackageStop", function()
-    DestroySound(AmbientSound)
+    if AmbientSound ~= nil then
+        DestroySound(AmbientSound)
+    end
 end)
 
 AddRemoteEvent("AlienAttacking", function(npc)

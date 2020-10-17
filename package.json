@@ -18,6 +18,7 @@
     "server/scoreboard.lua",
     "server/pickups.lua",
     "server/objects.lua",
+    "server/equip.lua",
     "server/objects/armyhat.lua",
     "server/objects/banana.lua",
     "server/objects/beer.lua",
@@ -41,6 +42,7 @@
     "server/vendor/file.lua"
   ],
   "client_scripts": [
+    "client/inspect.lua",
     "client/client.lua",
     "client/hud.lua",
     "client/aliens.lua",

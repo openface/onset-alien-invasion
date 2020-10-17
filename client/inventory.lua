@@ -13,6 +13,9 @@ AddEvent("OnPackageStop", function()
 end)
 
 AddEvent('OnKeyPress', function(key)
+  if IsShiftPressed() or IsAltPressed() then
+    return
+  end
   if key == 'Tab' then
     ShowMouseCursor(true)
     SetInputMode(INPUT_GAMEANDUI)

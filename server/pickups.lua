@@ -40,7 +40,7 @@ function DestroyObjectPickup(pickup)
 end
 
 function DestroyObjectPickupsByName(name)
-    print("Destroying object pickups by name ",name)
+    print("Destroying object pickup by name ",name)
     for _,pickup in pairs(Pickups) do
         if GetPickupPropertyValue(pickup, '_name') == name then
             DestroyObjectPickup(pickup)

@@ -1,18 +1,18 @@
 <template>
-  <div class="item" :class="!isBuilding && isBusy ? 'blurred' : ''">
+  <div class="item" :class="isBusy ? 'blurred' : ''">
     <div class="pic">
       <img v-if="!InGame" src="http://placekitten.com/100/100" />
       <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
     </div>
     <div class="details">
-      <div class="name">{{ item.name }}</div>
+      <div class="name">{{ item.name }} {{ item.key }}</div>
       <div class="info">
         <span v-for="(qty, resource) in recipe" :key="resource">
           <b>{{ qty }}</b> {{ resource }}
         </span>
       </div>
       <div class="action">
-        <div v-if="isBuilding">
+        <div v-if="isBuilding && !isBusy">
           <div class="meter">
             <span><span class="progress"></span></span>
           </div>
@@ -43,10 +43,10 @@ export default {
   },
   computed: {
     isBuilding() {
-      return this.building_item === this.item;
+      return this.building_item !== false;
     },
     isBusy() {
-      return this.building_item !== false;
+      return this.isBuilding && this.building_item !== this.item.key;
     },
     numPlayerMetal() {
       return this.player_resources.metal > 0 ? this.player_resources.metal : 0;
@@ -82,8 +82,10 @@ export default {
   },
   methods: {
     build() {
-      this.EventBus.$emit("building_item", this.item);
-      this.CallEvent("BuildItem", this.item);
+      // Use the bus to let siblings know what we're building
+      this.EventBus.$emit("building_item", this.item.key)
+      // Send building item back to client
+      this.CallEvent("BuildItem", this.building_item);
 
       setTimeout(() => this.EventBus.$emit("building_item", false), 15000);
     },

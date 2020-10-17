@@ -15,6 +15,7 @@ AddRemoteEvent("GetWorkbenchData", function(player)
     for key,item in pairs(GetObjects()) do
         if item['recipe'] ~= nil then
             item_data[key] = {
+                key = key,
                 name = item['name'],
                 modelid = item['modelid'],
                 recipe = item['recipe']

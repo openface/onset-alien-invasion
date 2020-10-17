@@ -51,6 +51,7 @@ export default {
         },
         item_data: {
           armor: {
+            key: 'armor',
             name: "Vest",
             recipe: {
               wood: 2,
@@ -59,6 +60,7 @@ export default {
             modelid: 843,
           },
           foobar: {
+            key: 'foobar',
             name: "Foobar",
             recipe: {
               plastic: 2,
@@ -66,6 +68,7 @@ export default {
             modelid: 843,
           },
           food2: {
+            key: 'food2',
             name: "Food",
             recipe: {
               plastic: 2,
@@ -74,6 +77,7 @@ export default {
             modelid: 843,
           },
           flashlight: {
+            key: 'flashlight',
             name: "Flashlight",
             recipe: {
               computer_part: 1,
@@ -82,6 +86,7 @@ export default {
             modelid: 843,
           },
           food4: {
+            key: 'food4',
             name: "Food",
             recipe: {
               plastic: 2,
@@ -90,6 +95,7 @@ export default {
             modelid: 843,
           },
           food5: {
+            key: 'food5',
             name: "Food",
             recipe: {
               plastic: 2,
@@ -98,6 +104,7 @@ export default {
             modelid: 843,
           },
           food6: {
+            key: 'food6',
             name: "Food",
             recipe: {
               plastic: 2,
@@ -106,6 +113,7 @@ export default {
             modelid: 843,
           },
           food7: {
+            key: 'food7',
             name: "Food",
             recipe: {
               plastic: 2,

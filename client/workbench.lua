@@ -47,8 +47,8 @@ function ShowWorkbenchTimer(loc)
 end
 
 -- selected item to build from UI
-AddEvent("BuildItem", function(item_key)
-    CallRemoteEvent("BuildItem", item_key)    
+AddEvent("BuildItem", function(item)
+    CallRemoteEvent("BuildItem", item)    
 end)
 
 AddRemoteEvent("StartBuilding", function(item_key, player_resources)

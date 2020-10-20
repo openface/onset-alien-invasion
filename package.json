@@ -83,6 +83,7 @@
     "client/sounds/eat.wav",
     "client/sounds/pickup.wav",
     "client/sounds/toolbox.wav",
+    "client/sounds/click.wav",
 
     "ui/dist/index.html",
     "ui/dist/js/app.js",

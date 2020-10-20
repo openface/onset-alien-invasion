@@ -121,6 +121,60 @@ export default {
             },
             modelid: 843,
           },
+          {
+            item: 'food20',
+            name: "Food",
+            recipe: {
+              plastic: 2,
+              wood: 2,
+            },
+            modelid: 843,
+          },
+          {
+            item: 'flashlight0',
+            name: "Flashlight",
+            recipe: {
+              computer_part: 1,
+              metal: 1,
+            },
+            modelid: 843,
+          },
+          {
+            item: 'food40',
+            name: "Food",
+            recipe: {
+              plastic: 2,
+              wood: 2,
+            },
+            modelid: 843,
+          },
+          {
+            item: 'food50',
+            name: "Food",
+            recipe: {
+              plastic: 2,
+              wood: 2,
+            },
+            modelid: 843,
+          },
+          {
+            item: 'food60',
+            name: "Food",
+            recipe: {
+              plastic: 2,
+              wood: 2,
+            },
+            modelid: 843,
+          },
+          {
+            item: 'food70',
+            name: "Food",
+            recipe: {
+              plastic: 2,
+              wood: 2,
+            },
+            modelid: 843,
+          },
         ]
       });
     }
@@ -133,11 +187,11 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 80vh;
+  height: 100%;
 }
 
 #inner {
-  width: 700px;
+  width: 800px;
   background: rgba(0, 0, 0, 0.9);
   font-family: helvetica;
   font-size: 16px;

@@ -18,7 +18,7 @@
           </div>
         </div>
         <div v-else-if="hasEnoughResources">
-          <button class="build" @click="build">BUILD NOW</button>
+          <button class="build" @click="Build()">BUILD NOW</button>
         </div>
         <div v-else>
           <button class="need_scrap" disabled="true">NEED SCRAP</button>
@@ -81,14 +81,14 @@ export default {
     },
   },
   methods: {
-    build() {
+    Build() {
       // Use the bus to let siblings know what we're building
       this.EventBus.$emit("building_item", this.item.item)
       // Send building item back to client
       this.CallEvent("BuildItem", this.building_item);
 
       setTimeout(() => this.EventBus.$emit("building_item", false), 15000);
-    },
+    }
   },
   mounted() {
     this.EventBus.$on("building_item", (item) => {
@@ -101,7 +101,7 @@ export default {
 <style scoped>
 .item {
   padding: 10px;
-  width: 305px;
+  width: 225px;
   margin: 10px;
   height: 75px;
   background: rgba(255, 255, 255, 0.1);
@@ -113,23 +113,24 @@ export default {
 .item .pic img {
   border-radius: 3px;
   width: 75px;
+  border:1px solid rgba(0,0,0, 0.1)
 }
 .item .details {
   float: left;
-  width: 200px;
+  width: 100px;
 }
 .item .details .name {
   font-weight: bold;
-  font-size: 16px;
+  font-size: 14px;
   color: #fff;
 }
 .item .details .info {
-  font-size: 12px;
+  font-size: 11px;
 }
 .item .details .info b {
   font-weight: bold;
   color: #fff;
-  font-size: 14px;
+  font-size: 12px;
 }
 .item .details .action {
   margin-top: 10px;

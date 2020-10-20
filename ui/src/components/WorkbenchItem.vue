@@ -1,5 +1,5 @@
 <template>
-  <div class="item" :class="isBusy ? 'blurred' : ''">
+  <div class="item" :class="isBusy ? 'blurred' : ''" @mouseenter="PlayClick()">
     <div class="pic">
       <img v-if="!InGame" src="http://placekitten.com/100/100" />
       <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
@@ -88,6 +88,9 @@ export default {
       this.CallEvent("BuildItem", this.building_item);
 
       setTimeout(() => this.EventBus.$emit("building_item", false), 15000);
+    },
+    PlayClick() {
+      this.CallEvent("PlayClick")
     }
   },
   mounted() {
@@ -105,6 +108,9 @@ export default {
   margin: 10px;
   height: 75px;
   background: rgba(255, 255, 255, 0.1);
+}
+.item:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 .item .pic {
   float: left;

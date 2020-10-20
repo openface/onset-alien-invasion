@@ -4,7 +4,7 @@
       <div v-if="InventoryItems.length > 0">
         <div id="title">INVENTORY</div>
         <div class="grid">
-          <div class="slot" v-for="item in InventoryItems" :key="item.name">
+          <div class="slot" v-for="item in InventoryItems" :key="item.name" @mouseenter="PlayClick()">
             <img v-if="!InGame" src="http://placekitten.com/100/100" />
             <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
             <span class="name">{{ item.name }}</span>
@@ -86,6 +86,9 @@ export default {
         .fill()
         .map((_, idx) => start + idx);
     },
+    PlayClick() {
+      this.CallEvent("PlayClick")
+    }
   },
   mounted() {
     this.EventBus.$on("SetInventory", this.SetInventory);
@@ -202,13 +205,16 @@ export default {
 .slot {
   margin: 5px;
   align-self: auto;
-  background: rgba(0, 0, 0, 0.3);
-  border: 2px solid rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(0, 0, 0, 0.1);
   height: 75px;
   width: 75px;
   display: inline-block;
   position: relative;
   font-family: Helvetica;
+}
+.slot:hover {
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .slot img {
@@ -256,7 +262,7 @@ export default {
   display: none;
   position: relative;
   z-index: 1;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0,0,0, 0.4);
   padding: 0 1px;
   top: -3px;
 }
@@ -273,7 +279,7 @@ export default {
 }
 
 .slot .options a:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0,0,0, 0.9);
   cursor: pointer;
 }
 </style>

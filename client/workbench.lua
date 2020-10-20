@@ -56,3 +56,7 @@ AddRemoteEvent("StartBuilding", function(item_key, player_resources)
     ExecuteWebJS(WorkbenchUI, "EmitEvent('SetPlayerResources',"..player_resources..")")
 end)
 
+-- clicks while navigating workbench and inventory
+AddEvent('PlayClick', function()
+    SetSoundVolume(CreateSound("client/sounds/click.wav"), 0.2)
+end)

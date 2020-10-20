@@ -8,21 +8,25 @@ RegisterObject("flashlight", {
         plastic = 5,
         computer_part = 1
     },
+    component = {
+      type = "spotlight",
+      position = {
+        x = 0,
+        y = 0,
+        z = 0,
+        rx = 0,
+        ry = 270,
+        rz = 0
+      }
+    },
     attachment = { 
         x = 33, 
         y = -8, 
         z = 0, 
         rx = 360, 
         ry = 260, 
-        rz = -110, 
+        rz = -120, 
         bone = "hand_l" 
-    },
+    }
 })
 
-AddEvent("items:flashlight:attach", function(player, object)
-  SetObjectPropertyValue(object, "pointlight", true)
-end)
-
-AddEvent("items:flashlight:detach", function(player, object)
-  SetObjectPropertyValue(object, "pointlight", false)
-end)

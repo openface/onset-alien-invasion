@@ -1,44 +1,49 @@
 
-local Pointlights = {}
+local Components = {}
 
 AddEvent("OnObjectStreamIn", function(object)
-    local pointlight = GetObjectPropertyValue(object, "pointlight")
-    if pointlight == true then
-        AttachPointlight(object)
+    local component = GetObjectPropertyValue(object, "component")
+    if component ~= nil then
+        AddComponentToObject(object, component)
     end
 end)
 
 AddEvent("OnObjectStreamOut", function(object)
-    if GetObjectPropertyValue(object, "pointlight") ~= nil then
-        DetachPointlight(object)
+    if Components[object] ~= nil and GetObjectPropertyValue(object, "component") == nil then
+        RemoveComponent(object)
     end
 end)
 
 AddEvent("OnObjectNetworkUpdatePropertyValue", function(object, PropertyName, PropertyValue)
-    if PropertyName == "pointlight" then
-        if PropertyValue == true then
-            AttachPointlight(object)
+    if PropertyName == "component" then
+        if PropertyValue ~= nil then
+            AddComponentToObject(object, PropertyValue)
         else
-            DetachPointlight(object)
+            RemoveComponent(object)
         end
     end
 end)
 
-function AttachPointlight(object)
-    AddPlayerChat("attaching pointlight")
+function AddComponentToObject(object, component)
+    AddPlayerChat("attaching component",component.type)
+
+    -- only spotlight supported for now
+    if component.type ~= "spotlight" then
+      return
+    end
 
     local actor = GetObjectActor(object)
-    light = actor:AddComponent(USpotLightComponent.Class())
+    local light = actor:AddComponent(USpotLightComponent.Class())
     light:SetIntensity(5000)
     light:SetLightColor(FLinearColor(255, 255, 255, 0), true)
-    light:SetRelativeLocation(FVector(0, 0, 0))
-    light:SetRelativeRotation(FRotator(0.0, -180, 0.0))
+    light:SetRelativeLocation(FVector(component.position.x, component.position.y, component.position.z))
+    light:SetRelativeRotation(FRotator(component.position.rx, component.position.ry, component.position.rz))
 
-    Pointlights[object] = light
+    Components[object] = light
 end
 
-function DetachPointlight(object)
-    AddPlayerChat("detaching pointlight")
+function RemoveComponent(object)
+    AddPlayerChat("detaching component")
     -- destroy the component
-    Pointlights[object]:Destroy()
+    Components[object]:Destroy()
 end

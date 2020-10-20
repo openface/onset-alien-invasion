@@ -14,12 +14,12 @@ AddRemoteEvent("GetWorkbenchData", function(player)
     local item_data = {}
     for key,item in pairs(GetObjects()) do
         if item['recipe'] ~= nil then
-            item_data[key] = {
-                key = key,
+            table.insert(item_data, {
+                item = key,
                 name = item['name'],
                 modelid = item['modelid'],
                 recipe = item['recipe']
-            }
+            })
         end
     end
 

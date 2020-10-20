@@ -5,7 +5,7 @@
       <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
     </div>
     <div class="details">
-      <div class="name">{{ item.name }} {{ item.key }}</div>
+      <div class="name">{{ item.name }}</div>
       <div class="info">
         <span v-for="(qty, resource) in recipe" :key="resource">
           <b>{{ qty }}</b> {{ resource }}
@@ -46,7 +46,7 @@ export default {
       return this.building_item !== false;
     },
     isBusy() {
-      return this.isBuilding && this.building_item !== this.item.key;
+      return this.isBuilding && this.building_item !== this.item.item;
     },
     numPlayerMetal() {
       return this.player_resources.metal > 0 ? this.player_resources.metal : 0;
@@ -83,7 +83,7 @@ export default {
   methods: {
     build() {
       // Use the bus to let siblings know what we're building
-      this.EventBus.$emit("building_item", this.item.key)
+      this.EventBus.$emit("building_item", this.item.item)
       // Send building item back to client
       this.CallEvent("BuildItem", this.building_item);
 

@@ -3,7 +3,7 @@
     <div id="inner">
       <div id="title">WORKBENCH</div>
       <div class="grid">
-        <div v-for="(item, key) in items" :key="key">
+        <div v-for="item in items" :key="item.item">
           <workbench-item
             :recipe="item.recipe"
             :player_resources="player_resources"
@@ -49,9 +49,9 @@ export default {
           wood: 2,
           computer_part: 1,
         },
-        item_data: {
-          armor: {
-            key: 'armor',
+        item_data: [
+          {
+            item: 'armor',
             name: "Vest",
             recipe: {
               wood: 2,
@@ -59,16 +59,16 @@ export default {
             },
             modelid: 843,
           },
-          foobar: {
-            key: 'foobar',
+          {
+            item: 'foobar',
             name: "Foobar",
             recipe: {
               plastic: 2,
             },
             modelid: 843,
           },
-          food2: {
-            key: 'food2',
+          {
+            item: 'food2',
             name: "Food",
             recipe: {
               plastic: 2,
@@ -76,8 +76,8 @@ export default {
             },
             modelid: 843,
           },
-          flashlight: {
-            key: 'flashlight',
+          {
+            item: 'flashlight',
             name: "Flashlight",
             recipe: {
               computer_part: 1,
@@ -85,8 +85,8 @@ export default {
             },
             modelid: 843,
           },
-          food4: {
-            key: 'food4',
+          {
+            item: 'food4',
             name: "Food",
             recipe: {
               plastic: 2,
@@ -94,8 +94,8 @@ export default {
             },
             modelid: 843,
           },
-          food5: {
-            key: 'food5',
+          {
+            item: 'food5',
             name: "Food",
             recipe: {
               plastic: 2,
@@ -103,8 +103,8 @@ export default {
             },
             modelid: 843,
           },
-          food6: {
-            key: 'food6',
+          {
+            item: 'food6',
             name: "Food",
             recipe: {
               plastic: 2,
@@ -112,8 +112,8 @@ export default {
             },
             modelid: 843,
           },
-          food7: {
-            key: 'food7',
+          {
+            item: 'food7',
             name: "Food",
             recipe: {
               plastic: 2,
@@ -121,7 +121,7 @@ export default {
             },
             modelid: 843,
           },
-        },
+        ]
       });
     }
   },

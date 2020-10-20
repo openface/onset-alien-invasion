@@ -83,20 +83,3 @@ function SetThirdPerson()
     SetCameraViewDistance(375)
 end
 
---[[ AddEvent("OnObjectStreamIn", function(object)
-  AddPlayerChat("torch")
-  SpawnTorchlight(object)
-end)
-
-local TorchLights = {}
-function SpawnTorchlight(objectId)
-    local actor = GetObjectActor(objectId)
-    light = actor:AddComponent(USpotLightComponent.Class())
-    light:SetIntensity(10000 * 30)
-    light:SetLightColor(FLinearColor(255, 255, 255, 0), true)
-    light:SetRelativeRotation(FRotator(0.0, 270.0, 0.0))
-    Torchlights[player] = {
-        obj = objectId,
-        light = light
-    }
-end ]]

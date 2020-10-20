@@ -89,7 +89,7 @@ AddEvent("InteractSatellite", function(player)
     -- ensure player has computer_part
     if HasComputerPart(player) ~= true then
         ShowMessage("You are missing a critical computer part!")
-        SetSoundVolume(CreateSound("client/sounds/error.mp3"), 1)
+        SetSoundVolume(CreateSound("client/sounds/error.wav"), 1)
     else
         SetSoundVolume(CreateSound3D("client/sounds/modem.mp3", SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z, 1500),
             0.7)

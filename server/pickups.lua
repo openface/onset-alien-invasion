@@ -66,7 +66,7 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
     -- if we already have the item, see if we can carry more
     if GetInventoryCount(player, item) >= object['max_carry'] then
         -- prevent pickup if it exceeds the max carry
-        print("Pickup exceeded max_carry"..object['max_carry'])
+        CallRemoteEvent(player, "PlayPickupSound", "sounds/error.wav")
         return
     elseif GetInventoryAvailableSlots(player) <= 0 then
         -- no available slots for more items

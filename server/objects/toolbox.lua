@@ -1,7 +1,26 @@
---[[ local x, y, z = GetPlayerLocation(player)
-objxD = CreateObject(551, x, y, z)
-Delay(100, function(player)
-    SetObjectAttached(objxD, ATTACH_PLAYER, player, -41.114220, 2.789312, -8.013786, -69.331429, 14.331373, -13.422723,
-        "hand_r")
-end, player)
- ]]
+ RegisterObject("toolbox", {
+    name = "Toolbox",
+    type = 'equipable',
+    pickup_sound = "sounds/toolbox.wav",
+    interaction = {
+        sound = "sounds/toolbox.wav",
+        animation = {
+            name = "FISHING",
+            duration = 4000
+        }
+    },
+    modelid = 551,
+    max_carry = 1,
+    recipe = {
+        metal = 10,
+    },
+    attachment = {
+        x = -41,
+        y = 2.78,
+        z = -8,
+        rx = -69.33,
+        ry = 14.33,
+        rz = -13.42,
+        bone = "hand_r"
+    }
+})

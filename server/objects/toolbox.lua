@@ -2,13 +2,6 @@
     name = "Toolbox",
     type = 'equipable',
     pickup_sound = "sounds/toolbox.wav",
-    interaction = {
-        sound = "sounds/toolbox.wav",
-        animation = {
-            name = "FISHING",
-            duration = 4000
-        }
-    },
     modelid = 551,
     max_carry = 1,
     recipe = {

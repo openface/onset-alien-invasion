@@ -25,15 +25,25 @@ AddEvent("OnObjectNetworkUpdatePropertyValue", function(object, PropertyName, Pr
 end)
 
 function AddComponentToObject(object, component)
-    AddPlayerChat("attaching component",component.type)
-
-    -- only spotlight supported for now
-    if component.type ~= "spotlight" then
+    if component.type == nil then
+      print "Error invalid component config"
       return
     end
 
     local actor = GetObjectActor(object)
-    local light = actor:AddComponent(USpotLightComponent.Class())
+    if component.type == "spotlight" then
+      light = actor:AddComponent(USpotLightComponent.Class())
+    elseif component.type == "pointlight" then
+      light = actor:AddComponent(UPointLightComponent.Class())
+    elseif component.type == "rectlight" then
+      light = actor:AddComponent(URectLightComponent.Class())
+    end
+
+    if light == nil then
+      print("Error unsupported component type",component.type)
+      return
+    end
+
     light:SetIntensity(5000)
     light:SetLightColor(FLinearColor(255, 255, 255, 0), true)
     light:SetRelativeLocation(FVector(component.position.x, component.position.y, component.position.z))

@@ -29,6 +29,7 @@
     "server/objects/vest.lua",
     "server/objects/mop.lua",
     "server/objects/toolbox.lua",
+    "server/objects/lantern.lua",
     "server/objects/resources/metal.lua",
     "server/objects/resources/computer_part.lua",
     "server/objects/resources/plastic.lua",

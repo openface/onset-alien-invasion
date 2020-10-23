@@ -23,14 +23,14 @@
       <div v-else id="title">YOUR INVENTORY IS EMPTY</div>
     </div>
     <div id="hotbar" v-if="!inventory_visible">
-      <div class="slot" v-for="n in 3" :key="n">
-        <div v-if="weapons[n - 1]">
+      <div class="slot" v-for="n in range(2, 3)" :key="n">
+        <div v-if="weapons[n - 2]">
           <img v-if="!InGame" src="http://placekitten.com/100/100" />
-          <img v-if="InGame" :src="'http://game/objects/' + weapons[n - 1].modelid" />
+          <img v-if="InGame" :src="'http://game/objects/' + weapons[n - 2].modelid" />
           <span class="keybind">{{ n }}</span>
-          <span class="name">{{ weapons[n - 1].name }}</span>
-          <span v-if="weapons[n - 1].quantity > 1" class="quantity">
-            x{{ weapons[n - 1].quantity }}
+          <span class="name">{{ weapons[n - 2].name }}</span>
+          <span v-if="weapons[n - 2].quantity > 1" class="quantity">
+            x{{ weapons[n - 2].quantity }}
           </span>
         </div>
       </div>
@@ -145,8 +145,8 @@ export default {
         ],
       });
 
-      this.EventBus.$emit("ShowInventory");
-      //this.EventBus.$emit("HideInventory");
+      //this.EventBus.$emit("ShowInventory");
+      this.EventBus.$emit("HideInventory");
 
     }
   },
@@ -198,7 +198,7 @@ export default {
   position: fixed;
   bottom: 1vh;
 }
-#hotbar .slot:nth-child(3) {
+#hotbar .slot:nth-child(2) {
   margin-right: 25px;
 }
 

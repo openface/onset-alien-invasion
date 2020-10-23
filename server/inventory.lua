@@ -101,12 +101,16 @@ function RemoveFromInventory(player, item, amount)
 
     local amount = amount or 1
     local curr_qty = GetInventoryCount(player, item)
-    if curr_qty > 0 then
+    if curr_qty > 1 then
         -- decrease qty by 1
         SetItemQuantity(player, item, curr_qty - amount)
     else
         -- remove item from inventory
         SetItemQuantity(player, item, 0)
+
+        print("items:"..item..":drop")
+        -- call DROP event on object
+        CallEvent("items:" .. item .. ":drop", player, object)
     end
 end
 

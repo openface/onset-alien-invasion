@@ -18,6 +18,5 @@ AddEvent("items:glock:pickup", function(player, pickup)
 end)
 
 AddEvent("items:glock:drop", function(player, object)
-    print("dropping weapon",weapon_slot)
     Weapon.SetWeapon(player, 1, 0, true, weapon_slot, true)
 end)

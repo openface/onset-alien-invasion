@@ -79,6 +79,7 @@ function EquipObject(player, item)
     equipped[item] = attached_object
     SetPlayerPropertyValue(player, "equipped", equipped)
 
+    -- call EQUIP event on object
     CallEvent("items:"..item..":equip", player, object)
 end
 
@@ -86,10 +87,12 @@ function UnequipObject(player, item)
     print "unequipping"
     local object = GetEquippedObject(player, item)
     if object == nil then
+        print "not equipped"
         return
     end
 
-    -- just in case the object requires an animation
+    -- just in case the object requires an animation,
+    -- cancel any currently running animations
     SetPlayerAnimation(player, "STOP")
 
     -- remove component config from object
@@ -104,6 +107,9 @@ function UnequipObject(player, item)
     SetPlayerPropertyValue(player, "equipped", equipped)
 
     DestroyObject(object)
+
+    -- call UNEQUIP event on object
+    CallEvent("items:" .. item .. ":unequip", player, object)
 end
 
 function GetEquippedObject(player, item)

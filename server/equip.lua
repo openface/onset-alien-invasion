@@ -35,7 +35,8 @@ function EquipObject(player, item)
     end
 
     if GetEquippedObject(player, item) ~= nil then
-        print "already equipped"
+        print "already equipped; unequipping"
+        UnequipObject(player, item)
         return
     end
 

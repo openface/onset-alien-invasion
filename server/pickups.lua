@@ -14,18 +14,18 @@ AddCommand("item", function(player, item)
 end)
 
 function CreateObjectPickup(item, x, y, z)
-    local object = GetObject(item)
-    if not object then
+    local item_cfg = GetItemConfig(item)
+    if not item_cfg then
         print("Invalid object "..item)
         return
     end
-    print("Creating item "..item.. " modelid "..object['modelid'])
+    print("Creating item "..item.. " modelid "..item_cfg['modelid'])
 
-    local pickup = CreatePickup(object['modelid'], x, y, z)
+    local pickup = CreatePickup(item_cfg['modelid'], x, y, z)
     SetPickupPropertyValue(pickup, '_name', item)
     SetPickupPropertyValue(pickup, '_text', CreateText3D(item, 8, x, y, z+100, 0, 0, 0))
-    if object['scale'] ~= nil then
-        SetPickupScale(pickup, object['scale'].x, object['scale'].y, object['scale'].z)
+    if item_cfg['scale'] ~= nil then
+        SetPickupScale(pickup, item_cfg['scale'].x, item_cfg['scale'].y, item_cfg['scale'].z)
     end
     Pickups[pickup] = pickup
 end
@@ -61,10 +61,10 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
         return
     end
 
-    local object = GetObject(item)
+    local item_cfg = GetItemConfig(item)
 
     -- if we already have the item, see if we can carry more
-    if GetInventoryCount(player, item) >= object['max_carry'] then
+    if GetInventoryCount(player, item) >= item_cfg['max_carry'] then
         -- prevent pickup if it exceeds the max carry
         CallRemoteEvent(player, "PlayErrorSound")
         return
@@ -74,14 +74,14 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
         return
     end
 
-    CallRemoteEvent(player, "PlayPickupSound", object['pickup_sound'] or "sounds/pickup.wav")
+    CallRemoteEvent(player, "PlayPickupSound", item_cfg['pickup_sound'] or "sounds/pickup.wav")
 
     print("Player "..GetPlayerName(player).." picks up item "..item)
     CallEvent("items:"..item..":pickup", player, pickup)
 
     AddToInventory(player, item)
 
-    if object['type'] == 'equipable' then
+    if item_cfg['type'] == 'equipable' then
       EquipObject(player, item)
     end
 

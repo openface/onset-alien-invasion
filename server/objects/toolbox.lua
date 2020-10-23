@@ -4,6 +4,7 @@
     pickup_sound = "sounds/toolbox.wav",
     modelid = 551,
     max_carry = 1,
+    prevent_aiming = true,
     recipe = {
         metal = 10,
     },

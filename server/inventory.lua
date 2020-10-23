@@ -44,8 +44,8 @@ AddEvent("SyncInventory", SyncInventory)
 function AddToInventory(player, item)
     local inventory = GetPlayerPropertyValue(player, "inventory")
 
-    object = GetObject(item)
-    if not object then
+    item_cfg = GetItemConfig(item)
+    if not item_cfg then
         print("Invalid object " .. item)
         return
     end
@@ -58,9 +58,9 @@ function AddToInventory(player, item)
         -- add new item to store
         table.insert(inventory, {
             item = item,
-            type = object['type'],
-            name = object['name'],
-            modelid = object['modelid'],
+            type = item_cfg['type'],
+            name = item_cfg['name'],
+            modelid = item_cfg['modelid'],
             quantity = 1
         })
         SetPlayerPropertyValue(player, "inventory", inventory)
@@ -93,8 +93,8 @@ end
 function RemoveFromInventory(player, item, amount)
     local inventory = GetPlayerPropertyValue(player, "inventory")
 
-    local object = GetObject(item)
-    if not object then
+    local item_cfg = GetItemConfig(item)
+    if not item_cfg then
         print("Invalid item: " .. item)
         return
     end
@@ -110,7 +110,7 @@ function RemoveFromInventory(player, item, amount)
 
         print("items:"..item..":drop")
         -- call DROP event on object
-        CallEvent("items:" .. item .. ":drop", player, object)
+        CallEvent("items:" .. item .. ":drop", player, item_cfg)
     end
 end
 
@@ -151,24 +151,24 @@ function GetInventoryAvailableSlots(player)
     return (20 - count)
 end
 
-function GetObjectFromInventory(player, item)
+function GetItemConfigFromInventory(player, item)
   local inventory = GetPlayerPropertyValue(player, "inventory")
   for i, _item in pairs(inventory) do
     if _item['item'] == item then
-      return GetObject(item)
+      return GetItemConfig(item)
     end
   end
 end
 
 -- use object
 function UseObjectFromInventory(player, item)
-    local object = GetObjectFromInventory(player, item)
-    if object == nil then 
+    local item_cfg = GetItemConfigFromInventory(player, item)
+    if item_cfg == nil then 
       print("Item "..item.." not found in inventory")
       return 
     end
 
-    print(GetPlayerName(player).. " uses object "..item.." from inventory")
+    print(GetPlayerName(player).. " uses item "..item.." from inventory")
     EquipObject(player, item)
     PlayInteraction(player, item)
 

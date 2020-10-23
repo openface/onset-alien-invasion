@@ -28,8 +28,8 @@ end
 
 
 function EquipObject(player, item)
-    local object = GetObject(item)
-    if object['type'] ~= 'equipable' then
+    local item_cfg = GetItemConfig(item)
+    if item_cfg['type'] ~= 'equipable' then
         print "not equipable"
         return
     end
@@ -39,13 +39,13 @@ function EquipObject(player, item)
         return
     end
 
-    if object['attachment'] == nil then
+    if item_cfg['attachment'] == nil then
         print("Object "..item.." is type equipable but does not define attachment info")
         return
     end
 
     -- unequip whatever is in the player's bone
-    local equipped_object = GetEquippedObjectNameFromBone(player, object['attachment']['bone'])
+    local equipped_object = GetEquippedObjectNameFromBone(player, item_cfg['attachment']['bone'])
     if equipped_object ~= nil then
         UnequipObject(player, equipped_object)
     end
@@ -56,22 +56,27 @@ function EquipObject(player, item)
     PlayInteraction(player, item)
 
     local x,y,z = GetPlayerLocation(player)
-    local attached_object = CreateObject(object['modelid'], x, y, z)
+    local attached_object = CreateObject(item_cfg['modelid'], x, y, z)
 
     SetObjectPropertyValue(attached_object, "_name", item)
-    SetObjectPropertyValue(attached_object, "_bone", object['attachment']['bone'])
+    SetObjectPropertyValue(attached_object, "_bone", item_cfg['attachment']['bone'])
     SetObjectAttached(attached_object, ATTACH_PLAYER, player, 
-        object['attachment']['x'],
-        object['attachment']['y'],
-        object['attachment']['z'],
-        object['attachment']['rx'],
-        object['attachment']['ry'],
-        object['attachment']['rz'],
-        object['attachment']['bone'])
+        item_cfg['attachment']['x'],
+        item_cfg['attachment']['y'],
+        item_cfg['attachment']['z'],
+        item_cfg['attachment']['rx'],
+        item_cfg['attachment']['ry'],
+        item_cfg['attachment']['rz'],
+        item_cfg['attachment']['bone'])
 
     -- set component config to object
-    if object['component'] ~= nil then
-        SetObjectPropertyValue(attached_object, "component", object['component'])
+    if item_cfg['component'] ~= nil then
+        SetObjectPropertyValue(attached_object, "component", item_cfg['component'])
+    end
+
+    -- set prevent_aiming property if object prevents item
+    if item_cfg['prevent_aiming'] ~= nil then
+        SetPlayerPropertyValue(player, "prevent_aiming", true)
     end
 
     -- update equipped store
@@ -95,10 +100,16 @@ function UnequipObject(player, item)
     -- cancel any currently running animations
     SetPlayerAnimation(player, "STOP")
 
+    local item_cfg = GetItemConfig(item)
+
     -- remove component config from object
-    local item_data = GetObject(item)
-    if item_data['component'] ~= nil then
+    if item_cfg['component'] ~= nil then
         SetObjectPropertyValue(object, "component", false)
+    end
+
+    -- allow prevent_aiming property if object prevented it
+    if item_cfg['prevent_aiming'] ~= nil then
+      SetPlayerPropertyValue(player, "prevent_aiming", nil)
     end
 
     -- remove from equipped list

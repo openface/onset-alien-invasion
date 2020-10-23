@@ -53,7 +53,7 @@ function AddComponentToObject(object, component)
 end
 
 function RemoveComponent(object)
-    AddPlayerChat("detaching component")
     -- destroy the component
     Components[object]:Destroy()
+    Components[object] = nil
 end

@@ -2,11 +2,11 @@
 Objects = {}
 
 -- object factory
-function GetObject(item)
+function GetItemConfig(item)
     return Objects[item]
 end
 
-function GetObjects()
+function GetItemConfigs()
     return Objects
 end
 
@@ -26,20 +26,20 @@ AddEvent("OnPackageStop", function()
 end)
 
 function PlayInteraction(player, item)
-    local object = GetObject(item)
-    if not object['interaction'] then
+    local item_cfg = GetItemConfig(item)
+    if not item_cfg['interaction'] then
         return
     end
-    if object['interaction']['animation'] then
-        SetPlayerAnimation(player, object['interaction']['animation']['name'])
-        if object['interaction']['animation']['duration'] then
-            Delay(object['interaction']['animation']['duration'], function()
+    if item_cfg['interaction']['animation'] then
+        SetPlayerAnimation(player, item_cfg['interaction']['animation']['name'])
+        if item_cfg['interaction']['animation']['duration'] then
+            Delay(item_cfg['interaction']['animation']['duration'], function()
                 SetPlayerAnimation(player, "STOP")
             end)
         end
     end
-    if object['interaction']['sound'] then
-        PlaySound(player, object['interaction']['sound'])
+    if item_cfg['interaction']['sound'] then
+        PlaySound(player, item_cfg['interaction']['sound'])
     end
 end
 

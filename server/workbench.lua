@@ -12,7 +12,7 @@ end)
 
 AddRemoteEvent("GetWorkbenchData", function(player)
     local item_data = {}
-    for key,item in pairs(GetObjects()) do
+    for key,item in pairs(GetItemConfigs()) do
         if item['recipe'] ~= nil then
             table.insert(item_data, {
                 item = key,
@@ -27,34 +27,33 @@ AddRemoteEvent("GetWorkbenchData", function(player)
         ["item_data"] = item_data,
         ["player_resources"] = GetPlayerResources(player)
     }
-    print(dump(json_encode(_send)))
+    --print(dump(json_encode(_send)))
     CallRemoteEvent(player, "OnGetWorkbenchData", json_encode(_send))
 end)
 
-AddRemoteEvent("BuildItem", function(player, item_key)
-    local item = GetObject(item_key)
-
-    if item == nil then
+AddRemoteEvent("BuildItem", function(player, item)
+    local item_cfg = GetItemConfig(item)
+    if item_cfg == nil then
         return
     end
 
     -- start the build
-    print("Player "..GetPlayerName(player).." builds item "..item['name'])
+    print("Player "..GetPlayerName(player).." builds item "..item_cfg['name'])
 
     -- remove scrap from inventory
-    for resource,amount in pairs(item['recipe']) do
+    for resource,amount in pairs(item_cfg['recipe']) do
         RemoveFromInventory(player, resource, amount)
     end
 
-    CallRemoteEvent(player, "StartBuilding", item_key, json_encode(GetPlayerResources(player)))
+    CallRemoteEvent(player, "StartBuilding", item, json_encode(GetPlayerResources(player)))
 
     SetPlayerLocation(player, -105738.5859375, 193734.59375, 1396.1424560547) 
     SetPlayerHeading(player, -92.786437988281)   
     SetPlayerAnimation(player, "BARCLEAN01")
     Delay(15000, function()
         SetPlayerAnimation(player, "STOP")
-        AddPlayerChat(player, item['name'].." has been added to your inventory.")
-        AddToInventory(player, item_key)
+        AddPlayerChat(player, item_cfg['name'].." has been added to your inventory.")
+        AddToInventory(player, item)
     end)
 end)
 

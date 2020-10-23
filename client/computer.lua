@@ -32,6 +32,7 @@ end)
 AddEvent("OnPackageStop", function()
     DestroyTextBox(SatelliteStatus)
     DestroyWebUI(ComputerUI)
+    HideSatelliteWaypoint()
 end)
 
 AddEvent("OnKeyPress", function(key)

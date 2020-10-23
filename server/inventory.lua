@@ -168,6 +168,7 @@ function UseObjectFromInventory(player, item)
       return 
     end
 
+    print(GetPlayerName(player).. " uses object "..item.." from inventory")
     EquipObject(player, item)
     PlayInteraction(player, item)
 
@@ -189,7 +190,7 @@ function UseObjectFromInventory(player, item)
  ]]
 end
 
--- drop all on death
+-- clear inventory on player death
 AddEvent("OnPlayerDeath", function(player, killer)
     SetPlayerPropertyValue(player, "inventory", {})
     CallEvent("SyncInventory", player)
@@ -200,6 +201,6 @@ AddRemoteEvent("UseObjectHotkey", function(player, key)
     local inventory = GetPlayerPropertyValue(player, "inventory")
     local item = inventory[key - 3]
     if item ~= nil then
-      UseObjectFromInventory(player, item['item'])
+        UseObjectFromInventory(player, item['item'])
     end
 end)

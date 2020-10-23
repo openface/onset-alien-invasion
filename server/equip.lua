@@ -1,13 +1,31 @@
 AddEvent("OnPackageStop", function()
     for _, player in pairs(GetAllPlayers()) do
-      for item,object in pairs(GetPlayerPropertyValue(player, 'equipped')) do
-        print("Destroying equipped object for player "..GetPlayerName(player).." item "..item)
-        SetObjectDetached(object)
-        DestroyObject(object)
-      end
-      SetPlayerPropertyValue(player, "equipped", {})
+      DestroyEquippedObjectsForPlayer(player)
     end
 end)
+
+-- destroy equipped objects on death
+AddEvent("OnPlayerDeath", function(player, killer)
+    DestroyEquippedObjectsForPlayer(player)
+end)
+
+-- destroy vest on quit
+AddEvent("OnPlayerQuit", function(player)
+    DestroyEquippedObjectsForPlayer(player)
+end)
+
+function DestroyEquippedObjectsForPlayer(player)
+    equipped = GetPlayerPropertyValue(player, "equipped")
+    for item,object in pairs(equipped) do
+        print("Destroying equipped object for player " .. GetPlayerName(player) .. " item " .. item)
+        SetObjectDetached(object)
+        DestroyObject(object)
+    end
+
+    -- clear player equipment
+    SetPlayerPropertyValue(player, "equipped", {})
+end
+
 
 function EquipObject(player, item)
     local object = GetObject(item)
@@ -29,11 +47,10 @@ function EquipObject(player, item)
     -- unequip whatever is in the player's bone
     local equipped_object = GetEquippedObjectNameFromBone(player, object['attachment']['bone'])
     if equipped_object ~= nil then
-        print "unequipping equipped"
         UnequipObject(player, equipped_object)
     end
 
-    print(GetPlayerName(player).." equip item "..item)
+    print(GetPlayerName(player).." equips item "..item)
 
     -- equipable animations
     PlayInteraction(player, item)
@@ -61,13 +78,14 @@ function EquipObject(player, item)
     local equipped = GetPlayerPropertyValue(player, "equipped")
     equipped[item] = attached_object
     SetPlayerPropertyValue(player, "equipped", equipped)
+
+    CallEvent("items:"..item..":equip", player, object)
 end
 
 function UnequipObject(player, item)
     print "unequipping"
     local object = GetEquippedObject(player, item)
     if object == nil then
-        print "not equipped"
         return
     end
 
@@ -101,3 +119,4 @@ function GetEquippedObjectNameFromBone(player, bone)
         end
     end
 end
+

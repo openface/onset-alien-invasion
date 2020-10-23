@@ -83,3 +83,6 @@ function SetThirdPerson()
     SetCameraViewDistance(375)
 end
 
+AddRemoteEvent('PlayErrorSound', function()
+    SetSoundVolume(CreateSound("client/sounds/error.wav"), 0.5)
+end)

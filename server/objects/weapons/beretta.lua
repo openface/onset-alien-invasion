@@ -1,5 +1,7 @@
 local Weapon = ImportPackage("Onset_Weapon_Patch")
 
+local weapon_slot = 2
+
 RegisterObject("beretta", {
     name = "Beretta",
     type = 'weapon',
@@ -12,5 +14,9 @@ RegisterObject("beretta", {
 })
 
 AddEvent("items:beretta:pickup", function(player, pickup)
-    Weapon.SetWeapon(player, 5, 100, true, 2, true)
+    Weapon.SetWeapon(player, 5, 100, true, weapon_slot, true)
+end)
+
+AddEvent("items:beretta:drop", function(player, object)
+    Weapon.SetWeapon(player, 1, 0, true, weapon_slot, true)
 end)

@@ -21,7 +21,8 @@ function SyncInventory(player)
                 ['name'] = item['name'],
                 ['modelid'] = item['modelid'],
                 ['quantity'] = item['quantity'],
-                ['type'] = item['type']
+                ['type'] = item['type'],
+                ['equipped'] = IsItemInWeaponSlot(player, item['item'])
             })
         elseif item['type'] == 'equipable' or item['type'] == 'usable' then
             table.insert(_send.items, {
@@ -122,9 +123,9 @@ function RemoveFromInventory(player, item, amount)
         --CallEvent("items:" .. item .. ":drop", player, item_cfg)
 
         -- if item is a weapon, switch to fists
-        if item_cfg['type'] == 'weapon' then
-          EquipWeapon(item)
-        end
+        --if item_cfg['type'] == 'weapon' then
+        --  EquipWeapon(player, item)
+        --end
     end
 end
 
@@ -153,6 +154,18 @@ function GetInventoryCount(player, item)
         end
     end
     return 0
+end
+
+-- get carry count for given item type
+function GetInventoryCountByType(player, type)
+  local inventory = GetPlayerPropertyValue(player, "inventory")
+  local n = 0
+  for _, _item in pairs(inventory) do
+      if _item['type'] == type then
+          n = n + 1
+      end
+  end
+  return n
 end
 
 function GetInventoryAvailableSlots(player)
@@ -212,10 +225,8 @@ AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
 
 -- equip from inventory
 AddRemoteEvent("EquipItemFromInventory", function(player, item)
-    -- when equipping a weapon from inventory,
-    -- force it to equip to player (force = true)
     if item_cfg['type'] == 'weapon' then
-      EquipWeapon(player, item, true)
+      EquipWeapon(player, item)
     else
       EquipObject(player, item)
     end

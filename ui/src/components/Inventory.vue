@@ -12,7 +12,10 @@
               x{{ item.quantity }}
             </span>
             <div class="options">
-              <div v-if="item.type == 'equipable' || item.type == 'weapon'">
+              <div v-if="item.type == 'weapon'">
+                <a v-if="!item.equipped" @click="EquipItem(item.item)">Equip</a>
+              </div>
+              <div v-if="item.type == 'equipable'">
                 <a v-if="!item.equipped" @click="EquipItem(item.item)">Equip</a>
                 <a v-if="item.equipped" @click="UnequipItem(item.item)">Unequip</a>
               </div>
@@ -119,7 +122,7 @@ export default {
             modelid: 2,
             quantity: 1,
             type: "weapon",
-            equipped: true,
+            equipped: true
           },
           {
             item: "glock2",
@@ -127,7 +130,7 @@ export default {
             modelid: 2,
             quantity: 1,
             type: "weapon",
-            equipped: true,
+            equipped: true
 
           },
           {
@@ -136,7 +139,7 @@ export default {
             modelid: 2,
             quantity: 1,
             type: "weapon",
-            equipped: true,
+            equipped: true
           },
           {
             item: "glock4",

@@ -85,15 +85,15 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
       CallRemoteEvent(player, "ComputerPartPickedup", pickup)
     end
 
-    AddToInventory(player, item)
-
     --if item_cfg['type'] == 'equipable' then
     --  EquipObject(player, item)
     --end
     if item_cfg['type'] == 'weapon' then
-      print "weapon picked up but dont force it"
-      EquipWeapon(player, item, false)
+      EquipWeapon(player, item)
     end
+
+    -- adds to player inventory and syncs
+    AddToInventory(player, item)
 
     DestroyText3D(GetPickupPropertyValue(pickup, '_text'))
     DestroyPickup(pickup)

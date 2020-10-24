@@ -117,8 +117,14 @@ function RemoveFromInventory(player, item, amount)
         SetItemQuantity(player, item, 0)
 
         print("items:" .. item .. ":drop")
+
         -- call DROP event on object
-        CallEvent("items:" .. item .. ":drop", player, item_cfg)
+        --CallEvent("items:" .. item .. ":drop", player, item_cfg)
+
+        -- if item is a weapon, switch to fists
+        if item_cfg['type'] == 'weapon' then
+          Weapon.SetWeapon(player, 1, 0, true, item_cfg['weapon_slot'], true)
+        end
     end
 end
 

@@ -1,8 +1,8 @@
-local weapon_slot = 2
-
 RegisterObject("glock", {
     name = "Glock",
     type = 'weapon',
+    weapon_slot = 2,
+    weapon_id = 4,
     modelid = 6,
     max_carry = 2,
     recipe = {
@@ -10,11 +10,3 @@ RegisterObject("glock", {
         plastic = 10
     }
 })
-
-AddEvent("items:glock:pickup", function(player, pickup)
-    Weapon.SetWeapon(player, 4, 100, true, weapon_slot, true)
-end)
-
-AddEvent("items:glock:drop", function(player, object)
-    Weapon.SetWeapon(player, 1, 0, true, weapon_slot, true)
-end)

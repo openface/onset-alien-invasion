@@ -77,13 +77,17 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
     CallRemoteEvent(player, "PlayPickupSound", item_cfg['pickup_sound'] or "sounds/pickup.wav")
 
     print("Player "..GetPlayerName(player).." picks up item "..item)
-    CallEvent("items:"..item..":pickup", player, pickup)
+
+    --CallEvent("items:"..item..":pickup", player, pickup)
 
     AddToInventory(player, item)
 
     --if item_cfg['type'] == 'equipable' then
     --  EquipObject(player, item)
     --end
+    if item_cfg['type'] == 'weapon' then
+      Weapon.SetWeapon(player, item_cfg['weapon_id'], 100, true, item_cfg['weapon_slot'], true)
+    end
 
     DestroyText3D(GetPickupPropertyValue(pickup, '_text'))
     DestroyPickup(pickup)

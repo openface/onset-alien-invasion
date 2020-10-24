@@ -44,6 +44,7 @@
     "server/objects/weapons/uzi.lua",
     "server/objects/weapons/m16a4.lua",
     "server/objects/weapons/ak47.lua",
+    "server/objects/weapons/ak47g.lua",
     "server/vendor/json.lua",
     "server/vendor/file.lua"
   ],

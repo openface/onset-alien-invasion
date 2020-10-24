@@ -1,8 +1,8 @@
-local weapon_slot = 3
-
 RegisterObject("auto_shotgun", {
     name = "Auto Shotgun",
     type = 'weapon',
+    weapon_slot = 3,
+    weapon_id = 6,
     modelid = 8, 
     max_carry = 1,
     recipe = {
@@ -11,10 +11,3 @@ RegisterObject("auto_shotgun", {
     }
 })
 
-AddEvent("items:auto_shotgun:pickup", function(player, pickup)
-    Weapon.SetWeapon(player, 6, 100, true, weapon_slot, true)
-end)
-
-AddEvent("items:auto_shotgun:drop", function(player, object)
-    Weapon.SetWeapon(player, 1, 0, true, weapon_slot, true)
-end)

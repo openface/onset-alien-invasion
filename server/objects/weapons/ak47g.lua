@@ -1,9 +1,9 @@
-RegisterObject("ak47", {
-    name = "AK47",
+RegisterObject("ak47g", {
+    name = "AK47 (Gold)",
     type = 'weapon',
     weapon_slot = 3,
-    weapon_id = 12,
-    modelid = 14, 
+    weapon_id = 13,
+    modelid = 15, 
     max_carry = 1,
     recipe = {
         metal = 25,

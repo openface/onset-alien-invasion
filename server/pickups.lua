@@ -91,7 +91,8 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
     --  EquipObject(player, item)
     --end
     if item_cfg['type'] == 'weapon' then
-      Weapon.SetWeapon(player, item_cfg['weapon_id'], 100, true, item_cfg['weapon_slot'], true)
+      print "weapon picked up but dont force it"
+      EquipWeapon(player, item, false)
     end
 
     DestroyText3D(GetPickupPropertyValue(pickup, '_text'))

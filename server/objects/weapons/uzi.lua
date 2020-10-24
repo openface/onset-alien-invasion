@@ -1,7 +1,6 @@
 RegisterObject("uzi", {
     name = "UZI",
     type = 'weapon',
-    weapon_slot = 3,
     weapon_id = 9,
     modelid = 11, 
     max_carry = 1,

@@ -1,7 +1,6 @@
 RegisterObject("ak47", {
     name = "AK47",
     type = 'weapon',
-    weapon_slot = 3,
     weapon_id = 12,
     modelid = 14, 
     max_carry = 1,

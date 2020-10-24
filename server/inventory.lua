@@ -123,7 +123,7 @@ function RemoveFromInventory(player, item, amount)
 
         -- if item is a weapon, switch to fists
         if item_cfg['type'] == 'weapon' then
-          Weapon.SetWeapon(player, 1, 0, true, item_cfg['weapon_slot'], true)
+          EquipWeapon(item)
         end
     end
 end
@@ -182,6 +182,11 @@ function UseItemFromInventory(player, item)
         return
     end
 
+    if item_cfg['type'] == 'weapon' then
+      print("Not using weapon from inventory")
+      return
+    end
+
     print(GetPlayerName(player) .. " uses item " .. item .. " from inventory")
     EquipObject(player, item)
     PlayInteraction(player, item)
@@ -207,7 +212,13 @@ AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
 
 -- equip from inventory
 AddRemoteEvent("EquipItemFromInventory", function(player, item)
-    EquipObject(player, item)
+    -- when equipping a weapon from inventory,
+    -- force it to equip to player (force = true)
+    if item_cfg['type'] == 'weapon' then
+      EquipWeapon(player, item, true)
+    else
+      EquipObject(player, item)
+    end
     CallEvent("SyncInventory", player)
 end)
 
@@ -226,9 +237,9 @@ end)
 -- item hotkeys
 AddRemoteEvent("UseItemHotkey", function(player, key)
     local inventory = GetPlayerPropertyValue(player, "inventory")
-    print(dump(inventory))
-    local item = inventory[key - 3]
+    local item = inventory[key - 4]
     if item ~= nil then
-        UseItemFromInventory(player, item['item'])
+      print("Hotkey",item['name'])
+      UseItemFromInventory(player, item['item'])
     end
 end)

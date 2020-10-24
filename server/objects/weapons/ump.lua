@@ -1,7 +1,6 @@
 RegisterObject("ump", {
     name = "UMP",
     type = 'weapon',
-    weapon_slot = 3,
     weapon_id = 10,
     modelid = 13, 
     max_carry = 1,

@@ -32,6 +32,3 @@ AddEvent("items:vest:unequip", function(player, object)
     SetPlayerArmor(player, 0)
 end)
 
-AddEvent("items:glock:drop", function(player, object)
-    Weapon.SetWeapon(player, 1, 0, true, weapon_slot, true)
-end)

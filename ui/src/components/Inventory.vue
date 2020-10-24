@@ -12,7 +12,7 @@
               x{{ item.quantity }}
             </span>
             <div class="options">
-              <div v-if="item.type == 'equipable'">
+              <div v-if="item.type == 'equipable' || item.type == 'weapon'">
                 <a v-if="!item.equipped" @click="EquipItem(item.item)">Equip</a>
                 <a v-if="item.equipped" @click="UnequipItem(item.item)">Unequip</a>
               </div>
@@ -29,14 +29,14 @@
       <div v-else id="title">YOUR INVENTORY IS EMPTY</div>
     </div>
     <div id="hotbar" v-if="!inventory_visible">
-      <div class="slot" v-for="n in range(2, 3)" :key="n">
-        <div v-if="weapons[n - 2]">
+      <div class="slot" v-for="n in range(1, 3)" :key="n">
+        <div v-if="weapons[n - 1]">
           <img v-if="!InGame" src="http://placekitten.com/100/100" />
-          <img v-if="InGame" :src="'http://game/objects/' + weapons[n - 2].modelid" />
+          <img v-if="InGame" :src="'http://game/objects/' + weapons[n - 1].modelid" />
           <span class="keybind">{{ n }}</span>
-          <span class="name">{{ weapons[n - 2].name }}</span>
-          <span v-if="weapons[n - 2].quantity > 1" class="quantity">
-            x{{ weapons[n - 2].quantity }}
+          <span class="name">{{ weapons[n - 1].name }}</span>
+          <span v-if="weapons[n - 1].quantity > 1" class="quantity">
+            x{{ weapons[n - 1].quantity }}
           </span>
         </div>
       </div>
@@ -116,6 +116,31 @@ export default {
           {
             item: "glock",
             name: "Glock",
+            modelid: 2,
+            quantity: 1,
+            type: "weapon",
+            equipped: true,
+          },
+          {
+            item: "glock2",
+            name: "Glock2",
+            modelid: 2,
+            quantity: 1,
+            type: "weapon",
+            equipped: true,
+
+          },
+          {
+            item: "glock3",
+            name: "Glock3",
+            modelid: 2,
+            quantity: 1,
+            type: "weapon",
+            equipped: true,
+          },
+          {
+            item: "glock4",
+            name: "Glock4",
             modelid: 2,
             quantity: 1,
             type: "weapon",
@@ -215,7 +240,7 @@ export default {
   position: fixed;
   bottom: 1vh;
 }
-#hotbar .slot:nth-child(2) {
+#hotbar .slot:nth-child(3) {
   margin-right: 25px;
 }
 

@@ -1,6 +1,6 @@
 AddEvent("OnPackageStop", function()
     for _, player in pairs(GetAllPlayers()) do
-      DestroyEquippedObjectsForPlayer(player)
+        DestroyEquippedObjectsForPlayer(player)
     end
 end)
 
@@ -16,7 +16,7 @@ end)
 
 function DestroyEquippedObjectsForPlayer(player)
     equipped = GetPlayerPropertyValue(player, "equipped")
-    for item,object in pairs(equipped) do
+    for item, object in pairs(equipped) do
         print("Destroying equipped object for player " .. GetPlayerName(player) .. " item " .. item)
         SetObjectDetached(object)
         DestroyObject(object)
@@ -26,7 +26,6 @@ function DestroyEquippedObjectsForPlayer(player)
     SetPlayerPropertyValue(player, "equipped", {})
 end
 
-
 function EquipObject(player, item)
     local item_cfg = GetItemConfig(item)
     if item_cfg['type'] ~= 'equipable' and item_cfg['type'] ~= 'usable' then
@@ -34,7 +33,7 @@ function EquipObject(player, item)
         return
     end
 
-    -- equipable items can be toggled
+    -- equipable items can be toggled via hotkey
     if item_cfg['type'] == 'equipable' and GetEquippedObject(player, item) ~= nil then
         print "already equipped; unequipping"
         UnequipObject(player, item)
@@ -42,35 +41,30 @@ function EquipObject(player, item)
     end
 
     if item_cfg['attachment'] == nil then
-        print("Object "..item.." is type equipable but does not define attachment info")
+        print("Object " .. item .. " is type equipable but does not define attachment info")
         return
     end
 
     -- unequip whatever is in the player's bone
     local equipped_object = GetEquippedObjectNameFromBone(player, item_cfg['attachment']['bone'])
     if equipped_object ~= nil then
-        print("Bone "..item_cfg['attachment']['bone'].." already equipped... unequipping first")
+        print("Bone " .. item_cfg['attachment']['bone'] .. " already equipped... unequipping first")
         UnequipObject(player, equipped_object)
     end
 
-    print(GetPlayerName(player).." equips item "..item)
+    print(GetPlayerName(player) .. " equips item " .. item)
 
     -- equipable animations
     PlayInteraction(player, item)
 
-    local x,y,z = GetPlayerLocation(player)
+    local x, y, z = GetPlayerLocation(player)
     local attached_object = CreateObject(item_cfg['modelid'], x, y, z)
 
     SetObjectPropertyValue(attached_object, "_name", item)
     SetObjectPropertyValue(attached_object, "_bone", item_cfg['attachment']['bone'])
-    SetObjectAttached(attached_object, ATTACH_PLAYER, player, 
-        item_cfg['attachment']['x'],
-        item_cfg['attachment']['y'],
-        item_cfg['attachment']['z'],
-        item_cfg['attachment']['rx'],
-        item_cfg['attachment']['ry'],
-        item_cfg['attachment']['rz'],
-        item_cfg['attachment']['bone'])
+    SetObjectAttached(attached_object, ATTACH_PLAYER, player, item_cfg['attachment']['x'], item_cfg['attachment']['y'],
+        item_cfg['attachment']['z'], item_cfg['attachment']['rx'], item_cfg['attachment']['ry'],
+        item_cfg['attachment']['rz'], item_cfg['attachment']['bone'])
 
     -- set component config to object
     if item_cfg['component'] ~= nil then
@@ -83,7 +77,7 @@ function EquipObject(player, item)
     SetPlayerPropertyValue(player, "equipped", equipped)
 
     -- call EQUIP event on object
-    CallEvent("items:"..item..":equip", player, object)
+    CallEvent("items:" .. item .. ":equip", player, object)
 
     -- sync inventory
     CallEvent("SyncInventory", player)
@@ -127,18 +121,18 @@ function GetEquippedObject(player, item)
 end
 
 function IsItemEquipped(player, item)
-  if GetEquippedObject(player, item) ~= nil then
-    return true
-  else
-    return false
-  end
+    if GetEquippedObject(player, item) ~= nil then
+        return true
+    else
+        return false
+    end
 end
 
 function GetEquippedObjectNameFromBone(player, bone)
     local equipped = GetPlayerPropertyValue(player, "equipped")
-    for _,object in pairs(equipped) do
+    for _, object in pairs(equipped) do
         if GetObjectPropertyValue(object, "_bone") == bone then
-            --print "found bone"
+            -- print "found bone"
             return GetObjectPropertyValue(object, "_name")
         end
     end

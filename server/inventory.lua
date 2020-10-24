@@ -23,7 +23,7 @@ function SyncInventory(player)
                 ['quantity'] = item['quantity'],
                 ['type'] = item['type']
             })
-        elseif item['type'] == 'equipable' then
+        elseif item['type'] == 'equipable' or item['type'] == 'usable' then
             table.insert(_send.items, {
                 ['item'] = item['item'],
                 ['name'] = item['name'],
@@ -32,7 +32,7 @@ function SyncInventory(player)
                 ['type'] = item['type'],
                 ['equipped'] = IsItemEquipped(player, item['item'])
             })
-          elseif item['type'] == 'usable' or item['type'] == 'resource' then
+          elseif item['type'] == 'resource' then
             table.insert(_send.items, {
                 ['item'] = item['item'],
                 ['name'] = item['name'],
@@ -169,7 +169,7 @@ function GetItemConfigFromInventory(player, item)
 end
 
 -- use object
-function UseObjectFromInventory(player, item)
+function UseItemFromInventory(player, item)
     local item_cfg = GetItemConfigFromInventory(player, item)
     if item_cfg == nil then
         print("Item " .. item .. " not found in inventory")
@@ -197,6 +197,7 @@ function UseObjectFromInventory(player, item)
     end
  ]]
 end
+AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
 
 -- equip from inventory
 AddRemoteEvent("EquipItemFromInventory", function(player, item)
@@ -216,12 +217,12 @@ AddEvent("OnPlayerDeath", function(player, killer)
     CallEvent("SyncInventory", player)
 end)
 
--- Hotkeys
-AddRemoteEvent("UseObjectHotkey", function(player, key)
+-- item hotkeys
+AddRemoteEvent("UseItemHotkey", function(player, key)
     local inventory = GetPlayerPropertyValue(player, "inventory")
     print(dump(inventory))
     local item = inventory[key - 3]
     if item ~= nil then
-        UseObjectFromInventory(player, item['item'])
+        UseItemFromInventory(player, item['item'])
     end
 end)

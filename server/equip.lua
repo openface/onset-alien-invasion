@@ -29,12 +29,13 @@ end
 
 function EquipObject(player, item)
     local item_cfg = GetItemConfig(item)
-    if item_cfg['type'] ~= 'equipable' then
+    if item_cfg['type'] ~= 'equipable' and item_cfg['type'] ~= 'usable' then
         print "not equipable"
         return
     end
 
-    if GetEquippedObject(player, item) ~= nil then
+    -- equipable items can be toggled
+    if item_cfg['type'] == 'equipable' and GetEquippedObject(player, item) ~= nil then
         print "already equipped; unequipping"
         UnequipObject(player, item)
         return

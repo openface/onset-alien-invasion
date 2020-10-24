@@ -22,7 +22,7 @@ AddEvent('OnKeyPress', function(key)
         SetWebVisibility(InventoryUI, WEB_VISIBLE)
         ExecuteWebJS(InventoryUI, "EmitEvent('ShowInventory')")
     elseif key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' then
-        CallRemoteEvent("UseObjectHotkey", key)
+        CallRemoteEvent("UseItemHotkey", key)
     end
 end)
 
@@ -54,3 +54,9 @@ end)
 AddEvent("UnequipItem", function(item)
     CallRemoteEvent("UnequipItemFromInventory", item)
 end)
+
+-- use item
+AddEvent("UseItem", function(item)
+    CallRemoteEvent("UseItemFromInventory", item)
+end)
+

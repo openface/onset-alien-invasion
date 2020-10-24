@@ -1,3 +1,5 @@
+-- TODO: rename to items.lua
+
 -- weapon handler
 Weapon = ImportPackage("Onset_Weapon_Patch")
 

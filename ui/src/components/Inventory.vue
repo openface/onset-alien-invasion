@@ -16,6 +16,10 @@
                 <a v-if="!item.equipped" @click="EquipItem(item.item)">Equip</a>
                 <a v-if="item.equipped" @click="UnequipItem(item.item)">Unequip</a>
               </div>
+              <div v-else-if="item.type == 'usable'">
+                <a @click="UseItem(item.item)">Use</a>
+                <a v-if="item.equipped" @click="UnequipItem(item.item)">Put Away</a>
+              </div>
               <a @click="DropItem(item.item)">Drop</a>
             </div>
           </div>
@@ -88,6 +92,9 @@ export default {
     },
     UnequipItem: function(item) {
       this.CallEvent('UnequipItem', item);
+    },
+    UseItem: function(item) {
+      this.CallEvent('UseItem', item);
     },
     range: function(start, end) {
       return Array(end - start + 1)

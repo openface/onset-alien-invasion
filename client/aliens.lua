@@ -37,4 +37,5 @@ end)
 
 AddRemoteEvent("OnAlienHit", function(player)
     SetSoundVolume(CreateSound("client/sounds/pain.mp3"), 1)
+    InvokeDamageFX(1000)
 end)

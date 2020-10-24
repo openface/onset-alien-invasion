@@ -145,8 +145,8 @@ export default {
         ],
       });
 
-      //this.EventBus.$emit("ShowInventory");
-      this.EventBus.$emit("HideInventory");
+      this.EventBus.$emit("ShowInventory");
+      //this.EventBus.$emit("HideInventory");
 
     }
   },

@@ -5,7 +5,6 @@ AddEvent("OnPackageStop", function()
     HideLootWaypoint()
 end)
 
-
 AddRemoteEvent('LootPickedup', function(pickup)
     SetSoundVolume(CreateSound("client/sounds/health_pickup.wav"), 1)
     HideLootWaypoint()

@@ -103,7 +103,8 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
         return
     end
 
-    AddToInventory(player, 'vest')    
+    -- add loot items to inventory
+    AddToInventory(player, 'vest')
 
     DestroyPickup(pickup)
 

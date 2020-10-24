@@ -40,6 +40,10 @@
     "server/objects/weapons/beretta.lua",
     "server/objects/weapons/auto_shotgun.lua",
     "server/objects/weapons/shotgun.lua",
+    "server/objects/weapons/mp5.lua",
+    "server/objects/weapons/uzi.lua",
+    "server/objects/weapons/m16a4.lua",
+    "server/objects/weapons/ak47.lua",
     "server/vendor/json.lua",
     "server/vendor/file.lua"
   ],

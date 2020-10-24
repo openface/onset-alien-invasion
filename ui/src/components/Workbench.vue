@@ -185,19 +185,25 @@ export default {
 <style scoped>
 #container {
   display: flex;
+  flex-direction: row;
   align-items: center;
+  flex-wrap: nowrap;
   justify-content: center;
-  height: 100%;
+  align-content: stretch;
+  align-items: flex-start;
 }
 
 #inner {
-  width: 800px;
+  width: 765px;
   background: rgba(0, 0, 0, 0.9);
+  flex: 0 1 auto;
+  align-self: center;
+  order: 0;
   font-family: helvetica;
   font-size: 16px;
   color: #ccc;
   text-shadow: 3px black;
-  padding: 20px;
+  padding: 10px;
 }
 
 #title {
@@ -213,6 +219,5 @@ export default {
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
-  margin: 0 auto;
 }
 </style>

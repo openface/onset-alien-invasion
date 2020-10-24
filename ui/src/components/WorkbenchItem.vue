@@ -1,7 +1,7 @@
 <template>
   <div class="item" :class="isBusy ? 'blurred' : ''" @mouseenter="PlayClick()">
     <div class="pic">
-      <img v-if="!InGame" src="http://placekitten.com/100/100" />
+      <img v-if="!InGame" src="http://placekitten.com/60/60" />
       <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
     </div>
     <div class="details">
@@ -105,25 +105,25 @@ export default {
 .item {
   padding: 10px;
   width: 225px;
-  margin: 10px;
-  height: 75px;
+  margin: 5px;
+  height: 60px;
   background: rgba(255, 255, 255, 0.1);
 }
-.item:hover {
+.item:hover:not(.blurred) {
   background: rgba(255, 255, 255, 0.2);
 }
 .item .pic {
   float: left;
-  width: 90px;
+  width: 70px;
 }
 .item .pic img {
   border-radius: 3px;
-  width: 75px;
+  width: 60px;
   border:1px solid rgba(0,0,0, 0.1)
 }
 .item .details {
   float: left;
-  width: 100px;
+  width: 150px;
 }
 .item .details .name {
   font-weight: bold;
@@ -151,8 +151,7 @@ button {
   display: block;
   font-size: 14px;
   width: 100%;
-  height: 25px;
-  border: 1px solid #111;
+  height: 22px;
 }
 button.build {
   background: #1770ff;
@@ -170,7 +169,7 @@ button[disabled] {
 
 /* Progress Meter */
 .meter {
-  height: 25px;
+  height: 22px;
   width: 100%;
   display: block;
   position: relative;

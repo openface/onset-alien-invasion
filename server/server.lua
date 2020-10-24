@@ -12,10 +12,6 @@ AddCommand("pos", function(player)
     print(string)
 end)
 
-AddCommand("blood", function(player)
-    CallRemoteEvent(player, "ShowBlood")
-end)
-
 AddCommand("players", function(player)
     for _, v in pairs(GetAllPlayers()) do
         AddPlayerChat(player, '['..v..'] '..GetPlayerName(v))

@@ -32,23 +32,12 @@ AddRemoteEvent("ShowMessage", function(msg)
     ShowMessage(msg)
 end)
 
--- blood splat
-function ShowBlood()    
-    ExecuteWebJS(HudUI, "EmitEvent('ShowBlood')")
-end
-AddFunctionExport("ShowBlood", ShowBlood)
-
-AddRemoteEvent("ShowBlood", function()
-    ShowBlood()
-end)
-
 -- boss health bar
 function SetBossHealth(percentage)
     ExecuteWebJS(HudUI, "EmitEvent('SetBossHealth',"..percentage..")")
 end
 AddRemoteEvent("SetBossHealth", SetBossHealth)
 AddEvent("SetBossHealth", SetBossHealth)
-
 
 -- inventory
 AddRemoteEvent("SetInventory", function(data)

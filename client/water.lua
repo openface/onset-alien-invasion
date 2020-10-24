@@ -11,6 +11,7 @@ end)
 function HandlePlayerInWater()
     if PlayerInWater and IsPlayerDead(GetPlayerId()) ~= true then
         CallRemoteEvent("HandlePlayerInWater")        
+        InvokeDamageFX(1000)
         SetSoundVolume(CreateSound("client/sounds/pain.mp3"), 1)
     end
 end

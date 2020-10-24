@@ -1,6 +1,5 @@
 <template>
   <div id="hud">
-    <div id="blood_overlay" v-if="show_blood"></div>
     <div id="banner" v-if="banner">
       <span class="message">{{ banner }}</span>
     </div>
@@ -18,21 +17,12 @@ export default {
   name: "Hud",
   data() {
     return {
-      show_blood: false,
       message: null,
       banner: null,
       boss_health: null,
     };
   },
   methods: {
-    ShowBlood: function() {
-      this.show_blood = true;
-
-      var that = this;
-      setTimeout(function() {
-        that.show_blood = false;
-      }, 3000);
-    },
     ShowMessage: function(message) {
       this.message = message;
 
@@ -54,13 +44,11 @@ export default {
     },
   },
   mounted() {
-    this.EventBus.$on("ShowBlood", this.ShowBlood);
     this.EventBus.$on("ShowMessage", this.ShowMessage);
     this.EventBus.$on("ShowBanner", this.ShowBanner);
     this.EventBus.$on("SetBossHealth", this.SetBossHealth);
 
     if (!this.InGame) {
-      this.EventBus.$emit("ShowBlood");
       this.EventBus.$emit(
         "ShowMessage",
         "You have found an important piece! Take this to the satellite!"
@@ -123,31 +111,6 @@ export default {
     opacity: 1;
   }
   to {
-    opacity: 0;
-  }
-}
-
-/*
- * Blood Splat
- */
-#blood_overlay {
-  background: url("../assets/images/blood_overlay.png") no-repeat center center
-    fixed;
-  background-size: cover;
-  opacity: 0.5;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  position: fixed;
-  animation: fadeSplat 3.5s;
-  z-index: -100;
-}
-@keyframes fadeSplat {
-  0% {
-    opacity: 0.5;
-  }
-  100% {
     opacity: 0;
   }
 }

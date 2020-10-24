@@ -80,6 +80,11 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
 
     --CallEvent("items:"..item..":pickup", player, pickup)
 
+    if item == 'computer_part' then
+      AddPlayerChatAll(GetPlayerName(player)..' has found a computer part!')
+      CallRemoteEvent(player, "ComputerPartPickedup", pickup)
+    end
+
     AddToInventory(player, item)
 
     --if item_cfg['type'] == 'equipable' then

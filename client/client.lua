@@ -12,7 +12,7 @@ AddEvent("OnPlayerSpawn", function()
     SetThirdPerson()
 end)
 
-AddEvent("OnPlayerDeath", function(player, killer)
+AddEvent("OnPlayerDeath", function(killer)
     SetPostEffect("ImageEffects", "VignetteIntensity", 2.0)
     ShowBanner("YOU HAVE DIED")
     SetCameraShakeRotation(0.0, 0.0, 1.0, 10.0, 0.0, 0.0)

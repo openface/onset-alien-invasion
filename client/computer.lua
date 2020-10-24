@@ -48,12 +48,10 @@ AddEvent("OnKeyPress", function(key)
 end)
 
 -- after computer_part is picked up, show waypoint to the satellite
-function ShowSatelliteWaypoint()
-    HideSatelliteWaypoint()
-    SatelliteWaypoint = CreateWaypoint(SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z + 50, "Satellite Terminal")
-end
-AddEvent("ShowSatelliteWaypoint", ShowSatelliteWaypoint)
-AddRemoteEvent("ShowSatelliteWaypoint", ShowSatelliteWaypoint)
+AddEvent("ShowSatelliteWaypoint", function()
+  HideSatelliteWaypoint()
+  SatelliteWaypoint = CreateWaypoint(SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z + 50, "Satellite Terminal")
+end)
 
 function HideSatelliteWaypoint()
     if SatelliteWaypoint ~= nil then
@@ -61,8 +59,6 @@ function HideSatelliteWaypoint()
         DestroyWaypoint(SatelliteWaypoint)
     end
 end
-AddEvent("HideSatelliteWaypoint", HideSatelliteWaypoint)
-AddRemoteEvent("HideSatelliteWaypoint", HideSatelliteWaypoint)
 
 -- timer used to hide computer screen once player walks away
 function ShowComputerTimer(loc)
@@ -135,3 +131,8 @@ function SetSatelliteStatus(percent)
 end
 AddEvent("SetSatelliteStatus", SetSatelliteStatus)
 AddRemoteEvent("SetSatelliteStatus", SetSatelliteStatus)
+
+-- clear satellite waypoint on death
+AddEvent("OnPlayerDeath", function(killer)
+  HideSatelliteWaypoint()
+end)

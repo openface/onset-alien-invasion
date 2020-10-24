@@ -81,9 +81,9 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
 
     AddToInventory(player, item)
 
-    if item_cfg['type'] == 'equipable' then
-      EquipObject(player, item)
-    end
+    --if item_cfg['type'] == 'equipable' then
+    --  EquipObject(player, item)
+    --end
 
     DestroyText3D(GetPickupPropertyValue(pickup, '_text'))
     DestroyPickup(pickup)

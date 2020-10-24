@@ -3,7 +3,6 @@ RegisterObject("lantern", {
     type = 'equipable',
     modelid = 553,
     max_carry = 1,
-    prevent_aiming = true,
     recipe = {
         metal = 10,
         plastic = 5,

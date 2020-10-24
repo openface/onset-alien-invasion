@@ -1,4 +1,3 @@
-
 AddEvent("OnPackageStop", function()
     print "Resetting player inventories..."
     for _, player in pairs(GetAllPlayers()) do
@@ -24,7 +23,16 @@ function SyncInventory(player)
                 ['quantity'] = item['quantity'],
                 ['type'] = item['type']
             })
-        else
+        elseif item['type'] == 'equipable' then
+            table.insert(_send.items, {
+                ['item'] = item['item'],
+                ['name'] = item['name'],
+                ['modelid'] = item['modelid'],
+                ['quantity'] = item['quantity'],
+                ['type'] = item['type'],
+                ['equipped'] = IsItemEquipped(player, item['item'])
+            })
+          elseif item['type'] == 'usable' or item['type'] == 'resource' then
             table.insert(_send.items, {
                 ['item'] = item['item'],
                 ['name'] = item['name'],
@@ -74,11 +82,11 @@ function SetItemQuantity(player, item, quantity)
     for i, _item in ipairs(inventory) do
         if _item['item'] == item then
             if quantity > 0 then
-              -- update quantity
-              inventory[i]['quantity'] = quantity
+                -- update quantity
+                inventory[i]['quantity'] = quantity
             else
-              -- remove object from inventory
-              inventory[i] = nil
+                -- remove object from inventory
+                inventory[i] = nil
             end
             break
         end
@@ -108,7 +116,7 @@ function RemoveFromInventory(player, item, amount)
         -- remove item from inventory
         SetItemQuantity(player, item, 0)
 
-        print("items:"..item..":drop")
+        print("items:" .. item .. ":drop")
         -- call DROP event on object
         CallEvent("items:" .. item .. ":drop", player, item_cfg)
     end
@@ -152,27 +160,27 @@ function GetInventoryAvailableSlots(player)
 end
 
 function GetItemConfigFromInventory(player, item)
-  local inventory = GetPlayerPropertyValue(player, "inventory")
-  for i, _item in pairs(inventory) do
-    if _item['item'] == item then
-      return GetItemConfig(item)
+    local inventory = GetPlayerPropertyValue(player, "inventory")
+    for i, _item in pairs(inventory) do
+        if _item['item'] == item then
+            return GetItemConfig(item)
+        end
     end
-  end
 end
 
 -- use object
 function UseObjectFromInventory(player, item)
     local item_cfg = GetItemConfigFromInventory(player, item)
-    if item_cfg == nil then 
-      print("Item "..item.." not found in inventory")
-      return 
+    if item_cfg == nil then
+        print("Item " .. item .. " not found in inventory")
+        return
     end
 
-    print(GetPlayerName(player).. " uses item "..item.." from inventory")
+    print(GetPlayerName(player) .. " uses item " .. item .. " from inventory")
     EquipObject(player, item)
     PlayInteraction(player, item)
 
---[[     if object['max_use'] and v['used'] < object['max_use'] then
+    --[[     if object['max_use'] and v['used'] < object['max_use'] then
         -- update inventory after use
         Delay(2000, function()
             inventory[i]['used'] = v['used'] + 1
@@ -190,6 +198,18 @@ function UseObjectFromInventory(player, item)
  ]]
 end
 
+-- equip from inventory
+AddRemoteEvent("EquipItemFromInventory", function(player, item)
+    EquipObject(player, item)
+    CallEvent("SyncInventory", player)
+end)
+
+-- unequip from inventory
+AddRemoteEvent("UnequipItemFromInventory", function(player, item)
+    UnequipObject(player, item)
+    CallEvent("SyncInventory", player)
+end)
+
 -- clear inventory on player death
 AddEvent("OnPlayerDeath", function(player, killer)
     SetPlayerPropertyValue(player, "inventory", {})
@@ -199,6 +219,7 @@ end)
 -- Hotkeys
 AddRemoteEvent("UseObjectHotkey", function(player, key)
     local inventory = GetPlayerPropertyValue(player, "inventory")
+    print(dump(inventory))
     local item = inventory[key - 3]
     if item ~= nil then
         UseObjectFromInventory(player, item['item'])

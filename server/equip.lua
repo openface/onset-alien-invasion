@@ -48,6 +48,7 @@ function EquipObject(player, item)
     -- unequip whatever is in the player's bone
     local equipped_object = GetEquippedObjectNameFromBone(player, item_cfg['attachment']['bone'])
     if equipped_object ~= nil then
+        print("Bone "..item_cfg['attachment']['bone'].." already equipped... unequipping first")
         UnequipObject(player, equipped_object)
     end
 
@@ -75,11 +76,6 @@ function EquipObject(player, item)
         SetObjectPropertyValue(attached_object, "component", item_cfg['component'])
     end
 
-    -- set prevent_aiming property if object prevents item
-    if item_cfg['prevent_aiming'] ~= nil then
-        SetPlayerPropertyValue(player, "prevent_aiming", true)
-    end
-
     -- update equipped store
     local equipped = GetPlayerPropertyValue(player, "equipped")
     equipped[item] = attached_object
@@ -87,6 +83,9 @@ function EquipObject(player, item)
 
     -- call EQUIP event on object
     CallEvent("items:"..item..":equip", player, object)
+
+    -- sync inventory
+    CallEvent("SyncInventory", player)
 end
 
 function UnequipObject(player, item)
@@ -108,11 +107,6 @@ function UnequipObject(player, item)
         SetObjectPropertyValue(object, "component", false)
     end
 
-    -- allow prevent_aiming property if object prevented it
-    if item_cfg['prevent_aiming'] ~= nil then
-      SetPlayerPropertyValue(player, "prevent_aiming", nil)
-    end
-
     -- remove from equipped list
     local equipped = GetPlayerPropertyValue(player, "equipped")
     equipped[item] = nil
@@ -122,17 +116,28 @@ function UnequipObject(player, item)
 
     -- call UNEQUIP event on object
     CallEvent("items:" .. item .. ":unequip", player, object)
+
+    -- sync inventory
+    CallEvent("SyncInventory", player)
 end
 
 function GetEquippedObject(player, item)
     return GetPlayerPropertyValue(player, "equipped")[item] or nil
 end
 
+function IsItemEquipped(player, item)
+  if GetEquippedObject(player, item) ~= nil then
+    return true
+  else
+    return false
+  end
+end
+
 function GetEquippedObjectNameFromBone(player, bone)
     local equipped = GetPlayerPropertyValue(player, "equipped")
     for _,object in pairs(equipped) do
         if GetObjectPropertyValue(object, "_bone") == bone then
-            print "found bone"
+            --print "found bone"
             return GetObjectPropertyValue(object, "_name")
         end
     end

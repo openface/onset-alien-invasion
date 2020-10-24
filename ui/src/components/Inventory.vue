@@ -12,8 +12,10 @@
               x{{ item.quantity }}
             </span>
             <div class="options">
-              <a>Equip</a>
-              <a>Unequip</a>
+              <div v-if="item.type == 'equipable'">
+                <a v-if="!item.equipped" @click="EquipItem(item.item)">Equip</a>
+                <a v-if="item.equipped" @click="UnequipItem(item.item)">Unequip</a>
+              </div>
               <a @click="DropItem(item.item)">Drop</a>
             </div>
           </div>
@@ -76,10 +78,16 @@ export default {
       this.inventory_visible = true;
     },
     HideInventory: function() {
-      this.inventory_visible = false;
+      this.inventory_visible = false; 
     },
     DropItem: function(item) {
       this.CallEvent('DropItem', item);
+    },
+    EquipItem: function(item) {
+      this.CallEvent('EquipItem', item);
+    },
+    UnequipItem: function(item) {
+      this.CallEvent('UnequipItem', item);
     },
     range: function(start, end) {
       return Array(end - start + 1)
@@ -127,6 +135,7 @@ export default {
             modelid: 14,
             quantity: 1,
             type: "equipable",
+            equipped: true,
           },
           {
             item: "flashlight",
@@ -134,6 +143,7 @@ export default {
             modelid: 14,
             quantity: 2,
             type: "equipable",
+            equipped: false,
           },
           {
             item: "beer",

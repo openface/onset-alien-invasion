@@ -1,3 +1,6 @@
+-- weapon handler
+Weapon = ImportPackage("Onset_Weapon_Patch")
+
 -- item configuration
 Objects = {}
 

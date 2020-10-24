@@ -1,5 +1,3 @@
-local Weapon = ImportPackage("Onset_Weapon_Patch")
-
 local weapon_slot = 3
 
 RegisterObject("m16a4", {

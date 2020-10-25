@@ -1,10 +1,17 @@
 <template>
   <div id="container">
     <div id="inventory_screen" v-if="inventory_visible">
-      <div v-if="inventory_items.length > 0">
+
+      <div v-if="weapons.length > 0">
+        <InventoryGrid v-model="weapons" @sort-end="SortInventoryItem" axis="xy" :lockToContainerEdges="true">
+          <InventoryItem v-for="(weapon, index) in weapons" :index="index" :key="weapon.item" :item="weapon" collection="weapons" />
+        </InventoryGrid>
+      </div>
+
+      <div v-if="items.length > 0">
         <div id="title">INVENTORY</div>
-        <InventoryGrid axis="xy" v-model="inventory_items" @sort-end="SortInventoryItem">
-          <InventoryItem v-for="(item, index) in inventory_items" :index="index" :key="item.item" :item="item" />
+        <InventoryGrid v-model="items" @sort-end="SortInventoryItem" axis="xy" :lockToContainerEdges="true">
+          <InventoryItem v-for="(item, index) in items" :index="index" :key="item.item" :item="item" collection="items" />
           <div class="slot" v-for="n in FreeInventorySlots" :key="n"></div>
         </InventoryGrid>
       </div>
@@ -51,20 +58,18 @@ export default {
     return {
       items: [],
       weapons: [],
-      inventory_items: [],
       inventory_visible: false,
     };
   },
   computed: {
     FreeInventorySlots: function() {
-      return 21 - this.inventory_items.length;
+      return 21 - this.items.length;
     },
   },
   methods: {
     SetInventory: function(data) {
       this.items = data.items;
       this.weapons = data.weapons;
-      this.inventory_items = this.weapons.concat(this.items);
     },
     ShowInventory: function() {
       this.inventory_visible = true;
@@ -92,8 +97,9 @@ export default {
     PlayClick() {
       this.CallEvent("PlayClick");
     },
-    SortInventoryItem: function(item) {
-      this.CallEvent('What', item)
+    SortInventoryItem: function(data) {
+      // increment by 1 to account for lua indexing
+      this.CallEvent('SortInventoryItem', data['oldIndex']+1, data['newIndex']+1, data['collection'])
     }
   },
   mounted() {

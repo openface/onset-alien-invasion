@@ -233,6 +233,20 @@ AddRemoteEvent("EquipItemFromInventory", function(player, item)
     CallEvent("SyncInventory", player)
 end)
 
+-- sort inventory
+AddRemoteEvent("SortInventoryItem", function(player, oldIndex, newIndex)
+  print(GetPlayerName(player).." sorting inventory",oldIndex,newIndex)
+  local inventory = GetPlayerPropertyValue(player, "inventory")
+
+  local temp = inventory[oldIndex];
+  inventory[oldIndex] = inventory[newIndex];
+  inventory[newIndex] = temp;
+
+  SetPlayerPropertyValue(player, "inventory", inventory)
+  CallEvent("SyncInventory", player)
+end)
+
+
 -- unequip from inventory
 AddRemoteEvent("UnequipItemFromInventory", function(player, item)
     UnequipObject(player, item)
@@ -248,9 +262,9 @@ end)
 -- item hotkeys
 AddRemoteEvent("UseItemHotkey", function(player, key)
     local inventory = GetPlayerPropertyValue(player, "inventory")
-    local item = inventory[key - 4]
+    local item = inventory[key - 3]
     if item ~= nil then
-      print("Hotkey",item['name'])
+      print("Hotkey",item['item'])
       UseItemFromInventory(player, item['item'])
     end
 end)

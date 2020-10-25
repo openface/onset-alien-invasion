@@ -35,7 +35,7 @@ function EquipObject(player, item)
 
     -- equipable items can be toggled via hotkey
     if item_cfg['type'] == 'equipable' and GetEquippedObject(player, item) ~= nil then
-        print "already equipped; unequipping"
+        print "already equipped; unequipping..."
         UnequipObject(player, item)
         return
     end

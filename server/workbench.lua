@@ -27,7 +27,7 @@ AddRemoteEvent("GetWorkbenchData", function(player)
         ["item_data"] = item_data,
         ["player_resources"] = GetPlayerResources(player)
     }
-    --print(dump(json_encode(_send)))
+    --log.debug(dump(json_encode(_send)))
     CallRemoteEvent(player, "OnGetWorkbenchData", json_encode(_send))
 end)
 
@@ -38,7 +38,7 @@ AddRemoteEvent("BuildItem", function(player, item)
     end
 
     -- start the build
-    print("Player "..GetPlayerName(player).." builds item "..item_cfg['name'])
+    log.debug("Player "..GetPlayerName(player).." builds item "..item_cfg['name'])
 
     -- remove scrap from inventory
     for resource,amount in pairs(item_cfg['recipe']) do
@@ -65,6 +65,6 @@ function GetPlayerResources(player)
             resources[item['item']] = item['quantity']
         end
     end
-    print(dump(resources))
+    log.debug(dump(resources))
     return resources
 end

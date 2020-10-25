@@ -3,6 +3,7 @@
     <img v-if="!InGame" src="http://placekitten.com/100/100" />
     <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
     <span class="name">{{ item.name }}</span>
+    <span v-handle class="handle"></span>
     <span v-if="item.quantity > 1" class="quantity">
       x{{ item.quantity }}
     </span>
@@ -24,11 +25,12 @@
 </template>
 
 <script>
-import { ElementMixin } from "vue-slicksort";
+import { ElementMixin, HandleDirective } from "vue-slicksort";
 
 export default {
   name: "InventoryItem",
-  mixins: [ElementMixin],
+  mixins: [ElementMixin ],
+  directives: { handle: HandleDirective },
   props: ['item'],
   methods: {
     DropItem: function(item) {
@@ -83,6 +85,16 @@ export default {
   font-size: 12px;
   padding: 5px 7px;
   background: rgba(0, 0, 0, 0.5);
+}
+/* invisible drag handle allows for the options to 
+   be functional underneath */
+.slot .handle {
+  width:100%;
+  height:100%;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  z-index:2;
 }
 .slot .keybind {
   position: absolute;

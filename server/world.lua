@@ -1,5 +1,5 @@
 AddEvent("OnPackageStart", function()
-  print("Loading world...")
+  log.info("Loading world...")
 
   local _table = File_LoadJSONTable("packages/"..GetPackageName().."/server/data/world.json")
   for _,v in pairs(_table) do
@@ -15,5 +15,5 @@ AddEvent("OnPackageStart", function()
     end
   end
 
-  print("Alien Invasion world loaded!")
+  log.info("Alien Invasion world loaded!")
 end)

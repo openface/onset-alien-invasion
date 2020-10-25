@@ -55,7 +55,7 @@ end)
 
 function HideSatelliteWaypoint()
     if SatelliteWaypoint ~= nil then
-        print("destroy sat wp: " .. SatelliteWaypoint)
+        --log.debug("destroy sat wp: " .. SatelliteWaypoint)
         DestroyWaypoint(SatelliteWaypoint)
     end
 end
@@ -97,7 +97,7 @@ end)
 function HasComputerPart(player)
     local inventory = GetPlayerPropertyValue(player, "inventory")
     for _, item in pairs(inventory) do
-        print(item['item'])
+        --log.debug(item['item'])
         if item['item'] == 'computer_part' then
             return true
         end

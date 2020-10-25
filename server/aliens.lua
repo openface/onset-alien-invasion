@@ -22,7 +22,7 @@ AddCommand("togaliens", function(player)
         return
     end
     AlienSpawnsEnabled = not AlienSpawnsEnabled
-    print("Alien spawning is now ", AlienSpawnsEnabled)
+    log.info("Alien spawning is now ", AlienSpawnsEnabled)
 end)
 
 AddEvent("OnPackageStart", function()
@@ -47,7 +47,7 @@ end)
 
 function SpawnAliens()
     if AlienSpawnsEnabled ~= true then
-        print "Alien spawning disabled."
+        log.info "Alien spawning disabled."
         return
     end
 
@@ -84,7 +84,7 @@ end
 function IsPlayerAttackable(player)
     -- don't attack if player is in lobby (character selection)
     if GetPlayerDimension(player) ~= 0 then
-        print(GetPlayerName(player) .. " is in another dimension")
+        log.debug(GetPlayerName(player) .. " is in another dimension")
         return false
     end
 
@@ -92,7 +92,7 @@ function IsPlayerAttackable(player)
     local x, y, z = GetPlayerLocation(player)
     local distance = GetDistance3D(x, y, z, SafeLocation.x, SafeLocation.y, SafeLocation.z)
     if distance < SafeRange then
-        print(GetPlayerName(player) .. " is in safe zone")
+        log.debug(GetPlayerName(player) .. " is in safe zone")
         return false
     end
 
@@ -116,12 +116,12 @@ function SpawnAlienNearPlayer(player)
     SetNPCPropertyValue(npc, 'type', 'alien')
     SetNPCPropertyValue(npc, 'location', {x, y, z})
 
-    print("NPC (ID " .. npc .. ") spawned near player " .. GetPlayerName(player))
+    log.info("NPC (ID " .. npc .. ") spawned near player " .. GetPlayerName(player))
 end
 
 AddEvent("OnNPCSpawn", function(npc)
     if GetNPCPropertyValue(npc, 'type') == 'alien' then
-        print("OnNPCSpawn alien " .. npc)
+        --log.debug("OnNPCSpawn alien " .. npc)
         SetNPCHealth(npc, AlienHealth)
 
         local x, y, z = GetNPCLocation(npc)
@@ -148,7 +148,7 @@ AddEvent("OnPlayerWeaponShot",
             -- chance that the alien runs away
             if math.random(1, 5) == 1 then
               AlienReturn(hitid)
-              print("Alien retreated " .. hitid)
+              log.debug("Alien retreated " .. hitid)
               return
             end
 
@@ -172,12 +172,12 @@ AddEvent("OnNPCDeath", function(npc, killer)
     if adjusted_killer ~= 0 then
         CallRemoteEvent(adjusted_killer, 'AlienNoLongerAttacking')
         AddPlayerChatAll(GetPlayerName(adjusted_killer) .. ' has killed an alien!')
-        print("NPC (ID " .. npc .. ") killed by player " .. GetPlayerName(adjusted_killer))
+        log.info("NPC (ID " .. npc .. ") killed by player " .. GetPlayerName(adjusted_killer))
         BumpPlayerStat(adjusted_killer, 'alien_kills')
     end
     SetNPCRagdoll(npc, true)
     Delay(120 * 1000, function()
-        print("NPC (ID " .. npc .. ") is dead.. despawning")
+        log.debug("NPC (ID " .. npc .. ") is dead.. despawning")
         AlienRetargetCooldown[npc] = nil
         DestroyNPC(npc)
     end)
@@ -187,7 +187,7 @@ function SetAlienTarget(npc, player)
     local vehicle = GetPlayerVehicle(player)
     if vehicle == 0 then
         -- target is on foot
-        print("NPC (ID " .. npc .. ") targets player " .. GetPlayerName(player))
+        log.debug("NPC (ID " .. npc .. ") targets player " .. GetPlayerName(player))
         SetNPCPropertyValue(npc, 'target', player, true)
 
         -- alien has a new target
@@ -195,7 +195,7 @@ function SetAlienTarget(npc, player)
         CallRemoteEvent(player, 'AlienAttacking', npc)
     else
         -- target is in a vehicle
-        print("NPC (ID " .. npc .. ") targets player in vehicle: " .. GetPlayerName(player))
+        log.debug("NPC (ID " .. npc .. ") targets player in vehicle: " .. GetPlayerName(player))
         SetNPCPropertyValue(npc, 'target', player, true)
 
         -- alien has a new target vehicle
@@ -229,7 +229,7 @@ function ResetAlien(npc)
             -- we found a target
             SetAlienTarget(npc, player)
         elseif (GetNPCPropertyValue(npc, 'target') == player) then
-            print("NPC (ID " .. npc .. ") target is out of range")
+            log.debug("NPC (ID " .. npc .. ") target is out of range")
             -- target is out of range, alien is sad
             local x, y, z = GetNPCLocation(npc)
             SetNPCTargetLocation(npc, x, y, z)
@@ -247,7 +247,7 @@ end
 
 -- kills players when reached
 AddEvent("OnNPCReachTarget", function(npc)
-    -- print("NPC (ID "..npc..") reached target")
+    -- log.debug("NPC (ID "..npc..") reached target")
     if GetNPCPropertyValue(npc, 'type') ~= 'alien' then
         return
     end
@@ -260,7 +260,7 @@ AddEvent("OnNPCReachTarget", function(npc)
     local returning = GetNPCPropertyValue(npc, 'returning')
     if returning == true then
         -- alien is back in starting position
-        print("NPC (ID " .. npc .. ") back at starting position.. despawning")
+        log.debug("NPC (ID " .. npc .. ") back at starting position.. despawning")
         AlienRetargetCooldown[npc] = nil
         DestroyNPC(npc)
         return
@@ -268,7 +268,7 @@ AddEvent("OnNPCReachTarget", function(npc)
 
     local target = GetNPCPropertyValue(npc, 'target')
     if target == nil then
-        print("NPC (ID " .. npc .. ") no longer has a target")
+        log.debug("NPC (ID " .. npc .. ") no longer has a target")
         -- alien reached a target but there is no target property?
         return
     end
@@ -284,7 +284,7 @@ AddEvent("OnNPCReachTarget", function(npc)
 
     if dist < 200 then
         -- we're in close range, attack player
-        print("NPC (ID " .. npc .. ") hit player " .. GetPlayerName(target))
+        log.debug("NPC (ID " .. npc .. ") hit player " .. GetPlayerName(target))
         SetNPCAnimation(npc, "KUNGFU", false)
 
         -- return home if attacking an admin

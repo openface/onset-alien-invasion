@@ -1,3 +1,6 @@
+-- global Log
+log = require("packages/" .. GetPackageName() .. "/server/vendor/log")
+
 local Config = require("packages/" .. GetPackageName() .. "/config")
 
 -- generate randomness

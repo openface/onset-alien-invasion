@@ -47,7 +47,8 @@
     "server/objects/weapons/ak47.lua",
     "server/objects/weapons/ak47g.lua",
     "server/vendor/json.lua",
-    "server/vendor/file.lua"
+    "server/vendor/file.lua",
+    "server/vendor/log.lua"
   ],
   "client_scripts": [
     "client/client.lua",

@@ -1,5 +1,5 @@
 AddEvent("OnPackageStop", function()
-    print "Resetting player inventories..."
+    log.info "Resetting player inventories..."
     for _, player in pairs(GetAllPlayers()) do
         SetPlayerPropertyValue(player, "inventory", {})
         SyncInventory(player)
@@ -44,22 +44,33 @@ function SyncInventory(player)
         end
     end
     CallRemoteEvent(player, "SetInventory", json_encode(_send))
-    print(GetPlayerName(player) .. " sync inventory: " .. json_encode(_send))
+    log.debug(GetPlayerName(player) .. " sync inventory: " .. json_encode(_send))
 end
 AddRemoteEvent("SyncInventory", SyncInventory)
 AddEvent("SyncInventory", SyncInventory)
 
 -- add object to inventory
 function AddToInventory(player, item)
-    local inventory = GetPlayerPropertyValue(player, "inventory")
-
     item_cfg = GetItemConfig(item)
     if not item_cfg then
-        print("Invalid object " .. item)
+        log.error("Invalid object " .. item)
         return
     end
 
+    if item_cfg['type'] == 'weapon' then
+      AddItemToInventory(player, item)
+      --AddWeaponToInventory(player, item)
+    else
+      AddItemToInventory(player, item)
+    end
+
+    CallEvent("SyncInventory", player)
+  end
+
+function AddItemToInventory(player, item)
+    local inventory = GetPlayerPropertyValue(player, "inventory")
     local curr_qty = GetInventoryCount(player, item)
+
     if curr_qty > 0 then
         -- update existing object quantity
         SetItemQuantity(player, item, curr_qty + 1)
@@ -74,8 +85,6 @@ function AddToInventory(player, item)
         })
         SetPlayerPropertyValue(player, "inventory", inventory)
     end
-
-    CallEvent("SyncInventory", player)
 end
 
 function SetItemQuantity(player, item, quantity)
@@ -93,7 +102,7 @@ function SetItemQuantity(player, item, quantity)
         end
     end
     SetPlayerPropertyValue(player, "inventory", inventory)
-    print(GetPlayerName(player) .. " inventory item " .. item .. " quantity set to " .. quantity)
+    log.debug(GetPlayerName(player) .. " inventory item " .. item .. " quantity set to " .. quantity)
     CallEvent("SyncInventory", player)
 end
 
@@ -104,7 +113,7 @@ function RemoveFromInventory(player, item, amount)
 
     local item_cfg = GetItemConfig(item)
     if not item_cfg then
-        print("Invalid item: " .. item)
+        log.error("Invalid item: " .. item)
         return
     end
 
@@ -117,7 +126,7 @@ function RemoveFromInventory(player, item, amount)
         -- remove item from inventory
         SetItemQuantity(player, item, 0)
 
-        print("items:" .. item .. ":drop")
+        log.debug("items:" .. item .. ":drop")
 
         -- call DROP event on object
         --CallEvent("items:" .. item .. ":drop", player, item_cfg)
@@ -131,7 +140,7 @@ end
 
 -- unequips item, removes from inventory, and places on ground
 AddRemoteEvent("DropItemFromInventory", function(player, item, x, y, z)
-    print("Player " .. GetPlayerName(player) .. " drops item " .. item)
+    log.info("Player " .. GetPlayerName(player) .. " drops item " .. item)
 
     SetPlayerAnimation(player, "CARRY_SETDOWN")
 
@@ -191,16 +200,16 @@ end
 function UseItemFromInventory(player, item)
     local item_cfg = GetItemConfigFromInventory(player, item)
     if item_cfg == nil then
-        print("Item " .. item .. " not found in inventory")
+        log.error("Item " .. item .. " not found in inventory")
         return
     end
 
     if item_cfg['type'] == 'weapon' then
-      print("Not using weapon from inventory")
+      log.error("Not using weapon from inventory")
       return
     end
 
-    print(GetPlayerName(player) .. " uses item " .. item .. " from inventory")
+    log.info(GetPlayerName(player) .. " uses item " .. item .. " from inventory")
     EquipObject(player, item)
     PlayInteraction(player, item)
 
@@ -212,7 +221,7 @@ function UseItemFromInventory(player, item)
 
             -- delete if all used up
             if (object['max_use'] - v['used'] == 0) then
-                print "all used up!"
+                log.debug "all used up!"
                 SetItemQuantity(player, item, 0)
             end
 
@@ -235,7 +244,7 @@ end)
 
 -- sort inventory
 AddRemoteEvent("SortInventoryItem", function(player, oldIndex, newIndex)
-  print(GetPlayerName(player).." sorting inventory",oldIndex,newIndex)
+  log.debug(GetPlayerName(player).." sorting inventory",oldIndex,newIndex)
   local inventory = GetPlayerPropertyValue(player, "inventory")
 
   local temp = inventory[oldIndex];
@@ -262,9 +271,10 @@ end)
 -- item hotkeys
 AddRemoteEvent("UseItemHotkey", function(player, key)
     local inventory = GetPlayerPropertyValue(player, "inventory")
+    log.trace(dump(inventory))
     local item = inventory[key - 3]
     if item ~= nil then
-      print("Hotkey",item['item'])
+      log.debug("Hotkey",item['item'])
       UseItemFromInventory(player, item['item'])
     end
 end)

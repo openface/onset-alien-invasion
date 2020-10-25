@@ -36,7 +36,7 @@ AddRemoteEvent("InteractSatelliteComputer", function(player)
     AddPlayerChatAll(GetPlayerName(player) .. " acquired a satellite part!")
     AddPlayerChatAll("Satellite communications are now "..percentage_complete.."% operational!")
 
-    print(GetPlayerName(player).. " acquired satellite part "..PartsCollected.." / "..PartsRequired)
+    log.info(GetPlayerName(player).. " acquired satellite part "..PartsCollected.." / "..PartsRequired)
     
     BumpPlayerStat(player, 'parts_collected')
 
@@ -44,7 +44,7 @@ AddRemoteEvent("InteractSatelliteComputer", function(player)
 
     if PartsCollected >= PartsRequired then
         -- part collection complete; spawn the mothership
-        print(GetPlayerName(player).." completed the satellite transmission")
+        log.info(GetPlayerName(player).." completed the satellite transmission")
         AddPlayerChatAll(GetPlayerName(player).." completed the satellite transmission!")
 
         -- reset satellite status

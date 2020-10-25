@@ -18,7 +18,7 @@ AddCommand("spos", function(player)
     local x, y, z = GetPlayerLocation(player)
     string = "Location: " .. x .. " " .. y .. " " .. z
     AddPlayerChat(player, string)
-    print(string)
+    log.debug(string)
     table.insert(ScrapLocations, {x, y, z})
 
     File_SaveJSONTable("packages/" .. GetPackageName() .. "/server/data/scrap.json", ScrapLocations)
@@ -53,14 +53,14 @@ end)
 function DespawnScrap()
     for _, text3d in pairs(GetAllText3D()) do
         if GetText3DPropertyValue(text3d, 'scrap') ~= nil then
-            print("Despawning scrap: " .. dump(text3d))
+            log.debug("Despawning scrap: " .. dump(text3d))
             DestroyText3D(text3d)
         end
     end
 end
 
 function SpawnScrap()
-    print "Spawning scrap..."
+    log.debug "Spawning scrap..."
     DespawnScrap()
 
     -- randomize scrap locations
@@ -74,7 +74,7 @@ function SpawnScrap()
     for _, pos in pairs({table.unpack(shuffled, 1, NumSpawnedScrap)}) do
         local text3d = CreateText3D("Press [E] to Search", 6, pos[1], pos[2], pos[3] + 30, 0, 0, 0)
         SetText3DPropertyValue(text3d, 'scrap', true)
-        print("Spawned scrap: " .. dump(text3d))
+        log.debug("Spawned scrap: " .. dump(text3d))
     end
 end
 
@@ -111,7 +111,7 @@ AddRemoteEvent("SearchForScrap", function(player)
                         else
                             -- not found
                             AddPlayerChat(player, "You were unable to find anything useful.")
-                            print("Player " .. GetPlayerName(player) .. " searched but found nothing.")
+                            log.debug("Player " .. GetPlayerName(player) .. " searched but found nothing.")
                         end
                     end)
                 end

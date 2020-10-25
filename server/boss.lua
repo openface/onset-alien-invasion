@@ -34,7 +34,7 @@ end)
 function SpawnBoss()
     if Boss ~= nil then
         -- boss is already spawned
-        print "Mothership already spawned"
+        log.warn "Mothership already spawned"
         return
     end
 
@@ -47,7 +47,7 @@ function SpawnBoss()
     BossTargetedLocation = { x = x, y = y, z = z }
 
     -- spawn boss randomly near the target
-    print("Spawning boss on target "..GetPlayerName(target))
+    log.info("Spawning boss on target "..GetPlayerName(target))
     local r_x,r_y = randomPointInCircle(BossTargetedLocation.x, BossTargetedLocation.y, BossDamageRange)
 
     Boss = CreateObject(91212, r_x, r_y, BossTargetedLocation.z+20000, 0, 0, 0, 20, 20, 20)
@@ -70,7 +70,7 @@ end
 function StartBossFight()
     if Boss == nil or BossTargetedLocation == nil then
         -- boss is already spawned
-        print "Mothership not spawned"
+        log.warn "Mothership not spawned"
         return
     end
 
@@ -82,12 +82,12 @@ function StartBossFight()
 
             if next(targets) == nil then
                 -- no targets found, mothership leaves
-                print "Mothership has no targets"
+                log.warn "Mothership has no targets"
                 DespawnBoss()
                 return
             end
 
-            print("Boss targets: "..dump(targets))
+            log.debug("Boss targets: "..dump(targets))
 
             for _,ply in pairs(targets) do
                 -- player may have disconnected
@@ -128,7 +128,7 @@ function DespawnBoss()
     BossTargets = {}
     BossKillers = {}
 
-    print "Mothership despawned"
+    log.info "Mothership despawned"
 end
     
 AddEvent("OnPlayerWeaponShot", function(player, weapon, hittype, hitid, hitx, hity, hitz, startx, starty, startz, normalx, normaly, normalz)
@@ -145,7 +145,7 @@ AddEvent("OnPlayerWeaponShot", function(player, weapon, hittype, hitid, hitx, hi
 
         -- anyone who fires on boss gets credit for the kill
         if BossKillers[player] == nil then
-            print("Adding boss killer "..player)
+            log.debug("Adding boss killer "..player)
             BossKillers[player] = player
         end
 
@@ -156,7 +156,7 @@ AddEvent("OnPlayerWeaponShot", function(player, weapon, hittype, hitid, hitx, hi
         -- when percentage is divisible by 5
         local percentage_health = math.floor(BossHealth / BossInitialHealth * 100.0)
         if first_hit or math.fmod(percentage_health, 5) == 0.0 then
-            print("Mothership health: "..percentage_health.."%")
+            log.debug("Mothership health: "..percentage_health.."%")
             for _,ply in pairs(players) do
                 CallRemoteEvent(ply, "SetBossHealth", percentage_health)
             end
@@ -187,7 +187,7 @@ AddEvent("OnPlayerWeaponShot", function(player, weapon, hittype, hitid, hitx, hi
             for _,ply in pairs(players) do
                 CallRemoteEvent(ply, "ShowBanner", "MOTHERSHIP HAS BEEN DESTROYED!")
             end
-            print "Mothership has been destroyed"
+            log.info "Mothership has been destroyed"
 
             --
             -- start new round

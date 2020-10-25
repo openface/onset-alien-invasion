@@ -8,7 +8,7 @@
           <div class="subtitle">
             WEAPONS
           </div>
-          <InventoryGrid v-model="weapons" @sort-end="SortInventoryItem" axis="xy" :lockToContainerEdges="false">
+          <InventoryGrid v-model="weapons" @sort-end="SortInventoryItem" axis="xy" :lockToContainerEdges="false" :useDragHandle="true">
             <InventoryItem v-for="(item, index) in weapons" :index="index" :key="item.item" :item="item" collection="weapons" />
           </InventoryGrid>
         </div>
@@ -17,7 +17,7 @@
             INVENTORY
             <span>{{ items.length }} / 21</span>
           </div>
-          <InventoryGrid v-model="items" @sort-end="SortInventoryItem" axis="xy" :lockToContainerEdges="false">
+          <InventoryGrid v-model="items" @sort-end="SortInventoryItem" axis="xy" :lockToContainerEdges="false" :useDragHandle="true">
             <InventoryItem v-for="(item, index) in items" :index="index" :key="item.item" :item="item" collection="items" />
             <div class="slot" v-for="n in FreeInventorySlots" :key="n"></div>
           </InventoryGrid>

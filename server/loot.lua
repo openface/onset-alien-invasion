@@ -17,7 +17,7 @@ AddCommand("lpos", function(player)
     local x, y, z = GetPlayerLocation(player)
     string = "Location: "..x.." "..y.." "..z
     AddPlayerChat(player, string)
-    print(string)
+    log.debug(string)
     table.insert(LootLocations, { x, y, z })
 
     File_SaveJSONTable("packages/"..GetPackageName().."/server/data/lootpickups.json", LootLocations)
@@ -42,7 +42,7 @@ function SpawnLootArea(pos)
         return
     end
 
-    print 'Spawning loot pickup...'
+    log.debug 'Spawning loot pickup...'
 
     -- destroy any existing loot pickups
     DestroyLootPickups()
@@ -110,7 +110,7 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
 
     BumpPlayerStat(player, "loot_collected")
     AddPlayerChatAll(GetPlayerName(player)..' has picked up a lootbox!')
-    print(GetPlayerName(player)..' has picked up a lootbox')
+    log.debug(GetPlayerName(player)..' has picked up a lootbox')
 
     -- remove waypoint for others
     for _,p in pairs(GetAllPlayers()) do

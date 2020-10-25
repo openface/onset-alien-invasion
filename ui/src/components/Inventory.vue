@@ -1,19 +1,27 @@
 <template>
   <div id="container">
     <div id="inventory_screen" v-if="inventory_visible">
-
-      <div v-if="weapons.length > 0">
-        <InventoryGrid v-model="weapons" @sort-end="SortInventoryItem" axis="xy" :lockToContainerEdges="true">
-          <InventoryItem v-for="(weapon, index) in weapons" :index="index" :key="weapon.item" :item="weapon" collection="weapons" />
-        </InventoryGrid>
-      </div>
-
-      <div v-if="items.length > 0">
+      <div v-if="weapons.length > 0 || items.length > 0">
         <div id="title">INVENTORY</div>
-        <InventoryGrid v-model="items" @sort-end="SortInventoryItem" axis="xy" :lockToContainerEdges="true">
-          <InventoryItem v-for="(item, index) in items" :index="index" :key="item.item" :item="item" collection="items" />
-          <div class="slot" v-for="n in FreeInventorySlots" :key="n"></div>
-        </InventoryGrid>
+
+        <div v-if="weapons.length > 0">
+          <div class="subtitle">
+            WEAPONS
+          </div>
+          <InventoryGrid v-model="weapons" @sort-end="SortInventoryItem" axis="xy" :lockToContainerEdges="false">
+            <InventoryItem v-for="(item, index) in weapons" :index="index" :key="item.item" :item="item" collection="weapons" />
+          </InventoryGrid>
+        </div>
+        <div v-if="items.length > 0">
+          <div class="subtitle">
+            INVENTORY
+            <span>{{ items.length }} / 21</span>
+          </div>
+          <InventoryGrid v-model="items" @sort-end="SortInventoryItem" axis="xy" :lockToContainerEdges="false">
+            <InventoryItem v-for="(item, index) in items" :index="index" :key="item.item" :item="item" collection="items" />
+            <div class="slot" v-for="n in FreeInventorySlots" :key="n"></div>
+          </InventoryGrid>
+        </div>
       </div>
       <div v-else id="title">YOUR INVENTORY IS EMPTY</div>
     </div>
@@ -99,7 +107,9 @@ export default {
     },
     SortInventoryItem: function(data) {
       // increment by 1 to account for lua indexing
-      this.CallEvent('SortInventoryItem', data['oldIndex']+1, data['newIndex']+1, data['collection'])
+      if (data['oldIndex'] != data['newIndex']) {
+        this.CallEvent('SortInventoryItem', data['oldIndex']+1, data['newIndex']+1, data['collection'])
+      }
     }
   },
   mounted() {
@@ -216,14 +226,19 @@ export default {
   margin: 0;
   font-weight: bold;
   font-family: impact;
+  text-shadow:2px 2px rgba(0, 0, 0, 0.1);
+}
+.subtitle {
+  background:rgba(0, 0, 0, 0.3);
+  padding:5px;
+  text-shadow:1px 1px rgba(0, 0, 0, 0.1);
+  font-weight:bold;
+  font-size:11px;
+}
+.subtitle span {
+  float:right;
 }
 
-.grid {
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  margin: 0 auto;
-}
 
 #hotbar {
   display: flex;

@@ -8,8 +8,8 @@
           <div class="subtitle">
             WEAPONS
           </div>
-          <InventoryGrid v-model="weapons" @sort-end="SortInventoryItem" axis="xy" :lockToContainerEdges="false" :useDragHandle="true">
-            <InventoryItem v-for="(item, index) in weapons" :index="index" :key="item.item" :item="item" collection="weapons" />
+          <InventoryGrid v-model="weapons" @input="SortInventoryWeapons" axis="x" :lockToContainerEdges="true" :useDragHandle="true">
+            <InventoryItem v-for="(item, index) in weapons" :index="index" :key="index" :item="item" collection="weapons" />
           </InventoryGrid>
         </div>
         <div v-if="items.length > 0">
@@ -17,9 +17,9 @@
             INVENTORY
             <span>{{ items.length }} / 21</span>
           </div>
-          <InventoryGrid v-model="items" @sort-end="SortInventoryItem" axis="xy" :lockToContainerEdges="false" :useDragHandle="true">
-            <InventoryItem v-for="(item, index) in items" :index="index" :key="item.item" :item="item" collection="items" />
-            <div class="slot" v-for="n in FreeInventorySlots" :key="n"></div>
+          <InventoryGrid v-model="items" @input="SortInventoryItems" axis="xy" :lockToContainerEdges="true" :useDragHandle="true">
+            <InventoryItem v-for="(item, index) in items" :index="index" :key="index" :item="item" collection="items" />
+            <div class="slot" v-for="n in FreeInventorySlots" :key="'F'+n"></div>
           </InventoryGrid>
         </div>
       </div>
@@ -85,31 +85,16 @@ export default {
     HideInventory: function() {
       this.inventory_visible = false;
     },
-    DropItem: function(item) {
-      this.CallEvent("DropItem", item);
-    },
-    EquipItem: function(item) {
-      this.CallEvent("EquipItem", item);
-    },
-    UnequipItem: function(item) {
-      this.CallEvent("UnequipItem", item);
-    },
-    UseItem: function(item) {
-      this.CallEvent("UseItem", item);
-    },
     range: function(start, end) {
       return Array(end - start + 1)
         .fill()
         .map((_, idx) => start + idx);
     },
-    PlayClick() {
-      this.CallEvent("PlayClick");
+    SortInventoryWeapons: function(data) {
+      this.CallEvent('SortInventoryWeapons', JSON.stringify(data))
     },
-    SortInventoryItem: function(data) {
-      // increment by 1 to account for lua indexing
-      if (data['oldIndex'] != data['newIndex']) {
-        this.CallEvent('SortInventoryItem', data['oldIndex']+1, data['newIndex']+1, data['collection'])
-      }
+    SortInventoryItems: function(data) {
+      this.CallEvent('SortInventoryItems', JSON.stringify(data))
     }
   },
   mounted() {

@@ -14,7 +14,7 @@ function SyncInventory(player)
         items = {},
         weapons = {}
     }
-    for _, item in pairs(inventory) do
+    for i, item in ipairs(inventory) do
         if item['type'] == 'weapon' then
             table.insert(_send.weapons, {
                 ['item'] = item['item'],
@@ -57,17 +57,6 @@ function AddToInventory(player, item)
         return
     end
 
-    if item_cfg['type'] == 'weapon' then
-      AddItemToInventory(player, item)
-      --AddWeaponToInventory(player, item)
-    else
-      AddItemToInventory(player, item)
-    end
-
-    CallEvent("SyncInventory", player)
-  end
-
-function AddItemToInventory(player, item)
     local inventory = GetPlayerPropertyValue(player, "inventory")
     local curr_qty = GetInventoryCount(player, item)
 
@@ -85,6 +74,8 @@ function AddItemToInventory(player, item)
         })
         SetPlayerPropertyValue(player, "inventory", inventory)
     end
+
+    CallEvent("SyncInventory", player)
 end
 
 function SetItemQuantity(player, item, quantity)
@@ -242,17 +233,17 @@ AddRemoteEvent("EquipItemFromInventory", function(player, item)
     CallEvent("SyncInventory", player)
 end)
 
+-- sort inventory weapons
+AddRemoteEvent("SortInventoryWeapons", function(player, data)
+  log.debug(GetPlayerName(player).. " sorting weapons")
+  SetPlayerPropertyValue(player, "inventory", json_decode(data))
+end)
+
 -- sort inventory
-AddRemoteEvent("SortInventoryItem", function(player, oldIndex, newIndex)
-  log.debug(GetPlayerName(player).." sorting inventory",oldIndex,newIndex)
-  local inventory = GetPlayerPropertyValue(player, "inventory")
-
-  local temp = inventory[oldIndex];
-  inventory[oldIndex] = inventory[newIndex];
-  inventory[newIndex] = temp;
-
-  SetPlayerPropertyValue(player, "inventory", inventory)
-  CallEvent("SyncInventory", player)
+AddRemoteEvent("SortInventoryItems", function(player, data)
+  log.debug(GetPlayerName(player).. " sorting items")
+  SetPlayerPropertyValue(player, "inventory", json_decode(data))
+  --CallEvent("SyncInventory", player)
 end)
 
 

@@ -61,10 +61,13 @@ AddEvent("UseItem", function(item)
 end)
 
 -- sorting inventory
-AddEvent("SortInventoryItem", function(oldIndex, newIndex, collection)
-    if collection == 'items' then
-      CallRemoteEvent("SortInventoryItem", oldIndex, newIndex)
-    end
+AddEvent("SortInventoryWeapons", function(data)
+    CallRemoteEvent("SortInventoryWeapons", data)
+end)
+
+-- sorting inventory
+AddEvent("SortInventoryItems", function(data)
+  CallRemoteEvent("SortInventoryItems", data)
 end)
 
 

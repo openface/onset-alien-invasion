@@ -3,7 +3,7 @@
     <div id="inventory_screen" v-if="inventory_visible">
       <div v-if="inventory_items.length > 0">
         <div id="title">INVENTORY</div>
-        <InventoryGrid axis="xy" v-model="inventory_items">
+        <InventoryGrid axis="xy" v-model="inventory_items" @sort-end="SortInventoryItem">
           <InventoryItem v-for="(item, index) in inventory_items" :index="index" :key="item.item" :item="item" />
           <div class="slot" v-for="n in FreeInventorySlots" :key="n"></div>
         </InventoryGrid>
@@ -14,10 +14,7 @@
       <div class="slot" v-for="n in range(1, 3)" :key="n">
         <div v-if="weapons[n - 1]">
           <img v-if="!InGame" src="http://placekitten.com/100/100" />
-          <img
-            v-if="InGame"
-            :src="'http://game/objects/' + weapons[n - 1].modelid"
-          />
+          <img v-if="InGame" :src="'http://game/objects/' + weapons[n - 1].modelid" />
           <span class="keybind">{{ n }}</span>
           <span class="name">{{ weapons[n - 1].name }}</span>
           <span v-if="weapons[n - 1].quantity > 1" class="quantity">
@@ -28,10 +25,7 @@
       <div class="slot" v-for="n in range(4, 9)" :key="n">
         <div v-if="items[n - 4]">
           <img v-if="!InGame" src="http://placekitten.com/100/100" />
-          <img
-            v-if="InGame"
-            :src="'http://game/objects/' + items[n - 4].modelid"
-          />
+          <img v-if="InGame" :src="'http://game/objects/' + items[n - 4].modelid" />
           <span class="keybind">{{ n }}</span>
           <span class="name">{{ items[n - 4].name }}</span>
           <span v-if="items[n - 4].quantity > 1" class="quantity">
@@ -98,6 +92,9 @@ export default {
     PlayClick() {
       this.CallEvent("PlayClick");
     },
+    SortInventoryItem: function(item) {
+      this.CallEvent('What', item)
+    }
   },
   mounted() {
     this.EventBus.$on("SetInventory", this.SetInventory);

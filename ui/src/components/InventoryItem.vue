@@ -6,7 +6,7 @@
     <span v-if="item.quantity > 1" class="quantity">
       x{{ item.quantity }}
     </span>
-    <div class="options" v-if="false">
+    <div class="options">
       <div v-if="item.type == 'weapon'">
         <a v-if="!item.equipped" @click="EquipItem(item.item)">Equip</a>
       </div>

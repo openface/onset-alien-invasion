@@ -1,33 +1,12 @@
 <template>
   <div id="container">
     <div id="inventory_screen" v-if="inventory_visible">
-      <div v-if="InventoryItems.length > 0">
+      <div v-if="inventory_items.length > 0">
         <div id="title">INVENTORY</div>
-        <div class="grid">
-          <div class="slot" v-for="item in InventoryItems" :key="item.name" @mouseenter="PlayClick()">
-            <img v-if="!InGame" src="http://placekitten.com/100/100" />
-            <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
-            <span class="name">{{ item.name }}</span>
-            <span v-if="item.quantity > 1" class="quantity">
-              x{{ item.quantity }}
-            </span>
-            <div class="options">
-              <div v-if="item.type == 'weapon'">
-                <a v-if="!item.equipped" @click="EquipItem(item.item)">Equip</a>
-              </div>
-              <div v-if="item.type == 'equipable'">
-                <a v-if="!item.equipped" @click="EquipItem(item.item)">Equip</a>
-                <a v-if="item.equipped" @click="UnequipItem(item.item)">Unequip</a>
-              </div>
-              <div v-else-if="item.type == 'usable'">
-                <a @click="UseItem(item.item)">Use</a>
-                <a v-if="item.equipped" @click="UnequipItem(item.item)">Put Away</a>
-              </div>
-              <a @click="DropItem(item.item)">Drop</a>
-            </div>
-          </div>
+        <InventoryGrid axis="xy" v-model="inventory_items">
+          <InventoryItem v-for="(item, index) in inventory_items" :index="index" :key="item.item" :item="item" />
           <div class="slot" v-for="n in FreeInventorySlots" :key="n"></div>
-        </div>
+        </InventoryGrid>
       </div>
       <div v-else id="title">YOUR INVENTORY IS EMPTY</div>
     </div>
@@ -35,7 +14,10 @@
       <div class="slot" v-for="n in range(1, 3)" :key="n">
         <div v-if="weapons[n - 1]">
           <img v-if="!InGame" src="http://placekitten.com/100/100" />
-          <img v-if="InGame" :src="'http://game/objects/' + weapons[n - 1].modelid" />
+          <img
+            v-if="InGame"
+            :src="'http://game/objects/' + weapons[n - 1].modelid"
+          />
           <span class="keybind">{{ n }}</span>
           <span class="name">{{ weapons[n - 1].name }}</span>
           <span v-if="weapons[n - 1].quantity > 1" class="quantity">
@@ -46,7 +28,10 @@
       <div class="slot" v-for="n in range(4, 9)" :key="n">
         <div v-if="items[n - 4]">
           <img v-if="!InGame" src="http://placekitten.com/100/100" />
-          <img v-if="InGame" :src="'http://game/objects/' + items[n - 4].modelid" />
+          <img
+            v-if="InGame"
+            :src="'http://game/objects/' + items[n - 4].modelid"
+          />
           <span class="keybind">{{ n }}</span>
           <span class="name">{{ items[n - 4].name }}</span>
           <span v-if="items[n - 4].quantity > 1" class="quantity">
@@ -59,45 +44,51 @@
 </template>
 
 <script>
+import InventoryGrid from "./InventoryGrid.vue";
+import InventoryItem from "./InventoryItem.vue";
+
 export default {
   name: "Inventory",
+  components: {
+    InventoryGrid,
+    InventoryItem,
+  },
   data() {
     return {
       items: [],
       weapons: [],
+      inventory_items: [],
       inventory_visible: false,
     };
   },
   computed: {
     FreeInventorySlots: function() {
-      return 21 - this.InventoryItems.length;
-    },
-    InventoryItems: function() {
-      return this.weapons.concat(this.items);
+      return 21 - this.inventory_items.length;
     },
   },
   methods: {
     SetInventory: function(data) {
       this.items = data.items;
       this.weapons = data.weapons;
+      this.inventory_items = this.weapons.concat(this.items);
     },
     ShowInventory: function() {
       this.inventory_visible = true;
     },
     HideInventory: function() {
-      this.inventory_visible = false; 
+      this.inventory_visible = false;
     },
     DropItem: function(item) {
-      this.CallEvent('DropItem', item);
+      this.CallEvent("DropItem", item);
     },
     EquipItem: function(item) {
-      this.CallEvent('EquipItem', item);
+      this.CallEvent("EquipItem", item);
     },
     UnequipItem: function(item) {
-      this.CallEvent('UnequipItem', item);
+      this.CallEvent("UnequipItem", item);
     },
     UseItem: function(item) {
-      this.CallEvent('UseItem', item);
+      this.CallEvent("UseItem", item);
     },
     range: function(start, end) {
       return Array(end - start + 1)
@@ -105,8 +96,8 @@ export default {
         .map((_, idx) => start + idx);
     },
     PlayClick() {
-      this.CallEvent("PlayClick")
-    }
+      this.CallEvent("PlayClick");
+    },
   },
   mounted() {
     this.EventBus.$on("SetInventory", this.SetInventory);
@@ -122,7 +113,7 @@ export default {
             modelid: 2,
             quantity: 1,
             type: "weapon",
-            equipped: true
+            equipped: true,
           },
           {
             item: "glock2",
@@ -130,8 +121,7 @@ export default {
             modelid: 2,
             quantity: 1,
             type: "weapon",
-            equipped: true
-
+            equipped: true,
           },
           {
             item: "glock3",
@@ -139,7 +129,7 @@ export default {
             modelid: 2,
             quantity: 1,
             type: "weapon",
-            equipped: true
+            equipped: true,
           },
           {
             item: "glock4",
@@ -192,7 +182,6 @@ export default {
 
       this.EventBus.$emit("ShowInventory");
       //this.EventBus.$emit("HideInventory");
-
     }
   },
 };
@@ -307,7 +296,7 @@ export default {
   display: none;
   position: relative;
   z-index: 1;
-  background: rgba(0,0,0, 0.4);
+  background: rgba(0, 0, 0, 0.4);
   padding: 0 1px;
   top: -3px;
 }
@@ -324,7 +313,7 @@ export default {
 }
 
 .slot .options a:hover {
-  background: rgba(0,0,0, 0.9);
+  background: rgba(0, 0, 0, 0.9);
   cursor: pointer;
 }
 </style>

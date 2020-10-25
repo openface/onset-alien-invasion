@@ -1,7 +1,11 @@
+local Config = require("packages/" .. GetPackageName() .. "/config")
+
 -- global Log
 log = require("packages/" .. GetPackageName() .. "/server/vendor/log")
 
-local Config = require("packages/" .. GetPackageName() .. "/config")
+if Config.log_level ~= nil then
+  log.level = Config.log_level
+end
 
 -- generate randomness
 math.randomseed(os.time())

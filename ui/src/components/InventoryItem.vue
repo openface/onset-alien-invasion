@@ -1,12 +1,12 @@
 <template>
-  <div class="slot" @mouseenter="PlayClick(); hover=true" @mouseleave="hover=false">
+  <div class="slot" @mouseenter="PlayClick();" @click="showOptions=true" @mouseleave="showOptions=false">
     <img v-if="!InGame" src="http://placekitten.com/100/100" />
     <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
     <span class="name">{{ item.name }}</span>
     <span v-if="item.quantity > 1" class="quantity">
       x{{ item.quantity }}
     </span>
-    <div class="options" v-if="hover">
+    <div class="options" v-if="showOptions">
       <div v-if="item.type == 'weapon'">
         <a v-if="!item.equipped" @click="EquipItem(item.item)">Equip</a>
       </div>
@@ -26,11 +26,18 @@
 <script>
 export default {
   name: "InventoryItem",
-  props: ['item','dragging'],
-    data() {
-      return {
-        hover: false,
+  props: ["item", "dragging"],
+  data() {
+    return {
+      showOptions: false,
+    };
+  },
+  watch: { 
+    dragging: function(newVal) {
+      if (newVal == true) {
+        this.showOptions = false;
       }
+    }
   },
   methods: {
     DropItem: function(item) {
@@ -113,9 +120,9 @@ export default {
   z-index: 1;
   background: rgba(0, 0, 0, 0.4);
   top: 75px;
-  width:75px;
-  left:0;
-  border:1px solid rgba(0, 0, 0, 0.4)
+  width: 75px;
+  left: 0;
+  border: 1px solid rgba(0, 0, 0, 0.4);
 }
 
 .slot .options a {

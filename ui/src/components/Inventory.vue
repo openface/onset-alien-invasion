@@ -9,6 +9,7 @@
             WEAPONS
           </div>
           <div class="grid">
+            <InventoryItem v-for="item in weapons" :index="item.item" :key="item.item" :item="item" />
           </div>
         </div>
         <div v-if="items.length > 0">
@@ -17,10 +18,9 @@
             <span>{{ items.length }} / 21</span>
           </div>
           <div class="grid">
-            <draggable v-model="items" @end="SortInventory" @start="dragging=true">
+            <draggable v-model="items" @sort="SortInventory" @start="dragging=true" @end="dragging=false">
               <InventoryItem v-for="item in items" :index="item.item" :key="item.item" :item="item" :dragging="dragging" />
             </draggable>
-            <div class="slot" v-for="n in FreeInventorySlots" :key="'F'+n"></div>
           </div>
         </div>
       </div>
@@ -93,8 +93,6 @@ export default {
         .map((_, idx) => start + idx);
     },
     SortInventory: function() {
-        // get your info then
-        // this exists outside the debounce so the ui is updated for the user
         var items = this.items.map(function(item, index) {
             return { item: item.item, order: index }
         })
@@ -118,7 +116,6 @@ export default {
             modelid: 2,
             quantity: 1,
             type: "weapon",
-            equipped: true,
           },
           {
             item: "glock2",
@@ -126,19 +123,10 @@ export default {
             modelid: 2,
             quantity: 1,
             type: "weapon",
-            equipped: true,
           },
           {
             item: "glock3",
             name: "Glock3",
-            modelid: 2,
-            quantity: 1,
-            type: "weapon",
-            equipped: true,
-          },
-          {
-            item: "glock4",
-            name: "Glock4",
             modelid: 2,
             quantity: 1,
             type: "weapon",
@@ -151,6 +139,13 @@ export default {
             modelid: 694,
             quantity: 2,
             type: "resource",
+          },
+          {
+            item: "glock4",
+            name: "Glock4",
+            modelid: 2,
+            quantity: 1,
+            type: "weapon",
           },
           {
             item: "plastic",
@@ -202,6 +197,7 @@ export default {
 
 #inventory_screen {
   width: 640px;
+  height:350px;
   z-index: 1000;
   background: rgba(0, 0, 0, 0.7);
   font-family: helvetica;

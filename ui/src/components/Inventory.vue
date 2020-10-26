@@ -69,6 +69,8 @@ export default {
   methods: {
     SetInventory: function(data) {
       this.items = data.items;
+      this.items = data.items.sort(function(a, b) { return a.index - b.index; });
+
     },
     ShowInventory: function() {
       this.inventory_visible = true;
@@ -159,7 +161,7 @@ export default {
             equipped: true,
           },
           {
-            index: 8,
+            index: 9,
             item: "flashlight",
             name: "Flashlight",
             modelid: 14,
@@ -168,7 +170,7 @@ export default {
             equipped: false,
           },
           {
-            index: 9,
+            index: 8,
             item: "beer",
             name: "Beer",
             modelid: 15,

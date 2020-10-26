@@ -12,35 +12,28 @@ function SyncInventory(player)
 
     local _send = {
         items = {},
-        weapons = {}
     }
-    for i, item in ipairs(inventory) do
+    for index, item in ipairs(inventory) do
         if item['type'] == 'weapon' then
-            table.insert(_send.weapons, {
-                ['item'] = item['item'],
-                ['name'] = item['name'],
-                ['modelid'] = item['modelid'],
-                ['quantity'] = item['quantity'],
-                ['type'] = item['type'],
-                ['equipped'] = IsWeaponEquipped(player, item['item'])
-            })
-        elseif item['type'] == 'equipable' or item['type'] == 'usable' then
-            table.insert(_send.items, {
-                ['item'] = item['item'],
-                ['name'] = item['name'],
-                ['modelid'] = item['modelid'],
-                ['quantity'] = item['quantity'],
-                ['type'] = item['type'],
-                ['equipped'] = IsItemEquipped(player, item['item'])
-            })
-          elseif item['type'] == 'resource' then
-            table.insert(_send.items, {
-                ['item'] = item['item'],
-                ['name'] = item['name'],
-                ['modelid'] = item['modelid'],
-                ['quantity'] = item['quantity'],
-                ['type'] = item['type']
-            })
+          table.insert(_send.items, {
+              ['index'] = index,
+              ['item'] = item['item'],
+              ['name'] = item['name'],
+              ['modelid'] = item['modelid'],
+              ['quantity'] = item['quantity'],
+              ['type'] = item['type'],
+              ['equipped'] = IsWeaponEquipped(player, item['item'])
+          })
+        else
+          table.insert(_send.items, {
+              ['index'] = index,
+              ['item'] = item['item'],
+              ['name'] = item['name'],
+              ['modelid'] = item['modelid'],
+              ['quantity'] = item['quantity'],
+              ['type'] = item['type'],
+              ['equipped'] = IsItemEquipped(player, item['item'])
+          })
         end
     end
     CallRemoteEvent(player, "SetInventory", json_encode(_send))
@@ -234,10 +227,26 @@ AddRemoteEvent("EquipItemFromInventory", function(player, item)
 end)
 
 -- sort inventory
+-- array of pairs: item, newIndex, oldIndex
 AddRemoteEvent("SortInventory", function(player, data)
-  local sorted_items = json_decode(data)
-  log.debug(GetPlayerName(player).. " sorting items:", dump(sorted_items))
+  local sorted = json_decode(data)
+  log.debug(GetPlayerName(player).. " sorting items:", dump(sorted))
   --CallEvent("SyncInventory", player)
+
+  local inventory = GetPlayerPropertyValue(player, "inventory")
+
+  for _,s in pairs(sorted) do
+      if s.oldIndex ~= s.newIndex then
+        print("Sorting item",s.item)
+        local temp = inventory[s.newIndex]
+        inventory[s.newIndex] = inventory[s.oldIndex]
+        inventory[s.oldIndex] = temp
+        break
+      end
+  end
+  print "NEW INVENTORY"
+  print(dump(inventory))
+  SetPlayerPropertyValue(player, "inventory", inventory)
 end)
 
 

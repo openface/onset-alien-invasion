@@ -1,12 +1,12 @@
 <template>
-  <div class="slot" @mouseenter="PlayClick()">
+  <div class="slot" @mouseenter="PlayClick(); hover=true" @mouseleave="hover=false">
     <img v-if="!InGame" src="http://placekitten.com/100/100" />
     <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
     <span class="name">{{ item.name }}</span>
     <span v-if="item.quantity > 1" class="quantity">
       x{{ item.quantity }}
     </span>
-    <div class="options" v-if="false">
+    <div class="options" v-if="hover">
       <div v-if="item.type == 'weapon'">
         <a v-if="!item.equipped" @click="EquipItem(item.item)">Equip</a>
       </div>
@@ -27,6 +27,11 @@
 export default {
   name: "InventoryItem",
   props: ['item','dragging'],
+    data() {
+      return {
+        hover: false,
+      }
+  },
   methods: {
     DropItem: function(item) {
       this.CallEvent("DropItem", item);
@@ -57,12 +62,12 @@ export default {
   border: 2px solid rgba(0, 0, 0, 0.1);
   height: 75px;
   width: 75px;
-  display: inline-block;
   position: relative;
   font-family: Helvetica;
 }
 .slot:hover {
   background: rgba(0, 0, 0, 0.3);
+  cursor: pointer;
 }
 
 .slot img {
@@ -101,18 +106,16 @@ export default {
   text-shadow: 1px 1px #000;
 }
 
-.slot:hover .options {
-  display: block;
-  width: 75px;
-}
+/* options */
 
 .slot .options {
-  display: none;
-  position: relative;
+  position: absolute;
   z-index: 1;
   background: rgba(0, 0, 0, 0.4);
-  padding: 0 1px;
-  top: -3px;
+  top: 75px;
+  width:75px;
+  left:0;
+  border:1px solid rgba(0, 0, 0, 0.4)
 }
 
 .slot .options a {
@@ -120,7 +123,7 @@ export default {
   display: block;
   padding: 5px 5px;
   text-decoration: none;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: bold;
   text-transform: uppercase;
   text-shadow: 1px 1px rgba(0, 0, 0, 0.4);
@@ -128,6 +131,5 @@ export default {
 
 .slot .options a:hover {
   background: rgba(0, 0, 0, 0.9);
-  cursor: pointer;
 }
 </style>

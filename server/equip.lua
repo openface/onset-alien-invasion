@@ -24,6 +24,9 @@ function DestroyEquippedObjectsForPlayer(player)
 
     -- clear player equipment
     SetPlayerPropertyValue(player, "equipped", {})
+
+    -- stop any animation player might be in
+    SetPlayerAnimation(player, "STOP")
 end
 
 function EquipObject(player, item)

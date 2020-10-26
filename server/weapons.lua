@@ -28,13 +28,14 @@ function GetNextAvailableWeaponSlot(player)
   end
 end
 
--- returns the weapon slot that the given item is in (or nil)
-function IsItemInWeaponSlot(player, item)
-  item_cfg = GetItemConfig(item)
+-- check if weapon is equipped
+function IsWeaponEquipped(player, item)
+  local item_cfg = GetItemConfig(item)
   for i = 1, 3 do
     local weapon_id,ammo = GetPlayerWeapon(player, i)
     if item_cfg['weapon_id'] == weapon_id then
-      return i
+      return true
     end
   end
+  return false
 end

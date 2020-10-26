@@ -22,7 +22,7 @@ function SyncInventory(player)
                 ['modelid'] = item['modelid'],
                 ['quantity'] = item['quantity'],
                 ['type'] = item['type'],
-                ['equipped'] = IsItemInWeaponSlot(player, item['item'])
+                ['equipped'] = IsWeaponEquipped(player, item['item'])
             })
         elseif item['type'] == 'equipable' or item['type'] == 'usable' then
             table.insert(_send.items, {

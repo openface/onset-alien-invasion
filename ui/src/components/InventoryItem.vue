@@ -1,5 +1,5 @@
 <template>
-  <div class="slot" @mouseenter="PlayClick();" @click="showOptions=true" @mouseleave="showOptions=false">
+  <div class="slot" @mouseenter="PlayClick();showOptions=true" @mouseleave="showOptions=false">
     <img v-if="!InGame" src="http://placekitten.com/100/100" />
     <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
     <span class="name">{{ item.name }}</span>
@@ -31,13 +31,6 @@ export default {
     return {
       showOptions: false,
     };
-  },
-  watch: { 
-    dragging: function(newVal) {
-      if (newVal == true) {
-        this.showOptions = false;
-      }
-    }
   },
   methods: {
     DropItem: function(item) {

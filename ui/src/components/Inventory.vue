@@ -18,7 +18,7 @@
             <span>{{ items.length }} / 21</span>
           </div>
           <div class="grid">
-            <draggable v-model="items" @sort="SortInventory" @start="dragging=true" @end="dragging=false">
+            <draggable v-model="items" @sort="SortInventory" @start="dragging=true" @end="dragging=false" forceFallback="true">
               <InventoryItem v-for="item in items" :index="item.item" :key="item.item" :item="item" :dragging="dragging" />
             </draggable>
           </div>

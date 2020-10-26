@@ -1,5 +1,5 @@
 <template>
-  <div class="slot" @mouseenter="PlayClick();showOptions=true" @mouseleave="showOptions=false">
+  <div :class="ItemClass" @mouseenter="PlayClick();showOptions=true" @mouseleave="showOptions=false">
     <img v-if="!InGame" src="http://placekitten.com/100/100" />
     <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
     <span class="name">{{ item.name }}</span>
@@ -30,8 +30,17 @@ export default {
   data() {
     return {
       showOptions: false,
+      isDraggable: true
     };
   },
+  computed: {
+    ItemClass: function () {
+      return {
+        draggable: this.item.type != 'weapon' || (this.item.type == 'weapon' && this.item.equipped == false),
+        slot: true
+      }
+    }
+  },  
   methods: {
     DropItem: function(item) {
       this.CallEvent("DropItem", item);

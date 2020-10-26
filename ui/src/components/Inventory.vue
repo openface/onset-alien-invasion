@@ -1,51 +1,36 @@
 <template>
   <div id="container">
     <div id="inventory_screen" v-if="inventory_visible">
-      <div v-if="weapons.length > 0 || items.length > 0">
+      <div v-if="items.length > 0">
         <div id="title">INVENTORY</div>
-
-        <div v-if="weapons.length > 0">
-          <div class="subtitle">
-            WEAPONS
-          </div>
-          <div class="grid">
-            <InventoryItem v-for="item in weapons" :index="item.item" :key="item.item" :item="item" />
-          </div>
-        </div>
-        <div v-if="items.length > 0">
-          <div class="subtitle">
-            INVENTORY
-            <span>{{ items.length }} / 21</span>
-          </div>
-          <div class="grid">
-            <draggable v-model="items" @sort="SortInventory" @start="dragging=true" @end="dragging=false" forceFallback="true">
-              <InventoryItem v-for="item in items" :index="item.item" :key="item.item" :item="item" :dragging="dragging" />
-            </draggable>
-          </div>
+        <div class="grid">
+          <draggable v-model="items" @sort="SortInventory" draggable=".draggable" @start="dragging=true" @end="dragging=false" forceFallback="true">
+            <InventoryItem v-for="item in items" :index="item.index" :key="item.index" :item="item" :dragging="dragging" />
+          </draggable>
         </div>
       </div>
       <div v-else id="title">YOUR INVENTORY IS EMPTY</div>
     </div>
     <div id="hotbar" v-if="!inventory_visible">
       <div class="slot" v-for="n in range(1, 3)" :key="n">
-        <div v-if="weapons[n - 1]">
+        <div v-if="EquippedWeapons[n - 1]">
           <img v-if="!InGame" src="http://placekitten.com/100/100" />
-          <img v-if="InGame" :src="'http://game/objects/' + weapons[n - 1].modelid" />
+          <img v-if="InGame" :src="'http://game/objects/' + EquippedWeapons[n - 1].modelid" />
           <span class="keybind">{{ n }}</span>
-          <span class="name">{{ weapons[n - 1].name }}</span>
-          <span v-if="weapons[n - 1].quantity > 1" class="quantity">
-            x{{ weapons[n - 1].quantity }}
+          <span class="name">{{ EquippedWeapons[n - 1].name }}</span>
+          <span v-if="EquippedWeapons[n - 1].quantity > 1" class="quantity">
+            x{{ EquippedWeapons[n - 1].quantity }}
           </span>
         </div>
       </div>
       <div class="slot" v-for="n in range(4, 9)" :key="n">
-        <div v-if="items[n - 4]">
+        <div v-if="NonWeaponItems[n - 4]">
           <img v-if="!InGame" src="http://placekitten.com/100/100" />
-          <img v-if="InGame" :src="'http://game/objects/' + items[n - 4].modelid" />
+          <img v-if="InGame" :src="'http://game/objects/' + NonWeaponItems[n - 4].modelid" />
           <span class="keybind">{{ n }}</span>
-          <span class="name">{{ items[n - 4].name }}</span>
-          <span v-if="items[n - 4].quantity > 1" class="quantity">
-            x{{ items[n - 4].quantity }}
+          <span class="name">{{ NonWeaponItems[n - 4].name }}</span>
+          <span v-if="NonWeaponItems[n - 4].quantity > 1" class="quantity">
+            x{{ NonWeaponItems[n - 4].quantity }}
           </span>
         </div>
       </div>
@@ -66,12 +51,17 @@ export default {
   data() {
     return {
       items: [],
-      weapons: [],
       inventory_visible: false,
       dragging: false
     };
   },
   computed: {
+    EquippedWeapons: function() {
+      return this.items.filter(item => item.type == 'weapon' && item.equipped == true);
+    },
+    NonWeaponItems: function() {
+      return this.items.filter(item => item.type != 'weapon' || (item.type == 'weapon' && item.equipped == false));
+    },
     FreeInventorySlots: function() {
       return 21 - this.items.length;
     },
@@ -79,7 +69,6 @@ export default {
   methods: {
     SetInventory: function(data) {
       this.items = data.items;
-      this.weapons = data.weapons;
     },
     ShowInventory: function() {
       this.inventory_visible = true;
@@ -94,7 +83,7 @@ export default {
     },
     SortInventory: function() {
         var data = this.items.map(function(item, index) {
-            return { item: item.item, order: index }
+            return { item: item.item, oldIndex: item.index, newIndex: index + 1 }
         })
 
         this.CallEvent("SortInventory", JSON.stringify(data));
@@ -107,8 +96,9 @@ export default {
 
     if (!this.InGame) {
       this.EventBus.$emit("SetInventory", {
-        weapons: [
+        items: [
           {
+            index: 1,
             item: "glock",
             name: "Glock",
             modelid: 2,
@@ -117,6 +107,7 @@ export default {
             equipped: true,
           },
           {
+            index: 2,
             item: "glock2",
             name: "Glock2",
             modelid: 2,
@@ -125,6 +116,7 @@ export default {
             equipped: true,
           },
           {
+            index: 3,
             item: "glock3",
             name: "Glock3",
             modelid: 2,
@@ -133,15 +125,16 @@ export default {
             equipped: true,
           },
           {
+            index: 4,
             item: "glock4",
             name: "Glock4",
             modelid: 2,
             quantity: 1,
             type: "weapon",
+            equipped: false,
           },
-        ],
-        items: [
           {
+            index: 5,
             item: "metal",
             name: "Metal",
             modelid: 694,
@@ -149,6 +142,7 @@ export default {
             type: "resource",
           },
           {
+            index: 6,
             item: "plastic",
             name: "Plastic",
             modelid: 627,
@@ -156,6 +150,7 @@ export default {
             type: "resource",
           },
           {
+            index: 7,
             item: "vest",
             name: "Kevlar Vest",
             modelid: 14,
@@ -164,6 +159,7 @@ export default {
             equipped: true,
           },
           {
+            index: 8,
             item: "flashlight",
             name: "Flashlight",
             modelid: 14,
@@ -172,6 +168,7 @@ export default {
             equipped: false,
           },
           {
+            index: 9,
             item: "beer",
             name: "Beer",
             modelid: 15,

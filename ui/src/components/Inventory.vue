@@ -116,6 +116,7 @@ export default {
             modelid: 2,
             quantity: 1,
             type: "weapon",
+            equipped: true,
           },
           {
             item: "glock2",
@@ -123,10 +124,19 @@ export default {
             modelid: 2,
             quantity: 1,
             type: "weapon",
+            equipped: true,
           },
           {
             item: "glock3",
             name: "Glock3",
+            modelid: 2,
+            quantity: 1,
+            type: "weapon",
+            equipped: true,
+          },
+          {
+            item: "glock4",
+            name: "Glock4",
             modelid: 2,
             quantity: 1,
             type: "weapon",
@@ -139,13 +149,6 @@ export default {
             modelid: 694,
             quantity: 2,
             type: "resource",
-          },
-          {
-            item: "glock4",
-            name: "Glock4",
-            modelid: 2,
-            quantity: 1,
-            type: "weapon",
           },
           {
             item: "plastic",

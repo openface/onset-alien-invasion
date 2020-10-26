@@ -231,10 +231,10 @@ end)
 AddRemoteEvent("SortInventory", function(player, data)
   local sorted = json_decode(data)
   log.debug(GetPlayerName(player).. " sorting items:", dump(sorted))
-  --CallEvent("SyncInventory", player)
-
+  
   local inventory = GetPlayerPropertyValue(player, "inventory")
 
+  -- swap indexes on the first detected change
   for _,s in pairs(sorted) do
       if s.oldIndex ~= s.newIndex then
         print("Sorting item",s.item)
@@ -244,8 +244,7 @@ AddRemoteEvent("SortInventory", function(player, data)
         break
       end
   end
-  print "NEW INVENTORY"
-  print(dump(inventory))
+  log.trace("NEW INVENTORY",dump(inventory))
   SetPlayerPropertyValue(player, "inventory", inventory)
 end)
 
@@ -265,10 +264,20 @@ end)
 -- item hotkeys
 AddRemoteEvent("UseItemHotkey", function(player, key)
     local inventory = GetPlayerPropertyValue(player, "inventory")
-    log.trace(dump(inventory))
-    local item = inventory[key - 3]
+    --log.trace(dump(inventory))
+
+    -- find valid hotbar items
+    local hotbar_items = {}
+    for i,item in ipairs(inventory) do
+        if item['type'] ~= 'weapon' then
+          table.insert(hotbar_items, item['item'])
+        end
+    end
+
+    -- use it by index
+    local item = hotbar_items[key - 3]
     if item ~= nil then
-      log.debug("Hotkey",item['item'])
-      UseItemFromInventory(player, item['item'])
+      log.debug("Hotkey",item)
+      UseItemFromInventory(player, item)
     end
 end)

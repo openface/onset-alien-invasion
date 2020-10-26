@@ -8,19 +8,20 @@
           <div class="subtitle">
             WEAPONS
           </div>
-          <InventoryGrid v-model="weapons" @input="SortInventoryWeapons" axis="x" :lockToContainerEdges="true" :useDragHandle="true">
-            <InventoryItem v-for="(item, index) in weapons" :index="index" :key="index" :item="item" collection="weapons" />
-          </InventoryGrid>
+          <div class="grid">
+          </div>
         </div>
         <div v-if="items.length > 0">
           <div class="subtitle">
             INVENTORY
             <span>{{ items.length }} / 21</span>
           </div>
-          <InventoryGrid v-model="items" @input="SortInventoryItems" axis="xy" :lockToContainerEdges="true" :useDragHandle="true">
-            <InventoryItem v-for="(item, index) in items" :index="index" :key="index" :item="item" collection="items" />
+          <div class="grid">
+            <draggable v-model="items" @end="SortInventory" @start="dragging=true">
+              <InventoryItem v-for="item in items" :index="item.item" :key="item.item" :item="item" :dragging="dragging" />
+            </draggable>
             <div class="slot" v-for="n in FreeInventorySlots" :key="'F'+n"></div>
-          </InventoryGrid>
+          </div>
         </div>
       </div>
       <div v-else id="title">YOUR INVENTORY IS EMPTY</div>
@@ -53,20 +54,21 @@
 </template>
 
 <script>
-import InventoryGrid from "./InventoryGrid.vue";
+import draggable from 'vuedraggable'
 import InventoryItem from "./InventoryItem.vue";
 
 export default {
   name: "Inventory",
   components: {
-    InventoryGrid,
-    InventoryItem,
+    draggable,
+    InventoryItem
   },
   data() {
     return {
       items: [],
       weapons: [],
       inventory_visible: false,
+      dragging: false
     };
   },
   computed: {
@@ -90,11 +92,16 @@ export default {
         .fill()
         .map((_, idx) => start + idx);
     },
-    SortInventoryWeapons: function(data) {
-      this.CallEvent('SortInventoryWeapons', JSON.stringify(data))
-    },
-    SortInventoryItems: function(data) {
-      this.CallEvent('SortInventoryItems', JSON.stringify(data))
+    SortInventory: function() {
+        // get your info then
+        // this exists outside the debounce so the ui is updated for the user
+        var items = this.items.map(function(item, index) {
+            return { item: item.item, order: index }
+        })
+
+        window.console.log(items)
+
+        this.dragging = false;
     }
   },
   mounted() {
@@ -223,8 +230,12 @@ export default {
 .subtitle span {
   float:right;
 }
-
-
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  margin: 0 auto;
+}
 #hotbar {
   display: flex;
   flex-direction: row;

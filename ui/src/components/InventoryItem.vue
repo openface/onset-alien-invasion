@@ -3,11 +3,10 @@
     <img v-if="!InGame" src="http://placekitten.com/100/100" />
     <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
     <span class="name">{{ item.name }}</span>
-    <span v-handle class="handle"></span>
     <span v-if="item.quantity > 1" class="quantity">
       x{{ item.quantity }}
     </span>
-    <div class="options">
+    <div class="options" v-if="false">
       <div v-if="item.type == 'weapon'">
         <a v-if="!item.equipped" @click="EquipItem(item.item)">Equip</a>
       </div>
@@ -25,13 +24,9 @@
 </template>
 
 <script>
-import { ElementMixin, HandleDirective } from "vue-slicksort";
-
 export default {
   name: "InventoryItem",
-  mixins: [ElementMixin ],
-  directives: { handle: HandleDirective },
-  props: ['item'],
+  props: ['item','dragging'],
   methods: {
     DropItem: function(item) {
       this.CallEvent("DropItem", item);
@@ -46,7 +41,9 @@ export default {
       this.CallEvent("UseItem", item);
     },
     PlayClick() {
-      this.CallEvent("PlayClick");
+      if (!this.dragging) {
+        this.CallEvent("PlayClick");
+      }
     },
   },
 };
@@ -85,16 +82,6 @@ export default {
   font-size: 12px;
   padding: 5px 7px;
   background: rgba(0, 0, 0, 0.5);
-}
-/* invisible drag handle allows for the options to 
-   be functional underneath */
-.slot .handle {
-  width:100%;
-  height:100%;
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  z-index:2;
 }
 .slot .keybind {
   position: absolute;

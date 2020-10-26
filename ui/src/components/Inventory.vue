@@ -93,13 +93,11 @@ export default {
         .map((_, idx) => start + idx);
     },
     SortInventory: function() {
-        var items = this.items.map(function(item, index) {
+        var data = this.items.map(function(item, index) {
             return { item: item.item, order: index }
         })
 
-        window.console.log(items)
-
-        this.dragging = false;
+        this.CallEvent("SortInventory", JSON.stringify(data));
     }
   },
   mounted() {

@@ -233,16 +233,10 @@ AddRemoteEvent("EquipItemFromInventory", function(player, item)
     CallEvent("SyncInventory", player)
 end)
 
--- sort inventory weapons
-AddRemoteEvent("SortInventoryWeapons", function(player, data)
-  log.debug(GetPlayerName(player).. " sorting weapons")
-  SetPlayerPropertyValue(player, "inventory", json_decode(data))
-end)
-
 -- sort inventory
-AddRemoteEvent("SortInventoryItems", function(player, data)
-  log.debug(GetPlayerName(player).. " sorting items")
-  SetPlayerPropertyValue(player, "inventory", json_decode(data))
+AddRemoteEvent("SortInventory", function(player, data)
+  local sorted_items = json_decode(data)
+  log.debug(GetPlayerName(player).. " sorting items:", dump(sorted_items))
   --CallEvent("SyncInventory", player)
 end)
 

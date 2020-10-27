@@ -25,7 +25,7 @@
         <div>
           <div class="subtitle">INVENTORY</div>
           <div class="grid">
-            <draggable v-model="items" @sort="SortInventory" @start="dragging=true" @end="dragging=false" forceFallback="true">
+            <draggable v-model="inventory_items" @sort="SortInventory" @start="dragging=true" @end="dragging=false" forceFallback="true">
               <InventoryItem v-for="item in inventory_items" :index="item.index" :key="item.index" :item="item" :dragging="dragging" />
             </draggable>
             <div class="slot" v-for="n in FreeInventorySlots" :key="'i'+n"></div>
@@ -48,13 +48,13 @@
         </div>
       </div>
       <div class="slot" v-for="n in range(4, 9)" :key="n">
-        <div v-if="hotbar_items[n - 4]">
+        <div v-if="inventory_items[n - 4]">
           <img v-if="!InGame" src="http://placekitten.com/100/100" />
-          <img v-if="InGame" :src="'http://game/objects/' + hotbar_items[n - 4].modelid" />
+          <img v-if="InGame" :src="'http://game/objects/' + inventory_items[n - 4].modelid" />
           <span class="keybind">{{ n }}</span>
-          <span class="name">{{ hotbar_items[n - 4].name }}</span>
-          <span v-if="hotbar_items[n - 4].quantity > 1" class="quantity">
-            x{{ hotbar_items[n - 4].quantity }}
+          <span class="name">{{ inventory_items[n - 4].name }}</span>
+          <span v-if="inventory_items[n - 4].quantity > 1" class="quantity">
+            x{{ inventory_items[n - 4].quantity }}
           </span>
         </div>
       </div>
@@ -78,7 +78,6 @@ export default {
       equipped_weapons: [],
       equipped_items: [],
       inventory_items: [],
-      hotbar_items: [],
       inventory_visible: false,
       dragging: false
     };
@@ -97,10 +96,10 @@ export default {
   methods: {
     SetInventory: function(data) {
       this.items = data.items;
+      //this.items = data.items.sort(function(a, b) { return a.index - b.index; });
       this.equipped_weapons = this.items.filter(item => item.type == 'weapon' && item.equipped == true);
       this.equipped_items = this.items.filter(item => item.type != 'weapon' && item.equipped == true);
       this.inventory_items = this.items.filter(item => !this.equipped_items.includes(item) && !this.equipped_weapons.includes(item));
-      this.hotbar_items = this.items.filter(item => item.type != 'weapon');
       //this.items = data.items.sort(function(a, b) { return a.index - b.index; });
 
     },
@@ -116,7 +115,9 @@ export default {
         .map((_, idx) => start + idx);
     },
     SortInventory: function() {
-        var data = this.items.map(function(item, index) {
+        //window.console.log(e.oldIndex);
+        //window.console.log(e.newIndex);
+        var data = this.inventory_items.map(function(item, index) {
             return { item: item.item, oldIndex: item.index, newIndex: index + 1 }
         })
 
@@ -218,8 +219,8 @@ export default {
         ],
       });
 
-      //this.EventBus.$emit("ShowInventory");
-      this.EventBus.$emit("HideInventory");
+      this.EventBus.$emit("ShowInventory");
+      //this.EventBus.$emit("HideInventory");
     }
   },
 };

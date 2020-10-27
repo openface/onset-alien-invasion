@@ -99,7 +99,7 @@ export default {
       this.items = data.items;
       this.equipped_weapons = this.items.filter(item => item.type == 'weapon' && item.equipped == true);
       this.equipped_items = this.items.filter(item => item.type != 'weapon' && item.equipped == true);
-      this.inventory_items = this.items.filter(item => !this.equipped_items.includes(item));
+      this.inventory_items = this.items.filter(item => !this.equipped_items.includes(item) && !this.equipped_weapons.includes(item));
       this.hotbar_items = this.items.filter(item => item.type != 'weapon');
       //this.items = data.items.sort(function(a, b) { return a.index - b.index; });
 

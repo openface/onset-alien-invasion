@@ -11,33 +11,27 @@ function SyncInventory(player)
     local inventory = GetPlayerPropertyValue(player, "inventory")
 
     local _send = {
-        items = {},
+        items = {}
     }
     for index, item in ipairs(inventory) do
         if item['type'] == 'weapon' then
-          table.insert(_send.items, {
-              ['index'] = index,
-              ['item'] = item['item'],
-              ['name'] = item['name'],
-              ['modelid'] = item['modelid'],
-              ['quantity'] = item['quantity'],
-              ['type'] = item['type'],
-              ['equipped'] = IsWeaponEquipped(player, item['item'])
-          })
+            equipped = IsWeaponEquipped(player, item['item'])
         else
-          table.insert(_send.items, {
-              ['index'] = index,
-              ['item'] = item['item'],
-              ['name'] = item['name'],
-              ['modelid'] = item['modelid'],
-              ['quantity'] = item['quantity'],
-              ['type'] = item['type'],
-              ['equipped'] = IsItemEquipped(player, item['item'])
-          })
+            equipped = IsItemEquipped(player, item['item'])
         end
+
+        table.insert(_send.items, {
+            ['index'] = index,
+            ['item'] = item['item'],
+            ['name'] = item['name'],
+            ['modelid'] = item['modelid'],
+            ['quantity'] = item['quantity'],
+            ['type'] = item['type'],
+            ['equipped'] = equipped
+        })
     end
     CallRemoteEvent(player, "SetInventory", json_encode(_send))
-    log.debug(GetPlayerName(player) .. " sync inventory: " .. json_encode(_send))
+    log.trace("INVENTORY SYNC: " .. json_encode(_send))
 end
 AddRemoteEvent("SyncInventory", SyncInventory)
 AddEvent("SyncInventory", SyncInventory)
@@ -113,12 +107,12 @@ function RemoveFromInventory(player, item, amount)
         log.debug("items:" .. item .. ":drop")
 
         -- call DROP event on object
-        --CallEvent("items:" .. item .. ":drop", player, item_cfg)
+        -- CallEvent("items:" .. item .. ":drop", player, item_cfg)
 
         -- if item is a weapon, switch to fists
-        --if item_cfg['type'] == 'weapon' then
+        -- if item_cfg['type'] == 'weapon' then
         --  EquipWeapon(player, item)
-        --end
+        -- end
     end
 end
 
@@ -151,14 +145,14 @@ end
 
 -- get carry count for given item type
 function GetInventoryCountByType(player, type)
-  local inventory = GetPlayerPropertyValue(player, "inventory")
-  local n = 0
-  for _, _item in pairs(inventory) do
-      if _item['type'] == type then
-          n = n + 1
-      end
-  end
-  return n
+    local inventory = GetPlayerPropertyValue(player, "inventory")
+    local n = 0
+    for _, _item in pairs(inventory) do
+        if _item['type'] == type then
+            n = n + 1
+        end
+    end
+    return n
 end
 
 function GetInventoryAvailableSlots(player)
@@ -189,8 +183,8 @@ function UseItemFromInventory(player, item)
     end
 
     if item_cfg['type'] == 'weapon' then
-      log.error("Not using weapon from inventory")
-      return
+        log.error("Not using weapon from inventory")
+        return
     end
 
     log.info(GetPlayerName(player) .. " uses item " .. item .. " from inventory")
@@ -219,9 +213,9 @@ AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
 -- equip from inventory
 AddRemoteEvent("EquipItemFromInventory", function(player, item)
     if item_cfg['type'] == 'weapon' then
-      EquipWeapon(player, item)
+        EquipWeapon(player, item)
     else
-      EquipObject(player, item)
+        EquipObject(player, item)
     end
     CallEvent("SyncInventory", player)
 end)
@@ -229,25 +223,24 @@ end)
 -- sort inventory
 -- array of pairs: item, newIndex, oldIndex
 AddRemoteEvent("SortInventory", function(player, data)
-  local sorted = json_decode(data)
-  log.debug(GetPlayerName(player).. " sorting items:", dump(sorted))
-  
-  local inventory = GetPlayerPropertyValue(player, "inventory")
+    local sorted = json_decode(data)
+    log.debug(GetPlayerName(player) .. " sorting items:", dump(sorted))
 
-  -- swap indexes on the first detected change
-  for _,s in pairs(sorted) do
-      if s.oldIndex ~= s.newIndex then
-        print("Sorting item",s.item)
-        local temp = inventory[s.newIndex]
-        inventory[s.newIndex] = inventory[s.oldIndex]
-        inventory[s.oldIndex] = temp
-        break
-      end
-  end
-  log.trace("NEW INVENTORY",dump(inventory))
-  SetPlayerPropertyValue(player, "inventory", inventory)
+    local inventory = GetPlayerPropertyValue(player, "inventory")
+
+    -- swap indexes on the first detected change
+    for _, s in pairs(sorted) do
+        if s.oldIndex ~= s.newIndex then
+            print("Sorting item", s.item)
+            local temp = inventory[s.newIndex]
+            inventory[s.newIndex] = inventory[s.oldIndex]
+            inventory[s.oldIndex] = temp
+            break
+        end
+    end
+    log.trace("NEW INVENTORY", dump(inventory))
+    SetPlayerPropertyValue(player, "inventory", inventory)
 end)
-
 
 -- unequip from inventory
 AddRemoteEvent("UnequipItemFromInventory", function(player, item)
@@ -264,20 +257,20 @@ end)
 -- item hotkeys
 AddRemoteEvent("UseItemHotkey", function(player, key)
     local inventory = GetPlayerPropertyValue(player, "inventory")
-    --log.trace(dump(inventory))
+    -- log.trace(dump(inventory))
 
     -- find valid hotbar items
     local hotbar_items = {}
-    for i,item in ipairs(inventory) do
+    for i, item in ipairs(inventory) do
         if item['type'] ~= 'weapon' then
-          table.insert(hotbar_items, item['item'])
+            table.insert(hotbar_items, item['item'])
         end
     end
 
     -- use it by index
     local item = hotbar_items[key - 3]
     if item ~= nil then
-      log.debug("Hotkey",item)
-      UseItemFromInventory(player, item)
+        log.debug("Hotkey", item)
+        UseItemFromInventory(player, item)
     end
 end)

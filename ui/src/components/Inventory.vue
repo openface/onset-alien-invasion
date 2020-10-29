@@ -101,7 +101,7 @@ export default {
       this.weapons = this.items.filter(item => item.type == 'weapon');
       this.equipped_items = this.items.filter(item => item.type != 'weapon' && item.equipped == true);
       this.inventory_items = this.items.filter(item => !this.equipped_items.includes(item) && !this.weapons.includes(item));
-      this.usable_items = this.items.filter(item => item.type == 'usable');
+      this.usable_items = this.items.filter(item => item.type == 'usable' || item.type == 'equipable');
 
       //this.items = data.items.sort(function(a, b) { return a.index - b.index; });
 

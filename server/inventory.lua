@@ -251,6 +251,7 @@ AddRemoteEvent("SortInventory", function(player, data)
     end
     log.trace("NEW INVENTORY", dump(inventory))
     SetPlayerPropertyValue(player, "inventory", inventory)
+    CallEvent("SyncInventory", player)
 end)
 
 -- unequip from inventory
@@ -273,7 +274,7 @@ AddRemoteEvent("UseItemHotkey", function(player, key)
     -- find valid hotbar items
     local usable_items = {}
     for i, item in ipairs(inventory) do
-        if item['type'] == 'usable' then
+        if item['type'] == 'usable' or item['type'] == 'equipable' then
             table.insert(usable_items, item['item'])
         end
     end

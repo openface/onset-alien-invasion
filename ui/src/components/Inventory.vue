@@ -47,14 +47,15 @@
           </span>
         </div>
       </div>
-      <div class="slot" v-for="n in range(4, 9)" :key="n">
-        <div v-if="inventory_items[n - 4]">
+
+      <div class="slot" v-for="(item,n) in usable_items" :key="n">
+        <div v-if="usable_items[n]">
           <img v-if="!InGame" src="http://placekitten.com/100/100" />
-          <img v-if="InGame" :src="'http://game/objects/' + inventory_items[n - 4].modelid" />
-          <span class="keybind">{{ n }}</span>
-          <span class="name">{{ inventory_items[n - 4].name }}</span>
-          <span v-if="inventory_items[n - 4].quantity > 1" class="quantity">
-            x{{ inventory_items[n - 4].quantity }}
+          <img v-if="InGame" :src="'http://game/objects/' + usable_items[n].modelid" />
+          <span class="keybind">{{ n+4 }}</span>
+          <span class="name">{{ usable_items[n].name }}</span>
+          <span v-if="usable_items[n].quantity > 1" class="quantity">
+            x{{ usable_items[n].quantity }}
           </span>
         </div>
       </div>
@@ -78,6 +79,7 @@ export default {
       weapons: [],
       equipped_items: [],
       inventory_items: [],
+      usable_items: [],
       inventory_visible: false,
       dragging: false
     };
@@ -96,10 +98,11 @@ export default {
   methods: {
     SetInventory: function(data) {
       this.items = data.items;
-      //this.items = data.items.sort(function(a, b) { return a.index - b.index; });
       this.weapons = this.items.filter(item => item.type == 'weapon');
       this.equipped_items = this.items.filter(item => item.type != 'weapon' && item.equipped == true);
       this.inventory_items = this.items.filter(item => !this.equipped_items.includes(item) && !this.weapons.includes(item));
+      this.usable_items = this.items.filter(item => item.type == 'usable');
+
       //this.items = data.items.sort(function(a, b) { return a.index - b.index; });
 
     },
@@ -203,6 +206,15 @@ export default {
             index: 8,
             item: "beer",
             name: "Beer",
+            modelid: 15,
+            quantity: 4,
+            type: "usable",
+            equipped: false,
+          },
+          {
+            index: 10,
+            item: "medkit",
+            name: "Medical Kit",
             modelid: 15,
             quantity: 4,
             type: "usable",

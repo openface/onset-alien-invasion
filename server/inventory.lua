@@ -271,15 +271,15 @@ AddRemoteEvent("UseItemHotkey", function(player, key)
     -- log.trace(dump(inventory))
 
     -- find valid hotbar items
-    local hotbar_items = {}
+    local usable_items = {}
     for i, item in ipairs(inventory) do
-        if item['type'] ~= 'weapon' then
-            table.insert(hotbar_items, item['item'])
+        if item['type'] == 'usable' then
+            table.insert(usable_items, item['item'])
         end
     end
 
-    -- use it by index
-    local item = hotbar_items[key - 3]
+    -- use it by index (1-3 are reserved for weapons)
+    local item = usable_items[key - 3]
     if item ~= nil then
         log.debug("Hotkey", item)
         UseItemFromInventory(player, item)

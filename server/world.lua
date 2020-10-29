@@ -1,7 +1,8 @@
-local WorldLoaded = false
+local WorldLoaded
 
 AddEvent("OnPackageStart", function()
-  if WorldLoaded then 
+  if WorldLoaded == true then 
+    log.info "Not loading world"
     return 
   end
 

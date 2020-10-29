@@ -9,11 +9,13 @@ end)
 -- get inventory data and send to UI
 function SyncInventory(player)
     local inventory = GetPlayerPropertyValue(player, "inventory")
+    log.trace("INVENTORY RAW: " .. dump(inventory))
 
     local _send = {
         items = {}
     }
     for index, item in ipairs(inventory) do
+      log.debug(index,dump(item))
         if item['type'] == 'weapon' then
             equipped = IsWeaponEquipped(player, item['item'])
         else
@@ -68,6 +70,13 @@ function AddToInventory(player, item)
         SetPlayerPropertyValue(player, "inventory", inventory)
     end
 
+    -- auto-equip when added
+    if item_cfg['type'] == 'equipable' and item_cfg['auto_equip'] == true then
+      EquipObject(player, item)
+    elseif item_cfg['type'] == 'weapon' then
+      EquipWeapon(player, item)
+    end
+
     CallEvent("SyncInventory", player)
 end
 
@@ -80,7 +89,7 @@ function SetItemQuantity(player, item, quantity)
                 inventory[i]['quantity'] = quantity
             else
                 -- remove object from inventory
-                inventory[i] = nil
+                table.remove(inventory, i)
             end
             break
         end

@@ -100,13 +100,6 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
       CallRemoteEvent(player, "ComputerPartPickedup", pickup)
     end
 
-    -- auto-equip on pickup
-    if item_cfg['type'] == 'equipable' and item_cfg['auto_equip'] == true then
-      EquipObject(player, item)
-    elseif item_cfg['type'] == 'weapon' then
-      EquipWeapon(player, item)
-    end
-
     -- adds to player inventory and syncs
     AddToInventory(player, item)
 

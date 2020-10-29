@@ -22,11 +22,9 @@ RegisterObject("vest", {
         ry = 0,
         rz = 5,
         bone = "spine_02"
-    }
+    },
 })
 
--- todo: move these into base configuration
--- Eg player_effects: { increase_health: 12, increase_armor: 20 }
 AddEvent("items:vest:equip", function(player, object)
     SetPlayerArmor(player, 100)
 end)

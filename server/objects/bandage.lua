@@ -20,3 +20,8 @@ RegisterObject("bandage", {
       bone = "hand_r" 
   }
 })
+
+AddEvent("items:bandage:use", function(player)
+  local health = GetPlayerHealth(player)
+  SetPlayerHealth(player, math.min(100, health + 20)) 
+end)

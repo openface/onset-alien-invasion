@@ -198,7 +198,7 @@ function UseItemFromInventory(player, item)
         return
     end
 
-    log.info(GetPlayerName(player) .. " uses item " .. item .. " from inventory")
+    log.debug(GetPlayerName(player) .. " uses item " .. item .. " from inventory")
     EquipObject(player, item)
     PlayInteraction(player, item)
 
@@ -219,6 +219,8 @@ function UseItemFromInventory(player, item)
         end)
     end
  ]]
+    -- call USE event on object
+    CallEvent("items:" .. item .. ":use", player)
 
 end
 AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)

@@ -57,7 +57,7 @@ end)
 
 -- console
 AddEvent("OnConsoleInput", function(input)
-    CallRemoteEvent("ConsoleInput", input)
+  CallRemoteEvent("ConsoleInput", input)
 end)
 
 -- toggle first-person view

@@ -40,6 +40,10 @@ AddRemoteEvent("ConsoleInput", function(player, input)
       return
     end
 
+    if input == "stats" then
+      print("Objects: " .. tostring(GetObjectCount()))
+    end
+
     log.debug("console: " .. input)
 end)
 

@@ -22,6 +22,8 @@ end)
 
 AddEvent("OnPackageStop", function()
     DespawnVehicles()
+    Vehicles = {}
+    VehicleLocations = {}
 end)
 
 function DespawnVehicles()

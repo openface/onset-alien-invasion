@@ -4,6 +4,7 @@ AddEvent("OnPackageStop", function()
     for _,pickup in pairs(Pickups) do
         DestroyObjectPickup(pickup)
     end
+    Pickups = {}
 end)
 
 AddCommand("item", function(player, item)

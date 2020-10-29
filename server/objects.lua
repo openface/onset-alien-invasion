@@ -1,5 +1,3 @@
--- TODO: rename to items.lua
-
 -- item configuration
 Objects = {}
 
@@ -18,13 +16,7 @@ function RegisterObject(item, meta)
 end
 
 AddEvent("OnPackageStop", function()
-    for _, player in pairs(GetAllPlayers()) do
-      for item,object in pairs(GetPlayerPropertyValue(player, 'equipped')) do
-        log.debug("Destroying object for player "..GetPlayerName(player).." equipped item "..item)
-        DestroyObject(object)
-      end
-      SetPlayerPropertyValue(player, "equipped", {})
-    end
+    Objects = {}
 end)
 
 function PlayInteraction(player, item)

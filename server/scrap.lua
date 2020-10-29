@@ -48,6 +48,7 @@ end)
 
 AddEvent("OnPackageStop", function()
     DespawnScrap()
+    CurrentlySearching = {}
 end)
 
 function DespawnScrap()

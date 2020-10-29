@@ -1,4 +1,4 @@
-local WorkbenchTest3D
+local WorkbenchText3D
 local WorkbenchLoc = { x = -105858.1328125, y = 193734.21875, z = 1396.1424560547 }
 
 AddEvent("OnPackageStart", function()

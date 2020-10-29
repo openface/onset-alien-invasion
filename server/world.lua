@@ -1,4 +1,10 @@
+local WorldLoaded = false
+
 AddEvent("OnPackageStart", function()
+  if WorldLoaded then 
+    return 
+  end
+
   log.info("Loading world...")
 
   local _table = File_LoadJSONTable("packages/"..GetPackageName().."/server/data/world.json")
@@ -14,6 +20,6 @@ AddEvent("OnPackageStart", function()
       CreateDoor(v['doorID'], v['x'], v['y'], v['z'], v['yaw'] + _AddYaw, true)
     end
   end
-
+  WorldLoaded = true
   log.info("Alien Invasion world loaded!")
 end)

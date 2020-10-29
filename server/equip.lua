@@ -14,6 +14,7 @@ AddEvent("OnPlayerQuit", function(player)
     DestroyEquippedObjectsForPlayer(player)
 end)
 
+-- clear equipped store for all players
 function DestroyEquippedObjectsForPlayer(player)
     equipped = GetPlayerPropertyValue(player, "equipped")
     for item, object in pairs(equipped) do

@@ -18,6 +18,14 @@ AddCommand("players", function(player)
     end
 end)
 
+AddCommand("anim", function(player, anim)
+  log.debug("Animation:", anim)
+  SetPlayerAnimation(player, "STOP")
+  if anim ~= nil then
+    SetPlayerAnimation(player, string.upper(anim))
+  end
+end)
+
 -- Setup world
 AddEvent("OnPackageStart", function()
 

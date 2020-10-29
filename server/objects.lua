@@ -29,6 +29,11 @@ function PlayInteraction(player, item)
         if item_cfg['interaction']['animation']['duration'] then
             Delay(item_cfg['interaction']['animation']['duration'], function()
                 SetPlayerAnimation(player, "STOP")
+
+                -- usable objects auto-unequip after use
+                if item_cfg['type'] == 'usable' then
+                  UnequipObject(player, item)
+                end
             end)
         end
     end

@@ -13,8 +13,8 @@ RegisterObject("flashlight", {
       position = {
         x = 0,
         y = 0,
-        z = 0,
-        rx = 0,
+        z = 14.9,
+        rx = -30.5,
         ry = 270,
         rz = 0
       }

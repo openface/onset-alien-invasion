@@ -193,8 +193,8 @@ function UseItemFromInventory(player, item)
         return
     end
 
-    if item_cfg['type'] == 'weapon' then
-        log.error("Not using weapon from inventory")
+    if item_cfg['type'] == 'weapon' or item_cfg['type'] == 'resource'  then
+        log.error("Cannot use type weapon or resource!")
         return
     end
 
@@ -202,6 +202,7 @@ function UseItemFromInventory(player, item)
     EquipObject(player, item)
     PlayInteraction(player, item)
 
+   
     --[[     if object['max_use'] and v['used'] < object['max_use'] then
         -- update inventory after use
         Delay(2000, function()
@@ -218,6 +219,7 @@ function UseItemFromInventory(player, item)
         end)
     end
  ]]
+
 end
 AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
 

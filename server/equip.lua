@@ -17,42 +17,45 @@ end)
 function DestroyEquippedObjectsForPlayer(player)
     equipped = GetPlayerPropertyValue(player, "equipped")
     for item, object in pairs(equipped) do
-        print("Destroying equipped object for player " .. GetPlayerName(player) .. " item " .. item)
+        log.debug("Destroying equipped object for player " .. GetPlayerName(player) .. " item " .. item)
         SetObjectDetached(object)
         DestroyObject(object)
     end
 
     -- clear player equipment
     SetPlayerPropertyValue(player, "equipped", {})
+
+    -- stop any animation player might be in
+    SetPlayerAnimation(player, "STOP")
 end
 
 function EquipObject(player, item)
     local item_cfg = GetItemConfig(item)
     if item_cfg['type'] ~= 'equipable' and item_cfg['type'] ~= 'usable' then
-        print "not equipable"
+        log.debug "not equipable"
         return
     end
 
     -- equipable items can be toggled via hotkey
     if item_cfg['type'] == 'equipable' and GetEquippedObject(player, item) ~= nil then
-        print "already equipped; unequipping"
+        log.debug "already equipped; unequipping..."
         UnequipObject(player, item)
         return
     end
 
     if item_cfg['attachment'] == nil then
-        print("Object " .. item .. " is type equipable but does not define attachment info")
+        log.error("Object " .. item .. " is type equipable but does not define attachment info")
         return
     end
 
     -- unequip whatever is in the player's bone
     local equipped_object = GetEquippedObjectNameFromBone(player, item_cfg['attachment']['bone'])
     if equipped_object ~= nil then
-        print("Bone " .. item_cfg['attachment']['bone'] .. " already equipped... unequipping first")
+        log.debug("Bone " .. item_cfg['attachment']['bone'] .. " already equipped... unequipping first")
         UnequipObject(player, equipped_object)
     end
 
-    print(GetPlayerName(player) .. " equips item " .. item)
+    log.debug(GetPlayerName(player) .. " equips item " .. item)
 
     -- equipable animations
     PlayInteraction(player, item)
@@ -75,6 +78,7 @@ function EquipObject(player, item)
     local equipped = GetPlayerPropertyValue(player, "equipped")
     equipped[item] = attached_object
     SetPlayerPropertyValue(player, "equipped", equipped)
+    log.trace("EQUIPPED: ",dump(equipped))
 
     -- call EQUIP event on object
     CallEvent("items:" .. item .. ":equip", player, object)
@@ -84,10 +88,10 @@ function EquipObject(player, item)
 end
 
 function UnequipObject(player, item)
-    print "unequipping"
+    log.debug "unequipping"
     local object = GetEquippedObject(player, item)
     if object == nil then
-        print "not equipped"
+        log.debug "not equipped"
         return
     end
 
@@ -106,6 +110,7 @@ function UnequipObject(player, item)
     local equipped = GetPlayerPropertyValue(player, "equipped")
     equipped[item] = nil
     SetPlayerPropertyValue(player, "equipped", equipped)
+    log.trace("EQUIPPED: ",dump(equipped))
 
     DestroyObject(object)
 
@@ -132,7 +137,7 @@ function GetEquippedObjectNameFromBone(player, bone)
     local equipped = GetPlayerPropertyValue(player, "equipped")
     for _, object in pairs(equipped) do
         if GetObjectPropertyValue(object, "_bone") == bone then
-            -- print "found bone"
+            -- log.debug "found bone"
             return GetObjectPropertyValue(object, "_name")
         end
     end

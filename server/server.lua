@@ -9,7 +9,7 @@ AddCommand("pos", function(player)
     local heading = GetPlayerHeading(player)
     string = "Location: "..x.." "..y.." "..z.." Heading: "..heading
     AddPlayerChat(player, string)
-    print(string)
+    log.debug(string)
 end)
 
 AddCommand("players", function(player)
@@ -32,7 +32,7 @@ AddRemoteEvent("ConsoleInput", function(player, input)
       return
     end
 
-    print("console: " .. input)
+    log.debug("console: " .. input)
 end)
 
 
@@ -82,11 +82,11 @@ end)
 AddEvent("OnPlayerDeath", function(player, killer)
     if player ~= killer then
         BumpPlayerStat(killer, 'player_kills')
-        print(GetPlayerName(player)..' has been killed by '..GetPlayerName(killer)..'!')
+        log.info(GetPlayerName(player)..' has been killed by '..GetPlayerName(killer)..'!')
         AddPlayerChatAll(GetPlayerName(player)..' has been killed by '..GetPlayerName(killer)..'!')
     else
         AddPlayerChatAll(GetPlayerName(player)..' has been taken!')
-        print(GetPlayerName(player)..' has been taken')
+        log.info(GetPlayerName(player)..' has been taken')
     end
 
     -- stats
@@ -96,13 +96,13 @@ end)
 
 -- Log auth
 AddEvent("OnPlayerSteamAuth", function(player)
-    print("Player "..GetPlayerName(player).." (ID "..player..") authenticated with steam ID "..GetPlayerSteamId(player))
+    log.info("Player "..GetPlayerName(player).." (ID "..player..") authenticated with steam ID "..GetPlayerSteamId(player))
 end)
 
 -- Chat
 AddEvent("OnPlayerChat", function(player, message)
     AddPlayerChatAll('<span color="#eeeeeeaa"><'..GetPlayerName(player)..'></> '..message)
-    print("<"..GetPlayerName(player).."> "..message)
+    log.debug("<"..GetPlayerName(player).."> "..message)
 end)
 
 -- Water is a killer

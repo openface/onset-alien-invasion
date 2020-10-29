@@ -26,7 +26,7 @@ end)
 
 function AddComponentToObject(object, component)
     if component.type == nil then
-      print "Error invalid component config"
+      log.error "Error invalid component config"
       return
     end
 
@@ -40,7 +40,7 @@ function AddComponentToObject(object, component)
     end
 
     if light == nil then
-      print("Error unsupported component type",component.type)
+      log.error("Error unsupported component type",component.type)
       return
     end
 

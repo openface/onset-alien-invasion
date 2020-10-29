@@ -16,10 +16,10 @@ end)
 function CreateObjectPickup(item, x, y, z)
     local item_cfg = GetItemConfig(item)
     if not item_cfg then
-        print("Invalid object "..item)
+        log.debug("Invalid object "..item)
         return
     end
-    print("Creating item "..item.. " modelid "..item_cfg['modelid'])
+    log.debug("Creating item "..item.. " modelid "..item_cfg['modelid'])
 
     local pickup = CreatePickup(item_cfg['modelid'], x, y, z)
     SetPickupPropertyValue(pickup, '_name', item)
@@ -40,7 +40,7 @@ function DestroyObjectPickup(pickup)
 end
 
 function DestroyObjectPickupsByName(name)
-    print("Destroying object pickup by name ",name)
+    log.debug("Destroying object pickup by name ",name)
     for _,pickup in pairs(Pickups) do
         if GetPickupPropertyValue(pickup, '_name') == name then
             DestroyObjectPickup(pickup)
@@ -63,20 +63,23 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
 
     local item_cfg = GetItemConfig(item)
 
-    -- if we already have the item, see if we can carry more
-    if GetInventoryCount(player, item) >= item_cfg['max_carry'] then
-        -- prevent pickup if it exceeds the max carry
+    if item_cfg['type'] == 'weapon' and GetNextAvailableWeaponSlot(player) == nil then
+        log.debug("No more weapon slots available")
+        CallRemoteEvent(player, "PlayErrorSound")
+        return
+    elseif item_cfg['max_carry'] ~= nil and GetInventoryCount(player, item) >= item_cfg['max_carry'] then
+        log.debug("Pickup exceeds max_carry")
         CallRemoteEvent(player, "PlayErrorSound")
         return
     elseif GetInventoryAvailableSlots(player) <= 0 then
-        -- no available slots for more items
-        print("Pickup exceeded max inventory slots")
+        log.debug("Pickup exceeded max inventory slots")
+        CallRemoteEvent(player, "PlayErrorSound")
         return
     end
 
     CallRemoteEvent(player, "PlayPickupSound", item_cfg['pickup_sound'] or "sounds/pickup.wav")
 
-    print("Player "..GetPlayerName(player).." picks up item "..item)
+    log.debug("Player "..GetPlayerName(player).." picks up item "..item)
 
     --CallEvent("items:"..item..":pickup", player, pickup)
 
@@ -85,9 +88,12 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
       CallRemoteEvent(player, "ComputerPartPickedup", pickup)
     end
 
-    --if item_cfg['type'] == 'equipable' then
-    --  EquipObject(player, item)
-    --end
+    -- auto-equip on pickup
+    if item_cfg['type'] == 'equipable' and item_cfg['auto_equip'] == true then
+      EquipObject(player, item)
+    end
+
+    -- auto-equip weapons
     if item_cfg['type'] == 'weapon' then
       EquipWeapon(player, item)
     end

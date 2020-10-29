@@ -12,6 +12,6 @@ CreateTimer(function()
     if time > 24 then
         time = 0
     end
-    --print("Time is now "..time)
+    --log.debug("Time is now "..time)
     SyncTime()
 end, 60 * 1000)

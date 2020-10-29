@@ -9,7 +9,7 @@ AddCommand("ppos", function(player)
     local x, y, z = GetPlayerLocation(player)
     string = "Location: "..x.." "..y.." "..z
     AddPlayerChat(player, string)
-    print(string)
+    log.debug(string)
     table.insert(PartsLocations, { x, y, z })
 
     File_SaveJSONTable("packages/"..GetPackageName().."/server/data/parts.json", PartsLocations)
@@ -21,7 +21,7 @@ AddEvent("OnPackageStart", function()
 end)
 
 function SpawnParts()
-    print "Spawning parts..."
+    log.debug "Spawning parts..."
 
     -- Remove all computer_parts from world
     DestroyObjectPickupsByName('computer_part')

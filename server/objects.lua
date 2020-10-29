@@ -14,13 +14,13 @@ end
 
 function RegisterObject(item, meta)
     Objects[item] = meta
-    print("Registering object: "..item)
+    log.debug("Registering object: "..item)
 end
 
 AddEvent("OnPackageStop", function()
     for _, player in pairs(GetAllPlayers()) do
       for item,object in pairs(GetPlayerPropertyValue(player, 'equipped')) do
-        print("Destroying object for player "..GetPlayerName(player).." equipped item "..item)
+        log.debug("Destroying object for player "..GetPlayerName(player).." equipped item "..item)
         DestroyObject(object)
       end
       SetPlayerPropertyValue(player, "equipped", {})

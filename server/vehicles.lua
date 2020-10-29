@@ -9,7 +9,7 @@ AddCommand("vpos", function(player)
     local x, y, z = GetPlayerLocation(player)
     string = "Location: "..x.." "..y.." "..z
     AddPlayerChat(player, string)
-    print(string)
+    log.debug(string)
     table.insert(VehicleLocations, { x, y, z })
 
     File_SaveJSONTable("packages/"..GetPackageName().."/server/data/vehicles.json", VehicleLocations)
@@ -26,14 +26,14 @@ end)
 
 function DespawnVehicles()
     for _,veh in pairs(Vehicles) do
-        --print("Destroying vehicle: "..veh)
+        --log.debug("Destroying vehicle: "..veh)
         DestroyVehicle(veh)
         Vehicles[veh] = nil
     end
 end
 
 function SpawnVehicles()
-    print "Spawning vehicles..."
+    log.debug "Spawning vehicles..."
     DespawnVehicles()
 
     for _,pos in pairs(VehicleLocations) do

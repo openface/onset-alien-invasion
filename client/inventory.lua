@@ -60,3 +60,9 @@ AddEvent("UseItem", function(item)
     CallRemoteEvent("UseItemFromInventory", item)
 end)
 
+-- sort inventory
+AddEvent("SortInventory", function(data)
+  CallRemoteEvent("SortInventory", data)
+end)
+
+

@@ -1,5 +1,5 @@
 AddEvent("OnPackageStop", function()
-    print "Resetting player inventories..."
+    log.info "Resetting player inventories..."
     for _, player in pairs(GetAllPlayers()) do
         SetPlayerPropertyValue(player, "inventory", {})
         SyncInventory(player)
@@ -11,55 +11,42 @@ function SyncInventory(player)
     local inventory = GetPlayerPropertyValue(player, "inventory")
 
     local _send = {
-        items = {},
-        weapons = {}
+        items = {}
     }
-    for _, item in pairs(inventory) do
+    for index, item in ipairs(inventory) do
         if item['type'] == 'weapon' then
-            table.insert(_send.weapons, {
-                ['item'] = item['item'],
-                ['name'] = item['name'],
-                ['modelid'] = item['modelid'],
-                ['quantity'] = item['quantity'],
-                ['type'] = item['type'],
-                ['equipped'] = IsItemInWeaponSlot(player, item['item'])
-            })
-        elseif item['type'] == 'equipable' or item['type'] == 'usable' then
-            table.insert(_send.items, {
-                ['item'] = item['item'],
-                ['name'] = item['name'],
-                ['modelid'] = item['modelid'],
-                ['quantity'] = item['quantity'],
-                ['type'] = item['type'],
-                ['equipped'] = IsItemEquipped(player, item['item'])
-            })
-          elseif item['type'] == 'resource' then
-            table.insert(_send.items, {
-                ['item'] = item['item'],
-                ['name'] = item['name'],
-                ['modelid'] = item['modelid'],
-                ['quantity'] = item['quantity'],
-                ['type'] = item['type']
-            })
+            equipped = IsWeaponEquipped(player, item['item'])
+        else
+            equipped = IsItemEquipped(player, item['item'])
         end
+
+        table.insert(_send.items, {
+            ['index'] = index,
+            ['item'] = item['item'],
+            ['name'] = item['name'],
+            ['modelid'] = item['modelid'],
+            ['quantity'] = item['quantity'],
+            ['type'] = item['type'],
+            ['equipped'] = equipped
+        })
     end
     CallRemoteEvent(player, "SetInventory", json_encode(_send))
-    print(GetPlayerName(player) .. " sync inventory: " .. json_encode(_send))
+    log.trace("INVENTORY SYNC: " .. json_encode(_send))
 end
 AddRemoteEvent("SyncInventory", SyncInventory)
 AddEvent("SyncInventory", SyncInventory)
 
 -- add object to inventory
 function AddToInventory(player, item)
-    local inventory = GetPlayerPropertyValue(player, "inventory")
-
     item_cfg = GetItemConfig(item)
     if not item_cfg then
-        print("Invalid object " .. item)
+        log.error("Invalid object " .. item)
         return
     end
 
+    local inventory = GetPlayerPropertyValue(player, "inventory")
     local curr_qty = GetInventoryCount(player, item)
+
     if curr_qty > 0 then
         -- update existing object quantity
         SetItemQuantity(player, item, curr_qty + 1)
@@ -93,7 +80,7 @@ function SetItemQuantity(player, item, quantity)
         end
     end
     SetPlayerPropertyValue(player, "inventory", inventory)
-    print(GetPlayerName(player) .. " inventory item " .. item .. " quantity set to " .. quantity)
+    log.debug(GetPlayerName(player) .. " inventory item " .. item .. " quantity set to " .. quantity)
     CallEvent("SyncInventory", player)
 end
 
@@ -104,7 +91,7 @@ function RemoveFromInventory(player, item, amount)
 
     local item_cfg = GetItemConfig(item)
     if not item_cfg then
-        print("Invalid item: " .. item)
+        log.error("Invalid item: " .. item)
         return
     end
 
@@ -117,21 +104,21 @@ function RemoveFromInventory(player, item, amount)
         -- remove item from inventory
         SetItemQuantity(player, item, 0)
 
-        print("items:" .. item .. ":drop")
+        log.debug("items:" .. item .. ":drop")
 
         -- call DROP event on object
-        --CallEvent("items:" .. item .. ":drop", player, item_cfg)
+        -- CallEvent("items:" .. item .. ":drop", player, item_cfg)
 
         -- if item is a weapon, switch to fists
-        --if item_cfg['type'] == 'weapon' then
+        -- if item_cfg['type'] == 'weapon' then
         --  EquipWeapon(player, item)
-        --end
+        -- end
     end
 end
 
 -- unequips item, removes from inventory, and places on ground
 AddRemoteEvent("DropItemFromInventory", function(player, item, x, y, z)
-    print("Player " .. GetPlayerName(player) .. " drops item " .. item)
+    log.info("Player " .. GetPlayerName(player) .. " drops item " .. item)
 
     SetPlayerAnimation(player, "CARRY_SETDOWN")
 
@@ -158,14 +145,14 @@ end
 
 -- get carry count for given item type
 function GetInventoryCountByType(player, type)
-  local inventory = GetPlayerPropertyValue(player, "inventory")
-  local n = 0
-  for _, _item in pairs(inventory) do
-      if _item['type'] == type then
-          n = n + 1
-      end
-  end
-  return n
+    local inventory = GetPlayerPropertyValue(player, "inventory")
+    local n = 0
+    for _, _item in pairs(inventory) do
+        if _item['type'] == type then
+            n = n + 1
+        end
+    end
+    return n
 end
 
 function GetInventoryAvailableSlots(player)
@@ -191,16 +178,16 @@ end
 function UseItemFromInventory(player, item)
     local item_cfg = GetItemConfigFromInventory(player, item)
     if item_cfg == nil then
-        print("Item " .. item .. " not found in inventory")
+        log.error("Item " .. item .. " not found in inventory")
         return
     end
 
     if item_cfg['type'] == 'weapon' then
-      print("Not using weapon from inventory")
-      return
+        log.error("Not using weapon from inventory")
+        return
     end
 
-    print(GetPlayerName(player) .. " uses item " .. item .. " from inventory")
+    log.info(GetPlayerName(player) .. " uses item " .. item .. " from inventory")
     EquipObject(player, item)
     PlayInteraction(player, item)
 
@@ -212,7 +199,7 @@ function UseItemFromInventory(player, item)
 
             -- delete if all used up
             if (object['max_use'] - v['used'] == 0) then
-                print "all used up!"
+                log.debug "all used up!"
                 SetItemQuantity(player, item, 0)
             end
 
@@ -226,11 +213,33 @@ AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
 -- equip from inventory
 AddRemoteEvent("EquipItemFromInventory", function(player, item)
     if item_cfg['type'] == 'weapon' then
-      EquipWeapon(player, item)
+        EquipWeapon(player, item)
     else
-      EquipObject(player, item)
+        EquipObject(player, item)
     end
     CallEvent("SyncInventory", player)
+end)
+
+-- sort inventory
+-- array of pairs: item, newIndex, oldIndex
+AddRemoteEvent("SortInventory", function(player, data)
+    local sorted = json_decode(data)
+    log.debug(GetPlayerName(player) .. " sorting items:", dump(sorted))
+
+    local inventory = GetPlayerPropertyValue(player, "inventory")
+
+    -- swap indexes on the first detected change
+    for _, s in pairs(sorted) do
+        if s.oldIndex ~= s.newIndex then
+            print("Sorting item", s.item)
+            local temp = inventory[s.newIndex]
+            inventory[s.newIndex] = inventory[s.oldIndex]
+            inventory[s.oldIndex] = temp
+            break
+        end
+    end
+    log.trace("NEW INVENTORY", dump(inventory))
+    SetPlayerPropertyValue(player, "inventory", inventory)
 end)
 
 -- unequip from inventory
@@ -248,9 +257,20 @@ end)
 -- item hotkeys
 AddRemoteEvent("UseItemHotkey", function(player, key)
     local inventory = GetPlayerPropertyValue(player, "inventory")
-    local item = inventory[key - 4]
+    -- log.trace(dump(inventory))
+
+    -- find valid hotbar items
+    local hotbar_items = {}
+    for i, item in ipairs(inventory) do
+        if item['type'] ~= 'weapon' then
+            table.insert(hotbar_items, item['item'])
+        end
+    end
+
+    -- use it by index
+    local item = hotbar_items[key - 3]
     if item ~= nil then
-      print("Hotkey",item['name'])
-      UseItemFromInventory(player, item['item'])
+        log.debug("Hotkey", item)
+        UseItemFromInventory(player, item)
     end
 end)

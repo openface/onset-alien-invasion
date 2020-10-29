@@ -91,10 +91,7 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
     -- auto-equip on pickup
     if item_cfg['type'] == 'equipable' and item_cfg['auto_equip'] == true then
       EquipObject(player, item)
-    end
-
-    -- auto-equip weapons
-    if item_cfg['type'] == 'weapon' then
+    elseif item_cfg['type'] == 'weapon' then
       EquipWeapon(player, item)
     end
 

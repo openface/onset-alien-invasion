@@ -1,5 +1,6 @@
 local LootLocations = {} -- lootpickups.json
 local LootDropInterval = 5 * 60 * 1000 -- drop loot every 5 min (if players are nearby)
+local LootWeapons = { 'ak47', 'ak47g', 'auto_shotgun', 'shotgun', 'm16a4', 'ump', 'uzi' }
 
 AddCommand("loot", function(player)
     if not IsAdmin(player) then
@@ -105,6 +106,7 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
 
     -- add loot items to inventory
     AddToInventory(player, 'vest')
+    AddToInventory(player, LootWeapons[math.random(#LootWeapons)])
 
     DestroyPickup(pickup)
 

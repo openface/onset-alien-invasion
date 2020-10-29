@@ -48,7 +48,7 @@ function AddToInventory(player, item)
     local curr_qty = GetInventoryCount(player, item)
 
     if curr_qty > 0 then
-        -- update existing object quantity
+        -- update existing object quantity unless it's a weapon
         SetItemQuantity(player, item, curr_qty + 1)
     else
         -- add new item to store
@@ -75,6 +75,11 @@ function SetItemQuantity(player, item, quantity)
             else
                 -- remove object from inventory
                 inventory[i] = nil
+
+                -- if item is a weapon, switch to fists
+                if item_cfg['type'] == 'weapon' then
+                    UnequipWeapon(player, item)
+                end
             end
             break
         end
@@ -108,11 +113,6 @@ function RemoveFromInventory(player, item, amount)
 
         -- call DROP event on object
         -- CallEvent("items:" .. item .. ":drop", player, item_cfg)
-
-        -- if item is a weapon, switch to fists
-        -- if item_cfg['type'] == 'weapon' then
-        --  EquipWeapon(player, item)
-        -- end
     end
 end
 

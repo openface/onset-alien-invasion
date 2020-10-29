@@ -31,11 +31,22 @@ end
 -- check if weapon is equipped
 function IsWeaponEquipped(player, item)
   local item_cfg = GetItemConfig(item)
-  for i = 1, 3 do
-    local weapon_id,ammo = GetPlayerWeapon(player, i)
+  for slot = 1, 3 do
+    local weapon_id,ammo = GetPlayerWeapon(player, slot)
     if item_cfg['weapon_id'] == weapon_id then
       return true
     end
   end
   return false
+end
+
+-- switch to fists if weapon is equipped
+function UnequipWeapon(player, item)
+  local item_cfg = GetItemConfig(item)
+  for slot = 1, 3 do
+    local weapon_id,ammo = GetPlayerWeapon(player, slot)
+    if item_cfg['weapon_id'] == weapon_id then
+      Weapon.SetWeapon(player, 1, 0, true, slot, true)
+    end
+  end
 end

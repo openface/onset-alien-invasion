@@ -3,9 +3,5 @@ RegisterObject("auto_shotgun", {
     type = 'weapon',
     weapon_id = 6,
     modelid = 8, 
-    recipe = {
-        metal = 25,
-        plastic = 10
-    }
 })
 

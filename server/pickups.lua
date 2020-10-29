@@ -63,11 +63,22 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
 
     local item_cfg = GetItemConfig(item)
 
-    if item_cfg['type'] == 'weapon' and GetNextAvailableWeaponSlot(player) == nil then
-        log.debug("No more weapon slots available")
+    -- weapons are special
+    if item_cfg['type'] == 'weapon' then
+      if GetInventoryCount(player, item) > 0 then
+        log.debug("Only 1 of this weapon can be carried!")
         CallRemoteEvent(player, "PlayErrorSound")
         return
-    elseif item_cfg['max_carry'] ~= nil and GetInventoryCount(player, item) >= item_cfg['max_carry'] then
+      end
+        
+      if GetNextAvailableWeaponSlot(player) == nil then
+        log.debug("No more weapon slots available!")
+        CallRemoteEvent(player, "PlayErrorSound")
+        return
+      end
+    end
+    
+    if item_cfg['max_carry'] ~= nil and GetInventoryCount(player, item) >= item_cfg['max_carry'] then
         log.debug("Pickup exceeds max_carry")
         CallRemoteEvent(player, "PlayErrorSound")
         return

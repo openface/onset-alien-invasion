@@ -12,10 +12,10 @@ end)
 
 -- equips weapons (if slot is available)
 function EquipWeapon(player, item)
-  item_cfg = GetItemConfig(item)
-  local weapon_slot = GetNextAvailableWeaponSlot(player)
-  if weapon_slot ~= nil then
-    Weapon.SetWeapon(player, item_cfg['weapon_id'], 100, true, weapon_slot, true)
+  item_cfg = GetItemConfig(item) 
+  local slot = GetNextAvailableWeaponSlot(player)
+  if slot ~= nil then
+    Weapon.SetWeapon(player, item_cfg['weapon_id'], 100, true, slot, true)
   end
 end
 

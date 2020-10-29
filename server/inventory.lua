@@ -47,6 +47,12 @@ function AddToInventory(player, item)
     local inventory = GetPlayerPropertyValue(player, "inventory")
     local curr_qty = GetInventoryCount(player, item)
 
+    -- todo
+    if item_cfg['type'] == 'weapon' and curr_qty > 0 then
+      log.debug('Only one weapon of this type allowed!')
+      return
+    end
+
     if curr_qty > 0 then
         -- update existing object quantity unless it's a weapon
         SetItemQuantity(player, item, curr_qty + 1)
@@ -75,11 +81,6 @@ function SetItemQuantity(player, item, quantity)
             else
                 -- remove object from inventory
                 inventory[i] = nil
-
-                -- if item is a weapon, switch to fists
-                if item_cfg['type'] == 'weapon' then
-                    UnequipWeapon(player, item)
-                end
             end
             break
         end
@@ -102,18 +103,19 @@ function RemoveFromInventory(player, item, amount)
 
     local amount = amount or 1
     local curr_qty = GetInventoryCount(player, item)
-    if curr_qty > 1 then
-        -- decrease qty by 1
-        SetItemQuantity(player, item, curr_qty - amount)
-    else
-        -- remove item from inventory
-        SetItemQuantity(player, item, 0)
 
+    local new_qty = curr_qty - amount
+    SetItemQuantity(player, item, new_qty)
+
+    if new_qty == 0 then
         log.debug("items:" .. item .. ":drop")
 
-        -- call DROP event on object
-        -- CallEvent("items:" .. item .. ":drop", player, item_cfg)
+        -- if item is a weapon, switch to fists
+        if item_cfg['type'] == 'weapon' then
+            UnequipWeapon(player, item)
+        end
     end
+
 end
 
 -- unequips item, removes from inventory, and places on ground

@@ -8,7 +8,7 @@
           <div style="width:280px;float:left;">
             <div class="subtitle">WEAPONS</div>
             <div class="grid">
-              <InventoryItem v-for="item in equipped_weapons" :index="item.index" :key="item.index" :item="item" />
+              <InventoryItem v-for="item in weapons" :index="item.index" :key="item.index" :item="item" />
               <div class="slot" v-for="n in FreeWeaponSlots" :key="'w'+n"></div>
             </div>
           </div>
@@ -37,13 +37,13 @@
     </div>
     <div id="hotbar" v-if="!inventory_visible || !InGame">
       <div class="slot" v-for="n in range(1, 3)" :key="n">
-        <div v-if="equipped_weapons[n - 1]">
+        <div v-if="weapons[n - 1]">
           <img v-if="!InGame" src="http://placekitten.com/100/100" />
-          <img v-if="InGame" :src="'http://game/objects/' + equipped_weapons[n - 1].modelid" />
+          <img v-if="InGame" :src="'http://game/objects/' + weapons[n - 1].modelid" />
           <span class="keybind">{{ n }}</span>
-          <span class="name">{{ equipped_weapons[n - 1].name }}</span>
-          <span v-if="equipped_weapons[n - 1].quantity > 1" class="quantity">
-            x{{ equipped_weapons[n - 1].quantity }}
+          <span class="name">{{ weapons[n - 1].name }}</span>
+          <span v-if="weapons[n - 1].quantity > 1" class="quantity">
+            x{{ weapons[n - 1].quantity }}
           </span>
         </div>
       </div>
@@ -75,7 +75,7 @@ export default {
   data() {
     return {
       items: [],
-      equipped_weapons: [],
+      weapons: [],
       equipped_items: [],
       inventory_items: [],
       inventory_visible: false,
@@ -87,7 +87,7 @@ export default {
       return 14 - this.inventory_items.length;
     },
     FreeWeaponSlots: function() {
-      return 3 - this.equipped_weapons.length;
+      return 3 - this.weapons.length;
     },
     FreeEquipmentSlots: function() {
       return 4 - this.equipped_items.length;
@@ -97,9 +97,9 @@ export default {
     SetInventory: function(data) {
       this.items = data.items;
       //this.items = data.items.sort(function(a, b) { return a.index - b.index; });
-      this.equipped_weapons = this.items.filter(item => item.type == 'weapon' && item.equipped == true);
+      this.weapons = this.items.filter(item => item.type == 'weapon');
       this.equipped_items = this.items.filter(item => item.type != 'weapon' && item.equipped == true);
-      this.inventory_items = this.items.filter(item => !this.equipped_items.includes(item) && !this.equipped_weapons.includes(item));
+      this.inventory_items = this.items.filter(item => !this.equipped_items.includes(item) && !this.weapons.includes(item));
       //this.items = data.items.sort(function(a, b) { return a.index - b.index; });
 
     },
@@ -158,15 +158,6 @@ export default {
             index: 3,
             item: "Shotgun",
             name: "Shotgun",
-            modelid: 2,
-            quantity: 1,
-            type: "weapon",
-            equipped: false,
-          },
-          {
-            index: 4,
-            item: "glock4",
-            name: "Glock4",
             modelid: 2,
             quantity: 1,
             type: "weapon",

@@ -35,7 +35,7 @@
       </div>
       <div v-else id="title">YOUR INVENTORY IS EMPTY</div>
     </div>
-    <div id="hotbar" v-if="!inventory_visible">
+    <div id="hotbar" v-if="!inventory_visible || !InGame">
       <div class="slot" v-for="n in range(1, 3)" :key="n">
         <div v-if="equipped_weapons[n - 1]">
           <img v-if="!InGame" src="http://placekitten.com/100/100" />
@@ -114,7 +114,8 @@ export default {
         .fill()
         .map((_, idx) => start + idx);
     },
-    SortInventory: function() {
+    SortInventory: function(e) {
+        window.console.log(e);
         //window.console.log(e.oldIndex);
         //window.console.log(e.newIndex);
         var data = this.inventory_items.map(function(item, index) {
@@ -146,8 +147,8 @@ export default {
           },
           {
             index: 2,
-            item: "glock2",
-            name: "Glock2",
+            item: "rifle",
+            name: "Rifle",
             modelid: 2,
             quantity: 1,
             type: "weapon",
@@ -155,8 +156,8 @@ export default {
           },
           {
             index: 3,
-            item: "glock3",
-            name: "Glock3",
+            item: "Shotgun",
+            name: "Shotgun",
             modelid: 2,
             quantity: 1,
             type: "weapon",

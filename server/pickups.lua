@@ -63,14 +63,17 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
 
     local item_cfg = GetItemConfig(item)
 
-    -- if we already have the item, see if we can carry more
-    if GetInventoryCount(player, item) >= item_cfg['max_carry'] then
-        -- prevent pickup if it exceeds the max carry
+    if item_cfg['type'] == 'weapon' and GetNextAvailableWeaponSlot(player) == nil then
+        log.debug("No more weapon slots available")
+        CallRemoteEvent(player, "PlayErrorSound")
+        return
+    elseif item_cfg['max_carry'] ~= nil and GetInventoryCount(player, item) >= item_cfg['max_carry'] then
+        log.debug("Pickup exceeds max_carry")
         CallRemoteEvent(player, "PlayErrorSound")
         return
     elseif GetInventoryAvailableSlots(player) <= 0 then
-        -- no available slots for more items
         log.debug("Pickup exceeded max inventory slots")
+        CallRemoteEvent(player, "PlayErrorSound")
         return
     end
 
@@ -85,9 +88,12 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
       CallRemoteEvent(player, "ComputerPartPickedup", pickup)
     end
 
-    --if item_cfg['type'] == 'equipable' then
-    --  EquipObject(player, item)
-    --end
+    -- auto-equip on pickup
+    if item_cfg['type'] == 'equipable' and item_cfg['auto_equip'] == true then
+      EquipObject(player, item)
+    end
+
+    -- auto-equip weapons
     if item_cfg['type'] == 'weapon' then
       EquipWeapon(player, item)
     end

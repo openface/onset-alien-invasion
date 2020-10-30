@@ -73,7 +73,7 @@ end)
 
 function SetFirstPerson()
     EnableFirstPersonCamera(true)
-    SetNearClipPlane(8)
+    SetNearClipPlane(9)
     SetCameraViewDistance(350)
 end
 

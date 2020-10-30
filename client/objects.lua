@@ -1,6 +1,3 @@
--- TODO: rename to items.lua
-
-
 AddRemoteEvent("PlayObjectUseSound", function(sound, x, y, z)
     SetSoundVolume(CreateSound3D("client/"..sound, x, y, z, 1000), 1.0)
 end)

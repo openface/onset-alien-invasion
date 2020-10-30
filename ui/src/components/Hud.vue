@@ -9,6 +9,9 @@
     <div id="boss-health" v-if="boss_health">
       <div class="health-bar" :style="{ width: boss_health + '%' }"></div>
     </div>
+    <div id="interaction-message" v-if="interaction_message">
+      {{ interaction_message }}
+    </div>
   </div>
 </template>
 
@@ -20,6 +23,7 @@ export default {
       message: null,
       banner: null,
       boss_health: null,
+      interaction_message: null
     };
   },
   methods: {
@@ -42,11 +46,20 @@ export default {
     SetBossHealth: function(percentage) {
       this.boss_health = percentage;
     },
+    ShowInteractionMessage: function() {
+      this.interaction_message = "Press [E] To Interact"
+    },
+    HideInteractionMessage: function() {
+      this.interaction_message = null;
+    }
   },
   mounted() {
-    this.EventBus.$on("ShowMessage", this.ShowMessage);
-    this.EventBus.$on("ShowBanner", this.ShowBanner);
+    //this.EventBus.$on("ShowMessage", this.ShowMessage);
+    //this.EventBus.$on("ShowBanner", this.ShowBanner);
     this.EventBus.$on("SetBossHealth", this.SetBossHealth);
+    this.EventBus.$on("ShowInteractionMessage", this.ShowInteractionMessage)
+    this.EventBus.$on("HideInteractionMessage", this.HideInteractionMessage)
+
 
     if (!this.InGame) {
       this.EventBus.$emit(
@@ -54,6 +67,10 @@ export default {
         "You have found an important piece! Take this to the satellite!"
       );
       this.EventBus.$emit("ShowBanner", "Welcome to the invasion!");
+
+      this.EventBus.$emit("ShowInteractionMessage");
+      setTimeout(() => this.EventBus.$emit("HideInteractionMessage"), 3000);
+
 
       this.EventBus.$emit("SetBossHealth", 100);
       setTimeout(() => this.EventBus.$emit("SetBossHealth", 80), 1000);
@@ -83,6 +100,22 @@ export default {
   font-weight: bold;
   font-family: Impact;
   text-transform: uppercase;
+}
+
+/**
+ * Interaction Message
+ */
+
+#interaction-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: Helvetica;
+  text-shadow: 2px 2px rgba(0, 0, 0, 0.2);
 }
 
 /**

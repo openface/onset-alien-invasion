@@ -43,3 +43,50 @@ AddEvent("SetBossHealth", SetBossHealth)
 AddRemoteEvent("SetInventory", function(data)
 	ExecuteWebJS(HudUI, "EmitEvent('SetInventory',".. data ..")")
 end)
+
+
+-- interactive objects
+
+
+local LastHitObject = nil
+
+AddEvent("OnRenderHUD", function()
+  local hittype, hitid, impactX, impactY, impactZ = PlayerLookRaycast(200)
+
+  -- previously hit an object but are now looking at something else
+  if LastHitObject ~= nil and hitid ~= LastHitObject then
+    AddPlayerChat("no longer looking at "..LastHitObject)
+    ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
+
+    SetObjectOutline(LastHitObject, false)
+    LastHitObject = nil
+    return
+  end
+
+  -- not looking at an object
+  if hittype ~= 5 then
+    return
+  end
+
+  -- looking at new object
+  if hitid ~= HitObject then
+    AddPlayerChat("now looking at "..hitid)
+
+    LastHitObject = hitid
+    SetObjectOutline(LastHitObject)
+    ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage')")
+
+    AddPlayerChat("hittype: "..hittype.." hitid: "..hitid.." model: ".. GetObjectModel(hitid))
+  end
+end)
+
+-- this function was borrowed from Mog Interactive Objects by AlexMog
+function PlayerLookRaycast(maxDistance)
+  local x, y, z = GetPlayerLocation(GetPlayerId())
+  z = z + 60
+  local forwardX, forwardY, forwardZ = GetCameraForwardVector()
+  local finalPointX = forwardX * maxDistance + x
+  local finalPointY = forwardY * maxDistance + y
+  local finalPointZ = forwardZ * maxDistance + z
+  return LineTrace(x + forwardX * 20, y + forwardY * 20, z, finalPointX, finalPointY, finalPointZ, false)
+end

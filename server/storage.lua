@@ -12,7 +12,7 @@ AddEvent("OnPackageStart", function()
       remote_event = 'SearchForScrap'
     })
     
-    Storages[storage] = storage
+    table.insert(Storages, storage)
   end
 end)
 

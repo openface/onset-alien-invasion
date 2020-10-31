@@ -1,13 +1,8 @@
-local WorkbenchText3D
-local WorkbenchLoc = { x = -105858.1328125, y = 193734.21875, z = 1396.1424560547 }
 
 AddEvent("OnPackageStart", function()
-    -- workbench
-    WorkbenchText3D = CreateText3D("Press [E] to Interact", 10, WorkbenchLoc.x, WorkbenchLoc.y, WorkbenchLoc.z + 130, 0,0,0)
 end)
 
 AddEvent("OnPackageStop", function()
-    DestroyText3D(WorkbenchText3D)
 end)
 
 AddRemoteEvent("GetWorkbenchData", function(player)
@@ -28,7 +23,7 @@ AddRemoteEvent("GetWorkbenchData", function(player)
         ["player_resources"] = GetPlayerResources(player)
     }
     --log.debug(dump(json_encode(_send)))
-    CallRemoteEvent(player, "OnGetWorkbenchData", json_encode(_send))
+    CallRemoteEvent(player, "LoadWorkbenchData", json_encode(_send))
 end)
 
 AddRemoteEvent("BuildItem", function(player, item)
@@ -45,13 +40,15 @@ AddRemoteEvent("BuildItem", function(player, item)
         RemoveFromInventory(player, resource, amount)
     end
 
+    PlaySoundSync(player, "sounds/workbench.mp3")
+
     CallRemoteEvent(player, "StartBuilding", item, json_encode(GetPlayerResources(player)))
 
-    SetPlayerLocation(player, -105738.5859375, 193734.59375, 1396.1424560547) 
-    SetPlayerHeading(player, -92.786437988281)   
-    SetPlayerAnimation(player, "BARCLEAN01")
+    --SetPlayerLocation(player, -105738.5859375, 193734.59375, 1396.1424560547) 
+    --SetPlayerHeading(player, -92.786437988281)   
+    --SetPlayerAnimation(player, "BARCLEAN01")
     Delay(15000, function()
-        SetPlayerAnimation(player, "STOP")
+        --SetPlayerAnimation(player, "STOP")
         AddPlayerChat(player, item_cfg['name'].." has been added to your inventory.")
         AddToInventory(player, item)
     end)

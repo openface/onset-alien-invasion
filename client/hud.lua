@@ -80,7 +80,7 @@ AddEvent("OnGameTick", function()
 
         LastHitObject = hitid
 
-        local cfg = GetInteractionConfigByTypeAndModel('scrap', GetObjectModel(hitid))
+        local cfg = GetInteractionConfigByModel(GetObjectModel(hitid))
         if cfg ~= nil then
             ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. cfg['message'] .. "')")
             SetObjectOutline(LastHitObject)
@@ -102,18 +102,21 @@ function PlayerLookRaycast(maxDistance)
     return LineTrace(x + forwardX * 20, y + forwardY * 20, z, finalPointX, finalPointY, finalPointZ, false)
 end
 
-function GetInteractionConfigByTypeAndModel(type, modelid)
-    for i, m in ipairs(InteractionConfig[type].models) do
+function GetInteractionConfigByModel(modelid)
+  for type, config in pairs(InteractionConfig) do
+    for i, m in ipairs(config.models) do
         if m == modelid then
-            return InteractionConfig[type]
+            return config
         end
     end
+  end
 end
 
 AddEvent("OnKeyPress", function(key)
     if key == "E" then
         if InteractionEvent ~= nil then
             CallRemoteEvent(InteractionEvent)
+            ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
         end
     end
 end)

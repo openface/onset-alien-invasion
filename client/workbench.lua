@@ -1,6 +1,4 @@
 local WorkbenchUI
-
-local WorkbenchLoc = { x = -105858.1328125, y = 193734.21875, z = 1396.1424560547 }
 local workbench_timer
 
 AddEvent("OnPackageStart", function()
@@ -15,35 +13,27 @@ AddEvent("OnPackageStop", function()
     DestroyWebUI(WorkbenchUI)
 end)
 
-AddEvent("OnKeyPress", function(key)
-    if key == "E" then
-        local player = GetPlayerId()
-        local x,y,z = GetPlayerLocation(player)
-        if GetDistance3D(x, y, z, WorkbenchLoc.x, WorkbenchLoc.y, WorkbenchLoc.z) <= 200 then
-            CallRemoteEvent("GetWorkbenchData")
-        end
-    end
- end)
-
 -- workbench data from server
-AddRemoteEvent("OnGetWorkbenchData", function(data)
+AddRemoteEvent("LoadWorkbenchData", function(data)
     ShowMouseCursor(true)
     SetInputMode(INPUT_GAMEANDUI)
     SetWebVisibility(WorkbenchUI, WEB_VISIBLE)
 
     ExecuteWebJS(WorkbenchUI, "EmitEvent('LoadWorkbenchData',"..data..")")
-    workbench_timer = CreateTimer(ShowWorkbenchTimer, 1000, WorkbenchLoc)
+
+    local x,y,z = GetPlayerLocation(GetPlayerId())
+    workbench_timer = CreateTimer(ShowWorkbenchTimer, 1000, { x = x, y = y, z = z })
 end)
 
 -- timer used to hide workbench screen once player walks away
 function ShowWorkbenchTimer(loc)
-    local x,y,z = GetPlayerLocation(GetPlayerId())
-    if GetDistance3D(x, y, z, loc.x, loc.y, loc.z) > 200 then
-        ShowMouseCursor(false)
-        SetInputMode(INPUT_GAME)
-        SetWebVisibility(WorkbenchUI, WEB_HIDDEN)
-        DestroyTimer(workbench_timer)
-    end
+  local x,y,z = GetPlayerLocation(GetPlayerId())
+  if GetDistance3D(x, y, z, loc.x, loc.y, loc.z) > 200 then
+      ShowMouseCursor(false)
+      SetInputMode(INPUT_GAME)
+      SetWebVisibility(WorkbenchUI, WEB_HIDDEN)
+      DestroyTimer(workbench_timer)
+  end
 end
 
 -- selected item to build from UI
@@ -52,7 +42,6 @@ AddEvent("BuildItem", function(item)
 end)
 
 AddRemoteEvent("StartBuilding", function(item_key, player_resources)
-    SetSoundVolume(CreateSound3D("client/sounds/workbench.mp3", WorkbenchLoc.x, WorkbenchLoc.y, WorkbenchLoc.z, 1500), 1.0)
     ExecuteWebJS(WorkbenchUI, "EmitEvent('SetPlayerResources',"..player_resources..")")
 end)
 

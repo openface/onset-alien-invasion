@@ -12,7 +12,7 @@ local CurrentlySearching = {}
 
 AddEvent("OnPackageStart", function()
     log.info("Loading scrap heaps...")
-    CreateInteractiveObjectsFromJSON("data/scrap.json", "Hit [E] to Search", "SearchForScrap")
+    CreatePropsFromJSON("data/scrapheaps.json", "Hit [E] to Search", "SearchForScrap")
 end)
 
 AddCommand("scrap", function(player, amt)

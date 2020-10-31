@@ -21,7 +21,7 @@ AddCommand("boss", function(player)
     if not IsAdmin(player) then
         return
     end
-    SpawnBoss()
+    CallEvent("SpawnBoss")
 end)
 
 AddCommand("noboss", function(player)
@@ -66,6 +66,7 @@ function SpawnBoss()
     -- give it time for boss to land before attacking
     Delay(6000, StartBossFight)
 end
+AddEvent("SpawnBoss", SpawnBoss)
 
 function StartBossFight()
     if Boss == nil or BossTargetedLocation == nil then

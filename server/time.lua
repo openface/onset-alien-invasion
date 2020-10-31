@@ -3,7 +3,7 @@ local TimeTimer
 
 function SyncTime()
     for _,ply in pairs(GetAllPlayers()) do
-        CallRemoteEvent(ply, "ClientSetTime", time)
+        CallRemoteEvent(ply, "ClientSetTime", CurrentTime)
     end
 end
 AddEvent("OnPlayerJoin", SyncTime)

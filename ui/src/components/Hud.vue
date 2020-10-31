@@ -46,8 +46,8 @@ export default {
     SetBossHealth: function(percentage) {
       this.boss_health = percentage;
     },
-    ShowInteractionMessage: function() {
-      this.interaction_message = "Press [E] To Interact"
+    ShowInteractionMessage: function(message) {
+      this.interaction_message = message;
     },
     HideInteractionMessage: function() {
       this.interaction_message = null;
@@ -68,7 +68,7 @@ export default {
       );
       this.EventBus.$emit("ShowBanner", "Welcome to the invasion!");
 
-      this.EventBus.$emit("ShowInteractionMessage");
+      this.EventBus.$emit("ShowInteractionMessage",'Hit [E] To Search');
       setTimeout(() => this.EventBus.$emit("HideInteractionMessage"), 3000);
 
 

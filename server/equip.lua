@@ -17,6 +17,8 @@ end)
 -- clear equipped store for all players
 function DestroyEquippedObjectsForPlayer(player)
     equipped = GetPlayerPropertyValue(player, "equipped")
+    if equipped == nil then return end
+    
     for item, object in pairs(equipped) do
         log.debug("Destroying equipped object for player " .. GetPlayerName(player) .. " item " .. item)
         SetObjectDetached(object)

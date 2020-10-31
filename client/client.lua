@@ -60,6 +60,10 @@ AddEvent("OnConsoleInput", function(input)
   CallRemoteEvent("ConsoleInput", input)
 end)
 
+AddEvent("OnScriptError", function(message)
+  AddPlayerChat('<span color="#ff0000bb">'..message..'</>')
+end)
+
 -- toggle first-person view
 AddEvent("OnKeyPress", function(key)
     if key == "V" then

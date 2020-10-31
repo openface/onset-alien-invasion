@@ -16,13 +16,13 @@ AddEvent("OnPackageStop", function()
 end)
 
 AddEvent("OnKeyPress", function(key)
-    if key == "E" then
+--[[     if key == "E" then
         local player = GetPlayerId()
         local x,y,z = GetPlayerLocation(player)
         if GetDistance3D(x, y, z, WorkbenchLoc.x, WorkbenchLoc.y, WorkbenchLoc.z) <= 200 then
             CallRemoteEvent("GetWorkbenchData")
         end
-    end
+    end ]]
  end)
 
 -- workbench data from server

@@ -1,8 +1,7 @@
 
 AddEvent("OnPackageStart", function()
-end)
-
-AddEvent("OnPackageStop", function()
+  log.info("Loading workbenches...")
+  CreateInteractiveObjectsFromJSON("data/workbenches.json", "Hit [E] to Interact", "GetWorkbenchData")
 end)
 
 AddRemoteEvent("GetWorkbenchData", function(player)

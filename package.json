@@ -21,6 +21,7 @@
     "server/equip.lua",
     "server/weapons.lua",
     "server/storage.lua",
+    "server/interactive_objects.lua",
 
     "server/objects/armyhat.lua",
     "server/objects/banana.lua",

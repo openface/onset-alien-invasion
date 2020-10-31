@@ -54,8 +54,8 @@ export default {
     }
   },
   mounted() {
-    //this.EventBus.$on("ShowMessage", this.ShowMessage);
-    //this.EventBus.$on("ShowBanner", this.ShowBanner);
+    this.EventBus.$on("ShowMessage", this.ShowMessage);
+    this.EventBus.$on("ShowBanner", this.ShowBanner);
     this.EventBus.$on("SetBossHealth", this.SetBossHealth);
     this.EventBus.$on("ShowInteractionMessage", this.ShowInteractionMessage)
     this.EventBus.$on("HideInteractionMessage", this.HideInteractionMessage)

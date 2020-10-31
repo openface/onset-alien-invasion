@@ -94,10 +94,9 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
     log.debug("Player "..GetPlayerName(player).." picks up item "..item)
 
     --CallEvent("items:"..item..":pickup", player, pickup)
-
+    -- TODO: where does this belong??
     if item == 'computer_part' then
-      AddPlayerChatAll(GetPlayerName(player)..' has found a computer part!')
-      CallRemoteEvent(player, "ComputerPartPickedup", pickup)
+      CallEvent("ComputerPartPickedUp", player)
     end
 
     -- adds to player inventory and syncs

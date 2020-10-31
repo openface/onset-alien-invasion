@@ -1,4 +1,5 @@
 local ScrapCooldown = 60000 * 5 -- can only search a scrap point every 10 minutes
+
 -- weighted resource loot
 -- higher weight == more common
 local Resources = {
@@ -9,6 +10,11 @@ local Resources = {
 }
 local CurrentlySearching = {}
 
+AddEvent("OnPackageStart", function()
+    log.info("Loading scrap heaps...")
+    CreatePropsFromJSON("data/scrapheaps.json", { message = "Hit [E] to Search", remote_event = "SearchForScrap"})
+end)
+
 AddCommand("scrap", function(player, amt)
     if not IsAdmin(player) then
         return
@@ -17,12 +23,6 @@ AddCommand("scrap", function(player, amt)
     for i = 1, amt do
         PickupScrap(player)
     end
-end)
-
-AddEvent("OnPackageStart", function()
-end)
-
-AddEvent("OnPackageStop", function()
 end)
 
 -- search for scrap
@@ -63,7 +63,7 @@ function PickupScrap(player)
     local item = _resources[math.random(#_resources)]
     local item_cfg = GetItemConfig(item)
     if item_cfg ~= nil then
-        AddPlayerChat(player, "Some "..item.." has been added to your inventory.")
+        AddPlayerChat(player, "Some " .. item .. " has been added to your inventory.")
         AddToInventory(player, item)
     end
 end

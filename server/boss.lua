@@ -8,6 +8,7 @@ local BossTargetedLocation
 local BossHurtTimer
 local BossBombTimer
 local BossKillers = {}
+local FakeBossModelID = 91212
 
 AddEvent("OnPackageStart", function()
     WeaponData = File_LoadJSONTable("weapons.json")["weapons"]
@@ -21,7 +22,7 @@ AddCommand("boss", function(player)
     if not IsAdmin(player) then
         return
     end
-    SpawnBoss()
+    CallEvent("SpawnBoss")
 end)
 
 AddCommand("noboss", function(player)
@@ -48,24 +49,23 @@ function SpawnBoss()
 
     -- spawn boss randomly near the target
     log.info("Spawning boss on target "..GetPlayerName(target))
-    local r_x,r_y = randomPointInCircle(BossTargetedLocation.x, BossTargetedLocation.y, BossDamageRange)
+    local from_x,from_y = randomPointInCircle(BossTargetedLocation.x, BossTargetedLocation.y, BossDamageRange + 10000)
 
-    Boss = CreateObject(91212, r_x, r_y, BossTargetedLocation.z+20000, 0, 0, 0, 20, 20, 20)
+    Boss = CreateObject(FakeBossModelID, from_x, from_y, BossTargetedLocation.z+20000, 0, 0, 0, 20, 20, 20)
     SetObjectPropertyValue(Boss, "type", "boss")
 
-    -- move down to earth over targeted player, slowly
-    SetObjectMoveTo(Boss, BossTargetedLocation.x, BossTargetedLocation.y, BossTargetedLocation.z+7000, 1500)
+    -- move down to earth towards targeted player, slowly
+    local to_x,to_y = randomPointInCircle(BossTargetedLocation.x, BossTargetedLocation.y, BossDamageRange)
+
+    SetObjectMoveTo(Boss, to_x, to_y, BossTargetedLocation.z+7000, 1500)
 
     -- reset boss health
     BossHealth = BossInitialHealth
 
-    for _,ply in pairs(GetAllPlayers()) do
-        CallRemoteEvent(ply, "SpawnBoss")
-    end
-
     -- give it time for boss to land before attacking
     Delay(6000, StartBossFight)
 end
+AddEvent("SpawnBoss", SpawnBoss)
 
 function StartBossFight()
     if Boss == nil or BossTargetedLocation == nil then
@@ -78,7 +78,8 @@ function StartBossFight()
     BossHurtTimer = CreateTimer(function()
         if Boss ~= nil then
             -- find targets within 3d range of initial target
-            local targets = GetPlayersInRange3D(BossTargetedLocation.x, BossTargetedLocation.y, BossTargetedLocation.z, BossDamageRange)
+            local targets = GetBossTargets()
+            log.debug("Boss targets: "..dump(targets))
 
             if next(targets) == nil then
                 -- no targets found, mothership leaves
@@ -87,15 +88,10 @@ function StartBossFight()
                 return
             end
 
-            log.debug("Boss targets: "..dump(targets))
-
             for _,ply in pairs(targets) do
-                -- player may have disconnected
-                if IsValidPlayer(ply) and not IsPlayerDead(ply) and GetPlayerDimension(ply) == 0 then
-                    -- hurt player
-                    CallRemoteEvent(ply, "BossHurtPlayer")
-                    SetPlayerHealth(ply, GetPlayerHealth(ply) - BossDamageAmount)
-                end
+                -- hurt player
+                CallRemoteEvent(ply, "BossHurtPlayer")
+                SetPlayerHealth(ply, GetPlayerHealth(ply) - BossDamageAmount)
             end
         end
     end, 5 * 1000)
@@ -109,6 +105,16 @@ function StartBossFight()
     end, 2500)
 end
 AddEvent("StartBossFight", StartBossFight)
+
+function GetBossTargets()
+  local targets = {}
+  for _,ply in pairs(GetPlayersInRange3D(BossTargetedLocation.x, BossTargetedLocation.y, BossTargetedLocation.z, BossDamageRange)) do
+    if IsValidPlayer(ply) and not IsPlayerDead(ply) and GetPlayerDimension(ply) == 0 then
+      table.insert(targets, ply)
+    end
+  end
+  return targets
+end
 
 function DespawnBoss()
     if Boss == nil then

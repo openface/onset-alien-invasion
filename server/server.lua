@@ -1,6 +1,5 @@
 local SpawnLocation = { x = -102037, y = 194299, z = 1400 }
 local PlayerRespawnSecs = 20 -- 20 secs
-local Interactions = require("packages/" .. GetPackageName() .. "/server/data/interactions")
 
 AddCommand("pos", function(player)
     if not IsAdmin(player) then
@@ -58,9 +57,6 @@ AddEvent("OnPlayerJoin", function(player)
     AddPlayerChatAll('<span color="#eeeeeeaa">'..GetPlayerName(player)..' has joined the server</>')
     AddPlayerChat(player, '<span color="#ffffffff">Welcome to Alien Invasion by oweff!</>')
     AddPlayerChat(player, '<span color="#eeeeeeaa">Hit [T] to chat, [TAB] for inventory, [P] for player list</>')
-
-    -- send interaction data to client
-    CallRemoteEvent(player, "LoadInteractionConfig", Interactions)
 end)
 
 -- Player spawn
@@ -128,10 +124,4 @@ end)
 
 AddRemoteEvent("DropParachute", function(player)
     AttachPlayerParachute(player, false)
-end)
-
-
--- interaction objects
-AddRemoteEvent("GetInteractionConfig", function(player)
-  CallRemoteEvent(player, "LoadInteractionConfig", Interactions)
 end)

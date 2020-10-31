@@ -8,12 +8,12 @@ RegisterObject("armyhat", {
     modelid = 398,
     max_carry = 1,
     attachment = { 
-        x = 16, 
-        y = 2, 
-        z = -1, 
-        rx = -93, 
-        ry = 9, 
-        rz = -10, 
+        x = 15.4, 
+        y = 0.2, 
+        z = 0.9, 
+        rx = 0.2, 
+        ry = 76.4, 
+        rz = -86.3, 
         bone = "head" 
     }
 })

@@ -63,7 +63,8 @@ function PickupScrap(player)
     local item = _resources[math.random(#_resources)]
     local item_cfg = GetItemConfig(item)
     if item_cfg ~= nil then
-        CreateObjectPickupNearPlayer(player, item)
+        AddPlayerChat(player, "Some "..item.." has been added to your inventory.")
+        AddToInventory(player, item)
     end
 end
 

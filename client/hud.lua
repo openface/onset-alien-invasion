@@ -79,6 +79,7 @@ AddEvent("OnGameTick", function()
         -- AddPlayerChat("now looking at " .. hitid)
 
         LastHitObject = hitid
+        if InteractionConfig == nil then return end
 
         local cfg = GetInteractionConfigByModel(GetObjectModel(hitid))
         if cfg ~= nil then

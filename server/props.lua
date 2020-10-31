@@ -1,17 +1,17 @@
 local Props = {}
 
-function CreatePropsFromJSON(json_file, message, remote_event)
-
+function CreatePropsFromJSON(json_file, options)
     local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/server/" .. json_file)
     for _, v in pairs(_table) do
-        log.debug("Creating interactive prop:", v['modelID'])
-        local object = CreateObject(v['modelID'], v['x'], v['y'], v['z'], v['rx'], v['ry'], v['rz'], v['sx'], v['sy'], v['sz'])
-        SetObjectPropertyValue(object, "interactive", {
-            message = message,
-            remote_event = remote_event
-        })
-        table.insert(Props, object)
+        CreateProp(v, options)
     end
+end
+
+function CreateProp(config, options)
+  --log.debug("Creating interactive prop:", config['modelID'], dump(options))
+  local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'], config['ry'], config['rz'], config['sx'], config['sy'], config['sz'])
+  SetObjectPropertyValue(object, "prop", options)
+  table.insert(Props, object)
 end
 
 AddEvent("OnPackageStop", function()

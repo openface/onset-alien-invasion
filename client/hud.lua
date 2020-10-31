@@ -1,6 +1,6 @@
 local HudUI
 local LastHitObject
-local CurrentInteraction
+local ActiveProp
 
 AddEvent("OnPackageStart", function()
     HudUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
@@ -57,7 +57,7 @@ AddEvent("OnGameTick", function()
 
         SetObjectOutline(LastHitObject, false)
         LastHitObject = nil
-        CurrentInteraction = nil
+        ActiveProp = nil
         return
     end
 
@@ -69,14 +69,17 @@ AddEvent("OnGameTick", function()
     -- looking at new object
     if hitid ~= LastHitObject then
         -- AddPlayerChat("now looking at " .. hitid)
-        local action = GetObjectPropertyValue(hitid, "interactive")
-        if action ~= nil then
-            ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. action['message'] .. "')")
+        local prop_options = GetObjectPropertyValue(hitid, "prop")
+        if prop_options ~= nil then
+            ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop_options['message'] .. "')")
             SetObjectOutline(hitid)
-            CurrentInteraction = {
-              remote_event = action['remote_event'],
-              object = hitid
+            ActiveProp = {
+              message = prop_options['message'],
+              object = hitid,
+              event = prop_options['event'] or nil,
+              remote_event = prop_options['remote_event'] or nil
             }
+            --AddPlayerChat(dump(ActiveProp))
         end
 
         LastHitObject = hitid
@@ -95,14 +98,19 @@ function PlayerLookRaycast(maxDistance)
     return LineTrace(x + forwardX * 20, y + forwardY * 20, z, finalPointX, finalPointY, finalPointZ, false)
 end
 
-
 AddEvent("OnKeyPress", function(key)
     if key == "E" then
-        if CurrentInteraction ~= nil then
-            CallRemoteEvent(CurrentInteraction['remote_event'])
+        if ActiveProp ~= nil then
+            if ActiveProp['event'] then
+                --AddPlayerChat("calling event: "..ActiveProp['event'])
+                CallEvent(ActiveProp['event'], ActiveProp['object'])
+            elseif ActiveProp['remote_event'] then
+                --AddPlayerChat("calling remote event: "..ActiveProp['remote_event'])
+                CallRemoteEvent(ActiveProp['remote_event'], ActiveProp['object'])
+            end
             ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
-            SetObjectOutline(CurrentInteraction['object'], false)
-            CurrentInteraction = nil
+            SetObjectOutline(ActiveProp['object'], false)
+            ActiveProp = nil
         end
     end
 end)

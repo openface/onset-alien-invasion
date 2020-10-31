@@ -60,7 +60,7 @@ AddEvent("InteractSatelliteTerminal", function(object)
         SetSoundVolume(CreateSound("client/sounds/error.wav"), 0.5)
     else
         SetSoundVolume(CreateSound3D("client/sounds/modem.mp3", x, y, z, 1500), 0.7)
-        CallRemoteEvent("InteractSatelliteComputer")
+        CallRemoteEvent("InteractSatelliteComputer", object)
 
         local x, y, z = GetObjectLocation(object)
         computer_timer = CreateTimer(ShowComputerTimer, 1000, {
@@ -89,10 +89,12 @@ AddRemoteEvent("ShowSatelliteComputer", function(percentage)
 end)
 
 -- occurs just before boss arrives
-AddRemoteEvent("SatelliteTransmission", function()
-    SetSoundVolume(CreateSound3D("client/sounds/transmission.mp3", SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z, 10000), 1)
+AddRemoteEvent("BeginSatelliteTransmission", function(object)
+    local x,y,z = GetObjectLocation(object)
+    
+    SetSoundVolume(CreateSound3D("client/sounds/transmission.mp3", x, y, z, 10000), 1)
     Delay(7000, function()
-        SetSoundVolume(CreateSound3D("client/sounds/alert.mp3", SatelliteLoc.x, SatelliteLoc.y, SatelliteLoc.z, 10000), 1)
+        SetSoundVolume(CreateSound3D("client/sounds/alert.mp3", x, y, z, 10000), 1)
     end)
 end)
 

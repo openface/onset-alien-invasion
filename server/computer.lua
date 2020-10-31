@@ -42,7 +42,7 @@ AddEvent("OnPackageStop", function()
 end)
 
 -- called when interacting with satellite with a computer_part in your inventory
-AddRemoteEvent("InteractSatelliteComputer", function(player)
+AddRemoteEvent("InteractSatelliteComputer", function(player, object)
     -- remove part from inventory
     RemoveFromInventory(player, "computer_part")
 
@@ -71,7 +71,7 @@ AddRemoteEvent("InteractSatelliteComputer", function(player)
 
         -- reset satellite status
         PartsCollected = 0
-        CallRemoteEvent(player, "SatelliteTransmission")
+        CallRemoteEvent(player, "BeginSatelliteTransmission", object)
 
         -- update satellite status for everyone
         UpdateAllPlayersSatelliteStatus()

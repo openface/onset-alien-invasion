@@ -1,5 +1,5 @@
 <template>
-  <div class="item" :class="isBusy ? 'blurred' : ''" @mouseenter="PlayClick()">
+  <div class="item" :class="isBusy ? 'blurred' : ''" @mouseenter="!isBusy ? PlayClick() : null">
     <div class="pic">
       <img v-if="!InGame" src="http://placekitten.com/60/60" />
       <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />

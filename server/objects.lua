@@ -38,16 +38,16 @@ function PlayInteraction(player, item)
         end
     end
     if item_cfg['interaction']['sound'] then
-        PlaySound(player, item_cfg['interaction']['sound'])
+        PlaySoundSync(player, item_cfg['interaction']['sound'])
     end
 end
 
-function PlaySound(player, sound)
+function PlaySoundSync(player, sound)
     local x,y,z = GetPlayerLocation(player)
     for k,ply in pairs(GetAllPlayers()) do
         local _x,_y,_z = GetPlayerLocation(ply)
         if GetDistance3D(x, y, z, _x, _y, _z) <= 1000 then
-            CallRemoteEvent(ply, "PlayObjectUseSound", sound, x, y, z)
+            CallRemoteEvent(ply, "Play3DSound", sound, x, y, z)
         end
     end
 end

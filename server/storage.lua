@@ -7,6 +7,11 @@ local StorageLocations = {
 AddEvent("OnPackageStart", function()
   for _,loc in pairs(StorageLocations) do
     local storage = CreateObject(1013, loc.x, loc.y, loc.z)
+    SetObjectPropertyValue(storage, "interactive", {
+      message = "Hit [E] to Search",
+      remote_event = 'SearchForScrap'
+    })
+    
     Storages[storage] = storage
   end
 end)

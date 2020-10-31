@@ -1,7 +1,6 @@
 local HudUI
 local LastHitObject
-local InteractionConfig
-local InteractionEvent
+local CurrentInteraction
 
 AddEvent("OnPackageStart", function()
     HudUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
@@ -9,17 +8,10 @@ AddEvent("OnPackageStart", function()
     SetWebAlignment(HudUI, 0.0, 0.0)
     SetWebAnchors(HudUI, 0.0, 0.0, 1.0, 1.0)
     SetWebVisibility(HudUI, WEB_HITINVISIBLE)
-
-    -- when package restarts, reload data on client
-    CallRemoteEvent("GetInteractionConfig")
 end)
 
 AddEvent("OnPackageStop", function()
     DestroyWebUI(HudUI)
-end)
-
-AddRemoteEvent("LoadInteractionConfig", function(data)
-  InteractionConfig = data
 end)
 
 -- banner
@@ -65,7 +57,7 @@ AddEvent("OnGameTick", function()
 
         SetObjectOutline(LastHitObject, false)
         LastHitObject = nil
-        InteractionEvent = nil
+        CurrentInteraction = nil
         return
     end
 
@@ -77,17 +69,17 @@ AddEvent("OnGameTick", function()
     -- looking at new object
     if hitid ~= LastHitObject then
         -- AddPlayerChat("now looking at " .. hitid)
-
-        LastHitObject = hitid
-        if InteractionConfig == nil then return end
-
-        local cfg = GetInteractionConfigByModel(GetObjectModel(hitid))
-        if cfg ~= nil then
-            ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. cfg['message'] .. "')")
-            SetObjectOutline(LastHitObject)
-            InteractionEvent = cfg['remote_event']
+        local action = GetObjectPropertyValue(hitid, "interactive")
+        if action ~= nil then
+            ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. action['message'] .. "')")
+            SetObjectOutline(hitid)
+            CurrentInteraction = {
+              remote_event = action['remote_event'],
+              object = hitid
+            }
         end
 
+        LastHitObject = hitid
         -- AddPlayerChat("hittype: "..hittype.." hitid: "..hitid..")
     end
 end)
@@ -103,21 +95,14 @@ function PlayerLookRaycast(maxDistance)
     return LineTrace(x + forwardX * 20, y + forwardY * 20, z, finalPointX, finalPointY, finalPointZ, false)
 end
 
-function GetInteractionConfigByModel(modelid)
-  for type, config in pairs(InteractionConfig) do
-    for i, m in ipairs(config.models) do
-        if m == modelid then
-            return config
-        end
-    end
-  end
-end
 
 AddEvent("OnKeyPress", function(key)
     if key == "E" then
-        if InteractionEvent ~= nil then
-            CallRemoteEvent(InteractionEvent)
+        if CurrentInteraction ~= nil then
+            CallRemoteEvent(CurrentInteraction['remote_event'])
             ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
+            SetObjectOutline(CurrentInteraction['object'], false)
+            CurrentInteraction = nil
         end
     end
 end)

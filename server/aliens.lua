@@ -42,7 +42,12 @@ AddEvent("OnPackageStart", function()
 end)
 
 AddEvent("OnPackageStop", function()
-  AlienRetargetCooldown = {}
+    AlienRetargetCooldown = {}
+    for _, npc in pairs(GetAllNPC()) do
+        if (GetNPCPropertyValue(npc, 'type') == 'alien') then
+            DestroyNPC(npc)
+        end
+    end
 end)
 
 function SpawnAliens()
@@ -121,7 +126,7 @@ end
 
 AddEvent("OnNPCSpawn", function(npc)
     if GetNPCPropertyValue(npc, 'type') == 'alien' then
-        --log.debug("OnNPCSpawn alien " .. npc)
+        -- log.debug("OnNPCSpawn alien " .. npc)
         SetNPCHealth(npc, AlienHealth)
 
         local x, y, z = GetNPCLocation(npc)
@@ -147,9 +152,9 @@ AddEvent("OnPlayerWeaponShot",
 
             -- chance that the alien runs away
             if math.random(1, 5) == 1 then
-              AlienReturn(hitid)
-              log.debug("Alien retreated " .. hitid)
-              return
+                AlienReturn(hitid)
+                log.debug("Alien retreated " .. hitid)
+                return
             end
 
             -- retarget w/ cooldown
@@ -221,27 +226,22 @@ function ResetAlien(npc)
     end
 
     local player, nearest_dist = GetNearestPlayer(npc)
-    if (player ~= 0 and not IsPlayerDead(player)) then
+    if IsPlayerAttackable(player) then
+        -- we found a target
+        SetAlienTarget(npc, player)
+    elseif (GetNPCPropertyValue(npc, 'target') == player) then
+        log.debug("NPC (ID " .. npc .. ") target "..GetPlayerName(player).." is no longer attackable")
+        -- target is out of range, alien is sad
+        local x, y, z = GetNPCLocation(npc)
+        SetNPCTargetLocation(npc, x, y, z)
+        SetNPCPropertyValue(npc, 'target', nil, true)
+        SetNPCAnimation(npc, "THROATSLIT", false)
+        CallRemoteEvent(player, 'AlienNoLongerAttacking', npc)
 
-        local x, y, z = GetPlayerLocation(player)
-        local distance_to_safety = GetDistance3D(x, y, z, SafeLocation.x, SafeLocation.y, SafeLocation.z)
-        if (nearest_dist < AlienAttackRange and distance_to_safety > SafeRange) then
-            -- we found a target
-            SetAlienTarget(npc, player)
-        elseif (GetNPCPropertyValue(npc, 'target') == player) then
-            log.debug("NPC (ID " .. npc .. ") target is out of range")
-            -- target is out of range, alien is sad
-            local x, y, z = GetNPCLocation(npc)
-            SetNPCTargetLocation(npc, x, y, z)
-            SetNPCPropertyValue(npc, 'target', nil, true)
-            SetNPCAnimation(npc, "THROATSLIT", false)
-            CallRemoteEvent(player, 'AlienNoLongerAttacking', npc)
-
-            -- wait a bit then walk back home, little alien
-            Delay(60000, function()
-                AlienReturn(npc)
-            end)
-        end
+        -- wait a bit then walk back home, little alien
+        Delay(15 * 1000, function()
+            AlienReturn(npc)
+        end)
     end
 end
 
@@ -251,7 +251,7 @@ AddEvent("OnNPCReachTarget", function(npc)
     if GetNPCPropertyValue(npc, 'type') ~= 'alien' then
         return
     end
-    
+
     local health = GetNPCHealth(npc)
     if (health == false or health <= 0) then
         return

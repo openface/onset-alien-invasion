@@ -21,7 +21,9 @@ end)
 AddEvent("OnPackageStop", function()
     DestroyTextBox(SatelliteStatus)
     DestroyWebUI(ComputerUI)
-    DestroyWaypoint(SatelliteWaypoint)
+    if SatelliteWaypoint ~= nil then
+      DestroyWaypoint(SatelliteWaypoint)
+    end
 end)
 
 -- timer used to hide computer screen once player walks away

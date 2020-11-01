@@ -12,8 +12,18 @@ AddEvent("OnPackageStart", function()
   local _table = File_LoadJSONTable("packages/"..GetPackageName().."/server/data/world.json")
   for _,v in pairs(_table) do
     if v['modelID'] ~= nil then
+      local object = CreateObject(v['modelID'], v['x'], v['y'], v['z'], v['rx'], v['ry'], v['rz'], v['sx'], v['sy'], v['sz'])
+      if v['modelID'] == 582 then
+        local component = {
+          type = "pointlight",
+          position = { x = 0, y = 66.3, z = 147.6, rx = 0, ry = 86.6, rz = 0 },
+          intensity = 10000
+        }
+        SetObjectPropertyValue(object, "component", component)
+        log.debug("Adding light component to model",v['modelID'])
+      end
       --log.debug("Creating object:",v['modelID'])
-      table.insert(Objects, CreateObject(v['modelID'], v['x'], v['y'], v['z'], v['rx'], v['ry'], v['rz'], v['sx'], v['sy'], v['sz']))
+      table.insert(Objects, object)
     else
       --log.debug("Creating door:",v['doorID'])
       table.insert(Doors, CreateDoor(v['doorID'], v['x'], v['y'], v['z'], v['yaw'], true))
@@ -27,6 +37,7 @@ AddEvent("OnPackageStop", function()
 
   for _,object in pairs(Objects) do
     DestroyObject(object)
+    -- TODO: need to destroy components too or is this automatic?
   end
   for _,door in pairs(Doors) do
     DestroyDoor(object)

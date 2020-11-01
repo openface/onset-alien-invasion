@@ -17,7 +17,8 @@ RegisterObject("lantern", {
             rx = 0,
             ry = 0,
             rz = 0
-        }
+        },
+        intensity = 5000
     },
     attachment = {
         x = 61,

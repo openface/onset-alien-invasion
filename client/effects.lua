@@ -1,6 +1,13 @@
 
 local Components = {}
 
+AddEvent("OnPackageStop", function()
+  for object,component in pairs(Components) do  
+    component:Destroy()
+    Components[object] = nil
+  end
+end)
+
 AddEvent("OnObjectStreamIn", function(object)
     local component = GetObjectPropertyValue(object, "component")
     if component ~= nil then
@@ -16,7 +23,7 @@ end)
 
 AddEvent("OnObjectNetworkUpdatePropertyValue", function(object, PropertyName, PropertyValue)
     if PropertyName == "component" then
-        if PropertyValue ~= nil then
+        if PropertyValue ~= false then
             AddComponentToObject(object, PropertyValue)
         else
             RemoveComponent(object)
@@ -44,7 +51,7 @@ function AddComponentToObject(object, component)
       return
     end
 
-    light:SetIntensity(5000)
+    light:SetIntensity(component.intensity)
     light:SetLightColor(FLinearColor(255, 255, 255, 0), true)
     light:SetRelativeLocation(FVector(component.position.x, component.position.y, component.position.z))
     light:SetRelativeRotation(FRotator(component.position.rx, component.position.ry, component.position.rz))
@@ -54,6 +61,8 @@ end
 
 function RemoveComponent(object)
     -- destroy the component
-    Components[object]:Destroy()
-    Components[object] = nil
+    if Components[object] ~= nil then
+      Components[object]:Destroy()
+      Components[object] = nil
+    end
 end

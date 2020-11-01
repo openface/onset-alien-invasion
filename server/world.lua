@@ -36,6 +36,18 @@ local LightingConfig = {
         rz = 5.2
       },
       intensity = 15000
+    },
+    [388] = {
+      type = "rectlight",
+      position = {
+        x = 0,
+        y = 0.2,
+        z = 254.4,
+        rx = -76.1,
+        ry = 45.9,
+        rz = 0
+      },
+      intensity = 50000
     }
 }
 

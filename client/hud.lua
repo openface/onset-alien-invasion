@@ -87,11 +87,12 @@ AddEvent("OnGameTick", function()
     end
 end)
 
--- this function was borrowed from Mog Interactive Objects by AlexMog
 function PlayerLookRaycast(maxDistance)
     local x, y, z = GetPlayerLocation(GetPlayerId())
     z = z + 60
     local forwardX, forwardY, forwardZ = GetCameraForwardVector()
+    if forwardX == false then return end
+
     local finalPointX = forwardX * maxDistance + x
     local finalPointY = forwardY * maxDistance + y
     local finalPointZ = forwardZ * maxDistance + z

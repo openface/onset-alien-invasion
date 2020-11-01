@@ -2,6 +2,11 @@ local Objects = {}
 local Doors = {}
 
 AddEvent("OnPackageStart", function()
+  if IsPackageStarted('sandbox') then 
+    log.warn("Not loading alien invasion world because sandbox package is loaded.") 
+    return
+  end
+
   log.info("Loading world...")
 
   local _table = File_LoadJSONTable("packages/"..GetPackageName().."/server/data/world.json")

@@ -87,6 +87,8 @@ function SpawnAliens()
 end
 
 function IsPlayerAttackable(player)
+    if player == nil then return false end
+    
     -- don't attack if player is in lobby (character selection)
     if GetPlayerDimension(player) ~= 0 then
         log.debug(GetPlayerName(player) .. " is in another dimension")

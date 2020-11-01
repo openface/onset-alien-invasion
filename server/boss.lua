@@ -55,7 +55,7 @@ function SpawnBoss()
     SetObjectPropertyValue(Boss, "type", "boss")
 
     -- move down to earth towards targeted player, slowly
-    local to_x,to_y = randomPointInCircle(BossTargetedLocation.x, BossTargetedLocation.y, BossDamageRange)
+    local to_x,to_y = randomPointInCircle(BossTargetedLocation.x, BossTargetedLocation.y, BossDamageRange - 5000)
 
     SetObjectMoveTo(Boss, to_x, to_y, BossTargetedLocation.z+7000, 1500)
 

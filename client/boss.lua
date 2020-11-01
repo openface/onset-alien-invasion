@@ -1,4 +1,5 @@
 local MothershipSpawnSound
+local BossLocation
 
 AddEvent("OnPackageStart", function()
     SetCloudDensity(1)
@@ -24,31 +25,33 @@ AddEvent("OnObjectStreamIn", function(object)
 
     EnableObjectHitEvents(object, true)
 
-    SetCloudDensity(4)
-    SetPostEffect("ImageEffects", "VignetteIntensity", 1.5)
-
-    if MothershipSpawnSound ~= nil then
-      DestroySound(MothershipSpawnSound)
-    end
-
     local x, y, z = GetObjectLocation(object)
-    MothershipSpawnSound = CreateSound3D("client/sounds/mothership.mp3", x, y, z, 100000.0, true)
-    SetSoundVolume(MothershipSpawnSound, 1)
+    BossLocation = { x = x, y = y, z = z }
+
+    SetSoundVolume(CreateSound3D("client/sounds/mothership_enter.mp3", x, y, z, 100000.0), 1.0)
+
+    Delay(6000, function()
+        if MothershipSpawnSound ~= nil then
+            DestroySound(MothershipSpawnSound)
+        end
+
+        SetCloudDensity(4)
+        SetPostEffect("ImageEffects", "VignetteIntensity", 1)
+
+        MothershipSpawnSound = CreateSound3D("client/sounds/mothership.mp3", BossLocation.x, BossLocation.y, BossLocation.z, 100000.0, true)
+        SetSoundVolume(MothershipSpawnSound, 1)
+    end)
 end)
 
 -- Boss is leaving
 AddRemoteEvent("DespawnBoss", function(boss)
-    local x, y, z = GetObjectLocation(boss)
-    if x == nil or y == nil or z == nil then
-        -- boss is no longer streamed
-    else
-        MothershipFlybySound = CreateSound3D("client/sounds/mothership_flyby.mp3", x, y, z, 100000.0)
-        SetSoundVolume(MothershipFlybySound, 1)
-    end
+    MothershipFlybySound = CreateSound3D("client/sounds/mothership_flyby.mp3", BossLocation.x, BossLocation.y, BossLocation.z, 100000.0)
+    SetSoundVolume(MothershipFlybySound, 1)
+
+    DestroySound(MothershipSpawnSound)
+    BossLocation = nil
 
     Delay(5000, function()
-        DestroySound(MothershipSpawnSound)
-
         AddPlayerChat("The mothership has left for now...")
 
         SetCloudDensity(1)

@@ -1,11 +1,11 @@
 RegisterObject("metal", {
     name = "Metal",
     type = 'resource',
-    modelid = 694,
+    modelid = 597,
     scale = {
-        x = 0.07,
-        y = 0.07,
-        z = 0.07
+        x = 0.2,
+        y = 0.2,
+        z = 0.2
     },
     max_carry = 25,
     recipe = nil,

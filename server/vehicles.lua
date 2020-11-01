@@ -47,6 +47,7 @@ end
 
 AddEvent("OnPlayerEnterVehicle", function(player, vehicle, seat)
     if seat == 1 then
+        StartVehicleEngine(vehicle)
         SetVehicleLightEnabled(vehicle, true)
     end
 end)

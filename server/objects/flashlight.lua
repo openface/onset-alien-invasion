@@ -3,6 +3,12 @@ RegisterObject("flashlight", {
     type = 'equipable',
     modelid = 1271,
     max_carry = 1,
+    interaction = {
+      sound = "sounds/backpack.wav",
+      animation = {
+          name = "CHECK_EQUIPMENT"
+      }
+    },
     recipe = {
         metal = 10,
         plastic = 5,

@@ -1,11 +1,19 @@
-
 local Components = {}
 
-AddEvent("OnPackageStop", function()
-  for object,component in pairs(Components) do  
-    component:Destroy()
-    Components[object] = nil
+AddEvent("OnPackageStart", function()
+  for object in pairs(GetStreamedObjects()) do
+    local component = GetObjectPropertyValue(object, "component")
+    if component ~= nil then
+        AddComponentToObject(object, component)
+    end
   end
+end)
+
+AddEvent("OnPackageStop", function()
+    for object, component in pairs(Components) do
+        component:Destroy()
+        Components[object] = nil
+    end
 end)
 
 AddEvent("OnObjectStreamIn", function(object)
@@ -22,7 +30,7 @@ AddEvent("OnObjectStreamOut", function(object)
 end)
 
 AddEvent("OnObjectNetworkUpdatePropertyValue", function(object, PropertyName, PropertyValue)
-    if PropertyName == "component" then
+  if PropertyName == "component" then
         if PropertyValue ~= false then
             AddComponentToObject(object, PropertyValue)
         else
@@ -33,22 +41,27 @@ end)
 
 function AddComponentToObject(object, component)
     if component.type == nil then
-      log.error "Error invalid component config"
-      return
+        AddPlayerChat "Error invalid component config"
+        return
+    end
+
+    if Components[object] ~= nil then
+        AddPlayerChat "Object already has a component"
+        return
     end
 
     local actor = GetObjectActor(object)
     if component.type == "spotlight" then
-      light = actor:AddComponent(USpotLightComponent.Class())
+        light = actor:AddComponent(USpotLightComponent.Class())
     elseif component.type == "pointlight" then
-      light = actor:AddComponent(UPointLightComponent.Class())
+        light = actor:AddComponent(UPointLightComponent.Class())
     elseif component.type == "rectlight" then
-      light = actor:AddComponent(URectLightComponent.Class())
+        light = actor:AddComponent(URectLightComponent.Class())
     end
 
     if light == nil then
-      log.error("Error unsupported component type",component.type)
-      return
+        log.error("Error unsupported component type", component.type)
+        return
     end
 
     light:SetIntensity(component.intensity)
@@ -62,7 +75,7 @@ end
 function RemoveComponent(object)
     -- destroy the component
     if Components[object] ~= nil then
-      Components[object]:Destroy()
-      Components[object] = nil
+        Components[object]:Destroy()
+        Components[object] = nil
     end
 end

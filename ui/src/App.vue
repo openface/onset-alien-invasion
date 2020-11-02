@@ -9,5 +9,5 @@ export default {
 </script>
 
 <style>
-body { user-select: none; }
+body { user-select: none; overflow: hidden; height: 100%; }
 </style>

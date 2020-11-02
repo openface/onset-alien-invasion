@@ -136,6 +136,7 @@ export default {
             recipe: {
               computer_part: 1,
               metal: 1,
+              plastic: 5
             },
             modelid: 843,
           },
@@ -184,25 +185,17 @@ export default {
 
 <style scoped>
 #container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-content: stretch;
-  align-items: flex-start;
+  display:flex;
+  height:75vh;
 }
-
 #inner {
-  width: 765px;
+  margin:auto;
+  width:780px;
   background: rgba(0, 0, 0, 0.9);
-  flex: 0 1 auto;
-  align-self: center;
-  order: 0;
   font-family: helvetica;
   font-size: 16px;
   color: #ccc;
-  text-shadow: 3px black;
+  text-shadow: 1px 1px black;
   padding: 10px;
 }
 

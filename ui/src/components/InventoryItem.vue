@@ -1,6 +1,6 @@
 <template>
-  <div :class="{ slot: true, equipped: IsEquipped }" @mouseenter="PlayClick();" @mouseleave="showOptions=false">
-    <img v-if="!InGame" src="http://placekitten.com/100/100" />
+  <div v-if="item" :class="{ slot: true, equipped: IsEquipped }" @mouseenter="PlayClick();" @mouseleave="showOptions=false">
+    <img v-if="!InGame" src="http://placekitten.com/75/75" />
     <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
     <span class="keybind" v-if="keybind">{{ keybind }}</span>
     <span class="name">{{ item.name }} {{item.index}}</span>
@@ -21,6 +21,8 @@
       </div>
       <a @click="DropItem(item.item)">Drop</a>
     </div>
+  </div>
+  <div v-else class="freeslot">
   </div>
 </template>
 
@@ -64,8 +66,8 @@ export default {
 };
 </script>
 
-<style scoped>
-.slot {
+<style>
+.slot, .freeslot {
   margin: 5px;
   align-self: auto;
   background: rgba(0, 0, 0, 0.2);
@@ -74,20 +76,25 @@ export default {
   width: 75px;
   position: relative;
   font-family: Helvetica;
+  display:inline-block;
 }
 .slot:hover {
   background: rgba(0, 0, 0, 0.3);
   cursor: pointer;
 }
+.slot:hover img {
+  opacity: 1;
+}
 .slot.equipped {
-  border-color:yellow;
+  border-color: rgba(255, 255, 0, 0.7);
 }
 
 .slot img {
   object-fit: scale-down;
   width: 75px;
   height: 75px;
-  opacity: 0.5;
+  opacity: .5;
+  display:block;
 }
 .slot .quantity {
   color: #fff;
@@ -125,21 +132,20 @@ export default {
   position: absolute;
   z-index: 1;
   background: rgba(0, 0, 0, 0.4);
-  top: 75px;
-  width: 75px;
   left: 0;
+  width:100%;
   border: 1px solid rgba(0, 0, 0, 0.4);
 }
 
 .slot .options a {
   color: #eee;
   display: block;
-  padding: 5px 5px;
+  padding: 6px 5px;
   text-decoration: none;
   font-size: 11px;
   font-weight: bold;
   text-transform: uppercase;
-  text-shadow: 1px 1px rgba(0, 0, 0, 0.4);
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.6);
 }
 
 .slot .options a:hover {

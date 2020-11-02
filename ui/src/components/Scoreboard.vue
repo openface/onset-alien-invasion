@@ -108,11 +108,12 @@ export default {
 
 #title {
   color: #fff;
-  font-size: 40px;
+  font-size: 36px;
   text-align: center;
   margin: 0;
-  font-family: Helvetica;
   font-weight: bold;
+  font-family: impact;
+  text-shadow:2px 2px rgba(0, 0, 0, 0.4);
 }
 
 table {

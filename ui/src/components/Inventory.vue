@@ -2,30 +2,13 @@
   <div id="container">
     <div id="inventory_screen" v-if="inventory_visible">
       <div v-if="HasInventory">
+
         <div id="title">INVENTORY</div>
-
-        <div>
-          <div style="width:280px;float:left;">
-            <div class="subtitle">WEAPONS</div>
-            <div class="grid">
-              <InventoryItem v-for="item in weapons" :index="item.index" :key="item.index" :item="item" />
-              <div class="slot" v-for="n in FreeWeaponSlots" :key="'w'+n"></div>
-            </div>
-          </div>
-          <div style="float:left;">
-WIP
-          </div>
-          <br style="clear:both;" />
-        </div>
-
-        <div>
-          <div class="subtitle">INVENTORY</div>
-          <div class="grid">
-            <draggable v-model="inventory_items" @sort="SortInventory" @start="dragging=true" @end="dragging=false" forceFallback="true">
-              <InventoryItem v-for="item in inventory_items" :index="item.index" :key="item.index" :item="item" :dragging="dragging" />
-            </draggable>
-            <div class="slot" v-for="n in FreeInventorySlots" :key="'i'+n"></div>
-          </div>
+        <div class="grid">
+          <draggable v-model="inventory_items" @sort="SortInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
+            <InventoryItem v-for="item in inventory_items" :index="item.index" :key="item.index" :item="item" :dragging="dragging" />
+            <InventoryItem v-for="n in FreeInventorySlots" :key="'i'+n" />
+          </draggable>
         </div>
 
       </div>
@@ -35,10 +18,10 @@ WIP
       <div class="grid">
           <!-- weapons 1,2,3 -->
           <InventoryItem v-for="(item,i) in weapons" :index="item.index" :key="item.index" :item="item" :keybind="i+1" />
-          <div class="slot" v-for="n in FreeWeaponSlots" :key="'w'+n"></div>
+          <div class="slot" v-for="n in FreeWeaponSlots" :key="'hw'+n"></div>
 
           <!-- usable_items 4,5,6,7,8,9 -->
-          <InventoryItem v-for="(item,i) in usable_items" :index="item.index" :key="item.index" :item="item" :keybind="i+4" />
+          <InventoryItem v-for="(item,i) in usable_items.slice(0, 6)" :index="item.index" :key="item.index" :item="item" :keybind="i+4" />
       </div>
 
     </div>
@@ -66,7 +49,7 @@ export default {
   },
   computed: {
     HasInventory: function() {
-      return this.weapons.length > 0 || this.inventory_items.length > 0;
+      return this.inventory_items.length > 0;
     },
     FreeInventorySlots: function() {
       return 14 - this.inventory_items.length;
@@ -187,6 +170,40 @@ export default {
             type: "usable",
             equipped: false,
           },
+          {
+            index: 11,
+            item: "medkit2",
+            name: "Medical Kit2",
+            modelid: 15,
+            quantity: 4,
+            type: "usable",
+            equipped: false,
+          },
+          {
+            index: 12,
+            item: "medkit3",
+            name: "Medical Kit",
+            modelid: 15,
+            quantity: 4,
+            type: "usable",
+            equipped: false,
+          },          {
+            index: 13,
+            item: "medkit4",
+            name: "Medical Kit",
+            modelid: 15,
+            quantity: 4,
+            type: "usable",
+            equipped: false,
+          },          {
+            index: 14,
+            item: "medkit5",
+            name: "Medical Kit",
+            modelid: 15,
+            quantity: 4,
+            type: "usable",
+            equipped: false,
+          },
         ],
       });
 
@@ -218,28 +235,19 @@ export default {
 
 #title {
   color: #fff;
-  font-size: 40px;
+  font-size: 36px;
   text-align: center;
   margin: 0;
   font-weight: bold;
   font-family: impact;
-  text-shadow:2px 2px rgba(0, 0, 0, 0.1);
-}
-.subtitle {
-  background:rgba(0, 0, 0, 0.3);
-  padding:5px;
-  text-shadow:1px 1px rgba(0, 0, 0, 0.1);
-  font-weight:bold;
-  font-size:11px;
-}
-.subtitle span {
-  float:right;
+  text-shadow:2px 2px rgba(0, 0, 0, 0.4);
 }
 .grid {
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
   justify-content: center;
+  align-items: flex-start;
 }
 #hotbar {
   display: flex;
@@ -253,86 +261,5 @@ export default {
 }
 #hotbar .slot:nth-child(3) {
   margin-right: 25px;
-}
-
-.slot {
-  margin: 5px;
-  align-self: auto;
-  background: rgba(0, 0, 0, 0.2);
-  border: 2px solid rgba(0, 0, 0, 0.1);
-  height: 75px;
-  width: 75px;
-  display: inline-block;
-  position: relative;
-  font-family: Helvetica;
-}
-.slot:hover {
-  background: rgba(0, 0, 0, 0.3);
-}
-
-.slot img {
-  object-fit: scale-down;
-  width: 75px;
-  height: 75px;
-  opacity: 0.5;
-}
-.slot .quantity {
-  color: #fff;
-  font-weight: bold;
-  position: absolute;
-  text-shadow: 2px 2px #000;
-  bottom: -2px;
-  right: -2px;
-  z-index: 1;
-  font-size: 12px;
-  padding: 5px 7px;
-  background: rgba(0, 0, 0, 0.5);
-}
-.slot .keybind {
-  position: absolute;
-  top: 1px;
-  left: 1px;
-  color: #fff;
-  background: rgba(255, 255, 255, 0.2);
-  text-shadow: 1px 1px #000;
-  padding: 0px 3px;
-}
-.slot .name {
-  position: absolute;
-  bottom: 1px;
-  left: 1px;
-  font-size: 12px;
-  color: #fff;
-  text-shadow: 1px 1px #000;
-}
-
-.slot:hover .options {
-  display: block;
-  width: 75px;
-}
-
-.slot .options {
-  display: none;
-  position: relative;
-  z-index: 1;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 0 1px;
-  top: -3px;
-}
-
-.slot .options a {
-  color: #eee;
-  display: block;
-  padding: 5px 5px;
-  text-decoration: none;
-  font-size: 12px;
-  font-weight: bold;
-  text-transform: uppercase;
-  text-shadow: 1px 1px rgba(0, 0, 0, 0.4);
-}
-
-.slot .options a:hover {
-  background: rgba(0, 0, 0, 0.9);
-  cursor: pointer;
 }
 </style>

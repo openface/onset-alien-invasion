@@ -1,7 +1,8 @@
 <template>
-  <div class="slot" @mouseenter="PlayClick();showOptions=true" @mouseleave="showOptions=false">
+  <div :class="{ slot: true, equipped: IsEquipped }" @mouseenter="PlayClick();" @mouseleave="showOptions=false">
     <img v-if="!InGame" src="http://placekitten.com/100/100" />
     <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
+    <span class="keybind" v-if="keybind">{{ keybind }}</span>
     <span class="name">{{ item.name }} {{item.index}}</span>
     <span v-if="item.quantity > 1" class="quantity">
       x{{ item.quantity }}
@@ -26,12 +27,17 @@
 <script>
 export default {
   name: "InventoryItem",
-  props: ["item", "dragging"],
+  props: ["item", "dragging", "keybind"],
   data() {
     return {
       showOptions: false,
     };
   }, 
+  computed: {
+    IsEquipped: function() {
+      return this.item.equipped;
+    },
+  },
   methods: {
     DropItem: function(item) {
       this.CallEvent("DropItem", item);
@@ -48,6 +54,10 @@ export default {
     PlayClick() {
       if (!this.dragging) {
         this.CallEvent("PlayClick");
+      }
+      // only show options if not in hotbar
+      if (!this.keybind) {
+        this.showOptions=true;
       }
     },
   },
@@ -68,6 +78,9 @@ export default {
 .slot:hover {
   background: rgba(0, 0, 0, 0.3);
   cursor: pointer;
+}
+.slot.equipped {
+  border-color:yellow;
 }
 
 .slot img {

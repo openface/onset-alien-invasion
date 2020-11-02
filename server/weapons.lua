@@ -30,7 +30,12 @@ end
 
 -- check if weapon is equipped
 function IsWeaponEquipped(player, item)
-  local item_cfg = GetItemConfig(item)
+  return false
+  --
+  -- This does not currently work because it is possible for player
+  -- to switch weapons and the inventory never gets sync'd.
+  -- Need a OnPlayerWeaponSwitch event or similar
+--[[   local item_cfg = GetItemConfig(item)
   for slot = 1, 3 do
     local weapon_id,ammo = GetPlayerWeapon(player, slot)
     if item_cfg['weapon_id'] == weapon_id then
@@ -38,6 +43,7 @@ function IsWeaponEquipped(player, item)
     end
   end
   return false
+ ]]
 end
 
 -- switch to fists if weapon is equipped

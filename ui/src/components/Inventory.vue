@@ -1,7 +1,7 @@
 <template>
   <div id="container">
     <div id="inventory_screen" v-if="inventory_visible">
-      <div v-if="items.length > 0">
+      <div v-if="HasInventory">
         <div id="title">INVENTORY</div>
 
         <div>
@@ -13,11 +13,7 @@
             </div>
           </div>
           <div style="float:left;">
-            <div class="subtitle">EQUIPMENT</div>
-            <div class="grid">
-              <InventoryItem v-for="item in equipped_items" :index="item.index" :key="item.index" :item="item" />
-              <div class="slot" v-for="n in FreeEquipmentSlots" :key="'w'+n"></div>
-            </div>
+WIP
           </div>
           <br style="clear:both;" />
         </div>
@@ -36,29 +32,15 @@
       <div v-else id="title">YOUR INVENTORY IS EMPTY</div>
     </div>
     <div id="hotbar" v-if="!inventory_visible || !InGame">
-      <div class="slot" v-for="n in range(1, 3)" :key="n">
-        <div v-if="weapons[n - 1]">
-          <img v-if="!InGame" src="http://placekitten.com/100/100" />
-          <img v-if="InGame" :src="'http://game/objects/' + weapons[n - 1].modelid" />
-          <span class="keybind">{{ n }}</span>
-          <span class="name">{{ weapons[n - 1].name }}</span>
-          <span v-if="weapons[n - 1].quantity > 1" class="quantity">
-            x{{ weapons[n - 1].quantity }}
-          </span>
-        </div>
+      <div class="grid">
+          <!-- weapons 1,2,3 -->
+          <InventoryItem v-for="(item,i) in weapons" :index="item.index" :key="item.index" :item="item" :keybind="i+1" />
+          <div class="slot" v-for="n in FreeWeaponSlots" :key="'w'+n"></div>
+
+          <!-- usable_items 4,5,6,7,8,9 -->
+          <InventoryItem v-for="(item,i) in usable_items" :index="item.index" :key="item.index" :item="item" :keybind="i+4" />
       </div>
 
-      <div class="slot" v-for="(item,n) in usable_items" :key="n">
-        <div v-if="usable_items[n]">
-          <img v-if="!InGame" src="http://placekitten.com/100/100" />
-          <img v-if="InGame" :src="'http://game/objects/' + usable_items[n].modelid" />
-          <span class="keybind">{{ n+4 }}</span>
-          <span class="name">{{ usable_items[n].name }}</span>
-          <span v-if="usable_items[n].quantity > 1" class="quantity">
-            x{{ usable_items[n].quantity }}
-          </span>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -75,9 +57,7 @@ export default {
   },
   data() {
     return {
-      items: [],
       weapons: [],
-      equipped_items: [],
       inventory_items: [],
       usable_items: [],
       inventory_visible: false,
@@ -85,26 +65,22 @@ export default {
     };
   },
   computed: {
+    HasInventory: function() {
+      return this.weapons.length > 0 || this.inventory_items.length > 0;
+    },
     FreeInventorySlots: function() {
       return 14 - this.inventory_items.length;
     },
     FreeWeaponSlots: function() {
       return 3 - this.weapons.length;
     },
-    FreeEquipmentSlots: function() {
-      return 4 - this.equipped_items.length;
-    }
   },
   methods: {
     SetInventory: function(data) {
-      this.items = data.items;
-      this.weapons = this.items.filter(item => item.type == 'weapon');
-      this.equipped_items = this.items.filter(item => item.type != 'weapon' && item.equipped == true);
-      this.inventory_items = this.items.filter(item => !this.equipped_items.includes(item) && !this.weapons.includes(item));
-      this.usable_items = this.items.filter(item => item.type == 'usable' || item.type == 'equipable');
+      this.weapons = data.items.filter(item => item.type == 'weapon');
+      this.inventory_items = data.items.filter(item => !this.weapons.includes(item));
 
-      //this.items = data.items.sort(function(a, b) { return a.index - b.index; });
-
+      this.usable_items = data.items.filter(item => item.type == 'usable' || item.type == 'equipable');
     },
     ShowInventory: function() {
       this.inventory_visible = true;
@@ -146,21 +122,12 @@ export default {
             modelid: 2,
             quantity: 1,
             type: "weapon",
-            equipped: true,
+            equipped: false,
           },
           {
             index: 2,
             item: "rifle",
             name: "Rifle",
-            modelid: 2,
-            quantity: 1,
-            type: "weapon",
-            equipped: true,
-          },
-          {
-            index: 3,
-            item: "Shotgun",
-            name: "Shotgun",
             modelid: 2,
             quantity: 1,
             type: "weapon",

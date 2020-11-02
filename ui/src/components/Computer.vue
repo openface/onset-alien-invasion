@@ -38,13 +38,14 @@
             <li>
               WATCH FOR SUPPLY DROPS! They contain armor, health, and weapons.
               You will see flares indicating where they drop. You can also craft
-              supplies from scrap parts found on the island.
+              supplies from scrap parts found on the island using the workbench
+              in the garage.
             </li>
 
             <li>
               The mothership is on it's way to this island! YOUR MISSION IS TO
-              DESTROY THE MOTHERSHIP. You will need supplies before you can
-              fight back!
+              DESTROY IT!. You will need supplies before you can fight back!
+              If you are unable to fight, running away is your best chance for survival.
             </li>
 
             <li>

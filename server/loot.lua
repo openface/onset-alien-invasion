@@ -116,6 +116,8 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
     AddPlayerChatAll(GetPlayerName(player)..' has picked up a lootbox!')
     log.debug(GetPlayerName(player)..' has picked up a lootbox')
 
+    CallRemoteEvent(player, "LootPickedup")
+
     -- remove waypoint for others
     for _,p in pairs(GetAllPlayers()) do
         CallRemoteEvent(p, "HideLootWaypoint")

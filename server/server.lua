@@ -58,7 +58,7 @@ AddEvent("OnPlayerJoin", function(player)
     AddPlayerChat(player, '<span color="#ffffffff">Welcome to Alien Invasion by oweff!</>')
     AddPlayerChat(player, '<span color="#eeeeeeaa">Hit [T] to chat, [TAB] for inventory, [P] for player list</>')
     AddPlayerChat(player, '<span color="#eeeeeeaa">Hit [E] when near interactive objects to interact with them</>')
-    AddPlayerChat(player, '<span color="#eeeeeeaa">Go to the computer in the garage for game information..  Good luck!</>')
+    AddPlayerChat(player, '<span color="#ffffffff">Go to the computer in the garage for game information..  Good luck!</>')
 end)
 
 -- Player spawn

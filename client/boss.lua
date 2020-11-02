@@ -28,7 +28,7 @@ AddEvent("OnObjectStreamIn", function(object)
     local x, y, z = GetObjectLocation(object)
     BossLocation = { x = x, y = y, z = z }
 
-    SetSoundVolume(CreateSound3D("client/sounds/mothership_enter.mp3", x, y, z, 100000.0), 1.0)
+    SetSoundVolume(CreateSound3D("client/sounds/mothership_enter.mp3", x, y, z, 50000.0), 1.0)
 
     Delay(6000, function()
         if MothershipSpawnSound ~= nil then
@@ -38,7 +38,7 @@ AddEvent("OnObjectStreamIn", function(object)
         SetCloudDensity(4)
         SetPostEffect("ImageEffects", "VignetteIntensity", 1)
 
-        MothershipSpawnSound = CreateSound3D("client/sounds/mothership.mp3", BossLocation.x, BossLocation.y, BossLocation.z, 100000.0, true)
+        MothershipSpawnSound = CreateSound3D("client/sounds/mothership.mp3", BossLocation.x, BossLocation.y, BossLocation.z, 50000.0, true)
         SetSoundVolume(MothershipSpawnSound, 1)
     end)
 end)
@@ -48,7 +48,10 @@ AddRemoteEvent("DespawnBoss", function(boss)
     MothershipFlybySound = CreateSound3D("client/sounds/mothership_flyby.mp3", BossLocation.x, BossLocation.y, BossLocation.z, 100000.0)
     SetSoundVolume(MothershipFlybySound, 1)
 
-    DestroySound(MothershipSpawnSound)
+    if MothershipSpawnSound ~= nil then
+      DestroySound(MothershipSpawnSound)
+    end
+
     BossLocation = nil
 
     Delay(5000, function()

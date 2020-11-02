@@ -18,7 +18,7 @@ AddEvent("OnPackageStop", function()
 end)
 
 function SyncTime()
-  log.debug("Time is now "..CurrentTime)
+  --log.debug("Time is now "..CurrentTime)
   for _,ply in pairs(GetAllPlayers()) do
       CallRemoteEvent(ply, "ClientSetTime", CurrentTime)
   end

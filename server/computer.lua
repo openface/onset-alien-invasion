@@ -76,6 +76,10 @@ AddRemoteEvent("InteractSatelliteComputer", function(player, object)
         -- update satellite status for everyone
         UpdateAllPlayersSatelliteStatus()
 
+        Delay(7000, function()
+          PlaySoundSync(player, "sounds/alert.mp3", 10000)
+        end)
+
         -- call mothership
         Delay(15000, function()
             CallEvent("SpawnBoss")

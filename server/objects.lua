@@ -43,12 +43,12 @@ function PlayInteraction(player, item)
 end
 
 function PlaySoundSync(player, sound, distance)
-    local distance = distance or 1000
-    local x,y,z = GetPlayerLocation(player)
-    for k,ply in pairs(GetAllPlayers()) do
-        local _x,_y,_z = GetPlayerLocation(ply)
-        if GetDistance3D(x, y, z, _x, _y, _z) <= distance then
-            CallRemoteEvent(ply, "Play3DSound", sound, x, y, z)
-        end
-    end
+  local distance = distance or 1000
+  local x,y,z = GetPlayerLocation(player)
+  for k,ply in pairs(GetAllPlayers()) do
+      local _x,_y,_z = GetPlayerLocation(ply)
+      if GetDistance3D(x, y, z, _x, _y, _z) <= distance then
+          CallRemoteEvent(ply, "Play3DSound", sound, x, y, z)
+      end
+  end
 end

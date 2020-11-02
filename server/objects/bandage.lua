@@ -9,7 +9,7 @@ RegisterObject("bandage", {
   modelid = 803,
   max_use = 3,
   use_label = "Heal",
-  max_carry = 2,
+  max_carry = 10,
   attachment = { 
       x = -11, 
       y = 4.6, 

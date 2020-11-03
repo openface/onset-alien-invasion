@@ -20,6 +20,10 @@ RegisterObject("lantern", {
         },
         intensity = 5000
     },
+    particle = {
+        path = "/Game/Geometry/OldTown/Effects/PS_LanternFire",
+        position = { x = 0, y = 0, z = 17, rx = 0, ry = 0, rz = 0 }
+    },
     attachment = {
         x = 61,
         y = -14,

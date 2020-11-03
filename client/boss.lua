@@ -1,13 +1,12 @@
 local MothershipSpawnSound
 local BossLocation
 
+-- Load UFO from MothershipBoss.pak
+-- Thanks Voltaism!
+LoadPak("MothershipBoss", "/MothershipBoss/", "../../../OnsetModding/Plugins/MothershipBoss/Content/")
+
 AddEvent("OnPackageStart", function()
     SetCloudDensity(1)
-
-    -- Load UFO from MothershipBoss.pak
-    -- Thanks Voltaism!
-    LoadPak("MothershipBoss", "/MothershipBoss/", "../../../OnsetModding/Plugins/MothershipBoss/Content/")
-    ReplaceObjectModelMesh(91212, "/MothershipBoss/UFO")
 end)
 
 AddEvent("OnPackageStop", function()

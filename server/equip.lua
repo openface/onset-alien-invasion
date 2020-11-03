@@ -72,9 +72,15 @@ function EquipObject(player, item)
         item_cfg['attachment']['z'], item_cfg['attachment']['rx'], item_cfg['attachment']['ry'],
         item_cfg['attachment']['rz'], item_cfg['attachment']['bone'])
 
-    -- set component config to object
+    -- set lighting component config to object
     if item_cfg['component'] ~= nil then
         SetObjectPropertyValue(attached_object, "component", item_cfg['component'])
+    end
+
+    -- set particle config to object
+    if item_cfg['particle'] ~= nil then
+        log.debug("particle")
+        SetObjectPropertyValue(attached_object, "particle", item_cfg['particle'])
     end
 
     -- update equipped store

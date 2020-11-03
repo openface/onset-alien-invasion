@@ -32,7 +32,6 @@
     "server/objects/flashlight.lua",
     "server/objects/headphones.lua",
     "server/objects/vest.lua",
-    "server/objects/mop.lua",
     "server/objects/toolbox.lua",
     "server/objects/lantern.lua",
     "server/objects/resources/metal.lua",

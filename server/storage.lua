@@ -7,6 +7,8 @@ AddRemoteEvent("OpenStorage", function(player)
 
   log.info "opening storage..."
   PlaySoundSync(player, "sounds/storage_open.wav")
+
+  CallRemoteEvent(player, "LoadStorageData", json_encode({}))  
 end)
 
 

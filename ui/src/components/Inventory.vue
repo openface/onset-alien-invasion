@@ -5,7 +5,7 @@
 
         <div id="title">INVENTORY</div>
         <div class="grid">
-          <draggable v-model="inventory_items" @sort="SortInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
+          <draggable ghost-class="ghost" v-model="inventory_items" @sort="SortInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
             <InventoryItem v-for="item in inventory_items" :index="item.index" :key="item.index" :item="item" :dragging="dragging" :show_options="true" />
             <InventoryItem v-for="n in FreeInventorySlots" :key="'i'+n" />
           </draggable>
@@ -264,6 +264,10 @@ export default {
   align-content: flex-start;
   justify-content: center;
   align-items: flex-start;
+}
+.ghost {
+  opacity: 0.1;
+  border:2px dotted #000;
 }
 #hotbar {
   display: flex;

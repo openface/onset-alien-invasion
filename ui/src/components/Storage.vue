@@ -3,9 +3,8 @@
     <div id="inner">
         <div id="title">STORAGE</div>
         <div class="grid">
-          <draggable v-model="storage_items" group="storage_inventory" @sort="SortInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
+          <draggable ghost-class="ghost" v-model="storage_items" class="draggable" group="storage_inventory" @sort="SortInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
             <InventoryItem v-for="item in storage_items" :index="item.index" :key="item.index" :item="item" :dragging="dragging" :show_options="false" />
-            <InventoryItem v-for="n in FreeStorageSlots" :key="'i'+n" />
           </draggable>
         </div>
     </div>
@@ -13,9 +12,8 @@
     <div id="inner">
         <div id="title">INVENTORY</div>
         <div class="grid">
-          <draggable v-model="inventory_items" group="storage_inventory" @sort="SortInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
+          <draggable ghost-class="ghost" v-model="inventory_items" class="draggable" group="storage_inventory" @sort="SortInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
             <InventoryItem v-for="item in inventory_items" :index="item.index" :key="item.index" :item="item" :dragging="dragging" :show_options="false" />
-            <InventoryItem v-for="n in FreeInventorySlots" :key="'i'+n" />
           </draggable>
         </div>
     </div>
@@ -200,15 +198,6 @@ export default {
   justify-content: center;
   height:100vh;
 }
-.slot-dropzone-area {
-  height: 6rem;
-  background: #888;
-  opacity: 0.8;
-  animation-duration: 0.5s;
-  animation-name: nodeInserted;
-  margin-left: 0.6rem;
-  margin-right: 0.6rem;
-}
 #inner {
   order: 0;
   flex: 0 1 auto;
@@ -229,6 +218,7 @@ export default {
   font-size: 36px;
   text-align: center;
   margin: 0;
+  margin-bottom:5px;
   font-weight: bold;
   font-family: impact;
   text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
@@ -250,17 +240,14 @@ export default {
   justify-content: center;
   align-items: flex-start;
 }
-#hotbar {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-content: flex-start;
-  align-items: flex-start;
-  width: 100%;
-  position: fixed;
-  bottom: 1vh;
+.ghost {
+    opacity: 0.1;
 }
-#hotbar .slot:nth-child(3) {
-  margin-right: 25px;
+.draggable:empty {
+    text-align:center;
+    height:85px;
+    width:85px;
+    border:3px dotted rgba(0, 0, 0, 0.2);
+    background:rgba(0, 0, 0, 0.1);
 }
 </style>

@@ -71,6 +71,7 @@
     "client/scoreboard.lua",
     "client/objects.lua",
     "client/inventory.lua",
+    "client/storage.lua",
     "client/water.lua"
   ],
   "files": [

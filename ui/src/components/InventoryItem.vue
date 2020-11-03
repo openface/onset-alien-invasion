@@ -34,7 +34,7 @@ export default {
   },
   computed: {
     IsEquipped: function() {
-      return this.item.equipped;
+      return this.show_options && this.item.equipped;
     },
   },
   methods: {

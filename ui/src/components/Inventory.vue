@@ -66,8 +66,8 @@ export default {
   },
   methods: {
     SetInventory: function(data) {
-      this.weapons = data.items.filter(item => item.type == 'weapon');
-      this.inventory_items = data.items.filter(item => !this.weapons.includes(item));
+      this.weapons = data.weapons;
+      this.inventory_items = data.items;
 
       this.usable_items = data.items.filter(item => item.type == 'usable' || item.type == 'equipable');
     },
@@ -84,13 +84,12 @@ export default {
     },
     SortInventory: function(e) {
         window.console.log(e);
-        //window.console.log(e.oldIndex);
-        //window.console.log(e.newIndex);
+
         var data = this.inventory_items.map(function(item, index) {
-            return { item: item.item, oldIndex: item.index, newIndex: index + 1 }
+            return { item: item.item, quantity: item.quantity, index: index + 1 }
         })
 
-        this.CallEvent("SortInventory", JSON.stringify(data));
+        this.CallEvent("UpdateInventory", JSON.stringify(data));
     },
     log: function(evt) {
       window.console.log(evt);
@@ -103,7 +102,7 @@ export default {
 
     if (!this.InGame) {
       this.EventBus.$emit("SetInventory", {
-        items: [
+        weapons: [
           {
             index: 1,
             item: "glock",
@@ -122,6 +121,8 @@ export default {
             type: "weapon",
             equipped: false,
           },
+        ],
+        items: [
           {
             index: 5,
             item: "metal",
@@ -268,6 +269,9 @@ export default {
 .ghost {
   opacity: 0.1;
   border:2px dotted #000;
+}
+.draggable > .slot:hover {
+  cursor:move;
 }
 #hotbar {
   display: flex;

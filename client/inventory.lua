@@ -61,8 +61,8 @@ AddEvent("UseItem", function(item)
 end)
 
 -- sort inventory
-AddEvent("SortInventory", function(data)
-  CallRemoteEvent("SortInventory", data)
+AddEvent("UpdateInventory", function(data)
+  CallRemoteEvent("UpdateInventory", data)
 end)
 
 

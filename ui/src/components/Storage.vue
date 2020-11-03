@@ -3,8 +3,8 @@
     <div id="inner">
         <div id="title">STORAGE</div>
         <div class="grid">
-          <draggable ghost-class="ghost" v-model="storage_items" class="draggable" group="storage_inventory" @sort="SortInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
-            <InventoryItem v-for="item in storage_items" :index="item.index" :key="item.index" :item="item" :dragging="dragging" :show_options="false" />
+          <draggable ghost-class="ghost" v-model="storage_items" class="draggable" group="storage_inventory" @sort="UpdateStorage" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
+            <InventoryItem v-for="(item, index) in storage_items" :key="index" :item="item" :dragging="dragging" :show_options="false" />
           </draggable>
         </div>
     </div>
@@ -12,7 +12,7 @@
     <div id="inner">
         <div id="title">INVENTORY</div>
         <div class="grid">
-          <draggable ghost-class="ghost" v-model="inventory_items" class="draggable" group="storage_inventory" @sort="SortInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
+          <draggable ghost-class="ghost" v-model="inventory_items" class="draggable" group="storage_inventory" @sort="UpdateInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
             <InventoryItem v-for="item in inventory_items" :index="item.index" :key="item.index" :item="item" :dragging="dragging" :show_options="false" />
           </draggable>
         </div>
@@ -55,15 +55,25 @@ export default {
         .fill()
         .map((_, idx) => start + idx);
     },
-    SortInventory: function(e) {
+    UpdateStorage: function(e) {
+        window.console.log(e);
+        //window.console.log(e.oldIndex);
+        //window.console.log(e.newIndex);
+        var data = this.storage_items.map(function(item, index) {
+            return { item: item.item, quantity: item.quantity, index: index + 1 }
+        })
+
+        this.CallEvent("UpdateStorage", JSON.stringify(data));
+    },
+    UpdateInventory: function(e) {
         window.console.log(e);
         //window.console.log(e.oldIndex);
         //window.console.log(e.newIndex);
         var data = this.inventory_items.map(function(item, index) {
-            return { item: item.item, oldIndex: item.index, newIndex: index + 1 }
+            return { item: item.item, quantity: item.quantity, index: index + 1 }
         })
 
-        this.CallEvent("SortInventory", JSON.stringify(data));
+        this.CallEvent("UpdateInventory", JSON.stringify(data));
     },
     log: function(evt) {
       window.console.log(evt);
@@ -113,74 +123,13 @@ export default {
           },
           {
             index: 7,
-            item: "vest",
-            name: "Kevlar Vest",
-            modelid: 14,
+            item: "flashlight",
+            name: "Flashlight",
+            modelid: 627,
             quantity: 1,
             type: "equipable",
             equipped: true,
-          },
-          {
-            index: 9,
-            item: "flashlight",
-            name: "Flashlight",
-            modelid: 14,
-            quantity: 2,
-            type: "equipable",
-            equipped: true,
-          },
-          {
-            index: 8,
-            item: "beer",
-            name: "Beer",
-            modelid: 15,
-            quantity: 4,
-            type: "usable",
-            equipped: false,
-          },
-          {
-            index: 10,
-            item: "medkit",
-            name: "Medical Kit",
-            modelid: 15,
-            quantity: 4,
-            type: "usable",
-            equipped: false,
-          },
-          {
-            index: 11,
-            item: "medkit2",
-            name: "Medical Kit2",
-            modelid: 15,
-            quantity: 4,
-            type: "usable",
-            equipped: false,
-          },
-          {
-            index: 12,
-            item: "medkit3",
-            name: "Medical Kit",
-            modelid: 15,
-            quantity: 4,
-            type: "usable",
-            equipped: false,
-          },          {
-            index: 13,
-            item: "medkit4",
-            name: "Medical Kit",
-            modelid: 15,
-            quantity: 4,
-            type: "usable",
-            equipped: false,
-          },          {
-            index: 14,
-            item: "medkit5",
-            name: "Medical Kit",
-            modelid: 15,
-            quantity: 4,
-            type: "usable",
-            equipped: false,
-          },
+          }
         ],
       });
     }
@@ -243,7 +192,11 @@ export default {
 .ghost {
     opacity: 0.1;
 }
-.draggable:empty {
+.draggable {
+  height:80px;
+  border:3px dotted rgba(0, 0, 0, 0.2);
+}
+.draggable1:empty {
     text-align:center;
     height:85px;
     width:85px;

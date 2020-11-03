@@ -77,7 +77,6 @@ export default {
 }
 .slot:hover {
   background: rgba(0, 0, 0, 0.3);
-  cursor: pointer;
 }
 .slot:hover img {
   opacity: 1;
@@ -85,7 +84,6 @@ export default {
 .slot.equipped {
   border-color: rgba(255, 255, 0, 0.7);
 }
-
 .slot img {
   object-fit: scale-down;
   width: 75px;
@@ -147,5 +145,6 @@ export default {
 
 .slot .options a:hover {
   background: rgba(0, 0, 0, 0.9);
+  cursor: pointer;
 }
 </style>

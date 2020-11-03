@@ -220,7 +220,7 @@ function UseItemFromInventory(player, item)
     end
  ]]
     -- call USE event on object
-    CallEvent("items:" .. item .. ":use", player)
+    CallEvent("items:" .. item .. ":use", player, item_cfg)
 
 end
 AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)

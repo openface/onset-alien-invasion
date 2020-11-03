@@ -11,6 +11,12 @@
           </draggable>
         </div>
 
+        <div class="subtitle">WEAPONS</div>
+        <div class="grid">
+          <InventoryItem v-for="item in weapons" :index="item.index" :key="item.index" :item="item" />
+          <div class="slot" v-for="n in FreeWeaponSlots" :key="'w'+n"></div>
+        </div>
+
       </div>
       <div v-else id="title">YOUR INVENTORY IS EMPTY</div>
     </div>
@@ -49,7 +55,7 @@ export default {
   },
   computed: {
     HasInventory: function() {
-      return this.inventory_items.length > 0;
+      return this.inventory_items.length > 0 || this.weapons.length > 0;
     },
     FreeInventorySlots: function() {
       return 14 - this.inventory_items.length;
@@ -225,7 +231,7 @@ export default {
 #inventory_screen {
   width: 645px;
   z-index: 1000;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.6);
   font-family: helvetica;
   font-size: 16px;
   color: #ccc;
@@ -240,7 +246,17 @@ export default {
   margin: 0;
   font-weight: bold;
   font-family: impact;
-  text-shadow:2px 2px rgba(0, 0, 0, 0.4);
+  text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
+}
+.subtitle {
+  color: #fff;
+  font-size: 20px;
+  text-align: center;
+  margin: 0;
+  font-weight: bold;
+  font-family: impact;
+  text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
+  background: rgba(255,255,255, 0.1);
 }
 .grid {
   display: flex;

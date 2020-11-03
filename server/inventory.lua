@@ -123,7 +123,11 @@ function RemoveFromInventory(player, item, amount)
         -- unequip if no more in inventory
         if item_cfg['type'] == 'weapon' then
             UnequipWeapon(player, item)
+
+            -- inventory updated
+            CallEvent("SyncInventory", player)
         else
+            -- UnequipObject syncs inventory; no need to do it again
             UnequipObject(player, item)
         end
     else

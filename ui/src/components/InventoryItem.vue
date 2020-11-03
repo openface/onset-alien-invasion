@@ -8,9 +8,6 @@
       x{{ item.quantity }}
     </span>
     <div class="options" v-if="showOptions && !dragging">
-      <div v-if="item.type == 'weapon'">
-        <a v-if="!item.equipped" @click="EquipItem(item.item)">Equip</a>
-      </div>
       <div v-if="item.type == 'equipable'">
         <a v-if="!item.equipped" @click="EquipItem(item.item)">Equip</a>
         <a v-if="item.equipped" @click="UnequipItem(item.item)">Unequip</a>

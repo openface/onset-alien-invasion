@@ -1,35 +1,23 @@
 <template>
   <div id="container">
-    <div id="inventory_screen" v-if="inventory_visible">
-      <div v-if="HasInventory">
+    <div id="inner">
+        <div id="title">STORAGE</div>
+        <div class="grid">
+          <draggable v-model="storage_items" group="storage_inventory" @sort="SortInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
+            <InventoryItem v-for="item in storage_items" :index="item.index" :key="item.index" :item="item" :dragging="dragging" :show_options="false" />
+            <InventoryItem v-for="n in FreeStorageSlots" :key="'i'+n" />
+          </draggable>
+        </div>
+    </div>
 
+    <div id="inner">
         <div id="title">INVENTORY</div>
         <div class="grid">
-          <draggable v-model="inventory_items" @sort="SortInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
-            <InventoryItem v-for="item in inventory_items" :index="item.index" :key="item.index" :item="item" :dragging="dragging" :show_options="true" />
+          <draggable v-model="inventory_items" group="storage_inventory" @sort="SortInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
+            <InventoryItem v-for="item in inventory_items" :index="item.index" :key="item.index" :item="item" :dragging="dragging" :show_options="false" />
             <InventoryItem v-for="n in FreeInventorySlots" :key="'i'+n" />
           </draggable>
         </div>
-
-        <div class="subtitle">WEAPONS</div>
-        <div class="grid">
-          <InventoryItem v-for="item in weapons" :index="item.index" :key="item.index" :item="item" :show_options="true" />
-          <div class="slot" v-for="n in FreeWeaponSlots" :key="'w'+n"></div>
-        </div>
-
-      </div>
-      <div v-else id="title">YOUR INVENTORY IS EMPTY</div>
-    </div>
-    <div id="hotbar" v-if="!inventory_visible || !InGame">
-      <div class="grid">
-          <!-- weapons 1,2,3 -->
-          <InventoryItem v-for="(item,i) in weapons" :index="item.index" :key="item.index" :item="item" :keybind="i+1" :show_options="false" />
-          <div class="slot" v-for="n in FreeWeaponSlots" :key="'hw'+n"></div>
-
-          <!-- usable_items 4,5,6,7,8,9 -->
-          <InventoryItem v-for="(item,i) in usable_items.slice(0, 6)" :index="item.index" :key="item.index" :item="item" :keybind="i+4" :show_options="false" />
-      </div>
-
     </div>
   </div>
 </template>
@@ -39,43 +27,30 @@ import draggable from 'vuedraggable'
 import InventoryItem from "./InventoryItem.vue";
 
 export default {
-  name: "Inventory",
+  name: "Storage",
   components: {
     draggable,
     InventoryItem
   },
   data() {
     return {
-      weapons: [],
+      storage_items: [],
       inventory_items: [],
-      usable_items: [],
-      inventory_visible: false,
       dragging: false
     };
   },
   computed: {
-    HasInventory: function() {
-      return this.inventory_items.length > 0 || this.weapons.length > 0;
+    FreeStorageSlots: function() {
+      return 14 - this.storage_items.length;
     },
     FreeInventorySlots: function() {
       return 14 - this.inventory_items.length;
     },
-    FreeWeaponSlots: function() {
-      return 3 - this.weapons.length;
-    },
   },
   methods: {
     SetInventory: function(data) {
-      this.weapons = data.items.filter(item => item.type == 'weapon');
-      this.inventory_items = data.items.filter(item => !this.weapons.includes(item));
-
-      this.usable_items = data.items.filter(item => item.type == 'usable' || item.type == 'equipable');
-    },
-    ShowInventory: function() {
-      this.inventory_visible = true;
-    },
-    HideInventory: function() {
-      this.inventory_visible = false;
+      this.storage_items = [];
+      this.inventory_items = data.items.filter(item => item.type != 'weapon');
     },
     range: function(start, end) {
       return Array(end - start + 1)
@@ -98,8 +73,6 @@ export default {
   },
   mounted() {
     this.EventBus.$on("SetInventory", this.SetInventory);
-    this.EventBus.$on("ShowInventory", this.ShowInventory);
-    this.EventBus.$on("HideInventory", this.HideInventory);
 
     if (!this.InGame) {
       this.EventBus.$emit("SetInventory", {
@@ -212,9 +185,6 @@ export default {
           },
         ],
       });
-
-      this.EventBus.$emit("ShowInventory");
-      //this.EventBus.$emit("HideInventory");
     }
   },
 };
@@ -223,12 +193,26 @@ export default {
 <style scoped>
 #container {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: space-around;
+  align-items: flex-start;
   justify-content: center;
-  height: 120vh;
+  height:100vh;
 }
-
-#inventory_screen {
+.slot-dropzone-area {
+  height: 6rem;
+  background: #888;
+  opacity: 0.8;
+  animation-duration: 0.5s;
+  animation-name: nodeInserted;
+  margin-left: 0.6rem;
+  margin-right: 0.6rem;
+}
+#inner {
+  order: 0;
+  flex: 0 1 auto;
+  align-self: auto;
   width: 645px;
   z-index: 1000;
   background: rgba(0, 0, 0, 0.6);
@@ -237,6 +221,7 @@ export default {
   color: #ccc;
   text-shadow: 3px black;
   padding: 10px;
+  margin-bottom:25px;
 }
 
 #title {

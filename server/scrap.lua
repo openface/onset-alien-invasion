@@ -33,7 +33,7 @@ AddRemoteEvent("SearchForScrap", function(player)
 
     CallRemoteEvent(player, "SearchingScrap")
     CurrentlySearching[player] = true
-    SetPlayerAnimation(player, "PICKUP_LOWER")
+    SetPlayerAnimation(player, "PICKUP_MIDDLE")
 
     Delay(4000, function()
         CurrentlySearching[player] = nil

@@ -1,7 +1,5 @@
 local LightComponents = {}
 
-LoadPak("particles4", "/particles4/", "../../../OnsetModding/Plugins/particles4/Content")
-
 AddEvent("OnPackageStart", function()
     for object in pairs(GetStreamedObjects()) do
         local component_cfg = GetObjectPropertyValue(object, "component")

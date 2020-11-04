@@ -22,16 +22,13 @@
       <div v-else id="title">YOUR INVENTORY IS EMPTY</div>
     </div>
     <div id="hotbar" v-if="!inventory_visible || !InGame">
-
       <div class="grid">
           <!-- weapons 1,2,3 -->
           <InventoryItem v-for="(item,i) in weapons" :index="item.index" :key="item.index" :item="item" :keybind="i+1" :show_options="false" />
           <div class="slot" v-for="n in FreeWeaponSlots" :key="'hw'+n"></div>
-
           <!-- usable_items 4,5,6,7,8,9 -->
           <InventoryItem v-for="(item,i) in usable_items.slice(0, 6)" :index="item.index" :key="item.index" :item="item" :keybind="i+4" :show_options="false" />
       </div>
-
     </div>
   </div>
 </template>
@@ -273,6 +270,10 @@ export default {
 #weapons .grid {
   grid-template-columns: repeat(3, 77px);
   grid-template-rows: repeat(1, 77px);
+  margin-top:5px;
+}
+#weapons {
+  margin:10px 0;
 }
 .grid-move {
   transition: all 0.3s;
@@ -282,7 +283,6 @@ export default {
 }
 .draggable {
   padding:5px;
-  min-height:80px;
   width:97%;
   border:3px dotted rgba(0, 0, 0, 0.2);
 }
@@ -302,8 +302,5 @@ export default {
   width: 100%;
   position: fixed;
   bottom: 1vh;
-}
-#hotbar .slot:nth-child(3) {
-  margin-right: 25px;
 }
 </style>

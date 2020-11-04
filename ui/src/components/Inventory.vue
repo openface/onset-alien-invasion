@@ -1,6 +1,6 @@
 <template>
   <div id="container">
-    <div id="inventory_screen" v-if="inventory_visible">
+    <div id="inner" v-if="inventory_visible">
       <div v-if="HasInventory">
 
         <div id="title">INVENTORY</div>
@@ -230,8 +230,8 @@ export default {
   height: 120vh;
 }
 
-#inventory_screen {
-  width: 645px;
+#inner {
+  width: 610px;
   z-index: 1000;
   background: rgba(0, 0, 0, 0.6);
   font-family: helvetica;

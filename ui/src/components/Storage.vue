@@ -166,7 +166,7 @@ export default {
   order: 0;
   flex: 0 1 auto;
   align-self: auto;
-  width: 645px;
+  width: 610px;
   z-index: 1000;
   background: rgba(0, 0, 0, 0.6);
   font-family: helvetica;

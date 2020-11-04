@@ -1,5 +1,5 @@
 <template>
-  <div v-if="item" :class="{ slot: true, equipped: IsEquipped }" @mouseenter="PlayClick();" @mouseleave="optionsVisible=false">
+  <div v-if="item" :class="{ slot: true, equipped: IsEquipped }" @mousedown="optionsVisible=false;" @mouseenter="PlayClick();" @mouseleave="optionsVisible=false">
     <img v-if="!InGame" src="http://placekitten.com/75/75" />
     <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
     <span class="keybind" v-if="keybind">{{ keybind }}</span>
@@ -65,15 +65,12 @@ export default {
 
 <style>
 .slot, .freeslot {
-  margin: 5px;
-  align-self: auto;
   background: rgba(0, 0, 0, 0.2);
   border: 2px solid rgba(0, 0, 0, 0.1);
-  height: 75px;
-  width: 75px;
   position: relative;
   font-family: Helvetica;
-  display:inline-block;
+  width:75px;
+  height:75px;
 }
 .slot:hover {
   background: rgba(0, 0, 0, 0.3);
@@ -89,7 +86,6 @@ export default {
   width: 75px;
   height: 75px;
   opacity: .5;
-  display:block;
 }
 .slot .quantity {
   color: #fff;

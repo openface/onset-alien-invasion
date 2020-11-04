@@ -2,20 +2,26 @@
   <div id="container">
     <div id="inner">
         <div id="title">STORAGE</div>
-        <div class="grid">
-          <draggable ghost-class="ghost" v-model="storage_items" class="draggable" group="storage_inventory" @sort="UpdateStorage(object, $event)" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
+      
+        <draggable ghost-class="ghost" v-model="storage_items" class="draggable" group="storage_inventory" @sort="UpdateStorage(object, $event)" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
+          <transition-group tag="div" class="grid" name="grid">
             <InventoryItem v-for="(item, index) in storage_items" :key="index" :item="item" :dragging="dragging" :show_options="false" />
-          </draggable>
-        </div>
+            <div class="freeslot" v-for="n in FreeStorageSlots" :key="'hw'+n"></div>
+          </transition-group>
+        </draggable>
+      
     </div>
 
     <div id="inner">
         <div id="title">INVENTORY</div>
-        <div class="grid">
-          <draggable ghost-class="ghost" v-model="inventory_items" class="draggable" group="storage_inventory" @sort="UpdateInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
+
+        <draggable ghost-class="ghost" v-model="inventory_items" class="draggable" group="storage_inventory" @sort="UpdateInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
+          <transition-group tag="div" class="grid" name="grid">
             <InventoryItem v-for="(item, index) in inventory_items" :key="index" :item="item" :dragging="dragging" :show_options="false" />
-          </draggable>
-        </div>
+            <div class="freeslot" v-for="n in FreeInventorySlots" :key="'hw'+n"></div>
+          </transition-group>
+        </draggable>
+
     </div>
   </div>
 </template>
@@ -38,12 +44,12 @@ export default {
     };
   },
   computed: {
-/*     FreeStorageSlots: function() {
+    FreeStorageSlots: function() {
       return 7 - this.storage_items.length;
     },
     FreeInventorySlots: function() {
       return 14 - this.inventory_items.length;
-    }, */
+    },
   },
   methods: {
     SetStorageData: function(data) {
@@ -171,24 +177,28 @@ export default {
   background: rgba(255,255,255, 0.1);
 }
 .grid {
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  justify-content: center;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: repeat(7, 77px);
+  grid-template-rows: repeat(2, 77px);
+  grid-gap: 0.7em;
+}
+.grid-move {
+  transition: all 0.3s;
 }
 .ghost {
-    opacity: 0.1;
+  opacity: 1;
 }
 .draggable {
-  height:80px;
+  padding:5px;
+  min-height:80px;
+  width:97%;
   border:3px dotted rgba(0, 0, 0, 0.2);
 }
-.draggable1:empty {
-    text-align:center;
-    height:85px;
-    width:85px;
-    border:3px dotted rgba(0, 0, 0, 0.2);
-    background:rgba(0, 0, 0, 0.1);
+.draggable:empty {
+  text-align:center;
+  height:85px;
+  width:100%;
+  border:3px dotted rgba(255,255,255, 0.1);
+  background:rgba(255,255,255, 0.1);
 }
 </style>

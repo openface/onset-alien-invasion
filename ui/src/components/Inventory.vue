@@ -4,23 +4,25 @@
       <div v-if="HasInventory">
 
         <div id="title">INVENTORY</div>
-        <div class="grid">
-          <draggable ghost-class="ghost" v-model="inventory_items" @sort="UpdateInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
+        <draggable ghost-class="ghost" v-model="inventory_items" @sort="UpdateInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
+          <transition-group tag="div" class="grid" name="grid">
             <InventoryItem v-for="item in inventory_items" :index="item.index" :key="item.index" :item="item" :dragging="dragging" :show_options="true" />
-            <InventoryItem v-for="n in FreeInventorySlots" :key="'i'+n" />
-          </draggable>
-        </div>
+            <div class="freeslot" v-for="n in FreeInventorySlots" :key="'hw'+n"></div>
+          </transition-group>
+        </draggable>
 
-        <div class="subtitle">WEAPONS</div>
-        <div class="grid">
-          <InventoryItem v-for="item in weapons" :index="item.index" :key="item.index" :item="item" :show_options="true" />
-          <div class="slot" v-for="n in FreeWeaponSlots" :key="'w'+n"></div>
+        <div id="weapons">
+          <div class="subtitle">WEAPONS</div>
+          <div class="grid">
+            <InventoryItem v-for="item in weapons" :index="item.index" :key="item.index" :item="item" :show_options="true" />
+          </div>
         </div>
 
       </div>
       <div v-else id="title">YOUR INVENTORY IS EMPTY</div>
     </div>
     <div id="hotbar" v-if="!inventory_visible || !InGame">
+
       <div class="grid">
           <!-- weapons 1,2,3 -->
           <InventoryItem v-for="(item,i) in weapons" :index="item.index" :key="item.index" :item="item" :keybind="i+1" :show_options="false" />
@@ -258,18 +260,38 @@ export default {
   background: rgba(255,255,255, 0.1);
 }
 .grid {
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  justify-content: center;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: repeat(7, 77px);
+  grid-template-rows: repeat(2, 77px);
+  grid-gap: 0.7em;
+  grid-auto-flow: row;
+}
+#hotbar .grid {
+  grid-template-columns: repeat(9, 77px);
+  grid-template-rows: repeat(1, 77px);
+}
+#weapons .grid {
+  grid-template-columns: repeat(3, 77px);
+  grid-template-rows: repeat(1, 77px);
+}
+.grid-move {
+  transition: all 0.3s;
 }
 .ghost {
-  opacity: 0.1;
-  border:2px dotted #000;
+  opacity: 1;
 }
-.draggable > .slot:hover {
-  cursor:move;
+.draggable {
+  padding:5px;
+  min-height:80px;
+  width:97%;
+  border:3px dotted rgba(0, 0, 0, 0.2);
+}
+.draggable:empty {
+  text-align:center;
+  height:85px;
+  width:100%;
+  border:3px dotted rgba(255,255,255, 0.1);
+  background:rgba(255,255,255, 0.1);
 }
 #hotbar {
   display: flex;

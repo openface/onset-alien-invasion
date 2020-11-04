@@ -3,7 +3,7 @@
     <div id="inner">
         <div id="title">STORAGE</div>
         <div class="grid">
-          <draggable ghost-class="ghost" v-model="storage_items" class="draggable" group="storage_inventory" @sort="UpdateStorage" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
+          <draggable ghost-class="ghost" v-model="storage_items" class="draggable" group="storage_inventory" @sort="UpdateStorage(object, $event)" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
             <InventoryItem v-for="(item, index) in storage_items" :key="index" :item="item" :dragging="dragging" :show_options="false" />
           </draggable>
         </div>
@@ -56,14 +56,14 @@ export default {
         .fill()
         .map((_, idx) => start + idx);
     },
-    UpdateStorage: function(e) {
-        window.console.log(e);
+    UpdateStorage: function(object) {
+        window.console.log('object:'+object);
 
         var data = this.storage_items.map(function(item, index) {
             return { item: item.item, quantity: item.quantity, index: index + 1 }
         })
 
-        this.CallEvent("UpdateStorage", JSON.stringify(data));
+        this.CallEvent("UpdateStorage", object, JSON.stringify(data));
     },
     UpdateInventory: function(e) {
         window.console.log(e);
@@ -86,7 +86,6 @@ export default {
         object: 666,
         storage_items: [
           {
-            index: 1,
             item: "boxhead",
             name: "Boxhead",
             modelid: 2,
@@ -96,25 +95,6 @@ export default {
         ],
         inventory_items: [
           {
-            index: 1,
-            item: "glock",
-            name: "Glock",
-            modelid: 2,
-            quantity: 1,
-            type: "weapon",
-            equipped: false,
-          },
-          {
-            index: 2,
-            item: "rifle",
-            name: "Rifle",
-            modelid: 2,
-            quantity: 1,
-            type: "weapon",
-            equipped: false,
-          },
-          {
-            index: 5,
             item: "metal",
             name: "Metal",
             modelid: 694,
@@ -123,7 +103,6 @@ export default {
             equipped: false,
           },
           {
-            index: 6,
             item: "plastic",
             name: "Plastic",
             modelid: 627,
@@ -132,7 +111,6 @@ export default {
             equipped: false,
           },
           {
-            index: 7,
             item: "flashlight",
             name: "Flashlight",
             modelid: 627,

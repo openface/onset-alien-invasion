@@ -104,7 +104,6 @@ export default {
       this.EventBus.$emit("SetInventory", {
         weapons: [
           {
-            index: 1,
             item: "glock",
             name: "Glock",
             modelid: 2,
@@ -113,7 +112,6 @@ export default {
             equipped: false,
           },
           {
-            index: 2,
             item: "rifle",
             name: "Rifle",
             modelid: 2,

@@ -20,7 +20,7 @@ AddRemoteEvent("LoadStorageData", function(data)
     SetWebVisibility(StorageUI, WEB_VISIBLE)
 
     ExecuteWebJS(StorageUI, "EmitEvent('SetStorageData',"..data..")")
-    AddPlayerChat("data:"..dump(data))
+    --AddPlayerChat("data:"..dump(data))
     local x, y, z = GetPlayerLocation(GetPlayerId())
     storage_timer = CreateTimer(OpenStorageTimer, 1000, {
         x = x,
@@ -41,7 +41,7 @@ function OpenStorageTimer(loc)
 end
 
 -- sort inventory
-AddEvent("UpdateStorage", function(data)
-    CallRemoteEvent("UpdateStorage", data)
+AddEvent("UpdateStorage", function(object, data)
+    CallRemoteEvent("UpdateStorage", object, data)
 end)
 

@@ -13,7 +13,7 @@
         <div id="title">INVENTORY</div>
         <div class="grid">
           <draggable ghost-class="ghost" v-model="inventory_items" class="draggable" group="storage_inventory" @sort="UpdateInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
-            <InventoryItem v-for="item in inventory_items" :index="item.index" :key="item.index" :item="item" :dragging="dragging" :show_options="false" />
+            <InventoryItem v-for="(item, index) in inventory_items" :key="index" :item="item" :dragging="dragging" :show_options="false" />
           </draggable>
         </div>
     </div>
@@ -38,17 +38,18 @@ export default {
     };
   },
   computed: {
-    FreeStorageSlots: function() {
-      return 14 - this.storage_items.length;
+/*     FreeStorageSlots: function() {
+      return 7 - this.storage_items.length;
     },
     FreeInventorySlots: function() {
       return 14 - this.inventory_items.length;
-    },
+    }, */
   },
   methods: {
-    SetInventory: function(data) {
-      this.storage_items = [];
-      this.inventory_items = data.items.filter(item => item.type != 'weapon');
+    SetStorageData: function(data) {
+      this.object = data.object;
+      this.storage_items = data.storage_items;
+      this.inventory_items = data.inventory_items;
     },
     range: function(start, end) {
       return Array(end - start + 1)
@@ -57,8 +58,7 @@ export default {
     },
     UpdateStorage: function(e) {
         window.console.log(e);
-        //window.console.log(e.oldIndex);
-        //window.console.log(e.newIndex);
+
         var data = this.storage_items.map(function(item, index) {
             return { item: item.item, quantity: item.quantity, index: index + 1 }
         })
@@ -67,8 +67,7 @@ export default {
     },
     UpdateInventory: function(e) {
         window.console.log(e);
-        //window.console.log(e.oldIndex);
-        //window.console.log(e.newIndex);
+
         var data = this.inventory_items.map(function(item, index) {
             return { item: item.item, quantity: item.quantity, index: index + 1 }
         })
@@ -80,11 +79,22 @@ export default {
     }
   },
   mounted() {
-    this.EventBus.$on("SetInventory", this.SetInventory);
+    this.EventBus.$on("SetStorageData", this.SetStorageData);
 
     if (!this.InGame) {
-      this.EventBus.$emit("SetInventory", {
-        items: [
+      this.EventBus.$emit("SetStorageData", {
+        object: 666,
+        storage_items: [
+          {
+            index: 1,
+            item: "boxhead",
+            name: "Boxhead",
+            modelid: 2,
+            quantity: 1,
+            type: "equipable",
+          }
+        ],
+        inventory_items: [
           {
             index: 1,
             item: "glock",

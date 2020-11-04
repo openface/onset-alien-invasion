@@ -5,7 +5,7 @@
 
         <div id="title">INVENTORY</div>
         <div class="grid">
-          <draggable ghost-class="ghost" v-model="inventory_items" @sort="SortInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
+          <draggable ghost-class="ghost" v-model="inventory_items" @sort="UpdateInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
             <InventoryItem v-for="item in inventory_items" :index="item.index" :key="item.index" :item="item" :dragging="dragging" :show_options="true" />
             <InventoryItem v-for="n in FreeInventorySlots" :key="'i'+n" />
           </draggable>
@@ -82,7 +82,7 @@ export default {
         .fill()
         .map((_, idx) => start + idx);
     },
-    SortInventory: function(e) {
+    UpdateInventory: function(e) {
         window.console.log(e);
 
         var data = this.inventory_items.map(function(item, index) {

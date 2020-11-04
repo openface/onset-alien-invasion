@@ -8,10 +8,11 @@ function CreatePropsFromJSON(json_file, options)
 end
 
 function CreateProp(config, options)
-  --log.debug("Creating interactive prop:", config['modelID'], dump(options))
-  local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'], config['ry'], config['rz'], config['sx'], config['sy'], config['sz'])
-  SetObjectPropertyValue(object, "prop", options)
-  table.insert(Props, object)
+    -- log.debug("Creating interactive prop:", config['modelID'], dump(options))
+    local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'], config['ry'],
+                       config['rz'], config['sx'], config['sy'], config['sz'])
+    SetObjectPropertyValue(object, "prop", options)
+    table.insert(Props, object)
 end
 
 AddEvent("OnPackageStop", function()

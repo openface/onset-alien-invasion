@@ -25,9 +25,10 @@
       <div class="grid">
           <!-- weapons 1,2,3 -->
           <InventoryItem v-for="(item,i) in weapons" :index="item.index" :key="item.index" :item="item" :keybind="i+1" :show_options="false" />
-          <div class="slot" v-for="n in FreeWeaponSlots" :key="'hw'+n"></div>
+          <div class="freeslot" v-for="n in FreeWeaponSlots" :key="'hw'+n"></div>
           <!-- usable_items 4,5,6,7,8,9 -->
-          <InventoryItem v-for="(item,i) in usable_items.slice(0, 6)" :index="item.index" :key="item.index" :item="item" :keybind="i+4" :show_options="false" />
+          <InventoryItem v-for="(item,i) in usable_items" :index="item.index" :key="item.index" :item="item" :keybind="i+4" :show_options="false" />
+          <div class="freeslot" v-for="n in FreeUsableSlots" :key="'hi'+n"></div>
       </div>
     </div>
   </div>
@@ -62,12 +63,14 @@ export default {
     FreeWeaponSlots: function() {
       return 3 - this.weapons.length;
     },
+    FreeUsableSlots: function() {
+      return 6 - this.usable_items.length;
+    }
   },
   methods: {
     SetInventory: function(data) {
       this.weapons = data.weapons;
       this.inventory_items = data.items;
-
       this.usable_items = data.items.filter(item => item.type == 'usable' || item.type == 'equipable');
     },
     ShowInventory: function() {
@@ -147,6 +150,7 @@ export default {
             type: "equipable",
             equipped: true,
           },
+/*
           {
             index: 9,
             item: "flashlight",
@@ -207,7 +211,7 @@ export default {
             quantity: 4,
             type: "usable",
             equipped: false,
-          },
+          }, */
         ],
       });
 

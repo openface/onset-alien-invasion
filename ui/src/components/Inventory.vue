@@ -4,17 +4,18 @@
       <div v-if="HasInventory">
 
         <div id="title">INVENTORY</div>
-        <div class="grid">
-          <draggable v-model="inventory_items" @sort="SortInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
-            <InventoryItem v-for="item in inventory_items" :index="item.index" :key="item.index" :item="item" :dragging="dragging" />
-            <InventoryItem v-for="n in FreeInventorySlots" :key="'i'+n" />
-          </draggable>
-        </div>
+        <draggable ghost-class="ghost" v-model="inventory_items" @sort="UpdateInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
+          <transition-group tag="div" class="grid" name="grid">
+            <InventoryItem v-for="item in inventory_items" :index="item.index" :key="item.index" :item="item" :dragging="dragging" :show_options="true" />
+            <div class="freeslot" v-for="n in FreeInventorySlots" :key="'hw'+n"></div>
+          </transition-group>
+        </draggable>
 
-        <div class="subtitle">WEAPONS</div>
-        <div class="grid">
-          <InventoryItem v-for="item in weapons" :index="item.index" :key="item.index" :item="item" />
-          <div class="slot" v-for="n in FreeWeaponSlots" :key="'w'+n"></div>
+        <div id="weapons">
+          <div class="subtitle">WEAPONS</div>
+          <div class="grid">
+            <InventoryItem v-for="item in weapons" :index="item.index" :key="item.index" :item="item" :show_options="true" />
+          </div>
         </div>
 
       </div>
@@ -23,13 +24,12 @@
     <div id="hotbar" v-if="!inventory_visible || !InGame">
       <div class="grid">
           <!-- weapons 1,2,3 -->
-          <InventoryItem v-for="(item,i) in weapons" :index="item.index" :key="item.index" :item="item" :keybind="i+1" />
-          <div class="slot" v-for="n in FreeWeaponSlots" :key="'hw'+n"></div>
-
+          <InventoryItem v-for="(item,i) in weapons" :index="item.index" :key="item.index" :item="item" :keybind="i+1" :show_options="false" />
+          <div class="freeslot" v-for="n in FreeWeaponSlots" :key="'hw'+n"></div>
           <!-- usable_items 4,5,6,7,8,9 -->
-          <InventoryItem v-for="(item,i) in usable_items.slice(0, 6)" :index="item.index" :key="item.index" :item="item" :keybind="i+4" />
+          <InventoryItem v-for="(item,i) in usable_items" :index="item.index" :key="item.index" :item="item" :keybind="i+4" :show_options="false" />
+          <div class="freeslot" v-for="n in FreeUsableSlots" :key="'hi'+n"></div>
       </div>
-
     </div>
   </div>
 </template>
@@ -63,12 +63,14 @@ export default {
     FreeWeaponSlots: function() {
       return 3 - this.weapons.length;
     },
+    FreeUsableSlots: function() {
+      return 6 - this.usable_items.length;
+    }
   },
   methods: {
     SetInventory: function(data) {
-      this.weapons = data.items.filter(item => item.type == 'weapon');
-      this.inventory_items = data.items.filter(item => !this.weapons.includes(item));
-
+      this.weapons = data.weapons;
+      this.inventory_items = data.items;
       this.usable_items = data.items.filter(item => item.type == 'usable' || item.type == 'equipable');
     },
     ShowInventory: function() {
@@ -82,15 +84,14 @@ export default {
         .fill()
         .map((_, idx) => start + idx);
     },
-    SortInventory: function(e) {
+    UpdateInventory: function(e) {
         window.console.log(e);
-        //window.console.log(e.oldIndex);
-        //window.console.log(e.newIndex);
+
         var data = this.inventory_items.map(function(item, index) {
-            return { item: item.item, oldIndex: item.index, newIndex: index + 1 }
+            return { item: item.item, quantity: item.quantity, index: index + 1 }
         })
 
-        this.CallEvent("SortInventory", JSON.stringify(data));
+        this.CallEvent("UpdateInventory", JSON.stringify(data));
     },
     log: function(evt) {
       window.console.log(evt);
@@ -103,9 +104,8 @@ export default {
 
     if (!this.InGame) {
       this.EventBus.$emit("SetInventory", {
-        items: [
+        weapons: [
           {
-            index: 1,
             item: "glock",
             name: "Glock",
             modelid: 2,
@@ -114,7 +114,6 @@ export default {
             equipped: false,
           },
           {
-            index: 2,
             item: "rifle",
             name: "Rifle",
             modelid: 2,
@@ -122,6 +121,8 @@ export default {
             type: "weapon",
             equipped: false,
           },
+        ],
+        items: [
           {
             index: 5,
             item: "metal",
@@ -149,6 +150,7 @@ export default {
             type: "equipable",
             equipped: true,
           },
+/*
           {
             index: 9,
             item: "flashlight",
@@ -209,7 +211,7 @@ export default {
             quantity: 4,
             type: "usable",
             equipped: false,
-          },
+          }, */
         ],
       });
 
@@ -259,11 +261,41 @@ export default {
   background: rgba(255,255,255, 0.1);
 }
 .grid {
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  justify-content: center;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: repeat(7, 77px);
+  grid-template-rows: repeat(2, 77px);
+  grid-gap: 0.7em;
+  grid-auto-flow: row;
+}
+#hotbar .grid {
+  grid-template-columns: repeat(9, 77px);
+  grid-template-rows: repeat(1, 77px);
+}
+#weapons .grid {
+  grid-template-columns: repeat(3, 77px);
+  grid-template-rows: repeat(1, 77px);
+  margin-top:5px;
+}
+#weapons {
+  margin:10px 0;
+}
+.grid-move {
+  transition: all 0.3s;
+}
+.ghost {
+  opacity: 1;
+}
+.draggable {
+  padding:5px;
+  width:97%;
+  border:3px dotted rgba(0, 0, 0, 0.2);
+}
+.draggable:empty {
+  text-align:center;
+  height:85px;
+  width:100%;
+  border:3px dotted rgba(255,255,255, 0.1);
+  background:rgba(255,255,255, 0.1);
 }
 #hotbar {
   display: flex;
@@ -274,8 +306,5 @@ export default {
   width: 100%;
   position: fixed;
   bottom: 1vh;
-}
-#hotbar .slot:nth-child(3) {
-  margin-right: 25px;
 }
 </style>

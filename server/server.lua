@@ -64,7 +64,11 @@ end)
 -- Player spawn
 AddEvent("OnPlayerSpawn", function(player)
     SetPlayerArmor(player, 0)
+
+    -- cleansing
     SetPlayerPropertyValue(player, "inventory", {})
+    SetPlayerPropertyValue(player, "weapons", {})
+    SetPlayerPropertyValue(player, "equipped", {})
 
     -- place player in separate dimension while character is selected
     SetPlayerDimension(player, math.random(1, 999))

@@ -46,7 +46,10 @@ AddRemoteEvent("SetInventory", function(data)
     ExecuteWebJS(HudUI, "EmitEvent('SetInventory'," .. data .. ")")
 end)
 
--- interactive objects
+--
+-- interactive props 
+--
+
 AddEvent("OnGameTick", function()
     local hittype, hitid, impactX, impactY, impactZ = PlayerLookRaycast(200)
 

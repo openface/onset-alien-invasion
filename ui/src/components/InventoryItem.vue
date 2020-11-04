@@ -1,13 +1,13 @@
 <template>
-  <div v-if="item" :class="{ slot: true, equipped: IsEquipped }" @mouseenter="PlayClick();" @mouseleave="showOptions=false">
+  <div v-if="item" :class="{ slot: true, equipped: IsEquipped }" @mousedown="optionsVisible=false;" @mouseenter="PlayClick();" @mouseleave="optionsVisible=false">
     <img v-if="!InGame" src="http://placekitten.com/75/75" />
     <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
     <span class="keybind" v-if="keybind">{{ keybind }}</span>
-    <span class="name">{{ item.name }} {{item.index}}</span>
+    <span class="name">{{ item.name }}</span>
     <span v-if="item.quantity > 1" class="quantity">
       x{{ item.quantity }}
     </span>
-    <div class="options" v-if="showOptions && !dragging">
+    <div class="options" v-if="optionsVisible && !dragging">
       <div v-if="item.type == 'equipable'">
         <a v-if="!item.equipped" @click="EquipItem(item.item)">Equip</a>
         <a v-if="item.equipped" @click="UnequipItem(item.item)">Unequip</a>
@@ -26,12 +26,12 @@
 <script>
 export default {
   name: "InventoryItem",
-  props: ["item", "dragging", "keybind"],
+  props: ["item", "dragging", "keybind", "show_options"],
   data() {
     return {
-      showOptions: false,
-    };
-  }, 
+      optionsVisible: false,
+    }
+  },
   computed: {
     IsEquipped: function() {
       return this.item.equipped;
@@ -55,8 +55,8 @@ export default {
         this.CallEvent("PlayClick");
       }
       // only show options if not in hotbar
-      if (!this.keybind) {
-        this.showOptions=true;
+      if (this.show_options) {
+        this.optionsVisible=true;
       }
     },
   },
@@ -65,19 +65,15 @@ export default {
 
 <style>
 .slot, .freeslot {
-  margin: 5px;
-  align-self: auto;
-  background: rgba(0, 0, 0, 0.2);
-  border: 2px solid rgba(0, 0, 0, 0.1);
-  height: 75px;
-  width: 75px;
+  background: rgba(255,255,255, 0.1);
+  border: 2px solid rgba(0, 0, 0, 0.3);
   position: relative;
   font-family: Helvetica;
-  display:inline-block;
+  width:75px;
+  height:75px;
 }
 .slot:hover {
   background: rgba(0, 0, 0, 0.3);
-  cursor: pointer;
 }
 .slot:hover img {
   opacity: 1;
@@ -85,13 +81,11 @@ export default {
 .slot.equipped {
   border-color: rgba(255, 255, 0, 0.7);
 }
-
 .slot img {
   object-fit: scale-down;
   width: 75px;
   height: 75px;
   opacity: .5;
-  display:block;
 }
 .slot .quantity {
   color: #fff;
@@ -147,5 +141,6 @@ export default {
 
 .slot .options a:hover {
   background: rgba(0, 0, 0, 0.9);
+  cursor: pointer;
 }
 </style>

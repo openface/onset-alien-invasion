@@ -2,6 +2,7 @@ AddEvent("OnPackageStop", function()
     log.info "Resetting player inventories..."
     for _, player in pairs(GetAllPlayers()) do
         SetPlayerPropertyValue(player, "inventory", {})
+        SetPlayerPropertyValue(player, "weapons", {})
         SyncInventory(player)
     end
 end)
@@ -9,18 +10,27 @@ end)
 -- get inventory data and send to UI
 function SyncInventory(player)
     local inventory = GetPlayerPropertyValue(player, "inventory")
+    local weapons = GetPlayerPropertyValue(player, "weapons")
 
     local _send = {
+        weapons = {},
         items = {}
     }
-    for index, item in ipairs(inventory) do
-        log.debug(index, dump(item))
-        if item['type'] == 'weapon' then
-            equipped = IsWeaponEquipped(player, item['item'])
-        else
-            equipped = IsItemEquipped(player, item['item'])
-        end
+    -- weapons
+    for index, weapon in ipairs(weapons) do
+        table.insert(_send.weapons, {
+            ['index'] = index,
+            ['item'] = weapon['item'],
+            ['name'] = weapon['name'],
+            ['modelid'] = weapon['modelid'],
+            ['type'] = weapon['type'],
+            ['equipped'] = IsWeaponEquipped(player, weapon['item'])
+        })
+    end
 
+    -- inventory
+    for index, item in ipairs(inventory) do
+        -- usable, equipable, resource
         table.insert(_send.items, {
             ['index'] = index,
             ['item'] = item['item'],
@@ -28,7 +38,8 @@ function SyncInventory(player)
             ['modelid'] = item['modelid'],
             ['quantity'] = item['quantity'],
             ['type'] = item['type'],
-            ['equipped'] = equipped
+            ['equipped'] = IsItemEquipped(player, item['item']),
+            ['used'] = item['used']
         })
     end
     CallRemoteEvent(player, "SetInventory", json_encode(_send))
@@ -45,14 +56,13 @@ function AddToInventory(player, item)
         return
     end
 
-    local inventory = GetPlayerPropertyValue(player, "inventory")
-    local curr_qty = GetInventoryCount(player, item)
-
-    -- todo
-    if item_cfg['type'] == 'weapon' and curr_qty > 0 then
-        log.debug('Only one weapon of this type allowed!')
+    if item_cfg['type'] == 'weapon' then
+        AddWeapon(player, item)
         return
     end
+
+    local inventory = GetPlayerPropertyValue(player, "inventory")
+    local curr_qty = GetInventoryCount(player, item)
 
     if curr_qty > 0 then
         -- update existing object quantity unless it's a weapon
@@ -73,8 +83,6 @@ function AddToInventory(player, item)
     -- auto-equip when added
     if item_cfg['type'] == 'equipable' and item_cfg['auto_equip'] == true then
         EquipObject(player, item)
-    elseif item_cfg['type'] == 'weapon' then
-        EquipWeapon(player, item)
     end
 
     CallEvent("SyncInventory", player)
@@ -103,13 +111,18 @@ end
 -- deletes item from inventory
 -- deduces by quantity if carrying more than 1
 function RemoveFromInventory(player, item, amount)
-    local inventory = GetPlayerPropertyValue(player, "inventory")
-
     local item_cfg = GetItemConfig(item)
     if not item_cfg then
         log.error("Invalid item: " .. item)
         return
     end
+
+    if item_cfg['type'] == 'weapon' then
+        RemoveWeapon(player, item)
+        return
+    end
+
+    local inventory = GetPlayerPropertyValue(player, "inventory")
 
     local amount = amount or 1
     local curr_qty = GetInventoryCount(player, item)
@@ -120,16 +133,8 @@ function RemoveFromInventory(player, item, amount)
     if new_qty == 0 then
         log.debug("items:" .. item .. ":drop")
 
-        -- unequip if no more in inventory
-        if item_cfg['type'] == 'weapon' then
-            UnequipWeapon(player, item)
-
-            -- inventory updated
-            CallEvent("SyncInventory", player)
-        else
-            -- UnequipObject syncs inventory; no need to do it again
-            UnequipObject(player, item)
-        end
+        -- UnequipObject syncs inventory; no need to do it again
+        UnequipObject(player, item)
     else
         -- inventory updated
         CallEvent("SyncInventory", player)
@@ -199,27 +204,32 @@ function UseItemFromInventory(player, item)
             EquipObject(player, item)
             PlayInteraction(player, item)
 
-            if item_cfg['max_use'] and _item['used'] < item_cfg['max_use'] then
-                -- update inventory after use
-                Delay(2000, function()
+            if item_cfg['max_use'] then
+                if _item['used'] < item_cfg['max_use'] then
+                    -- update inventory after use
+                    Delay(2000, function()
 
-                    -- delete if this is the last use
-                    if (item_cfg['max_use'] - _item['used'] == 1) then
-                        log.debug "all used up!"
-                        RemoveFromInventory(player, item)
-                    else
-                        log.debug('increment used by 1')
-                        inventory[i]['used'] = _item['used'] + 1
-                        SetPlayerPropertyValue(player, "inventory", inventory)
-                        CallEvent("SyncInventory", player)
-                    end
+                        -- delete if this is the last use
+                        if (item_cfg['max_use'] - _item['used'] == 1) then
+                            log.debug "all used up!"
+                            RemoveFromInventory(player, item)
+                        else
+                            log.debug('increment used by 1')
+                            inventory[i]['used'] = _item['used'] + 1
+                            SetPlayerPropertyValue(player, "inventory", inventory)
+                            CallEvent("SyncInventory", player)
+                        end
 
-                    -- call USE event on object
-                    CallEvent("items:" .. item .. ":use", player, item_cfg)
-                end)
-            else
-                log.error("cannot use item due to use miscount!")
+                        -- call USE event on object
+                        CallEvent("items:" .. item .. ":use", player, item_cfg)
+                    end)
+                else
+                    log.error("cannot use item due to use miscount!")
+                    log.trace("max_use: " .. item_cfg['max_use'])
+                    log.trace("used: " .. _item['used'])
+                end
             end
+
             break
         end
     end
@@ -236,26 +246,27 @@ AddRemoteEvent("EquipItemFromInventory", function(player, item)
     CallEvent("SyncInventory", player)
 end)
 
--- sort inventory
--- array of pairs: item, newIndex, oldIndex
-AddRemoteEvent("SortInventory", function(player, data)
-    local sorted = json_decode(data)
-    log.debug(GetPlayerName(player) .. " sorting items:", dump(sorted))
+-- updates inventory from inventory UI sorting
+AddRemoteEvent("UpdateInventory", function(player, data)
+    local items = json_decode(data)
+    log.debug(GetPlayerName(player) .. " updating inventory:", dump(items))
 
     local inventory = GetPlayerPropertyValue(player, "inventory")
+    local new_inventory = {}
 
-    -- swap indexes on the first detected change
-    for _, s in pairs(sorted) do
-        if s.oldIndex ~= s.newIndex then
-            print("Sorting item", s.item)
-            local temp = inventory[s.newIndex]
-            inventory[s.newIndex] = inventory[s.oldIndex]
-            inventory[s.oldIndex] = temp
-            break
-        end
+    for _, item in pairs(items) do
+        local item_cfg = GetItemConfig(item.item)
+        new_inventory[item.index] = {
+            item = item.item,
+            quantity = item.quantity,
+            type = item_cfg['type'],
+            name = item_cfg['name'],
+            modelid = item_cfg['modelid'],
+            used = 0
+        }
     end
-    log.trace("NEW INVENTORY", dump(inventory))
-    SetPlayerPropertyValue(player, "inventory", inventory)
+    log.trace("NEW INVENTORY", dump(new_inventory))
+    SetPlayerPropertyValue(player, "inventory", new_inventory)
     CallEvent("SyncInventory", player)
 end)
 
@@ -268,6 +279,7 @@ end)
 -- clear inventory on player death
 AddEvent("OnPlayerDeath", function(player, killer)
     SetPlayerPropertyValue(player, "inventory", {})
+    SetPlayerPropertyValue(player, "weapons", {})
     CallEvent("SyncInventory", player)
 end)
 

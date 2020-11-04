@@ -3,7 +3,7 @@
     <div id="inner">
         <div id="title">STORAGE</div>
       
-        <draggable ghost-class="ghost" v-model="storage_items" class="draggable" group="storage_inventory" @sort="UpdateStorage(object, $event)" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
+        <draggable ghost-class="ghost" v-model="storage_items" class="draggable storage" v-bind="storageDraggableOptions" @sort="UpdateStorage(object, $event)" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
           <transition-group tag="div" class="grid" name="grid">
             <InventoryItem v-for="(item, index) in storage_items" :key="index" :item="item" :dragging="dragging" :show_options="false" />
             <div class="freeslot" v-for="n in FreeStorageSlots" :key="'hw'+n"></div>
@@ -15,7 +15,7 @@
     <div id="inner">
         <div id="title">INVENTORY</div>
 
-        <draggable ghost-class="ghost" v-model="inventory_items" class="draggable" group="storage_inventory" @sort="UpdateInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
+        <draggable ghost-class="ghost" v-model="inventory_items" class="draggable" v-bind="inventoryDraggableOptions" @sort="UpdateInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
           <transition-group tag="div" class="grid" name="grid">
             <InventoryItem v-for="(item, index) in inventory_items" :key="index" :item="item" :dragging="dragging" :show_options="false" />
             <div class="freeslot" v-for="n in FreeInventorySlots" :key="'hw'+n"></div>
@@ -30,6 +30,9 @@
 import draggable from 'vuedraggable'
 import InventoryItem from "./InventoryItem.vue";
 
+const MAX_STORAGE_SLOTS = 7;
+const MAX_INVENTORY_SLOTS = 14;
+
 export default {
   name: "Storage",
   components: {
@@ -40,15 +43,33 @@ export default {
     return {
       storage_items: [],
       inventory_items: [],
-      dragging: false
+      dragging: false,
+      storageDraggableOptions: {
+        group: {
+          name: 'storage_inventory',
+          put: function (to) {
+            // allow drops if storage has less than 7
+            return to.el.getElementsByClassName('slot').length < MAX_STORAGE_SLOTS;
+          }
+        },
+      },
+      inventoryDraggableOptions: {
+        group: {
+          name: 'storage_inventory',
+          put: function (to) {
+            // allow drops if inventory has less than 14
+            return to.el.getElementsByClassName('slot').length < MAX_INVENTORY_SLOTS;
+          }
+        },
+      },
     };
   },
   computed: {
     FreeStorageSlots: function() {
-      return 7 - this.storage_items.length;
+      return MAX_STORAGE_SLOTS - this.storage_items.length;
     },
     FreeInventorySlots: function() {
-      return 14 - this.inventory_items.length;
+      return MAX_INVENTORY_SLOTS - this.inventory_items.length;
     },
   },
   methods: {
@@ -191,8 +212,13 @@ export default {
 .draggable {
   padding:5px;
   min-height:80px;
+  max-height:165px;
+  overflow: hidden;
   width:97%;
   border:3px dotted rgba(0, 0, 0, 0.2);
+}
+.draggable.storage {
+  max-height:75px;
 }
 .draggable:empty {
   text-align:center;

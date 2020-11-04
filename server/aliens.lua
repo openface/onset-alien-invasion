@@ -228,7 +228,8 @@ function ResetAlien(npc)
     end
 
     local player, nearest_dist = GetNearestPlayer(npc)
-    if IsPlayerAttackable(player) then
+
+    if player ~= 0 and IsPlayerAttackable(player) then
         -- we found a target
         SetAlienTarget(npc, player)
     elseif (GetNPCPropertyValue(npc, 'target') == player) then

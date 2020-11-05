@@ -7,6 +7,7 @@
     recipe = {
         metal = 10,
     },
+    price = 40,
     attachment = {
         x = -41,
         y = 2.78,

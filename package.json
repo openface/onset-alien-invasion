@@ -12,6 +12,7 @@
     "server/boss.lua",
     "server/computer.lua",
     "server/workbench.lua",
+    "server/merchant.lua",
     "server/inventory.lua",
     "server/time.lua",
     "server/world.lua",
@@ -67,6 +68,7 @@
     "client/boss.lua",
     "client/computer.lua",
     "client/workbench.lua",
+    "client/merchant.lua",
     "client/character.lua",
     "client/scoreboard.lua",
     "client/objects.lua",
@@ -104,6 +106,7 @@
     "client/sounds/cloth.mp3",
     "client/sounds/storage_open.wav",
     "client/sounds/shovel.wav",
+    "client/sounds/purchase.mp3",
 
     "ui/dist/index.html",
     "ui/dist/js/app.js",

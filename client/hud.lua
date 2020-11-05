@@ -99,7 +99,7 @@ function PlayerLookRaycast(maxDistance)
     local finalPointX = forwardX * maxDistance + x
     local finalPointY = forwardY * maxDistance + y
     local finalPointZ = forwardZ * maxDistance + z
-    return LineTrace(x + forwardX * 20, y + forwardY * 20, z, finalPointX, finalPointY, finalPointZ, false)
+    return LineTrace(x + forwardX * 20, y + forwardY * 20, z + 20, finalPointX, finalPointY, finalPointZ, false)
 end
 
 AddEvent("OnKeyPress", function(key)

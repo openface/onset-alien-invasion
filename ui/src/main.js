@@ -74,6 +74,17 @@ var VueOnset = {
 
 Vue.use(VueOnset);
 
+/*
+ * Progress Bar
+ */
+import 'vue-progress-path/dist/vue-progress-path.css'
+import VueProgress from 'vue-progress-path'
+
+Vue.use(VueProgress, {
+  // defaultShape: 'circle',
+})
+
+
 /* 
  * Routing
  */
@@ -84,6 +95,7 @@ import Inventory from "./components/Inventory.vue";
 import Storage from "./components/Storage.vue";
 import Hud from "./components/Hud.vue";
 import Workbench from "./components/Workbench.vue";
+import Merchant from "./components/Merchant.vue";
 import Computer from "./components/Computer.vue";
 import Scoreboard from "./components/Scoreboard.vue";
 
@@ -97,6 +109,7 @@ const routes = [
   { path: "/storage", component: Storage, name: "Storage" },
   { path: "/hud", component: Hud, name: "Hud" },
   { path: "/workbench", component: Workbench, name: "Workbench" },
+  { path: "/merchant", component: Merchant, name: "Merchant" },
   { path: "/computer", component: Computer, name: "Computer" },
   { path: "/scoreboard", component: Scoreboard, name: "Scoreboard" },
 ];

@@ -14,6 +14,7 @@ RegisterObject("landmine", {
         metal = 20,
         plastic = 2
     },
+    price = 50,
     attachment = {
         x = 10.3,
         y = -4.9,

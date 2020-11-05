@@ -1,13 +1,15 @@
 AddEvent("OnPackageStart", function()
     log.info("Loading scrap heaps...")
-    CreatePropsFromJSON("data/storages.json", {
-        message = "Hit [E] to Open",
-        remote_event = "OpenStorage"
-    })
+    
+    local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/server/data/storages.json")
+    for _, v in pairs(_table) do
+        CreateProp(v, { message = "Hit [E] to Open", remote_event = "OpenStorage" })
+    end
 end)
 
 AddRemoteEvent("OpenStorage", function(player, object)
-    log.info "opening storage..."
+    log.info(GetPlayerName(player).." opens storage "..object)
+
     PlaySoundSync(player, "sounds/storage_open.wav")
 
     local storage_items = GetObjectPropertyValue(object, "storage") or {}

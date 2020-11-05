@@ -2,6 +2,7 @@ RegisterObject("bandage", {
   name = "Bandage",
   type = "usable",
   recipe = nil,
+  price = 2,
   interaction = {
       sound = "sounds/cloth.mp3",
       animation = { name = "COMBINE", duration = 6000 },
@@ -24,4 +25,5 @@ RegisterObject("bandage", {
 AddEvent("items:bandage:use", function(player)
   local health = GetPlayerHealth(player)
   SetPlayerHealth(player, math.min(100, health + 20)) 
+  AddPlayerChat(player, "Your health has increased by 20")
 end)

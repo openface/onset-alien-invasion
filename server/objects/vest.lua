@@ -14,6 +14,7 @@ RegisterObject("vest", {
         metal = 2,
         plastic = 15
     },
+    price = 100,
     attachment = {
         x = -17,
         y = 0,

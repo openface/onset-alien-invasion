@@ -14,6 +14,7 @@ RegisterObject("flashlight", {
         plastic = 5,
         computer_part = 1
     },
+    price = 50,
     component = {
         type = "spotlight",
         position = {

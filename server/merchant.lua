@@ -1,4 +1,3 @@
-
 AddEvent("OnPackageStart", function()
   log.info("Loading merchants...")
 
@@ -41,8 +40,6 @@ AddRemoteEvent("BuyItem", function(player, item)
 
     -- TODO: PlaySoundSync
 
-    -- 
-    CallRemoteEvent(player, "MakePurchase", item, json_encode({}))
 
     --SetPlayerLocation(player, -105738.5859375, 193734.59375, 1396.1424560547) 
     --SetPlayerHeading(player, -92.786437988281)   
@@ -51,6 +48,8 @@ AddRemoteEvent("BuyItem", function(player, item)
         --SetPlayerAnimation(player, "STOP")
         AddPlayerChat(player, "Purchase is complete.")
 
+        local player_cash = 10
+        CallRemoteEvent(player, "CompletePurchase", item, json_encode(player_cash))
         -- TODO: adjust player inventory
         --AddToInventory(player, item)
     end)

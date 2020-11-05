@@ -50,6 +50,10 @@ export default {
       this.is_busy = true;
       this.CallEvent('BuyItem', item)
     },
+    CompletePurchase(data) {
+      this.player_cash = data["player_cash"];
+      this.is_busy = false;
+    },
     IsBusy() {
       return this.is_busy;
     },
@@ -59,6 +63,7 @@ export default {
   },
   mounted() {
     this.EventBus.$on("LoadMerchantData", this.LoadMerchantData);
+    this.EventBus.$on("CompletePurchase", this.CompletePurchase)
 
     if (!this.InGame) {
       this.EventBus.$emit("LoadMerchantData", {

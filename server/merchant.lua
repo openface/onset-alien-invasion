@@ -21,11 +21,11 @@ AddRemoteEvent("GetMerchantData", function(player)
     end
 
     local _send = {
-        ["item_data"] = item_data,
-        ["player_cash"] = 0 -- TODO
+        ["merchant_items"] = item_data,
+        ["player_cash"] = 10 -- TODO
     }
     --log.debug(dump(json_encode(_send)))
-    CallRemoteEvent(player, "LoadWorkbenchData", json_encode(_send))
+    CallRemoteEvent(player, "LoadMerchantData", json_encode(_send))
 end)
 
 AddRemoteEvent("BuyItem", function(player, item)
@@ -48,8 +48,9 @@ AddRemoteEvent("BuyItem", function(player, item)
         --SetPlayerAnimation(player, "STOP")
         AddPlayerChat(player, "Purchase is complete.")
 
-        local player_cash = 10
-        CallRemoteEvent(player, "CompletePurchase", item, json_encode(player_cash))
+        CallRemoteEvent(player, "CompletePurchase", item, json_encode({
+          player_cash = 10
+        }))
         -- TODO: adjust player inventory
         --AddToInventory(player, item)
     end)

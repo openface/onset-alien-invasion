@@ -89,7 +89,7 @@ function AddToInventory(player, item)
 end
 
 -- private function to update inventory item quantity
-local function SetItemQuantity(player, item, quantity)
+function SetItemQuantity(player, item, quantity)
     local inventory = GetPlayerPropertyValue(player, "inventory")
     for i, _item in ipairs(inventory) do
         if _item['item'] == item then

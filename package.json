@@ -106,6 +106,7 @@
     "client/sounds/cloth.mp3",
     "client/sounds/storage_open.wav",
     "client/sounds/shovel.wav",
+    "client/sounds/purchase.mp3",
 
     "ui/dist/index.html",
     "ui/dist/js/app.js",

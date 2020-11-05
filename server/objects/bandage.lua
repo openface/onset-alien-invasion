@@ -25,4 +25,5 @@ RegisterObject("bandage", {
 AddEvent("items:bandage:use", function(player)
   local health = GetPlayerHealth(player)
   SetPlayerHealth(player, math.min(100, health + 20)) 
+  AddPlayerChat(player, "Your health has increased by 20")
 end)

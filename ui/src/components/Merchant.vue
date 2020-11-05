@@ -54,6 +54,9 @@ export default {
       this.player_cash = data["player_cash"];
       this.is_busy = false;
     },
+    PurchaseDenied() {
+      this.is_busy = false;
+    },
     IsBusy() {
       return this.is_busy;
     },
@@ -64,8 +67,12 @@ export default {
   mounted() {
     this.EventBus.$on("LoadMerchantData", this.LoadMerchantData);
     this.EventBus.$on("CompletePurchase", this.CompletePurchase)
+    this.EventBus.$on("PurchaseDenied", this.PurchaseDenied)
 
     if (!this.InGame) {
+      //setTimeout(() => this.EventBus.$emit("CompletePurchase", { player_cash: 10 }), 5000);
+      //setTimeout(() => this.EventBus.$emit("PurchaseDenied"), 5000);
+
       this.EventBus.$emit("LoadMerchantData", {
         player_cash: 100,
         merchant_items: [
@@ -207,7 +214,7 @@ export default {
   height: 60px;
   background: rgba(255, 255, 255, 0.1);
 }
-.item:hover {
+.grid:not(.blurred) item:hover {
   background: rgba(255, 255, 255, 0.2);
 }
 .item .pic {

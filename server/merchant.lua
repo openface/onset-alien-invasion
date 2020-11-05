@@ -36,22 +36,33 @@ AddRemoteEvent("BuyItem", function(player, item)
 
     log.debug("Player "..GetPlayerName(player).." buys item "..item_cfg['name'])
 
+
+    if item_cfg['max_carry'] ~= nil and GetInventoryCount(player, item) >= item_cfg['max_carry'] then
+      log.debug("Pickup exceeds max_carry")
+      AddPlayerChat(player, "You cannot carry anymore of this item!")
+      CallRemoteEvent(player, "PurchaseDenied")
+      return
+    elseif GetInventoryAvailableSlots(player) <= 0 then
+      log.debug("Pickup exceeded max inventory slots")
+      AddPlayerChat(player, "Your inventory is full!")
+      CallRemoteEvent(player, "PurchaseDenied")
+      return
+    end
+
+
     -- TODO: remove money from player
-
-    -- TODO: PlaySoundSync
-
 
     --SetPlayerLocation(player, -105738.5859375, 193734.59375, 1396.1424560547) 
     --SetPlayerHeading(player, -92.786437988281)   
     --SetPlayerAnimation(player, "BARCLEAN01")
-    Delay(3000, function()
+    Delay(4000, function()
         --SetPlayerAnimation(player, "STOP")
         AddPlayerChat(player, "Purchase is complete.")
 
-        CallRemoteEvent(player, "CompletePurchase", item, json_encode({
-          player_cash = 10
-        }))
-        -- TODO: adjust player inventory
-        --AddToInventory(player, item)
+        CallRemoteEvent(player, "CompletePurchase", json_encode({ player_cash = 10 }))
+
+        PlaySoundSync(player, "sounds/purchase.mp3")
+
+        AddToInventory(player, item)
     end)
 end)

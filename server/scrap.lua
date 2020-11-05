@@ -12,7 +12,11 @@ local CurrentlySearching = {}
 
 AddEvent("OnPackageStart", function()
     log.info("Loading scrap heaps...")
-    CreatePropsFromJSON("data/scrapheaps.json", { message = "Hit [E] to Search", remote_event = "SearchForScrap"})
+
+    local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/server/data/scrapheaps.json")
+    for _, v in pairs(_table) do
+        CreateProp(v, { message = "Hit [E] to Search", remote_event = "SearchForScrap"})
+    end
 end)
 
 AddCommand("scrap", function(player, amt)

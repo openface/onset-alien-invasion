@@ -2,6 +2,7 @@ RegisterObject("banana", {
     name = "Banana",
     type = "usable",
     recipe = nil,
+    price = 3,
     interaction = {
         sound = "sounds/eat.wav",
         animation = { name = "DRINKING" }

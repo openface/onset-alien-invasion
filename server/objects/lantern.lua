@@ -8,6 +8,7 @@ RegisterObject("lantern", {
         plastic = 5,
         computer_part = 1
     },
+    price = 50,
     component = {
         type = "pointlight",
         position = {

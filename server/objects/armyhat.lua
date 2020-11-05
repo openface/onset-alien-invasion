@@ -5,6 +5,7 @@ RegisterObject("armyhat", {
         metal = 2,
         plastic = 1
     },
+    price = 10,
     modelid = 398,
     max_carry = 1,
     attachment = { 

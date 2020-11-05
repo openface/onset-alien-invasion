@@ -6,6 +6,7 @@ RegisterObject("boxhead", {
     recipe = {
         wood = 1,
     },
+    price = 10,
     attachment = { 
         x = 10, 
         y = 2, 

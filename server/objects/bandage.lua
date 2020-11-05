@@ -2,6 +2,7 @@ RegisterObject("bandage", {
   name = "Bandage",
   type = "usable",
   recipe = nil,
+  price = 2,
   interaction = {
       sound = "sounds/cloth.mp3",
       animation = { name = "COMBINE", duration = 6000 },

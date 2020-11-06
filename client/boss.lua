@@ -38,8 +38,10 @@ AddEvent("OnObjectStreamIn", function(object)
         SetCloudDensity(4)
         SetPostEffect("ImageEffects", "VignetteIntensity", 1)
 
-        MothershipSpawnSound = CreateSound3D("client/sounds/mothership.mp3", BossLocation.x, BossLocation.y, BossLocation.z, 50000.0, true)
-        SetSoundVolume(MothershipSpawnSound, 1)
+        if BossLocation ~= nil then
+            MothershipSpawnSound = CreateSound3D("client/sounds/mothership.mp3", BossLocation.x, BossLocation.y, BossLocation.z, 50000.0, true)
+            SetSoundVolume(MothershipSpawnSound, 1)
+        end
     end)
 end)
 

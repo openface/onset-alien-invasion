@@ -2,7 +2,7 @@ local CharUI
 
 AddEvent("OnPackageStart", function()
     CharUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
-    SetWebURL(CharUI, "http://asset/"..GetPackageName().."/ui/dist/index.html#/character-selection/")
+    SetWebURL(CharUI, "http://asset/"..GetPackageName().."/ui/dist/index.html#/character/")
     SetWebAlignment(CharUI, 0.0, 0.0)
     SetWebAnchors(CharUI, 0.0, 0.0, 1.0, 1.0)
     SetWebVisibility(CharUI, WEB_HIDDEN)

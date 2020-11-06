@@ -80,9 +80,7 @@ Vue.use(VueOnset);
 import 'vue-progress-path/dist/vue-progress-path.css'
 import VueProgress from 'vue-progress-path'
 
-Vue.use(VueProgress, {
-  // defaultShape: 'circle',
-})
+Vue.use(VueProgress);
 
 
 /* 
@@ -90,7 +88,7 @@ Vue.use(VueProgress, {
  */
 Vue.use(VueRouter);
 
-import CharacterSelection from "./components/CharacterSelection.vue";
+import Character from "./components/Character.vue";
 import Inventory from "./components/Inventory.vue";
 import Storage from "./components/Storage.vue";
 import Hud from "./components/Hud.vue";
@@ -100,11 +98,7 @@ import Computer from "./components/Computer.vue";
 import Scoreboard from "./components/Scoreboard.vue";
 
 const routes = [
-  {
-    path: "/character-selection",
-    component: CharacterSelection,
-    name: "CharacterSelection",
-  },
+  { path: "/character", component: Character, name: "Character" },
   { path: "/inventory", component: Inventory, name: "Inventory" },
   { path: "/storage", component: Storage, name: "Storage" },
   { path: "/hud", component: Hud, name: "Hud" },

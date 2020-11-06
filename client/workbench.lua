@@ -41,8 +41,8 @@ AddEvent("BuildItem", function(item)
     CallRemoteEvent("BuildItem", item)    
 end)
 
-AddRemoteEvent("StartBuilding", function(item_key, player_resources)
-    ExecuteWebJS(WorkbenchUI, "EmitEvent('SetPlayerResources',"..player_resources..")")
+AddRemoteEvent("CompleteBuild", function(data)
+    ExecuteWebJS(WorkbenchUI, "EmitEvent('CompleteBuild',"..data..")")
 end)
 
 -- clicks while navigating workbench and inventory

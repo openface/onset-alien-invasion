@@ -45,7 +45,7 @@ AddRemoteEvent("BuildItem", function(player, item)
 
     PlaySoundSync(player, "sounds/workbench.mp3")
 
-    CallRemoteEvent(player, "StartBuilding", item, json_encode(GetPlayerResources(player)))
+    CallRemoteEvent(player, "CompleteBuild", json_encode(GetPlayerResources(player)))
 
     --SetPlayerLocation(player, -105738.5859375, 193734.59375, 1396.1424560547) 
     --SetPlayerHeading(player, -92.786437988281)   
@@ -65,6 +65,6 @@ function GetPlayerResources(player)
             resources[item['item']] = item['quantity']
         end
     end
-    log.debug(dump(resources))
+    --log.debug(dump(resources))
     return resources
 end

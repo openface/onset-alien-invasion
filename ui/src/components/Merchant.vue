@@ -26,7 +26,7 @@
     </div>
 
     <div id="progress" v-if="IsBusy()">
-      <loading-progress :indeterminate="true" size="64" />
+      <loading-progress :indeterminate="true" size="64" rotate fillDuration="3" rotationDuration="4" />
     </div>
   </div>
 </template>
@@ -49,6 +49,11 @@ export default {
     BuyItem: function(item) {
       this.is_busy = true;
       this.CallEvent('BuyItem', item)
+
+      if (!this.InGame) {
+        setTimeout(() => this.EventBus.$emit("CompletePurchase", { player_cash: 10 }), 3000);
+        //setTimeout(() => this.EventBus.$emit("PurchaseDenied"), 5000);
+      }
     },
     CompletePurchase(data) {
       this.player_cash = data["player_cash"];
@@ -70,9 +75,6 @@ export default {
     this.EventBus.$on("PurchaseDenied", this.PurchaseDenied)
 
     if (!this.InGame) {
-      //setTimeout(() => this.EventBus.$emit("CompletePurchase", { player_cash: 10 }), 5000);
-      //setTimeout(() => this.EventBus.$emit("PurchaseDenied"), 5000);
-
       this.EventBus.$emit("LoadMerchantData", {
         player_cash: 100,
         merchant_items: [
@@ -196,8 +198,16 @@ export default {
   position: fixed;
   top: 40%;
   left: 50%;
-  /* bring your own prefixes */
   transform: translate(-50%, -50%);
+}
+.vue-progress-path path {
+  stroke-width: 16;
+}
+.vue-progress-path .progress {
+  stroke: rgba(255,255,255, 0.9);
+}
+.vue-progress-path .background {
+  stroke: rgba(0, 0, 0, 0.4);
 }
 .grid {
   display: flex;
@@ -256,7 +266,7 @@ button.buy {
   background: #1770ff;
   color: #fff;
 }
-button.buy:hover:not([disabled]) {
+.grid:not(.blurred) button.buy:hover:not([disabled]) {
   cursor: pointer;
   background: #3684ff;
 }

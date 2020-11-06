@@ -89,7 +89,7 @@ export default {
 <style scoped>
 #container {
   display:flex;
-  height:95vh;
+  height:99vh;
 }
 #inner {
   margin:auto;

@@ -28,7 +28,7 @@ end)
 -- timer used to hide workbench screen once player walks away
 function ShowMerchantTimer(loc)
   local x,y,z = GetPlayerLocation(GetPlayerId())
-  if GetDistance3D(x, y, z, loc.x, loc.y, loc.z) > 200 then
+  if GetDistance3D(x, y, z, loc.x, loc.y, loc.z) > 100 then
       ShowMouseCursor(false)
       SetInputMode(INPUT_GAME)
       SetWebVisibility(MerchantUI, WEB_HIDDEN)

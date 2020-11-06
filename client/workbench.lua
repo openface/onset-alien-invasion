@@ -28,7 +28,7 @@ end)
 -- timer used to hide workbench screen once player walks away
 function ShowWorkbenchTimer(loc)
   local x,y,z = GetPlayerLocation(GetPlayerId())
-  if GetDistance3D(x, y, z, loc.x, loc.y, loc.z) > 200 then
+  if GetDistance3D(x, y, z, loc.x, loc.y, loc.z) > 100 then
       ShowMouseCursor(false)
       SetInputMode(INPUT_GAME)
       SetWebVisibility(WorkbenchUI, WEB_HIDDEN)
@@ -43,6 +43,11 @@ end)
 
 AddRemoteEvent("CompleteBuild", function(data)
     ExecuteWebJS(WorkbenchUI, "EmitEvent('CompleteBuild',"..data..")")
+end)
+
+AddRemoteEvent("BuildDenied", function()
+  ExecuteWebJS(WorkbenchUI, "EmitEvent('BuildDenied')")
+  SetSoundVolume(CreateSound("client/sounds/error.wav"), 0.5)
 end)
 
 -- clicks while navigating workbench and inventory

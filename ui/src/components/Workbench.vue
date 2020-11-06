@@ -17,12 +17,7 @@
                 </span>
               </div>
               <div class="action">
-                <div v-if="hasEnoughResources">
-                  <button class="build" @click="BuildItem(item.item)">BUILD NOW</button>
-                </div>
-                <div v-else>
-                  <button class="need_scrap" disabled="true">NEED SCRAP</button>
-                </div>
+                <button class="build" @click="BuildItem(item.item)">BUILD NOW</button>
               </div>
             </div>
           </div>
@@ -57,45 +52,28 @@ export default {
       this.is_busy = false;
       this.player_resources = data['player_resources'];
     },
-    hasEnoughResources: function(item) {
-      if (Object.keys(this.player_resources).length == 0) {
-        // No resources at all
-        return false;
-      }
-      for (const resource in item.recipe) {
-        //console.log(`*** ${resource}: ${this.recipe[resource]}`);
-        if (this.player_resources[resource]) {
-          //console.log(`need ${this.recipe[resource]}, have: ${this.player_resources[resource]}`);
-          if (this.player_resources[resource] < item.recipe[resource]) {
-            // Not enough of that resource
-            return false;
-          }
-        } else {
-          // No resource
-          return false;
-        }
-      }
-      return true;
+    BuildDenied: function() {
+      this.is_busy = false;
     },
     BuildItem(item) {
       this.is_busy = true;
       this.CallEvent("BuildItem", item);
 
       if (!this.InGame) {
-        setTimeout(() => this.EventBus.$emit("CompleteBuild", { player_resources: { plastic: 10, wood: 5 }}), 5000);
+        setTimeout(() => this.EventBus.$emit("BuildDenied"), 5000);
+        //setTimeout(() => this.EventBus.$emit("CompleteBuild", { player_resources: { plastic: 10, wood: 5 }}), 5000);
       }
     },
   },
   mounted() {
     this.EventBus.$on("LoadWorkbenchData", this.LoadWorkbenchData);
     this.EventBus.$on("CompleteBuild", this.CompleteBuild);
+    this.EventBus.$on("BuildDenied", this.BuildDenied);
 
     if (!this.InGame) {
-      //setTimeout(() => this.EventBus.$emit("BuildDenied"), 5000);
-
       this.EventBus.$emit("LoadWorkbenchData", {
         player_resources: {
-          metal: 1,
+          plastic: 2,
           wood: 2,
           computer_part: 1,
         },
@@ -244,13 +222,13 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-.vue-progress-path path {
+#progress >>> .vue-progress-path path {
   stroke-width: 16;
 }
-.vue-progress-path .progress {
+#progress >>> .vue-progress-path .progress {
   stroke: rgba(255,255,255, 0.9);
 }
-.vue-progress-path .background {
+#progress >>> .vue-progress-path .background {
   stroke: rgba(0, 0, 0, 0.4);
 }
 #inner {

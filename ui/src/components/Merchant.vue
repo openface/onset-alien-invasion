@@ -200,13 +200,13 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-.vue-progress-path path {
+#progress >>> .vue-progress-path path {
   stroke-width: 16;
 }
-.vue-progress-path .progress {
+#progress >>> .vue-progress-path .progress {
   stroke: rgba(255,255,255, 0.9);
 }
-.vue-progress-path .background {
+#progress >>> .vue-progress-path .background {
   stroke: rgba(0, 0, 0, 0.4);
 }
 .grid {

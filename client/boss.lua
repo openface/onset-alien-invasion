@@ -4,6 +4,7 @@ local BossLocation
 -- Load UFO from MothershipBoss.pak
 -- Thanks Voltaism!
 LoadPak("MothershipBoss", "/MothershipBoss/", "../../../OnsetModding/Plugins/MothershipBoss/Content/")
+ReplaceObjectModelMesh(91212, "/MothershipBoss/UFO")
 
 AddEvent("OnPackageStart", function()
     SetCloudDensity(1)

@@ -5,7 +5,7 @@
       
         <draggable ghost-class="ghost" v-model="storage_items" class="draggable storage" v-bind="storageDraggableOptions" @sort="UpdateStorage(object, $event)" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
           <transition-group tag="div" class="grid" name="grid">
-            <InventoryItem v-for="(item, index) in storage_items" :key="index" :item="item" :dragging="dragging" :show_options="false" />
+            <InventoryItem v-for="item in storage_items" :key="item.name" :item="item" :dragging="dragging" :show_options="false" />
             <div class="freeslot" v-for="n in FreeStorageSlots" :key="'hw'+n"></div>
           </transition-group>
         </draggable>
@@ -17,7 +17,7 @@
 
         <draggable ghost-class="ghost" v-model="inventory_items" class="draggable" v-bind="inventoryDraggableOptions" @sort="UpdateInventory" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
           <transition-group tag="div" class="grid" name="grid">
-            <InventoryItem v-for="(item, index) in inventory_items" :key="index" :item="item" :dragging="dragging" :show_options="false" />
+            <InventoryItem v-for="item in inventory_items" :key="item.name" :item="item" :dragging="dragging" :show_options="false" />
             <div class="freeslot" v-for="n in FreeInventorySlots" :key="'hw'+n"></div>
           </transition-group>
         </draggable>

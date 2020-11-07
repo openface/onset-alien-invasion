@@ -40,6 +40,7 @@
     "server/objects/resources/computer_part.lua",
     "server/objects/resources/plastic.lua",
     "server/objects/resources/wood.lua",
+
     "server/objects/weapons/deagle.lua",
     "server/objects/weapons/colt.lua",
     "server/objects/weapons/glock.lua",
@@ -52,6 +53,8 @@
     "server/objects/weapons/m16a4.lua",
     "server/objects/weapons/ak47.lua",
     "server/objects/weapons/ak47g.lua",
+
+    "server/objects/axe.lua",
 
     "server/vendor/json.lua",
     "server/vendor/file.lua",
@@ -78,6 +81,7 @@
   ],
   "files": [
     "client/pak/MothershipBoss.pak",
+    "client/pak/AlienInvasion.pak",
 
     "client/sounds/alien.wav",
     "client/sounds/loot_pickup.wav",
@@ -129,6 +133,9 @@
     "ui/dist/img/18.jpg",
     "ui/dist/img/19.jpg",
     "ui/dist/img/20.jpg",
-    "ui/dist/img/25.jpg"
+    "ui/dist/img/25.jpg",
+
+    "ui/dist/img/SM_Axe-Neo.png"
+
   ]
 }

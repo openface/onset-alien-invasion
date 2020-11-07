@@ -1,7 +1,6 @@
 <template>
   <div v-if="item" :class="{ slot: true, equipped: IsEquipped }" @mousedown="optionsVisible=false;" @mouseenter="PlayClick();" @mouseleave="optionsVisible=false">
-    <img v-if="!InGame" src="http://placekitten.com/75/75" />
-    <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
+    <img :src="getImgUrl(item)" />
     <span class="keybind" v-if="keybind">{{ keybind }}</span>
     <span class="name">{{ item.name }}</span>
     <span v-if="item.quantity > 1" class="quantity">
@@ -59,6 +58,17 @@ export default {
         this.optionsVisible=true;
       }
     },
+    getImgUrl(item) {
+      if (this.InGame) {
+        if (item.image !== undefined) {
+          return require('@/assets/images/' + item.image)
+        } else {
+          return 'http://game/objects/' + item.modelid;
+        }
+      } else {
+        return "http://placekitten.com/75/75"
+      }
+    }
   },
 };
 </script>

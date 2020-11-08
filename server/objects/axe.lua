@@ -2,8 +2,8 @@ RegisterObject("axe", {
     name = "Axe",
     type = 'usable',
     interaction = {
-        sound = "sounds/chainsaw.wav",
-        animation = { name = "FISHING", duration = 4000 }
+        sound = "sounds/chopping_wood.mp3",
+        animation = { name = "PICKAXE_SWING" }
     },
     modelid = 20002,
     image = "objects/SM_Axe-Neo.png",
@@ -14,12 +14,12 @@ RegisterObject("axe", {
     },
     price = 150,
     attachment = { 
-      x = -6, 
-      y = 4, 
+      x = -10.8, 
+      y = 5.2, 
       z = -1, 
       rx = -64, 
       ry = 1, 
-      rz = 0, 
+      rz = -15.1, 
       bone = "hand_r" 
     }
 })

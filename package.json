@@ -111,6 +111,7 @@
     "client/sounds/storage_open.wav",
     "client/sounds/shovel.wav",
     "client/sounds/purchase.mp3",
+    "client/sounds/chopping_wood.mp3",
 
     "ui/dist/index.html",
     "ui/dist/js/app.js",

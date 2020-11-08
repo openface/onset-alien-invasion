@@ -134,13 +134,11 @@ function RemoveFromInventory(player, item, amount)
 
     if new_qty == 0 then
         log.debug("items:" .. item .. ":drop")
-
-        -- UnequipObject syncs inventory; no need to do it again
         UnequipObject(player, item)
-    else
-        -- inventory updated
-        CallEvent("SyncInventory", player)
     end
+
+    -- inventory updated
+    CallEvent("SyncInventory", player)
 end
 
 -- unequips item, removes from inventory, and places on ground

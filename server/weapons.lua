@@ -58,9 +58,7 @@ end
 function EquipWeapon(player, item)
     item_cfg = GetItemConfig(item)
     local slot = GetNextAvailableWeaponSlot(player)
-    if slot == nil then
-        return false
-    else
+    if slot ~= nil then
         WeaponPatch.SetWeapon(player, item_cfg['weapon_id'], 100, true, slot, true)
         return slot
     end

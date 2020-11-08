@@ -5,8 +5,7 @@
       <div class="grid" :class="IsBusy() ? 'blurred' : ''">
         <div class="item" v-for="item in merchant_items" :key="item.item" @mouseenter="!IsBusy ? PlayClick() : null">
           <div class="pic">
-            <img v-if="!InGame" src="http://placekitten.com/60/60" />
-            <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
+            <img :src="getImageUrl(item)" />
           </div>
           <div class="details">
             <div class="name">{{ item.name }}</div>
@@ -67,7 +66,7 @@ export default {
     },
     PlayClick() {
       this.CallEvent("PlayClick")
-    }
+    },
   },
   mounted() {
     this.EventBus.$on("LoadMerchantData", this.LoadMerchantData);

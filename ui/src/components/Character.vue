@@ -11,63 +11,63 @@
     <div class="subtitle">Select a character to join...</div>
     <div id="character-select">
       <div class="character" @click="SelectCharacter(1)">
-        <img src="@/assets/images/1.jpg" />
+        <img :src="getImgUrl('1')" />
         <button>SELECT</button>
       </div>
       <div class="character" @click="SelectCharacter(2)">
-        <img src="@/assets/images/2.jpg" />
+        <img :src="getImgUrl('2')" />
         <button>SELECT</button>
       </div>
       <div class="character" @click="SelectCharacter(4)">
-        <img src="@/assets/images/4.jpg" />
+        <img :src="getImgUrl('4')" />
         <button>SELECT</button>
       </div>
       <div class="character" @click="SelectCharacter(5)">
-        <img src="@/assets/images/5.jpg" />
+        <img :src="getImgUrl('5')" />
         <button>SELECT</button>
       </div>
       <div class="character" @click="SelectCharacter(6)">
-        <img src="@/assets/images/6.jpg" />
+        <img :src="getImgUrl('6')" />
         <button>SELECT</button>
       </div>
       <div class="character" @click="SelectCharacter(7)">
-        <img src="@/assets/images/7.jpg" />
+        <img :src="getImgUrl('7')" />
         <button>SELECT</button>
       </div>
       <div class="character" @click="SelectCharacter(9)">
-        <img src="@/assets/images/9.jpg" />
+        <img :src="getImgUrl('9')" />
         <button>SELECT</button>
       </div>
       <div class="character" @click="SelectCharacter(10)">
-        <img src="@/assets/images/10.jpg" />
+        <img :src="getImgUrl('10')" />
         <button>SELECT</button>
       </div>
       <div class="character" @click="SelectCharacter(14)">
-        <img src="@/assets/images/14.jpg" />
+        <img :src="getImgUrl('14')" />
         <button>SELECT</button>
       </div>
       <div class="character" @click="SelectCharacter(15)">
-        <img src="@/assets/images/15.jpg" />
+        <img :src="getImgUrl('15')" />
         <button>SELECT</button>
       </div>
       <div class="character" @click="SelectCharacter(16)">
-        <img src="@/assets/images/16.jpg" />
+        <img :src="getImgUrl('16')" />
         <button>SELECT</button>
       </div>
       <div class="character" @click="SelectCharacter(18)">
-        <img src="@/assets/images/18.jpg" />
+        <img :src="getImgUrl('18')" />
         <button>SELECT</button>
       </div>
       <div class="character" @click="SelectCharacter(19)">
-        <img src="@/assets/images/19.jpg" />
+        <img :src="getImgUrl('19')" />
         <button>SELECT</button>
       </div>
       <div class="character" @click="SelectCharacter(20)">
-        <img src="@/assets/images/20.jpg" />
+        <img :src="getImgUrl('20')" />
         <button>SELECT</button>
       </div>
       <div class="character" @click="SelectCharacter(25)">
-        <img src="@/assets/images/25.jpg" />
+        <img :src="getImgUrl('25')" />
         <button>SELECT</button>
       </div>
     </div>
@@ -82,6 +82,9 @@ export default {
     SelectCharacter: function(value) {
       this.CallEvent("SelectCharacter", value);
     },
+    getImgUrl(id) {
+      return require('@/assets/images/characters/'+id+'.jpg')
+    }
   },
 };
 </script>

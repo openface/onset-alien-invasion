@@ -1,13 +1,12 @@
 <template>
-  <div v-if="item" :class="{ slot: true, equipped: IsEquipped }" @mousedown="optionsVisible=false;" @mouseenter="PlayClick();" @mouseleave="optionsVisible=false">
-    <img v-if="!InGame" src="http://placekitten.com/75/75" />
-    <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
+  <div v-if="item" :class="{ slot: true, equipped: IsEquipped }" @mouseenter="PlayClick();hover=true" @mouseleave="hover=false">
+    <img :src="getImageUrl(item)" @mousedown="hover=false" />
     <span class="keybind" v-if="keybind">{{ keybind }}</span>
     <span class="name">{{ item.name }}</span>
     <span v-if="item.quantity > 1" class="quantity">
       x{{ item.quantity }}
     </span>
-    <div class="options" v-if="optionsVisible && !dragging">
+    <div class="options" v-if="OptionsVisible">
       <div v-if="item.type == 'equipable'">
         <a v-if="!item.equipped" @click="EquipItem(item.item)">Equip</a>
         <a v-if="item.equipped" @click="UnequipItem(item.item)">Unequip</a>
@@ -29,16 +28,20 @@ export default {
   props: ["item", "dragging", "keybind", "show_options"],
   data() {
     return {
-      optionsVisible: false,
+      hover: false
     }
   },
   computed: {
     IsEquipped: function() {
       return this.item.equipped;
     },
+    OptionsVisible: function() {
+      return this.show_options && !this.dragging && this.hover;
+    }
   },
   methods: {
     DropItem: function(item) {
+      window.console.log('drop')
       this.CallEvent("DropItem", item);
     },
     EquipItem: function(item) {
@@ -53,10 +56,6 @@ export default {
     PlayClick() {
       if (!this.dragging) {
         this.CallEvent("PlayClick");
-      }
-      // only show options if not in hotbar
-      if (this.show_options) {
-        this.optionsVisible=true;
       }
     },
   },

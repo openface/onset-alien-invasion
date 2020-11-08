@@ -53,7 +53,7 @@ window.EmitEvent = EmitEvent;
 // eslint-disable-next-line
 var VueOnset = {
   install(Vue) {
-    Vue.prototype.CallEvent = function (name, ...args) {
+    Vue.prototype.CallEvent = function(name, ...args) {
       if (typeof name != "string") {
         return;
       }
@@ -69,6 +69,19 @@ var VueOnset = {
     }
     Vue.prototype.EventBus = EventBus;
     Vue.prototype.InGame = InGame;
+
+    // object image handler
+    Vue.prototype.getImageUrl = function(item) {
+      if (this.InGame) {
+        if (item.image !== undefined) {
+          return require('@/assets/images/objects/' + item.image)
+        } else {
+          return 'http://game/objects/' + item.modelid;
+        }
+      } else {
+        return "http://placekitten.com/75/75"
+      }
+    }
   }
 }
 

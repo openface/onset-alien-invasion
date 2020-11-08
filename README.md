@@ -30,9 +30,7 @@ The satellite computer has enough power to communicate with the mothership. Sear
 * Inventory system with interactive objects and hotbar selection.
 
 
-### Additional Credits and Thanks
+### Thanks
 
-* Talos ;)
-* Voltaism for the Onset pak integration, his awesome onset packages, and testing contributions.
-* The Onset community for their wealth of knowledge of the Unreal Engine.
-* Billy Meier for the [UFO model](https://sketchfab.com/3d-models/billy-meier-ufo-b21083ba65824b4a9b1b4720b705b32e)
+* Voltaism for help with Onset pak integration, his awesome onset packages, and testing contributions.
+* Talos and the Onset community for their wealth of knowledge of the Unreal Engine.

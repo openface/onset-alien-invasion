@@ -16,6 +16,7 @@ AddRemoteEvent("GetWorkbenchData", function(player)
                 item = key,
                 name = item['name'],
                 modelid = item['modelid'],
+                image = item['image'],
                 recipe = item['recipe']
             })
         end

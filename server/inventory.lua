@@ -264,6 +264,7 @@ AddRemoteEvent("UpdateInventory", function(player, data)
             type = item_cfg['type'],
             name = item_cfg['name'],
             modelid = item_cfg['modelid'],
+            image = item_cfg['image'],
             used = 0
         }
     end

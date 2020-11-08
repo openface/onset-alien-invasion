@@ -2,7 +2,7 @@ RegisterObject("binoculars", {
     name = "Binoculars",
     type = 'usable',
     interaction = {
-        animation = { name = "WATCHING" }
+        animation = { name = "WATCHING", duration = 5000 }
     },
     modelid = 20004,
     image = "SM_Binocular.png",

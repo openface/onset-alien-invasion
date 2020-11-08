@@ -80,7 +80,7 @@
     "client/water.lua"
   ],
   "files": [
-    "client/pak/MothershipBoss.pak",
+    "client/pak/Mothership.pak",
     "client/pak/AlienInvasion.pak",
 
     "client/sounds/alien.wav",

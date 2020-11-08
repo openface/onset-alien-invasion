@@ -55,13 +55,13 @@ function SpawnBoss()
     log.info("Spawning boss on target " .. GetPlayerName(target))
     local from_x, from_y = randomPointInCircle(BossTargetedLocation.x, BossTargetedLocation.y, BossDamageRange + 10000)
 
-    Boss = CreateObject(FakeBossModelID, from_x, from_y, BossTargetedLocation.z + 20000, 0, 0, 0, 20, 20, 20)
+    Boss = CreateObject(FakeBossModelID, from_x, from_y, BossTargetedLocation.z + 20000)
     SetObjectPropertyValue(Boss, "type", "boss")
 
     -- move down to earth towards targeted player, slowly
     local to_x, to_y = randomPointInCircle(BossTargetedLocation.x, BossTargetedLocation.y, BossDamageRange - 5000)
 
-    SetObjectMoveTo(Boss, to_x, to_y, BossTargetedLocation.z + 7000, 1500)
+    SetObjectMoveTo(Boss, to_x, to_y, BossTargetedLocation.z + 7000, 2500)
 
     -- reset boss health
     BossHealth = BossInitialHealth

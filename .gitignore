@@ -4,7 +4,9 @@
 
 node_modules/
 dist/
+
 config.lua
+client/pak/
 
 # Log files
 npm-debug.log*

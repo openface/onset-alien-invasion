@@ -6,8 +6,7 @@
         <div v-for="item in items" :key="item.item">
           <div class="item" @mouseenter="!IsBusy ? PlayClick() : null">
             <div class="pic">
-              <img v-if="!InGame" src="http://placekitten.com/60/60" />
-              <img v-if="InGame" :src="'http://game/objects/' + item.modelid" />
+              <img :src="getImageUrl(item)" />
             </div>
             <div class="details">
               <div class="name">{{ item.name }}</div>

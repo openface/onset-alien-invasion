@@ -6,7 +6,7 @@ RegisterObject("axe", {
         animation = { name = "PICKAXE_SWING" }
     },
     modelid = 20002,
-    image = "objects/SM_Axe-Neo.png",
+    image = "SM_Axe-Neo.png",
     max_carry = 1,
     recipe = {
         metal = 20,

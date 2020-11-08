@@ -55,6 +55,7 @@
     "server/objects/weapons/ak47g.lua",
 
     "server/objects/axe.lua",
+    "server/objects/binoculars.lua",
 
     "server/vendor/json.lua",
     "server/vendor/file.lua",
@@ -136,7 +137,8 @@
     "ui/dist/img/20.jpg",
     "ui/dist/img/25.jpg",
 
-    "ui/dist/img/SM_Axe-Neo.png"
+    "ui/dist/img/SM_Axe-Neo.png",
+    "ui/dist/img/SM_Binocular.png"
 
   ]
 }

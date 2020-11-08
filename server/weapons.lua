@@ -8,9 +8,6 @@ AddEvent("OnPackageStop", function()
             WeaponPatch.SetWeapon(player, 1, 0, true, i, true)
         end
     end
-
-    DestroyTimer(WeaponsTimer)
-    EquippedWeapons = {}
 end)
 
 function AddWeapon(player, item)
@@ -24,16 +21,22 @@ function AddWeapon(player, item)
         return
     end
 
+    local slot = EquipWeapon(player, item)
+    if slot == nil then
+        log.error("No available slot")
+        return
+    end
+
     local weapons = GetPlayerPropertyValue(player, "weapons")
     -- add new item to store
     table.insert(weapons, {
         item = item,
         type = item_cfg['type'],
         name = item_cfg['name'],
-        modelid = item_cfg['modelid']
+        modelid = item_cfg['modelid'],
+        slot = slot
     })
     SetPlayerPropertyValue(player, "weapons", weapons)
-    EquipWeapon(player, item)
     CallEvent("SyncInventory", player)
 end
 
@@ -50,46 +53,33 @@ function RemoveWeapon(player, item)
     CallEvent("SyncInventory", player)
 end
 
--- equips weapons (if slot is available)
+-- equips weapon
+-- returns slot or nil
 function EquipWeapon(player, item)
     item_cfg = GetItemConfig(item)
     local slot = GetNextAvailableWeaponSlot(player)
-    if slot ~= nil then
+    if slot == nil then
+        return false
+    else
         WeaponPatch.SetWeapon(player, item_cfg['weapon_id'], 100, true, slot, true)
+        return slot
     end
 end
 
 -- returns the next available weapon slot
+-- only checks slots 2-3 to leave 1 always for fists
 function GetNextAvailableWeaponSlot(player)
-    for i = 1, 3 do
+    for i = 2, 3 do
         if (GetPlayerWeapon(player, i) == 1) then
             return i
         end
     end
 end
 
--- check if weapon is equipped
-function IsWeaponEquipped(player, item)
-    return false
-    --
-    -- This does not currently work because it is possible for player
-    -- to switch weapons and the inventory never gets sync'd.
-    -- Need a OnPlayerWeaponSwitch event or similar
-    --[[   local item_cfg = GetItemConfig(item)
-  for slot = 1, 3 do
-    local weapon_id,ammo = GetPlayerWeapon(player, slot)
-    if item_cfg['weapon_id'] == weapon_id then
-      return true
-    end
-  end
-  return false
- ]]
-end
-
--- switch to fists if weapon is equipped
+-- switch to fists if weapon is equipped for given weapon/item
 function UnequipWeapon(player, item)
     local item_cfg = GetItemConfig(item)
-    for slot = 1, 3 do
+    for slot = 2, 3 do
         local weapon_id, ammo = GetPlayerWeapon(player, slot)
         if item_cfg['weapon_id'] == weapon_id then
             WeaponPatch.SetWeapon(player, 1, 0, true, slot, true)
@@ -97,10 +87,11 @@ function UnequipWeapon(player, item)
     end
 end
 
-function UnequipEquippedWeapon(player)
+-- if weapon is not 1, set weapon 1 to slot 1
+function SwitchToFists(player)
   local wep = GetPlayerEquippedWeapon(player)
   if wep ~= 1 then
-    local slot = GetPlayerEquippedWeaponSlot(player)
-    WeaponPatch.SetWeapon(player, 1, 0, true, slot, true)
+    WeaponPatch.SetWeapon(player, 1, 0, true, 1, true)
   end
 end
+

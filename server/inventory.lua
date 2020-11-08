@@ -24,7 +24,7 @@ function SyncInventory(player)
             ['name'] = weapon['name'],
             ['modelid'] = weapon['modelid'],
             ['type'] = weapon['type'],
-            ['equipped'] = IsWeaponEquipped(player, weapon['item'])
+            ['slot'] = weapon['slot']
         })
     end
 
@@ -278,6 +278,11 @@ AddEvent("OnPlayerDeath", function(player, killer)
     SetPlayerPropertyValue(player, "inventory", {})
     SetPlayerPropertyValue(player, "weapons", {})
     CallEvent("SyncInventory", player)
+end)
+
+-- when weapon switching occurs, unequip whatever is in hand_r bone
+AddRemoteEvent("UnequipForWeapon", function(player)
+  UnequipFromBone(player, 'hand_r')
 end)
 
 -- item hotkeys

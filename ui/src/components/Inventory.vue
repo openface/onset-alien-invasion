@@ -14,7 +14,7 @@
         <div id="weapons">
           <div class="subtitle">WEAPONS</div>
           <div class="grid">
-            <InventoryItem v-for="item in weapons" :index="item.index" :key="item.index" :item="item" :show_options="true" />
+            <InventoryItem v-for="weapon in weapons" :index="weapon.slot" :key="weapon.slot" :item="weapon" :show_options="true" />
           </div>
         </div>
 
@@ -23,9 +23,10 @@
     </div>
     <div id="hotbar" v-if="!inventory_visible || !InGame">
       <div class="grid">
-          <!-- weapons 1,2,3 -->
-          <InventoryItem v-for="(item,i) in weapons" :index="item.index" :key="item.index" :item="item" :keybind="i+1" :show_options="false" />
+          <!-- weapons 2,3 -->
+          <InventoryItem v-for="weapon in weapons" :index="weapon.slot" :key="weapon.slot" :item="weapon" :keybind="weapon.slot" :show_options="false" />
           <div class="freeslot" v-for="n in FreeWeaponSlots" :key="'hw'+n"></div>
+
           <!-- usable_items 4,5,6,7,8,9 -->
           <InventoryItem v-for="(item,i) in usable_items" :index="item.index" :key="item.index" :item="item" :keybind="i+4" :show_options="false" />
           <div class="freeslot" v-for="n in FreeUsableSlots" :key="'hi'+n"></div>
@@ -61,7 +62,7 @@ export default {
       return 14 - this.inventory_items.length;
     },
     FreeWeaponSlots: function() {
-      return 3 - this.weapons.length;
+      return 2 - this.weapons.length;
     },
     FreeUsableSlots: function() {
       return 6 - this.usable_items.length;
@@ -111,7 +112,7 @@ export default {
             modelid: 2,
             quantity: 1,
             type: "weapon",
-            equipped: false,
+            slot: 2,
           },
           {
             item: "rifle",
@@ -119,7 +120,7 @@ export default {
             modelid: 2,
             quantity: 1,
             type: "weapon",
-            equipped: false,
+            slot: 3,
           },
         ],
         items: [
@@ -268,7 +269,7 @@ export default {
   grid-auto-flow: row;
 }
 #hotbar .grid {
-  grid-template-columns: repeat(9, 77px);
+  grid-template-columns: repeat(8, 77px);
   grid-template-rows: repeat(1, 77px);
 }
 #weapons .grid {

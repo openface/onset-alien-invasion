@@ -53,6 +53,9 @@ function EquipObject(player, item)
         return
     end
 
+    -- unarm first
+    SwitchToFists(player)
+
     -- start equipping
     log.debug(GetPlayerName(player) .. " equips item " .. item)
 

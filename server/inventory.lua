@@ -238,11 +238,7 @@ AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
 
 -- equip from inventory
 AddRemoteEvent("EquipItemFromInventory", function(player, item)
-    if item_cfg['type'] == 'weapon' then
-        EquipWeapon(player, item)
-    else
-        EquipObject(player, item)
-    end
+    EquipObject(player, item)
     CallEvent("SyncInventory", player)
 end)
 

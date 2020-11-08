@@ -1,13 +1,16 @@
 -- weapon handler
-Weapon = ImportPackage("Onset_Weapon_Patch")
+WeaponPatch = ImportPackage("Onset_Weapon_Patch")
 
 -- replace all weapon slots for all players to fists
 AddEvent("OnPackageStop", function()
     for _, player in pairs(GetAllPlayers()) do
         for i = 1, 3 do
-            Weapon.SetWeapon(player, 1, 0, true, i, true)
+            WeaponPatch.SetWeapon(player, 1, 0, true, i, true)
         end
     end
+
+    DestroyTimer(WeaponsTimer)
+    EquippedWeapons = {}
 end)
 
 function AddWeapon(player, item)
@@ -52,7 +55,7 @@ function EquipWeapon(player, item)
     item_cfg = GetItemConfig(item)
     local slot = GetNextAvailableWeaponSlot(player)
     if slot ~= nil then
-        Weapon.SetWeapon(player, item_cfg['weapon_id'], 100, true, slot, true)
+        WeaponPatch.SetWeapon(player, item_cfg['weapon_id'], 100, true, slot, true)
     end
 end
 
@@ -89,7 +92,15 @@ function UnequipWeapon(player, item)
     for slot = 1, 3 do
         local weapon_id, ammo = GetPlayerWeapon(player, slot)
         if item_cfg['weapon_id'] == weapon_id then
-            Weapon.SetWeapon(player, 1, 0, true, slot, true)
+            WeaponPatch.SetWeapon(player, 1, 0, true, slot, true)
         end
     end
+end
+
+function UnequipEquippedWeapon(player)
+  local wep = GetPlayerEquippedWeapon(player)
+  if wep ~= 1 then
+    local slot = GetPlayerEquippedWeaponSlot(player)
+    WeaponPatch.SetWeapon(player, 1, 0, true, slot, true)
+  end
 end

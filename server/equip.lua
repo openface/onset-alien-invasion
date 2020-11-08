@@ -17,8 +17,10 @@ end)
 -- clear equipped store for all players
 function DestroyEquippedObjectsForPlayer(player)
     equipped = GetPlayerPropertyValue(player, "equipped")
-    if equipped == nil then return end
-    
+    if equipped == nil then
+        return
+    end
+
     for item, object in pairs(equipped) do
         log.debug("Destroying equipped object for player " .. GetPlayerName(player) .. " item " .. item)
         SetObjectDetached(object)
@@ -51,14 +53,11 @@ function EquipObject(player, item)
         return
     end
 
-    -- unequip whatever is in the player's bone
-    local equipped_object = GetEquippedObjectNameFromBone(player, item_cfg['attachment']['bone'])
-    if equipped_object ~= nil then
-        log.debug("Bone " .. item_cfg['attachment']['bone'] .. " already equipped... unequipping first")
-        UnequipObject(player, equipped_object)
-    end
-
+    -- start equipping
     log.debug(GetPlayerName(player) .. " equips item " .. item)
+
+    -- unequip whatever is in the player's bone first
+    UnequipFromBone(player, item_cfg['attachment']['bone'])
 
     -- equipable animations
     PlayInteraction(player, item)
@@ -87,13 +86,22 @@ function EquipObject(player, item)
     local equipped = GetPlayerPropertyValue(player, "equipped")
     equipped[item] = attached_object
     SetPlayerPropertyValue(player, "equipped", equipped)
-    log.trace("EQUIPPED: ",dump(equipped))
+    log.trace("EQUIPPED: ", dump(equipped))
 
     -- call EQUIP event on object
     CallEvent("items:" .. item .. ":equip", player, object)
 
     -- sync inventory
     CallEvent("SyncInventory", player)
+end
+
+function UnequipFromBone(player, bone)
+    -- unequip whatever is in the player's bone
+    local equipped_object = GetEquippedObjectNameFromBone(player, bone)
+    if equipped_object ~= nil then
+        log.debug("Equipped bone " .. bone .. ", unequipping...")
+        UnequipObject(player, equipped_object)
+    end
 end
 
 function UnequipObject(player, item)
@@ -119,7 +127,7 @@ function UnequipObject(player, item)
     local equipped = GetPlayerPropertyValue(player, "equipped")
     equipped[item] = nil
     SetPlayerPropertyValue(player, "equipped", equipped)
-    log.trace("EQUIPPED: ",dump(equipped))
+    log.trace("EQUIPPED: ", dump(equipped))
 
     DestroyObject(object)
 

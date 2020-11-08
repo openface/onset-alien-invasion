@@ -16,9 +16,9 @@ RegisterObject("binoculars", {
       x = -10, 
       y = 10.3, 
       z = -20.2, 
-      rx = 193.4, 
-      ry = -20.2, 
-      rz = 188.3, 
+      rx = -10, 
+      ry = 152.7, 
+      rz = 15.4, 
       bone = "hand_r" 
     }
 })

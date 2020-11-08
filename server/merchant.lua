@@ -15,6 +15,7 @@ AddRemoteEvent("GetMerchantData", function(player)
                 item = key,
                 name = item['name'],
                 modelid = item['modelid'],
+                image = item['image'],
                 price = item['price']
             })
         end

@@ -41,15 +41,15 @@ function EquipObject(player, item)
         return
     end
 
+    if item_cfg['attachment'] == nil then
+        log.debug "not attachable"
+        return
+    end
+
     -- equipable items can be toggled via hotkey
     if item_cfg['type'] == 'equipable' and GetEquippedObject(player, item) ~= nil then
         log.debug "already equipped; unequipping..."
         UnequipObject(player, item)
-        return
-    end
-
-    if item_cfg['attachment'] == nil then
-        log.error("Object " .. item .. " is type equipable but does not define attachment info")
         return
     end
 

@@ -131,3 +131,4 @@ end)
 AddRemoteEvent("DropParachute", function(player)
     AttachPlayerParachute(player, false)
 end)
+

@@ -190,6 +190,7 @@ end
 
 -- use object from inventory
 function UseItemFromInventory(player, item)
+    log.debug(loc)
     local item_cfg = GetItemConfig(item)
     if item_cfg['type'] == 'weapon' or item_cfg['type'] == 'resource' then
         log.error("Cannot use type weapon or resource!")

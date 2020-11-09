@@ -1,4 +1,5 @@
 local LightComponents = {}
+local Particles = {}
 
 AddEvent("OnPackageStart", function()
     for object in pairs(GetStreamedObjects()) do
@@ -17,6 +18,10 @@ AddEvent("OnPackageStop", function()
     for object, component in pairs(LightComponents) do
         component:Destroy()
         LightComponents[object] = nil
+    end
+    for object, particle in pairs(Particles) do
+      particle:Destroy()
+      Particles[object] = nil
     end
 end)
 
@@ -107,4 +112,5 @@ function AddParticleToObject(object, particle_cfg)
     if particle_cfg.scale ~= nil then
         HitEffect:SetRelativeScale3D(FVector(particle_cfg.scale.x, particle_cfg.scale.y, particle_cfg.scale.z))
     end
+    Particles[object] = HitEffect
 end

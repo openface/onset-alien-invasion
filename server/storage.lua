@@ -29,6 +29,7 @@ AddRemoteEvent("OpenStorage", function(player, object)
             ['item'] = item['item'],
             ['name'] = item['name'],
             ['modelid'] = item['modelid'],
+            ['image'] = item['image'],
             ['quantity'] = item['quantity'],
             ['type'] = item['type'],
         })
@@ -53,6 +54,7 @@ AddRemoteEvent("UpdateStorage", function(player, object, data)
       quantity = item.quantity,
       name = item_cfg['name'],
       modelid = item_cfg['modelid'],
+      image = item_cfg['image'],
       type = item_cfg['type']
     }
   end

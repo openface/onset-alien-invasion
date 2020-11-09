@@ -55,7 +55,7 @@ AddEvent("OnGameTick", function()
 
     -- previously hit an object but are now looking at something else
     if LastHitObject ~= nil and hitObject ~= LastHitObject then
-        AddPlayerChat("no longer looking at " .. LastHitObject)
+        --AddPlayerChat("no longer looking at " .. LastHitObject)
         ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
         SetObjectOutline(LastHitObject, false)
 
@@ -75,7 +75,6 @@ AddEvent("OnGameTick", function()
                 SetObjectOutline(hitObject, true)
                 ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop_options['message'] .. "')")
                 ActiveProp = {
-                    message = prop_options['message'],
                     object = hitObject,
                     event = prop_options['event'] or nil,
                     remote_event = prop_options['remote_event'] or nil
@@ -85,6 +84,10 @@ AddEvent("OnGameTick", function()
         else
             -- foliage component
             ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','Press [E] to Harvest')")
+            ActiveProp = {
+              object = hitObject,
+              remote_event = "HarvestTree"
+            }
         end
 
         LastHitObject = hitObject

@@ -51,65 +51,88 @@ end)
 --
 
 AddEvent("OnGameTick", function()
-    local hittype, hitid, impactX, impactY, impactZ = PlayerLookRaycast(200)
+    local hitObject = PlayerLookRaycast()
 
     -- previously hit an object but are now looking at something else
-    if LastHitObject ~= nil and hitid ~= LastHitObject then
-        -- AddPlayerChat("no longer looking at " .. LastHitObject)
+    if LastHitObject ~= nil and hitObject ~= LastHitObject then
+        AddPlayerChat("no longer looking at " .. LastHitObject)
         ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
-
         SetObjectOutline(LastHitObject, false)
+
         LastHitObject = nil
         ActiveProp = nil
         return
     end
 
-    -- not looking at an object
-    if hittype ~= 5 then
-        return
-    end
-
     -- looking at new object
-    if hitid ~= LastHitObject then
-        -- AddPlayerChat("now looking at " .. hitid)
-        local prop_options = GetObjectPropertyValue(hitid, "prop")
-        if prop_options ~= nil then
-            ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop_options['message'] .. "')")
-            SetObjectOutline(hitid)
-            ActiveProp = {
-              message = prop_options['message'],
-              object = hitid,
-              event = prop_options['event'] or nil,
-              remote_event = prop_options['remote_event'] or nil
-            }
-            --AddPlayerChat(dump(ActiveProp))
+    if hitObject ~= LastHitObject then
+        --AddPlayerChat("-> now looking at " .. hitObject)
+
+        if IsValidObject(hitObject) then
+            -- world object
+            local prop_options = GetObjectPropertyValue(hitObject, "prop")
+            if prop_options ~= nil then
+                SetObjectOutline(hitObject, true)
+                ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop_options['message'] .. "')")
+                ActiveProp = {
+                    message = prop_options['message'],
+                    object = hitObject,
+                    event = prop_options['event'] or nil,
+                    remote_event = prop_options['remote_event'] or nil
+                }
+                -- AddPlayerChat(dump(ActiveProp))
+            end
+        else
+            -- foliage component
+            ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','Press [E] to Harvest')")
         end
 
-        LastHitObject = hitid
-        -- AddPlayerChat("hittype: "..hittype.." hitid: "..hitid..")
+        LastHitObject = hitObject
+        -- AddPlayerChat("hitObject: "..hitObject..")
     end
 end)
 
-function PlayerLookRaycast(maxDistance)
-    local x, y, z = GetPlayerLocation(GetPlayerId())
-    z = z + 60
-    local forwardX, forwardY, forwardZ = GetCameraForwardVector()
-    if forwardX == false then return end
+local TraceRange = 600.0
 
-    local finalPointX = forwardX * maxDistance + x
-    local finalPointY = forwardY * maxDistance + y
-    local finalPointZ = forwardZ * maxDistance + z
-    return LineTrace(x + forwardX * 20, y + forwardY * 20, z + 20, finalPointX, finalPointY, finalPointZ, false)
+-- returns the object or component unique id (if foliage)
+function PlayerLookRaycast()
+    local camX, camY, camZ = GetCameraLocation()
+    local camForwardX, camForwardY, camForwardZ = GetCameraForwardVector()
+
+    local Start = FVector(camX, camY, camZ)
+    local End = Start + (FVector(camForwardX, camForwardY, camForwardZ) * FVector(TraceRange, TraceRange, TraceRange))
+    local bResult, HitResult = UKismetSystemLibrary.LineTraceSingle(GetPlayerActor(), Start, End,
+                                   ETraceTypeQuery.TraceTypeQuery1, true, {}, EDrawDebugTrace.None, true,
+                                   FLinearColor(1.0, 0.0, 0.0, 1.0), FLinearColor(0.0, 1.0, 0.0, 1.0), 10.0)
+    if bResult ~= true then
+        return
+    end
+
+    local Actor = HitResult:GetActor()
+    local Comp = HitResult:GetComponent()
+    if Comp and Comp:IsA(UStaticMeshComponent.Class()) then
+
+        --AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName())
+        if string.find(Comp:GetName(), "FoliageInstancedStaticMeshComponent") then
+            return Comp:GetUniqueID()
+        end
+
+        for _, obj in pairs(GetStreamedObjects()) do
+            if GetObjectStaticMeshComponent(obj):GetUniqueID() == Comp:GetUniqueID() then
+                return obj
+            end
+        end
+    end
 end
 
 AddEvent("OnKeyPress", function(key)
     if key == "E" then
         if ActiveProp ~= nil then
             if ActiveProp['event'] then
-                --AddPlayerChat("calling event: "..ActiveProp['event'])
+                -- AddPlayerChat("calling event: "..ActiveProp['event'])
                 CallEvent(ActiveProp['event'], ActiveProp['object'])
             elseif ActiveProp['remote_event'] then
-                --AddPlayerChat("calling remote event: "..ActiveProp['remote_event'])
+                -- AddPlayerChat("calling remote event: "..ActiveProp['remote_event'])
                 CallRemoteEvent(ActiveProp['remote_event'], ActiveProp['object'])
             end
             ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")

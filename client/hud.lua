@@ -1,6 +1,4 @@
 local HudUI
-local LastHitObject
-local ActiveProp
 
 AddEvent("OnPackageStart", function()
     HudUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
@@ -50,27 +48,35 @@ end)
 -- interactive props 
 --
 
+local LastHitObject
+local LastHitStruct
+local ActiveProp
+
 AddEvent("OnGameTick", function()
-    local hitObject = PlayerLookRaycast()
+    local hitObject, hitStruct = PlayerLookRaycast()
 
     -- previously hit an object but are now looking at something else
     if LastHitObject ~= nil and hitObject ~= LastHitObject then
-        --AddPlayerChat("no longer looking at " .. LastHitObject)
+        AddPlayerChat("no longer looking at " .. LastHitObject .. " -> ".. dump(LastHitStruct))
         ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
-        SetObjectOutline(LastHitObject, false)
+
+        if LastHitStruct.type == 'object' then
+          SetObjectOutline(LastHitObject, false)
+        end
 
         LastHitObject = nil
+        LastHitStruct = nil
         ActiveProp = nil
         return
     end
 
     -- looking at new object
     if hitObject ~= LastHitObject then
-        --AddPlayerChat("-> now looking at " .. hitObject)
+        AddPlayerChat("-> now looking at " .. hitObject .. " -> ".. dump(hitStruct))
 
-        if IsValidObject(hitObject) then
+        if hitStruct.type == 'object' then
             -- world object
-            local prop_options = GetObjectPropertyValue(hitObject, "prop")
+            local prop_options = GetObjectPropertyValue(hit.object, "prop")
             if prop_options ~= nil then
                 SetObjectOutline(hitObject, true)
                 ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop_options['message'] .. "')")
@@ -81,23 +87,30 @@ AddEvent("OnGameTick", function()
                 }
                 -- AddPlayerChat(dump(ActiveProp))
             end
-        else
+        elseif hitStruct.type == 'tree' then
             -- foliage component
             ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','Press [E] to Harvest')")
             ActiveProp = {
               object = hitObject,
               remote_event = "HarvestTree"
             }
+        elseif hitStruct.type == 'stone' then
+            -- foliage component
+            ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','Press [E] to Mine')")
+            ActiveProp = {
+              object = hitObject,
+              remote_event = "HarvestStone"
+            }
         end
 
         LastHitObject = hitObject
-        -- AddPlayerChat("hitObject: "..hitObject..")
+        LastHitStruct = hitStruct
     end
 end)
 
 local TraceRange = 600.0
 
--- returns the object or component unique id (if foliage)
+-- returns the object and a structure or nil
 function PlayerLookRaycast()
     local camX, camY, camZ = GetCameraLocation()
     local camForwardX, camForwardY, camForwardZ = GetCameraForwardVector()
@@ -116,13 +129,18 @@ function PlayerLookRaycast()
     if Comp and Comp:IsA(UStaticMeshComponent.Class()) then
 
         --AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName())
-        if string.find(Comp:GetName(), "FoliageInstancedStaticMeshComponent") then
-            return Comp:GetUniqueID()
+
+        if string.find(Comp:GetName(), "FoliageInstancedStaticMeshComponent_5") then
+            -- foliage stone
+            return Comp:GetUniqueID(), { type = 'stone', component = Comp }
+        elseif string.find(Comp:GetName(), "FoliageInstancedStaticMeshComponent") then
+            -- foliage tree
+            return Comp:GetUniqueID(), { type = 'tree', component = Comp }
         end
 
         for _, obj in pairs(GetStreamedObjects()) do
             if GetObjectStaticMeshComponent(obj):GetUniqueID() == Comp:GetUniqueID() then
-                return obj
+                return obj, { type = 'object' }
             end
         end
     end

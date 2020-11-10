@@ -89,6 +89,24 @@ AddRemoteEvent("ClientSetTime", function(time)
     SetTime(time)
 end)
 
+AddEvent("OnShowMainMenu", function ()
+    ShowMouseCursor(true)
+    SetInputMode(INPUT_GAMEANDUI)
+end)
+
+AddEvent("OnHideMainMenu", function ()
+    -- hide any visible UIs
+    for _,ui in pairs(GetAllWebUI()) do
+      if GetWebVisibility(ui) == WEB_VISIBLE then
+        print("Hiding UI: "..ui)
+        SetWebVisibility(ui, WEB_HIDDEN)
+      end
+    end
+
+    ShowMouseCursor(false)
+    SetInputMode(INPUT_GAME)
+end)
+
 -- skydive
 AddEvent("OnPlayerSkydive", function()
     ShowMessage("Hit [SPACE] to open parachute")

@@ -23,7 +23,7 @@ AddEvent('OnKeyPress', function(key)
         SetInputMode(INPUT_GAMEANDUI)
         SetWebVisibility(StorageUI, WEB_VISIBLE)
 
-        CallRemoteEvent("OpenStorage", GetPlayerVehicle())
+        CallRemoteEvent("OpenStorage", GetPlayerVehicle(), { type = 'vehicle' })
     end
 end)
 
@@ -64,7 +64,7 @@ function OpenStorageTimer(loc)
 end
 
 -- sort inventory
-AddEvent("UpdateStorage", function(object, data)
-    CallRemoteEvent("UpdateStorage", object, data)
+AddEvent("UpdateStorage", function(object, type, data)
+    CallRemoteEvent("UpdateStorage", object, type, data)
 end)
 

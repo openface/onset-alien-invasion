@@ -85,7 +85,8 @@ AddEvent("OnGameTick", function()
                 ActiveProp = {
                     object = hitObject,
                     event = prop_options['event'] or nil,
-                    remote_event = prop_options['remote_event'] or nil
+                    remote_event = prop_options['remote_event'] or nil,
+                    options = prop_options['options']
                 }
                 -- AddPlayerChat(dump(ActiveProp))
             end
@@ -143,10 +144,10 @@ AddEvent("OnKeyPress", function(key)
         if ActiveProp ~= nil then
             if ActiveProp['event'] then
                 -- AddPlayerChat("calling event: "..ActiveProp['event'])
-                CallEvent(ActiveProp['event'], ActiveProp['object'])
+                CallEvent(ActiveProp['event'], ActiveProp['object'], ActiveProp['options'])
             elseif ActiveProp['remote_event'] then
                 -- AddPlayerChat("calling remote event: "..ActiveProp['remote_event'])
-                CallRemoteEvent(ActiveProp['remote_event'], ActiveProp['object'])
+                CallRemoteEvent(ActiveProp['remote_event'], ActiveProp['object'], ActiveProp['options'])
             end
             ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
             SetObjectOutline(ActiveProp['object'], false)

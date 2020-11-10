@@ -3,7 +3,7 @@
     <div id="inner">
         <div id="title">STORAGE</div>
       
-        <draggable ghost-class="ghost" v-model="storage_items" class="draggable storage" v-bind="storageDraggableOptions" @sort="UpdateStorage(object, $event)" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
+        <draggable ghost-class="ghost" v-model="storage_items" class="draggable storage" v-bind="storageDraggableOptions" @sort="UpdateStorage(object, type, $event)" @start="dragging=true" @end="dragging=false" draggable=".slot" forceFallback="true">
           <transition-group tag="div" class="grid" name="grid">
             <InventoryItem v-for="item in storage_items" :key="item.name" :item="item" :dragging="dragging" :show_options="false" />
             <div class="freeslot" v-for="n in FreeStorageSlots" :key="'hw'+n"></div>
@@ -75,6 +75,7 @@ export default {
   methods: {
     SetStorageData: function(data) {
       this.object = data.object;
+      this.type = data.type;
       this.storage_items = data.storage_items;
       this.inventory_items = data.inventory_items;
     },
@@ -83,14 +84,14 @@ export default {
         .fill()
         .map((_, idx) => start + idx);
     },
-    UpdateStorage: function(object) {
+    UpdateStorage: function(object, type) {
         window.console.log('object:'+object);
 
         var data = this.storage_items.map(function(item, index) {
             return { item: item.item, quantity: item.quantity, index: index + 1 }
         })
 
-        this.CallEvent("UpdateStorage", object, JSON.stringify(data));
+        this.CallEvent("UpdateStorage", object, type, JSON.stringify(data));
     },
     UpdateInventory: function(e) {
         window.console.log(e);
@@ -111,6 +112,7 @@ export default {
     if (!this.InGame) {
       this.EventBus.$emit("SetStorageData", {
         object: 666,
+        type: 'object',
         storage_items: [
           {
             item: "boxhead",

@@ -74,7 +74,7 @@ var VueOnset = {
     Vue.prototype.getImageUrl = function(item) {
       if (this.InGame) {
         if (item.image !== undefined) {
-          return require('@/assets/images/objects/' + item.image)
+          return require('@/assets/images/' + item.image)
         } else {
           return 'http://game/objects/' + item.modelid;
         }

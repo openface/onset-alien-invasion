@@ -43,7 +43,7 @@ AddRemoteEvent("SearchForScrap", function(player)
         CurrentlySearching[player] = nil
 
         -- chance to find scrap
-        if math.random(1, 3) == 1 then
+        if math.random(1, 2) == 1 then
             -- found something
             PickupScrap(player)
         else

@@ -14,3 +14,24 @@ AddEvent("OnPackageStop", function()
         DestroyObject(object)
     end
 end)
+
+--
+-- Foliage
+--
+
+AddRemoteEvent("HarvestTree", function(player)
+  log.debug("harvesting tree")
+  if GetInventoryCount(player, "axe") == 0 then
+    AddPlayerChat(player, "You need an axe to harvest this!")
+    CallRemoteEvent(player, "PlayErrorSound")
+    return
+  end
+
+  UseItemFromInventory(player, "axe")
+
+  Delay(5000, function()
+      AddPlayerChat(player, "You collect some wood")
+      AddToInventory(player, "wood")
+  end)
+
+end)

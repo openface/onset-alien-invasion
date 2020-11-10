@@ -91,7 +91,7 @@ end)
 
 AddEvent("OnShowMainMenu", function ()
     ShowMouseCursor(true)
-    SetInputMode(INPUT_GAMEANDUI)
+    SetInputMode(INPUT_UI)
 end)
 
 AddEvent("OnHideMainMenu", function ()

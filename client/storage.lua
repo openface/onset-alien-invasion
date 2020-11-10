@@ -22,6 +22,7 @@ AddEvent('OnKeyPress', function(key)
         ShowMouseCursor(true)
         SetInputMode(INPUT_GAMEANDUI)
         SetWebVisibility(StorageUI, WEB_VISIBLE)
+        SetWebVisibility(InventoryUI, WEB_HIDDEN)
 
         CallRemoteEvent("OpenStorage", GetPlayerVehicle(), { type = 'vehicle' })
     end
@@ -33,6 +34,7 @@ AddEvent('OnKeyRelease', function(key)
         ShowMouseCursor(false)
         SetInputMode(INPUT_GAME)
         SetWebVisibility(StorageUI, WEB_HIDDEN)
+        SetWebVisibility(InventoryUI, WEB_HITINVISIBLE)
     end
 end)
 
@@ -41,6 +43,7 @@ AddRemoteEvent("LoadStorageData", function(data)
     ShowMouseCursor(true)
     SetInputMode(INPUT_GAMEANDUI)
     SetWebVisibility(StorageUI, WEB_VISIBLE)
+    SetWebVisibility(InventoryUI, WEB_HIDDEN)
 
     ExecuteWebJS(StorageUI, "EmitEvent('SetStorageData'," .. data .. ")")
     -- AddPlayerChat("data:"..dump(data))
@@ -59,6 +62,8 @@ function OpenStorageTimer(loc)
         ShowMouseCursor(false)
         SetInputMode(INPUT_GAME)
         SetWebVisibility(StorageUI, WEB_HIDDEN)
+        SetWebVisibility(InventoryUI, WEB_HITINVISIBLE)
+
         DestroyTimer(storage_timer)
     end
 end

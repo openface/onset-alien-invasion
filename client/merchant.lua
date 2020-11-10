@@ -18,6 +18,7 @@ AddRemoteEvent("LoadMerchantData", function(data)
     ShowMouseCursor(true)
     SetInputMode(INPUT_GAMEANDUI)
     SetWebVisibility(MerchantUI, WEB_VISIBLE)
+    SetWebVisibility(InventoryUI, WEB_HIDDEN)
 
     ExecuteWebJS(MerchantUI, "EmitEvent('LoadMerchantData',"..data..")")
 
@@ -32,6 +33,7 @@ function ShowMerchantTimer(loc)
       ShowMouseCursor(false)
       SetInputMode(INPUT_GAME)
       SetWebVisibility(MerchantUI, WEB_HIDDEN)
+      SetWebVisibility(InventoryUI, WEB_HITINVISIBLE)
       DestroyTimer(merchant_timer)
   end
 end

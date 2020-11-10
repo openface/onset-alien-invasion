@@ -18,6 +18,7 @@ AddRemoteEvent("LoadWorkbenchData", function(data)
     ShowMouseCursor(true)
     SetInputMode(INPUT_GAMEANDUI)
     SetWebVisibility(WorkbenchUI, WEB_VISIBLE)
+    SetWebVisibility(InventoryUI, WEB_HIDDEN)
 
     ExecuteWebJS(WorkbenchUI, "EmitEvent('LoadWorkbenchData',"..data..")")
 
@@ -32,6 +33,7 @@ function ShowWorkbenchTimer(loc)
       ShowMouseCursor(false)
       SetInputMode(INPUT_GAME)
       SetWebVisibility(WorkbenchUI, WEB_HIDDEN)
+      SetWebVisibility(InventoryUI, WEB_HITINVISIBLE)
       DestroyTimer(workbench_timer)
   end
 end

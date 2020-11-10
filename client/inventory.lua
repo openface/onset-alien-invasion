@@ -1,4 +1,4 @@
-local InventoryUI
+InventoryUI = nil
 
 AddEvent("OnPackageStart", function()
     InventoryUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
@@ -13,7 +13,7 @@ AddEvent("OnPackageStop", function()
 end)
 
 AddEvent('OnKeyPress', function(key)
-    if IsShiftPressed() or IsAltPressed() then
+    if IsShiftPressed() or IsAltPressed() or GetWebVisibility(InventoryUI) == WEB_HIDDEN then
         return
     end
     if not IsPlayerInVehicle() then
@@ -34,6 +34,10 @@ AddEvent('OnKeyPress', function(key)
 end)
 
 AddEvent('OnKeyRelease', function(key)
+    if GetWebVisibility(InventoryUI) == WEB_HIDDEN then
+      return
+    end
+
     if key == 'Tab' and not IsPlayerInVehicle() then
         -- item inventory
         SetWebVisibility(InventoryUI, WEB_HITINVISIBLE)

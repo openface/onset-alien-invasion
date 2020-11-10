@@ -36,10 +36,12 @@
     "server/objects/toolbox.lua",
     "server/objects/lantern.lua",
     "server/objects/landmine.lua",
+
     "server/objects/resources/metal.lua",
     "server/objects/resources/computer_part.lua",
     "server/objects/resources/plastic.lua",
     "server/objects/resources/wood.lua",
+    "server/objects/resources/exhaust.lua",
 
     "server/objects/weapons/deagle.lua",
     "server/objects/weapons/colt.lua",
@@ -83,6 +85,7 @@
   "files": [
     "client/pak/Mothership.pak",
     "client/pak/AlienInvasion.pak",
+    "client/pak/CarParts.pak",
 
     "client/sounds/alien.wav",
     "client/sounds/loot_pickup.wav",
@@ -138,7 +141,11 @@
     "ui/dist/img/25.jpg",
 
     "ui/dist/img/SM_Axe-Neo.png",
-    "ui/dist/img/SM_Binocular.png"
+    "ui/dist/img/SM_Binocular.png",
 
+    "ui/dist/img/SM_Car_Axle.jpg",
+    "ui/dist/img/SM_Car_Exhaust.jpg",
+    "ui/dist/img/SM_Car_Fuel_Tank.jpg",
+    "ui/dist/img/SM_Car_Steering_wheel.jpg"
   ]
 }

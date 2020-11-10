@@ -5,7 +5,7 @@ RegisterObject("binoculars", {
         animation = { name = "WATCHING", duration = 5000 }
     },
     modelid = 20004,
-    image = "SM_Binocular.png",
+    image = "survival/SM_Binocular.png",
     max_carry = 1,
     recipe = {
         metal = 20,

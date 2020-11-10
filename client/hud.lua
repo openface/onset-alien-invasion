@@ -76,7 +76,7 @@ AddEvent("OnGameTick", function()
 
         if hitStruct.type == 'object' then
             -- world object
-            local prop_options = GetObjectPropertyValue(hit.object, "prop")
+            local prop_options = GetObjectPropertyValue(hitObject, "prop")
             if prop_options ~= nil then
                 SetObjectOutline(hitObject, true)
                 ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop_options['message'] .. "')")
@@ -93,13 +93,6 @@ AddEvent("OnGameTick", function()
             ActiveProp = {
               object = hitObject,
               remote_event = "HarvestTree"
-            }
-        elseif hitStruct.type == 'stone' then
-            -- foliage component
-            ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','Press [E] to Mine')")
-            ActiveProp = {
-              object = hitObject,
-              remote_event = "HarvestStone"
             }
         end
 
@@ -130,10 +123,7 @@ function PlayerLookRaycast()
 
         --AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName())
 
-        if string.find(Comp:GetName(), "FoliageInstancedStaticMeshComponent_5") then
-            -- foliage stone
-            return Comp:GetUniqueID(), { type = 'stone', component = Comp }
-        elseif string.find(Comp:GetName(), "FoliageInstancedStaticMeshComponent") then
+        if string.find(Comp:GetName(), "FoliageInstancedStaticMeshComponent") then
             -- foliage tree
             return Comp:GetUniqueID(), { type = 'tree', component = Comp }
         end

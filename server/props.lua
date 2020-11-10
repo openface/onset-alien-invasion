@@ -35,21 +35,3 @@ AddRemoteEvent("HarvestTree", function(player)
   end)
 
 end)
-
-
-AddRemoteEvent("HarvestStone", function(player)
-  log.debug("harvesting stone")
-  if GetInventoryCount(player, "pickaxe") == 0 then
-    AddPlayerChat(player, "You need an pickaxe to harvest this!")
-    CallRemoteEvent(player, "PlayErrorSound")
-    return
-  end
-
-  UseItemFromInventory(player, "pickaxe")
-
-  Delay(5000, function()
-      AddPlayerChat(player, "You collect some stone")
-      AddToInventory(player, "stone")
-  end)
-
-end)

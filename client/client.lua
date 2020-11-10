@@ -1,6 +1,7 @@
 -- custom assets
-LoadPak("AlienInvasion", "/AlienInvasion/", "../../../OnsetModding/Plugins/AlienInvasion/Content/")
 
+-- SurvivalAssetPack
+LoadPak("AlienInvasion", "/AlienInvasion/", "../../../OnsetModding/Plugins/AlienInvasion/Content/")
 ReplaceObjectModelMesh(20000, "/AlienInvasion/Meshes/SM_Axe-Blood")
 ReplaceObjectModelMesh(20001, "/AlienInvasion/Meshes/SM_Axe-Forest")
 ReplaceObjectModelMesh(20002, "/AlienInvasion/Meshes/SM_Axe-Neo")
@@ -24,6 +25,25 @@ ReplaceObjectModelMesh(20029, "/AlienInvasion/Meshes/SM_SleepingBag-RolledUp-Bro
 ReplaceObjectModelMesh(20030, "/AlienInvasion/Meshes/SM_SleepingBag-RolledUp-Green")
 ReplaceObjectModelMesh(20029, "/AlienInvasion/Meshes/SM_SleepingBag-Open-Brown")
 ReplaceObjectModelMesh(20030, "/AlienInvasion/Meshes/SM_SleepingBag-Open-Green")
+
+-- Wheels_Mini_Pack
+LoadPak("CarParts", "/CarParts/", "../../../OnsetModding/Plugins/CarParts/Content/")
+ReplaceObjectModelMesh(30000, "/CarParts/Wheels_Mini_Pack/Meshes/Car_Parts/SM_Car_Bumper_Front1")
+ReplaceObjectModelMesh(30001, "/CarParts/Wheels_Mini_Pack/Meshes/Car_Parts/SM_Car_Bumper_Front2")
+ReplaceObjectModelMesh(30002, "/CarParts/Wheels_Mini_Pack/Meshes/Car_Parts/SM_Car_Bumper_Rear1")
+ReplaceObjectModelMesh(30003, "/CarParts/Wheels_Mini_Pack/Meshes/Car_Parts/SM_Car_Bumper_Rear2")
+ReplaceObjectModelMesh(30004, "/CarParts/Wheels_Mini_Pack/Meshes/Car_Parts/SM_Car_Fender")
+ReplaceObjectModelMesh(30005, "/CarParts/Wheels_Mini_Pack/Meshes/Car_Parts/SM_Car_Hood")
+ReplaceObjectModelMesh(30006, "/CarParts/Wheels_Mini_Pack/Meshes/Car_Parts/SM_Car_Axle")
+ReplaceObjectModelMesh(30007, "/CarParts/Wheels_Mini_Pack/Meshes/Car_Parts/SM_Car_Door1")
+ReplaceObjectModelMesh(30008, "/CarParts/Wheels_Mini_Pack/Meshes/Car_Parts/SM_Car_Door2")
+ReplaceObjectModelMesh(30009, "/CarParts/Wheels_Mini_Pack/Meshes/Car_Parts/SM_Car_Exhaust")
+ReplaceObjectModelMesh(30010, "/CarParts/Wheels_Mini_Pack/Meshes/Car_Parts/SM_Car_Fuel_Tank")
+ReplaceObjectModelMesh(30011, "/CarParts/Wheels_Mini_Pack/Meshes/Car_Parts/SM_Car_Leaf_Spring")
+ReplaceObjectModelMesh(30012, "/CarParts/Wheels_Mini_Pack/Meshes/Car_Parts/SM_Car_Seat")
+ReplaceObjectModelMesh(30013, "/CarParts/Wheels_Mini_Pack/Meshes/Car_Parts/SM_Car_Steering_wheel")
+
+
 
 AddEvent("OnPlayerSpawn", function()
     local player = GetPlayerId()

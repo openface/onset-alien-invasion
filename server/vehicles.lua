@@ -51,3 +51,74 @@ AddEvent("OnPlayerEnterVehicle", function(player, vehicle, seat)
         SetVehicleLightEnabled(vehicle, true)
     end
 end)
+
+AddEvent("OnPlayerLeaveVehicle", function(player, vehicle, seat)
+  if seat == 1 then
+      StopVehicleEngine(vehicle)
+      SetVehicleLightEnabled(vehicle, false)
+  end
+end)
+
+
+function cmd_trunk(player, ratio)
+	local vehicle = GetPlayerVehicle(player)
+
+	if (vehicle == 0) then
+		return AddPlayerChat(player, "You must be in a vehicle")
+	end
+
+	if (GetPlayerVehicleSeat(player) ~= 1) then
+		return AddPlayerChat(player, "You must be the driver of the vehicle")
+	end
+
+	if (ratio == nil) then
+		if (GetVehicleTrunkRatio(vehicle) > 0.0) then
+			SetVehicleTrunkRatio(vehicle, 0.0)
+		else
+			SetVehicleTrunkRatio(vehicle, 60.0)
+		end
+	else
+		ratio = tonumber(ratio)
+
+		if (ratio > 90.0) then
+			ratio = 90.0
+		elseif (ratio < 0.0) then
+			ratio = 0.0
+		end
+
+		SetVehicleTrunkRatio(vehicle, ratio)
+	end
+end
+AddCommand("trunk", cmd_trunk)
+
+
+function cmd_hood(player, ratio)
+	local vehicle = GetPlayerVehicle(player)
+
+	if (vehicle == 0) then
+		return AddPlayerChat(player, "You must be in a vehicle")
+	end
+
+	if (GetPlayerVehicleSeat(player) ~= 1) then
+		return AddPlayerChat(player, "You must be the driver of the vehicle")
+	end
+
+	if (ratio == nil) then
+		if (GetVehicleHoodRatio(vehicle) > 0.0) then
+			SetVehicleHoodRatio(vehicle, 0.0)
+		else
+			SetVehicleHoodRatio(vehicle, 60.0)
+		end
+	else
+		ratio = tonumber(ratio)
+
+		if (ratio > 90.0) then
+			ratio = 90.0
+		elseif (ratio < 0.0) then
+			ratio = 0.0
+		end
+
+		SetVehicleHoodRatio(vehicle, ratio)
+	end
+end
+AddCommand("hood", cmd_hood)

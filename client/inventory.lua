@@ -16,21 +16,26 @@ AddEvent('OnKeyPress', function(key)
     if IsShiftPressed() or IsAltPressed() then
         return
     end
-    if key == 'Tab' then
-        ShowMouseCursor(true)
-        SetInputMode(INPUT_GAMEANDUI)
-        SetWebVisibility(InventoryUI, WEB_VISIBLE)
-        ExecuteWebJS(InventoryUI, "EmitEvent('ShowInventory')")
-    elseif key == '1' or key == '2' or key == '3' then
-        -- weapon switching
-        CallRemoteEvent("UnequipForWeapon")
-    elseif key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' then
-        CallRemoteEvent("UseItemHotkey", key)
+    if not IsPlayerInVehicle() then
+        if key == 'Tab' then
+            -- inventory
+            ShowMouseCursor(true)
+            SetInputMode(INPUT_GAMEANDUI)
+            SetWebVisibility(InventoryUI, WEB_VISIBLE)
+            ExecuteWebJS(InventoryUI, "EmitEvent('ShowInventory')")
+        elseif key == '1' or key == '2' or key == '3' then
+            -- weapon switching
+            CallRemoteEvent("UnequipForWeapon")
+        elseif key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' then
+            -- item hotkeys
+            CallRemoteEvent("UseItemHotkey", key)
+        end
     end
 end)
 
 AddEvent('OnKeyRelease', function(key)
-    if key == 'Tab' then
+    if key == 'Tab' and not IsPlayerInVehicle() then
+        -- item inventory
         SetWebVisibility(InventoryUI, WEB_HITINVISIBLE)
         ExecuteWebJS(InventoryUI, "EmitEvent('HideInventory')")
         ShowMouseCursor(false)
@@ -65,7 +70,6 @@ end)
 
 -- sort inventory
 AddEvent("UpdateInventory", function(data)
-  CallRemoteEvent("UpdateInventory", data)
+    CallRemoteEvent("UpdateInventory", data)
 end)
-
 

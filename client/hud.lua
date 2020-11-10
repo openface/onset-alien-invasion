@@ -53,11 +53,13 @@ local LastHitStruct
 local ActiveProp
 
 AddEvent("OnGameTick", function()
+    if IsPlayerInVehicle() then return end
+    
     local hitObject, hitStruct = PlayerLookRaycast()
 
     -- previously hit an object but are now looking at something else
     if LastHitObject ~= nil and hitObject ~= LastHitObject then
-        AddPlayerChat("no longer looking at " .. LastHitObject .. " -> ".. dump(LastHitStruct))
+        --AddPlayerChat("no longer looking at " .. LastHitObject .. " -> ".. dump(LastHitStruct))
         ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
 
         if LastHitStruct.type == 'object' then
@@ -72,7 +74,7 @@ AddEvent("OnGameTick", function()
 
     -- looking at new object
     if hitObject ~= LastHitObject then
-        AddPlayerChat("-> now looking at " .. hitObject .. " -> ".. dump(hitStruct))
+        --AddPlayerChat("-> now looking at " .. hitObject .. " -> ".. dump(hitStruct))
 
         if hitStruct.type == 'object' then
             -- world object

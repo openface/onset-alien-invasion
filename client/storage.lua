@@ -13,14 +13,37 @@ AddEvent("OnPackageStop", function()
     DestroyWebUI(StorageUI)
 end)
 
+AddEvent('OnKeyPress', function(key)
+    if IsShiftPressed() or IsAltPressed() then
+        return
+    end
+    if key == 'Tab' and IsPlayerInVehicle() then
+        -- vehicle storage
+        ShowMouseCursor(true)
+        SetInputMode(INPUT_GAMEANDUI)
+        SetWebVisibility(StorageUI, WEB_VISIBLE)
+
+        CallRemoteEvent("OpenStorage", GetPlayerVehicle())
+    end
+end)
+
+AddEvent('OnKeyRelease', function(key)
+    if key == 'Tab' and IsPlayerInVehicle() then
+        -- vehicle storage
+        ShowMouseCursor(false)
+        SetInputMode(INPUT_GAME)
+        SetWebVisibility(StorageUI, WEB_HIDDEN)
+    end
+end)
+
 -- storage and inventory data from server
 AddRemoteEvent("LoadStorageData", function(data)
     ShowMouseCursor(true)
     SetInputMode(INPUT_GAMEANDUI)
     SetWebVisibility(StorageUI, WEB_VISIBLE)
 
-    ExecuteWebJS(StorageUI, "EmitEvent('SetStorageData',"..data..")")
-    --AddPlayerChat("data:"..dump(data))
+    ExecuteWebJS(StorageUI, "EmitEvent('SetStorageData'," .. data .. ")")
+    -- AddPlayerChat("data:"..dump(data))
     local x, y, z = GetPlayerLocation(GetPlayerId())
     storage_timer = CreateTimer(OpenStorageTimer, 1000, {
         x = x,

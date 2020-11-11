@@ -97,5 +97,5 @@ end)
 
 AddRemoteEvent("InspectOrRepairVehicle", function(player, vehicle)
     local damage = GetVehicleHealth(vehicle)
-    CallRemoteEvent(player, "ShowMessage", "Vehicle Damage: " .. damage)
+    CallRemoteEvent(player, "ShowMessage", "Vehicle Health: " .. damage)
 end)

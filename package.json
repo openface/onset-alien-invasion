@@ -80,7 +80,8 @@
     "client/objects.lua",
     "client/inventory.lua",
     "client/storage.lua",
-    "client/water.lua"
+    "client/water.lua",
+    "client/vehicles.lua"
   ],
   "files": [
     "client/pak/Mothership.pak",

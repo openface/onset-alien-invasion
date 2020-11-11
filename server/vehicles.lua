@@ -94,3 +94,8 @@ AddRemoteEvent("ToggleVehicleHood", function(player)
         SetVehicleHoodRatio(vehicle, 60.0)
     end
 end)
+
+AddRemoteEvent("InspectOrRepairVehicle", function(player, vehicle)
+    local damage = GetVehicleHealth(vehicle)
+    CallRemoteEvent(player, "ShowMessage", "Vehicle Damage: " .. damage)
+end)

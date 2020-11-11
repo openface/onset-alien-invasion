@@ -57,4 +57,3 @@ function BumpPlayerStat(player, stat)
     ScoreboardData[player][stat] = ScoreboardData[player][stat] + 1
   end
 end
-AddFunctionExport("BumpPlayerStat", BumpPlayerStat)

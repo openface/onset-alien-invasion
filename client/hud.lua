@@ -77,6 +77,11 @@ AddEvent("OnGameTick", function()
         return
     end
 
+    -- do not process further if player is in vehicle
+    if IsPlayerInVehicle() then
+        return
+    end
+
     -- looking at new object
     if hitObject ~= LastHitObject then
         if Debug then
@@ -167,7 +172,7 @@ function ProcessHitComponent(Comp)
     for _, veh in pairs(GetStreamedVehicles()) do
         if GetVehicleSkeletalMeshComponent(veh):GetUniqueID() == Comp:GetUniqueID() then
             -- we only care about being close to the hood bone
-            if IsNearVehicleHood(veh) then
+            if IsNearVehicleOpenHood(veh) then
                 return veh, {
                     type = 'vehicle'
                 }

@@ -51,74 +51,13 @@ end)
 local LastHitObject
 local LastHitStruct
 local ActiveProp
+local TraceRange = 500.0
 
 AddEvent("OnGameTick", function()
     if IsPlayerInVehicle() then
         return
     end
 
-    local hitObject, hitStruct = PlayerLookRaycast()
-
-    -- previously hit an object but are now looking at something else
-    if LastHitObject ~= nil and hitObject ~= LastHitObject then
-        -- AddPlayerChat("no longer looking at " .. LastHitObject .. " -> " .. dump(LastHitStruct))
-        ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
-
-        if LastHitStruct.type == 'object' then
-            SetObjectOutline(LastHitObject, false)
-        end
-
-        LastHitObject = nil
-        LastHitStruct = nil
-        ActiveProp = nil
-        return
-    end
-
-    -- looking at new object
-    if hitObject ~= LastHitObject then
-        AddPlayerChat("-> now looking at " .. hitObject .. " -> " .. dump(hitStruct))
-
-        if hitStruct.type == 'object' then
-            -- world object
-            local prop_options = GetObjectPropertyValue(hitObject, "prop")
-            if prop_options ~= nil then
-                SetObjectOutline(hitObject, true)
-                ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop_options['message'] .. "')")
-                ActiveProp = {
-                    object = hitObject,
-                    event = prop_options['event'] or nil,
-                    remote_event = prop_options['remote_event'] or nil,
-                    options = prop_options['options']
-                }
-                -- AddPlayerChat(dump(ActiveProp))
-            end
-        elseif hitStruct.type == 'tree' then
-            -- foliage component
-            ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','Press [E] to Harvest')")
-            ActiveProp = {
-                object = hitObject,
-                remote_event = "HarvestTree"
-            }
-        elseif hitStruct.type == 'vehicle' then         
-            -- vehicle component
-            if IsNearVehicleHood(hitObject) then
-              ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','Press [E] to Inspect/Repair')")
-              ActiveProp = {
-                  object = hitObject,
-                  remote_event = "InspectOrRepairVehicle"
-              }
-            end
-        end
-
-        LastHitObject = hitObject
-        LastHitStruct = hitStruct
-    end
-end)
-
-local TraceRange = 500.0
-
--- returns the object and a structure or nil
-function PlayerLookRaycast()
     local camX, camY, camZ = GetCameraLocation()
     local camForwardX, camForwardY, camForwardZ = GetCameraForwardVector()
 
@@ -138,9 +77,64 @@ function PlayerLookRaycast()
     --AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName())
 
     if Comp:GetName() == "VehicleMeshComponent" or Comp:IsA(UStaticMeshComponent.Class()) then
-        return ProcessHitComponent(Comp)
+        hitObject, hitStruct = ProcessHitComponent(Comp)
+
+        -- previously hit an object but are now looking at something else
+        if LastHitObject ~= nil and hitObject ~= LastHitObject then
+          -- AddPlayerChat("no longer looking at " .. LastHitObject .. " -> " .. dump(LastHitStruct))
+          ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
+
+          if LastHitStruct.type == 'object' then
+              SetObjectOutline(LastHitObject, false)
+          end
+
+          LastHitObject = nil
+          LastHitStruct = nil
+          ActiveProp = nil
+          return
+        end
+
+        -- looking at new object
+        if hitObject ~= LastHitObject then
+          AddPlayerChat("-> now looking at " .. hitObject .. " -> " .. dump(hitStruct))
+
+          if hitStruct.type == 'object' then
+              -- world object
+              local prop_options = GetObjectPropertyValue(hitObject, "prop")
+              if prop_options ~= nil then
+                  SetObjectOutline(hitObject, true)
+                  ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop_options['message'] .. "')")
+                  ActiveProp = {
+                      object = hitObject,
+                      event = prop_options['event'] or nil,
+                      remote_event = prop_options['remote_event'] or nil,
+                      options = prop_options['options']
+                  }
+                  -- AddPlayerChat(dump(ActiveProp))
+              end
+          elseif hitStruct.type == 'tree' then
+              -- foliage component
+              ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','Press [E] to Harvest')")
+              ActiveProp = {
+                  object = hitObject,
+                  remote_event = "HarvestTree"
+              }
+          elseif hitStruct.type == 'vehicle' then         
+              -- vehicle component
+              if IsNearVehicleHood(hitObject) then
+                ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','Press [E] to Inspect/Repair')")
+                ActiveProp = {
+                    object = hitObject,
+                    remote_event = "InspectOrRepairVehicle"
+                }
+              end
+          end
+
+          LastHitObject = hitObject
+          LastHitStruct = hitStruct
+      end
     end
-end
+end)
 
 -- given a SMC, returns 
 function ProcessHitComponent(Comp)

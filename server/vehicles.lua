@@ -1,6 +1,7 @@
 local VehicleLocations = {}
 local Vehicles = {}
 local VehicleRespawnTime = 5 * 60 * 1000 -- 5 mins
+local VehicleMaxHealth = 1000
 
 AddCommand("vpos", function(player)
     if not IsAdmin(player) then
@@ -41,6 +42,7 @@ function SpawnVehicles()
     for _, pos in pairs(VehicleLocations) do
         local veh = CreateVehicle(23, pos[1], pos[2], pos[3])
         SetVehicleRespawnParams(veh, false, VehicleRespawnTime, true)
+        SetVehicleHealth(veh, VehicleMaxHealth)
         Vehicles[veh] = veh
     end
 end
@@ -95,7 +97,28 @@ AddRemoteEvent("ToggleVehicleHood", function(player)
     end
 end)
 
+
+-- 1 engine
+-- 2 front
+-- 3 right side
+-- 4 left side
+-- 5 rear?
+-- 6 rear?
+
 AddRemoteEvent("InspectOrRepairVehicle", function(player, vehicle)
+    log.info(GetPlayerName(player) .. " inspects vehicle "..vehicle)
     local damage = GetVehicleHealth(vehicle)
-    CallRemoteEvent(player, "ShowMessage", "Vehicle Health: " .. damage)
+
+    local health_percentage = math.floor(damage / VehicleMaxHealth * 100.0)
+    CallRemoteEvent(player, "ShowMessage", "Vehicle Health: " .. health_percentage .."%%")
+
+    log.debug("1 "..GetVehicleDamage(vehicle, 1))
+    log.debug("2 "..GetVehicleDamage(vehicle, 2))
+    log.debug("3 "..GetVehicleDamage(vehicle, 3))
+    log.debug("4 "..GetVehicleDamage(vehicle, 4))
+    log.debug("5 "..GetVehicleDamage(vehicle, 5))
+    log.debug("6 "..GetVehicleDamage(vehicle, 6))
+    log.debug("7 "..GetVehicleDamage(vehicle, 7))
+    log.debug("8 "..GetVehicleDamage(vehicle, 8))
+
 end)

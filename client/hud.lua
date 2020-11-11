@@ -16,7 +16,6 @@ end)
 function ShowBanner(msg)
     ExecuteWebJS(HudUI, "EmitEvent('ShowBanner','" .. msg .. "')")
 end
-AddFunctionExport("ShowBanner", ShowBanner)
 
 AddRemoteEvent("ShowBanner", function(msg)
     ShowBanner(msg)
@@ -26,7 +25,6 @@ end)
 function ShowMessage(msg)
     ExecuteWebJS(HudUI, "EmitEvent('ShowMessage','" .. msg .. "')")
 end
-AddFunctionExport("ShowMessage", ShowMessage)
 
 AddRemoteEvent("ShowMessage", function(msg)
     ShowMessage(msg)

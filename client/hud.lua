@@ -61,7 +61,7 @@ AddEvent("OnGameTick", function()
 
     -- previously hit an object but are now looking at something else
     if LastHitObject ~= nil and hitObject ~= LastHitObject then
-        --AddPlayerChat("no longer looking at " .. LastHitObject .. " -> " .. dump(LastHitStruct))
+        -- AddPlayerChat("no longer looking at " .. LastHitObject .. " -> " .. dump(LastHitStruct))
         ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
 
         if LastHitStruct.type == 'object' then
@@ -76,7 +76,7 @@ AddEvent("OnGameTick", function()
 
     -- looking at new object
     if hitObject ~= LastHitObject then
-        --AddPlayerChat("-> now looking at " .. hitObject .. " -> " .. dump(hitStruct))
+        AddPlayerChat("-> now looking at " .. hitObject .. " -> " .. dump(hitStruct))
 
         if hitStruct.type == 'object' then
             -- world object
@@ -99,6 +99,15 @@ AddEvent("OnGameTick", function()
                 object = hitObject,
                 remote_event = "HarvestTree"
             }
+        elseif hitStruct.type == 'vehicle' then         
+            -- vehicle component
+            if IsNearVehicleHood(hitObject) then
+              ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','Press [E] to Inspect/Repair')")
+              ActiveProp = {
+                  object = hitObject,
+                  remote_event = "InspectOrRepairVehicle"
+              }
+            end
         end
 
         LastHitObject = hitObject
@@ -106,7 +115,7 @@ AddEvent("OnGameTick", function()
     end
 end)
 
-local TraceRange = 600.0
+local TraceRange = 500.0
 
 -- returns the object and a structure or nil
 function PlayerLookRaycast()
@@ -124,13 +133,16 @@ function PlayerLookRaycast()
 
     local Actor = HitResult:GetActor()
     local Comp = HitResult:GetComponent()
-    if Comp and Comp:IsA(UStaticMeshComponent.Class()) then
-        --AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName())
+    if not Comp then return end
 
+    --AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName())
+
+    if Comp:GetName() == "VehicleMeshComponent" or Comp:IsA(UStaticMeshComponent.Class()) then
         return ProcessHitComponent(Comp)
     end
 end
 
+-- given a SMC, returns 
 function ProcessHitComponent(Comp)
     if string.find(Comp:GetName(), "FoliageInstancedStaticMeshComponent") then
         -- foliage tree
@@ -144,6 +156,14 @@ function ProcessHitComponent(Comp)
         if GetObjectStaticMeshComponent(obj):GetUniqueID() == Comp:GetUniqueID() then
             return obj, {
                 type = 'object'
+            }
+        end
+    end
+
+    for _, veh in pairs(GetStreamedVehicles()) do
+        if GetVehicleSkeletalMeshComponent(veh):GetUniqueID() == Comp:GetUniqueID() then
+            return veh, {
+                type = 'vehicle'
             }
         end
     end

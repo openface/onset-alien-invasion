@@ -1,3 +1,4 @@
+-- global
 InventoryUI = nil
 
 AddEvent("OnPackageStart", function()

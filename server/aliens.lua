@@ -8,7 +8,7 @@ local SafeLocation = {
 }
 local SafeRange = 5000
 local AlienRetargetCooldown = {} -- aliens re-target on every weapon hit w/ cooldown period
-local AlienSpawnsEnabled = false
+local AlienSpawnsEnabled = true
 
 AddCommand("alien", function(player)
     if not IsAdmin(player) then

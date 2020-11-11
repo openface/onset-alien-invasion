@@ -79,6 +79,11 @@ AddEvent("OnPlayerStreamIn", function(player)
     if (clothing ~= nil) then
         SetPlayerClothingPreset(player, clothing)
     end
+
+    TogglePlayerTag(player, "name", false)
+		TogglePlayerTag(player, "health", false)
+		TogglePlayerTag(player, "armor", false)
+		TogglePlayerTag(player, "voice", false)
 end)
 
 AddEvent("OnPlayerTalking", function(player)

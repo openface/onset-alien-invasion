@@ -53,17 +53,19 @@ local LastHitStruct
 local ActiveProp
 
 AddEvent("OnGameTick", function()
-    if IsPlayerInVehicle() then return end
-    
+    if IsPlayerInVehicle() then
+        return
+    end
+
     local hitObject, hitStruct = PlayerLookRaycast()
 
     -- previously hit an object but are now looking at something else
     if LastHitObject ~= nil and hitObject ~= LastHitObject then
-        --AddPlayerChat("no longer looking at " .. LastHitObject .. " -> ".. dump(LastHitStruct))
+        --AddPlayerChat("no longer looking at " .. LastHitObject .. " -> " .. dump(LastHitStruct))
         ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
 
         if LastHitStruct.type == 'object' then
-          SetObjectOutline(LastHitObject, false)
+            SetObjectOutline(LastHitObject, false)
         end
 
         LastHitObject = nil
@@ -74,7 +76,7 @@ AddEvent("OnGameTick", function()
 
     -- looking at new object
     if hitObject ~= LastHitObject then
-        --AddPlayerChat("-> now looking at " .. hitObject .. " -> ".. dump(hitStruct))
+        --AddPlayerChat("-> now looking at " .. hitObject .. " -> " .. dump(hitStruct))
 
         if hitStruct.type == 'object' then
             -- world object
@@ -94,8 +96,8 @@ AddEvent("OnGameTick", function()
             -- foliage component
             ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','Press [E] to Harvest')")
             ActiveProp = {
-              object = hitObject,
-              remote_event = "HarvestTree"
+                object = hitObject,
+                remote_event = "HarvestTree"
             }
         end
 
@@ -123,18 +125,26 @@ function PlayerLookRaycast()
     local Actor = HitResult:GetActor()
     local Comp = HitResult:GetComponent()
     if Comp and Comp:IsA(UStaticMeshComponent.Class()) then
-
         --AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName())
 
-        if string.find(Comp:GetName(), "FoliageInstancedStaticMeshComponent") then
-            -- foliage tree
-            return Comp:GetUniqueID(), { type = 'tree', component = Comp }
-        end
+        return ProcessHitComponent(Comp)
+    end
+end
 
-        for _, obj in pairs(GetStreamedObjects()) do
-            if GetObjectStaticMeshComponent(obj):GetUniqueID() == Comp:GetUniqueID() then
-                return obj, { type = 'object' }
-            end
+function ProcessHitComponent(Comp)
+    if string.find(Comp:GetName(), "FoliageInstancedStaticMeshComponent") then
+        -- foliage tree
+        return Comp:GetUniqueID(), {
+            type = 'tree',
+            component = Comp
+        }
+    end
+
+    for _, obj in pairs(GetStreamedObjects()) do
+        if GetObjectStaticMeshComponent(obj):GetUniqueID() == Comp:GetUniqueID() then
+            return obj, {
+                type = 'object'
+            }
         end
     end
 end

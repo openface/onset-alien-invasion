@@ -1,9 +1,7 @@
 AddEvent("OnPackageStop", function()
     log.info "Resetting player inventories..."
     for _, player in pairs(GetAllPlayers()) do
-        SetPlayerPropertyValue(player, "inventory", {})
-        SetPlayerPropertyValue(player, "weapons", {})
-        SyncInventory(player)
+        ClearInventory(player)
     end
 end)
 
@@ -48,6 +46,13 @@ function SyncInventory(player)
 end
 AddRemoteEvent("SyncInventory", SyncInventory)
 AddEvent("SyncInventory", SyncInventory)
+
+--
+function ClearInventory(player)
+    SetPlayerPropertyValue(player, "inventory", {})
+    SetPlayerPropertyValue(player, "weapons", {})
+    SyncInventory(player)
+end
 
 -- add object to inventory
 function AddToInventory(player, item)
@@ -285,7 +290,7 @@ end)
 
 -- when weapon switching occurs, unequip whatever is in hand_r bone
 AddRemoteEvent("UnequipForWeapon", function(player)
-  UnequipFromBone(player, 'hand_r')
+    UnequipFromBone(player, 'hand_r')
 end)
 
 -- item hotkeys

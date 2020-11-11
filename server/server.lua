@@ -66,8 +66,7 @@ AddEvent("OnPlayerSpawn", function(player)
     SetPlayerArmor(player, 0)
 
     -- cleansing
-    SetPlayerPropertyValue(player, "inventory", {})
-    SetPlayerPropertyValue(player, "weapons", {})
+    ClearInventory(player)
     SetPlayerPropertyValue(player, "equipped", {})
 
     -- place player in separate dimension while character is selected

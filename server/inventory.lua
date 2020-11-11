@@ -265,6 +265,8 @@ AddRemoteEvent("UpdateInventory", function(player, data)
     end
     log.trace("NEW INVENTORY", dump(new_inventory))
     SetPlayerPropertyValue(player, "inventory", new_inventory)
+
+    CheckEquippedFromInventory(player)
     CallEvent("SyncInventory", player)
 end)
 

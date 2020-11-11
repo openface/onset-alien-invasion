@@ -108,10 +108,9 @@ function UnequipFromBone(player, bone)
 end
 
 function UnequipObject(player, item)
-    log.debug "unequipping"
     local object = GetEquippedObject(player, item)
-    if object == nil then
-        log.debug "not equipped"
+    if not object then
+        log.warn "item not equipped"
         return
     end
 
@@ -121,18 +120,16 @@ function UnequipObject(player, item)
 
     local item_cfg = GetItemConfig(item)
 
-    -- remove component config from object
-    if item_cfg['component'] ~= nil then
-        SetObjectPropertyValue(object, "component", false)
-    end
-
     -- remove from equipped list
     local equipped = GetPlayerPropertyValue(player, "equipped")
     equipped[item] = nil
     SetPlayerPropertyValue(player, "equipped", equipped)
+
     log.trace("EQUIPPED: ", dump(equipped))
 
     DestroyObject(object)
+
+    log.debug(GetPlayerName(player).. " unequipped item "..item)
 
     -- call UNEQUIP event on object
     CallEvent("items:" .. item .. ":unequip", player, object)
@@ -163,3 +160,15 @@ function GetEquippedObjectNameFromBone(player, bone)
     end
 end
 
+-- unequip items no longer in player inventory
+function CheckEquippedFromInventory(player)
+  local equipped = GetPlayerPropertyValue(player, "equipped")
+  local inventory = GetPlayerPropertyValue(player, "inventory")
+
+  for item,_ in pairs(equipped) do
+    if GetInventoryCount(player,item) == 0 then
+      log.debug("Unequipping item "..item.." no longer in inventory")
+      UnequipObject(player, item)
+    end
+  end
+end

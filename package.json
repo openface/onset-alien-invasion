@@ -36,25 +36,10 @@
     "server/objects/toolbox.lua",
     "server/objects/lantern.lua",
     "server/objects/landmine.lua",
-
     "server/objects/metal.lua",
     "server/objects/computer_part.lua",
     "server/objects/plastic.lua",
     "server/objects/wood.lua",
-
-    "server/objects/weapons/deagle.lua",
-    "server/objects/weapons/colt.lua",
-    "server/objects/weapons/glock.lua",
-    "server/objects/weapons/beretta.lua",
-    "server/objects/weapons/auto_shotgun.lua",
-    "server/objects/weapons/shotgun.lua",
-    "server/objects/weapons/mp5.lua",
-    "server/objects/weapons/uzi.lua",
-    "server/objects/weapons/ump.lua",
-    "server/objects/weapons/m16a4.lua",
-    "server/objects/weapons/ak47.lua",
-    "server/objects/weapons/ak47g.lua",
-
     "server/objects/axe.lua",
     "server/objects/binoculars.lua",
 

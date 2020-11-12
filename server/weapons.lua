@@ -1,6 +1,22 @@
 -- weapon handler
 WeaponPatch = ImportPackage("Onset_Weapon_Patch")
 
+-- weapon map
+WeaponsConfig = {
+    ["ak47"] = { name = "AK47", weapon_id = 12, modelid = 14 },
+    ["ak47g"] = { name = "AK47 (Gold)", weapon_id = 13, modelid = 15 },
+    ["auto_shotgun"] = { name = "Auto Shotgun", weapon_id = 6, modelid = 8 },
+    ["beretta"] = { name = "Beretta", weapon_id = 5, modelid = 7 },
+    ["colt"] = { name = "Colt", weapon_id = 3, modelid = 5 },
+    ["deagle"] = { name = "Deagle", weapon_id = 2, modelid = 4 },
+    ["glock"] = { name = "Glock", weapon_id = 4, modelid = 6 },
+    ["m16a4"] = { name = "M16A4", weapon_id = 11, modelid = 13 },
+    ["mp5"] = { name = "MP5", weapon_id = 8, modelid = 10 },
+    ["shotgun"] = { name = "Shotgun", weapon_id = 7, modelid = 9 },
+    ["ump"] = { name = "UMP", weapon_id = 10, modelid = 12 },
+    ["uzi"] = { name = "UZI", weapon_id = 9, modelid = 11 }
+}
+
 -- replace all weapon slots for all players to fists
 AddEvent("OnPackageStop", function()
     for _, player in pairs(GetAllPlayers()) do
@@ -10,14 +26,11 @@ AddEvent("OnPackageStop", function()
     end
 end)
 
+-- add weapon to player
 function AddWeapon(player, item)
-    item_cfg = GetItemConfig(item)
+    item_cfg = WeaponsConfig[item]
     if not item_cfg then
         log.error("Invalid weapon " .. item)
-        return
-    end
-    if item_cfg['type'] ~= 'weapon' then
-        log.error('Invalid weapon type')
         return
     end
 
@@ -56,10 +69,9 @@ end
 -- equips weapon
 -- returns slot or nil
 function EquipWeapon(player, item)
-    item_cfg = GetItemConfig(item)
     local slot = GetNextAvailableWeaponSlot(player)
     if slot ~= nil then
-        WeaponPatch.SetWeapon(player, item_cfg['weapon_id'], 100, true, slot, true)
+        WeaponPatch.SetWeapon(player, WeaponsConfig[item].weapon_id, 100, true, slot, true)
         return slot
     end
 end
@@ -76,10 +88,9 @@ end
 
 -- switch to fists if weapon is equipped for given weapon/item
 function UnequipWeapon(player, item)
-    local item_cfg = GetItemConfig(item)
     for slot = 2, 3 do
         local weapon_id, ammo = GetPlayerWeapon(player, slot)
-        if item_cfg['weapon_id'] == weapon_id then
+        if WeaponsConfig[item].weapon_id == weapon_id then
             WeaponPatch.SetWeapon(player, 1, 0, true, slot, true)
         end
     end

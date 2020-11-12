@@ -35,9 +35,6 @@ function DestroyEquippedObjectsForPlayer(player)
 end
 
 function EquipObject(player, item)
-    -- unarm first
-    SwitchToFists(player)
-
     local item_cfg = GetItemConfig(item)
 
     if item_cfg['attachment'] == nil then
@@ -54,6 +51,11 @@ function EquipObject(player, item)
 
     -- start equipping
     log.debug(GetPlayerName(player) .. " equips item " .. item)
+
+    -- unarm first if equipping to hands
+    if item_cfg['attachment']['bone'] == 'hand_r' or item_cfg['attachment']['bone'] == 'hand_l' then
+        SwitchToFists(player)
+    end
 
     -- unequip whatever is in the player's bone first
     UnequipFromBone(player, item_cfg['attachment']['bone'])
@@ -100,7 +102,7 @@ function UnequipFromBone(player, bone)
     -- unequip whatever is in the player's bone
     local equipped_object = GetEquippedObjectNameFromBone(player, bone)
     if equipped_object ~= nil then
-        log.debug("Equipped bone " .. bone .. ", unequipping...")
+        log.debug("Bone " .. bone .. " is already equipped, unequipping...")
         UnequipObject(player, equipped_object)
     end
 end

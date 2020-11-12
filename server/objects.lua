@@ -27,23 +27,24 @@ function PlayInteraction(player, item, after_use_callback)
     end
     if item_cfg['interaction']['animation'] then
         SetPlayerAnimation(player, item_cfg['interaction']['animation']['name'])
-        if item_cfg['interaction']['animation']['duration'] then
+
+        local duration = item_cfg['interaction']['animation']['duration'] or 5000 -- default animation time
+        if item_cfg['interaction']['animation']['spinner'] then
+            CallRemoteEvent(player, "ShowSpinner")
+        end
+
+        Delay(duration, function()
+            SetPlayerAnimation(player, "STOP")
             if item_cfg['interaction']['animation']['spinner'] then
-                CallRemoteEvent(player, "ShowSpinner")
+                CallRemoteEvent(player, "HideSpinner")
             end
 
-            Delay(item_cfg['interaction']['animation']['duration'], function()
-                SetPlayerAnimation(player, "STOP")
-                if item_cfg['interaction']['animation']['spinner'] then
-                    CallRemoteEvent(player, "HideSpinner")
-                end
-
-                if after_use_callback then
-                    after_use_callback()
-                end
-            end)
-        elseif after_use_callback then
-            -- no animation or delay
+            if after_use_callback then
+                after_use_callback()
+            end
+        end)
+    else
+        if after_use_callback then
             after_use_callback()
         end
     end

@@ -62,11 +62,6 @@ function AddToInventory(player, item)
         return
     end
 
-    if item_cfg['type'] == 'weapon' then
-        AddWeapon(player, item)
-        return
-    end
-
     local inventory = GetPlayerPropertyValue(player, "inventory")
     local curr_qty = GetInventoryCount(player, item)
 
@@ -178,7 +173,7 @@ AddRemoteEvent("DropItemFromInventory", function(player, item, x, y, z)
         RemoveFromInventory(player, item)
 
         -- spawn object near player
-        CreateObjectPickupNearPlayer(player, item)
+        CreatePickupNearPlayer(player, item)
     end)
 end)
 
@@ -218,10 +213,6 @@ end
 -- use object from inventory
 function UseItemFromInventory(player, item, options)
     local item_cfg = GetItemConfig(item)
-    if item_cfg['type'] == 'weapon' then
-        log.error("Cannot use type weapon!")
-        return
-    end
 
     local _item = GetItemFromInventory(player, item)
     log.debug(GetPlayerName(player) .. " uses item " .. item .. " from inventory")
@@ -240,6 +231,7 @@ function UseItemFromInventory(player, item, options)
 
         -- auto-unequip after use unless item is equipable
         if item_cfg['type'] ~= 'equipable' then
+            log.debug("item not equipable, unequipping after use")
             UnequipObject(player, item)
         end
 

@@ -1,11 +1,19 @@
- RegisterObject("toolbox", {
+RegisterObject("toolbox", {
     name = "Toolbox",
-    type = 'equipable',
+    type = 'resource',
     pickup_sound = "sounds/toolbox.wav",
     modelid = 551,
     max_carry = 1,
+    max_use = 10,
+    interaction = {
+        sound = "sounds/toolbox.wav",
+        animation = {
+            name = "BARCLEAN01",
+            duration = 10000
+        }
+    },
     recipe = {
-        metal = 10,
+        metal = 10
     },
     price = 40,
     attachment = {

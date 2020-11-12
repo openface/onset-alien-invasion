@@ -2,7 +2,7 @@ local LastHitObject
 local LastHitStruct
 local ActiveProp
 local TraceRange = 500.0
-local Debug = true
+local Debug = false
 
 AddEvent("OnGameTick", function()
 

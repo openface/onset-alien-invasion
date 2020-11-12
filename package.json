@@ -37,11 +37,10 @@
     "server/objects/lantern.lua",
     "server/objects/landmine.lua",
 
-    "server/objects/resources/metal.lua",
-    "server/objects/resources/computer_part.lua",
-    "server/objects/resources/plastic.lua",
-    "server/objects/resources/wood.lua",
-    "server/objects/resources/exhaust.lua",
+    "server/objects/metal.lua",
+    "server/objects/computer_part.lua",
+    "server/objects/plastic.lua",
+    "server/objects/wood.lua",
 
     "server/objects/weapons/deagle.lua",
     "server/objects/weapons/colt.lua",

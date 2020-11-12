@@ -35,7 +35,12 @@ function DestroyEquippedObjectsForPlayer(player)
 end
 
 function EquipObject(player, item)
+    -- unarm first
+    SwitchToFists(player)
+
     local item_cfg = GetItemConfig(item)
+
+    -- if item is a resource, do nothing
     if item_cfg['type'] ~= 'equipable' and item_cfg['type'] ~= 'usable' then
         log.debug "not equipable"
         return
@@ -52,9 +57,6 @@ function EquipObject(player, item)
         UnequipObject(player, item)
         return
     end
-
-    -- unarm first
-    SwitchToFists(player)
 
     -- start equipping
     log.debug(GetPlayerName(player) .. " equips item " .. item)

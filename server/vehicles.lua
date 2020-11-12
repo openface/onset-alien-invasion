@@ -97,28 +97,31 @@ AddRemoteEvent("ToggleVehicleHood", function(player)
     end
 end)
 
-
--- 1 engine
--- 2 front
--- 3 right side
--- 4 left side
--- 5 rear?
--- 6 rear?
-
 AddRemoteEvent("RepairVehicle", function(player, vehicle)
-    log.info(GetPlayerName(player) .. " inspects vehicle "..vehicle)
+    log.info(GetPlayerName(player) .. " inspects vehicle " .. vehicle)
     local damage = GetVehicleHealth(vehicle)
 
     local health_percentage = math.floor(damage / VehicleMaxHealth * 100.0)
-    CallRemoteEvent(player, "ShowMessage", "Vehicle Health: " .. health_percentage .."%%")
+    CallRemoteEvent(player, "ShowMessage", "Vehicle Health: " .. health_percentage .. "%%")
 
-    log.debug("1 "..GetVehicleDamage(vehicle, 1))
-    log.debug("2 "..GetVehicleDamage(vehicle, 2))
-    log.debug("3 "..GetVehicleDamage(vehicle, 3))
-    log.debug("4 "..GetVehicleDamage(vehicle, 4))
-    log.debug("5 "..GetVehicleDamage(vehicle, 5))
-    log.debug("6 "..GetVehicleDamage(vehicle, 6))
-    log.debug("7 "..GetVehicleDamage(vehicle, 7))
-    log.debug("8 "..GetVehicleDamage(vehicle, 8))
+    if GetVehicleDamage(vehicle, 1) == 1 then
+        -- unrepairable
+        AddPlayerChat(player, "The vehicle is unrepairable.")
+        CallRemoteEvent(player, "PlayErrorSound")
+    elseif health_percentage <= 75 then
+        -- repairable
+        if GetInventoryCount(player, "toolbox") > 0 then
+            AddPlayerChat(player, "You begin to repair the vehicle...")
+            UseItemFromInventory(player, "toolbox")
 
+            local health = GetVehicleHealth(vehicle)
+            SetVehicleHealth(vehicle, health + 250)
+        else
+            AddPlayerChat(player, "You need tools to repair this vehicle!")
+            CallRemoteEvent(player, "PlayErrorSound")
+        end
+    else
+        AddPlayerChat(player, "Vehicle can not be repaired any further.")
+        CallRemoteEvent(player, "PlayErrorSound")
+    end
 end)

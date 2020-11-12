@@ -19,7 +19,8 @@ AddEvent("OnPackageStop", function()
     Objects = {}
 end)
 
-function PlayInteraction(player, item)
+-- 
+function PlayInteraction(player, item, after_use_callback)
     local item_cfg = GetItemConfig(item)
     if not item_cfg['interaction'] then
         return
@@ -27,13 +28,13 @@ function PlayInteraction(player, item)
     if item_cfg['interaction']['animation'] then
         SetPlayerAnimation(player, item_cfg['interaction']['animation']['name'])
         if item_cfg['interaction']['animation']['duration'] then
+            CallRemoteEvent(player, "ShowSpinner")
+            
             Delay(item_cfg['interaction']['animation']['duration'], function()
                 SetPlayerAnimation(player, "STOP")
+                CallRemoteEvent(player, "HideSpinner")
 
-                -- usable objects auto-unequip after use
-                if item_cfg['type'] == 'usable' then
-                  UnequipObject(player, item)
-                end
+                after_use_callback()
             end)
         end
     end

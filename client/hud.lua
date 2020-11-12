@@ -38,6 +38,20 @@ end
 AddRemoteEvent("SetBossHealth", SetBossHealth)
 AddEvent("SetBossHealth", SetBossHealth)
 
+-- spinner
+function ShowSpinner()
+    ExecuteWebJS(HudUI, "EmitEvent('ShowSpinner')")
+end
+AddRemoteEvent("ShowSpinner", function()
+    ShowSpinner()
+end)
+function HideSpinner()
+    ExecuteWebJS(HudUI, "EmitEvent('HideSpinner')")
+end
+AddRemoteEvent("HideSpinner", function()
+    HideSpinner()
+end)
+
 -- inventory
 AddRemoteEvent("SetInventory", function(data)
     ExecuteWebJS(HudUI, "EmitEvent('SetInventory'," .. data .. ")")

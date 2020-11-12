@@ -1,19 +1,36 @@
 # Framework API
 
-WIP
+## Registering Item
+
+
+## Item Callbacks
+
+#### USE
+
+```
+# items/toolbox.lua
+AddEvent("items:toolbox:use", function(player, item_cfg, options)
+```
 
 
 ## Inventory Item Types
 
-WEAPON
+#### WEAPON
 
-RESOURCE
+#### RESOURCE
+- Can be used but not directly
 
-EQUIPPABLE
+#### EQUIPPABLE
 
-USABLE
-
+#### USABLE
+- Can be used directory from inventory
 
 ## Interactive World Props
 
-WIP
+```
+CreateProp(v, { message = "Search", remote_event = "SearchForScrap"})
+```
+
+```
+AddRemoteEvent("SearchForScrap", function(player)
+```

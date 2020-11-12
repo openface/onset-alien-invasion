@@ -13,6 +13,9 @@
       <span class="key">E</span><br />
       {{ interaction_message }}
     </div>
+    <div id="progress" v-if="show_spinner">
+      <loading-progress :indeterminate="true" size="64" rotate fillDuration="3" rotationDuration="4" />
+    </div>
   </div>
 </template>
 
@@ -24,7 +27,8 @@ export default {
       message: null,
       banner: null,
       boss_health: null,
-      interaction_message: null
+      interaction_message: null,
+      show_spinner: false
     };
   },
   methods: {
@@ -52,14 +56,22 @@ export default {
     },
     HideInteractionMessage: function() {
       this.interaction_message = null;
+    },
+    ShowSpinner: function() {
+      this.show_spinner = true;
+    },
+    HideSpinner: function() {
+      this.show_spinner = false;
     }
   },
   mounted() {
     this.EventBus.$on("ShowMessage", this.ShowMessage);
     this.EventBus.$on("ShowBanner", this.ShowBanner);
     this.EventBus.$on("SetBossHealth", this.SetBossHealth);
-    this.EventBus.$on("ShowInteractionMessage", this.ShowInteractionMessage)
-    this.EventBus.$on("HideInteractionMessage", this.HideInteractionMessage)
+    this.EventBus.$on("ShowInteractionMessage", this.ShowInteractionMessage);
+    this.EventBus.$on("HideInteractionMessage", this.HideInteractionMessage);
+    this.EventBus.$on("ShowSpinner", this.ShowSpinner);
+    this.EventBus.$on("HideSpinner", this.HideSpinner);
 
 
     if (!this.InGame) {
@@ -70,6 +82,11 @@ export default {
       this.EventBus.$emit("ShowBanner", "Welcome to the invasion!");
 
       this.EventBus.$emit("ShowInteractionMessage",'Search');
+      setTimeout(() => this.EventBus.$emit("HideInteractionMessage"), 1000);
+
+      this.EventBus.$emit("ShowSpinner");
+      setTimeout(() => this.EventBus.$emit("HideSpinner"), 5000);
+
 
       this.EventBus.$emit("SetBossHealth", 100);
       setTimeout(() => this.EventBus.$emit("SetBossHealth", 80), 1000);
@@ -184,5 +201,21 @@ export default {
   opacity: 0.9;
   border-radius: 20px;
   transition: all 3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#progress {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+#progress >>> .vue-progress-path path {
+  stroke-width: 16;
+}
+#progress >>> .vue-progress-path .progress {
+  stroke: rgba(255,255,255, 0.9);
+}
+#progress >>> .vue-progress-path .background {
+  stroke: rgba(0, 0, 0, 0.4);
 }
 </style>

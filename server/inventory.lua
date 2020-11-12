@@ -115,6 +115,28 @@ function SetItemQuantity(player, item, quantity)
     -- CallEvent("SyncInventory", player)
 end
 
+function IncrementItemUsed(player, item)
+    local inventory = GetPlayerPropertyValue(player, "inventory")
+    for i, _item in ipairs(inventory) do
+        if _item['item'] == item then
+            -- delete if this is the last use
+            local item_cfg = GetItemConfig(item)
+
+            if (item_cfg['max_use'] - _item['used'] == 1) then
+                log.debug "all used up!"
+                RemoveFromInventory(player, item)
+            else
+                log.debug('increment used by 1')
+                inventory[i]['used'] = _item['used'] + 1
+                SetPlayerPropertyValue(player, "inventory", inventory)
+                CallEvent("SyncInventory", player)
+            end
+
+            break
+        end
+    end
+end
+
 -- deletes item from inventory
 -- deduces by quantity if carrying more than 1
 function RemoveFromInventory(player, item, amount)
@@ -194,53 +216,50 @@ function GetInventoryAvailableSlots(player)
 end
 
 -- use object from inventory
-function UseItemFromInventory(player, item)
-    log.debug(loc)
+function UseItemFromInventory(player, item, options)
     local item_cfg = GetItemConfig(item)
-    if item_cfg['type'] == 'weapon' or item_cfg['type'] == 'resource' then
-        log.error("Cannot use type weapon or resource!")
+    if item_cfg['type'] == 'weapon' then
+        log.error("Cannot use type weapon!")
         return
     end
 
+    local _item = GetItemFromInventory(player, item)
+    log.debug(GetPlayerName(player) .. " uses item " .. item .. " from inventory")
+
+    if not item_cfg['max_use'] then
+        log.error "Cannot use item without a max_use!"
+        return
+    end
+
+    if _item['used'] > item_cfg['max_use'] then
+        log.error "Max use exceeded!"
+        return
+    end
+
+    EquipObject(player, item)
+    PlayInteraction(player, item, function()
+        -- increment used
+        IncrementItemUsed(player, item)
+
+        -- usable objects auto-unequip after use
+        if item_cfg['type'] == 'usable' then
+            UnequipObject(player, item)
+        end
+        
+        -- call USE event on object
+        CallEvent("items:" .. item .. ":use", player, item_cfg, options)
+    end)
+end
+AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
+
+function GetItemFromInventory(player, item)
     local inventory = GetPlayerPropertyValue(player, "inventory")
     for i, _item in ipairs(inventory) do
         if _item['item'] == item then
-            log.debug(GetPlayerName(player) .. " uses item " .. item .. " from inventory")
-
-            EquipObject(player, item)
-            PlayInteraction(player, item)
-
-            if item_cfg['max_use'] then
-                if _item['used'] < item_cfg['max_use'] then
-                    -- update inventory after use
-                    Delay(2000, function()
-
-                        -- delete if this is the last use
-                        if (item_cfg['max_use'] - _item['used'] == 1) then
-                            log.debug "all used up!"
-                            RemoveFromInventory(player, item)
-                        else
-                            log.debug('increment used by 1')
-                            inventory[i]['used'] = _item['used'] + 1
-                            SetPlayerPropertyValue(player, "inventory", inventory)
-                            CallEvent("SyncInventory", player)
-                        end
-
-                        -- call USE event on object
-                        CallEvent("items:" .. item .. ":use", player, item_cfg)
-                    end)
-                else
-                    log.error("cannot use item due to use miscount!")
-                    log.trace("max_use: " .. item_cfg['max_use'])
-                    log.trace("used: " .. _item['used'])
-                end
-            end
-
-            break
+            return _item
         end
     end
 end
-AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
 
 -- equip from inventory
 AddRemoteEvent("EquipItemFromInventory", function(player, item)

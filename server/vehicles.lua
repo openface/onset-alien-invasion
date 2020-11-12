@@ -97,11 +97,14 @@ AddRemoteEvent("ToggleVehicleHood", function(player)
     end
 end)
 
+function GetVehicleHealthPercentage(vehicle)
+    return math.floor(GetVehicleHealth(vehicle) / VehicleMaxHealth * 100.0)
+end
+
 AddRemoteEvent("RepairVehicle", function(player, vehicle)
     log.info(GetPlayerName(player) .. " inspects vehicle " .. vehicle)
-    local damage = GetVehicleHealth(vehicle)
 
-    local health_percentage = math.floor(damage / VehicleMaxHealth * 100.0)
+    local health_percentage = GetVehicleHealthPercentage(vehicle)
     CallRemoteEvent(player, "ShowMessage", "Vehicle Health: " .. health_percentage .. "%%")
 
     if GetVehicleDamage(vehicle, 1) == 1 then
@@ -112,10 +115,7 @@ AddRemoteEvent("RepairVehicle", function(player, vehicle)
         -- repairable
         if GetInventoryCount(player, "toolbox") > 0 then
             AddPlayerChat(player, "You begin to repair the vehicle...")
-            UseItemFromInventory(player, "toolbox")
-
-            local health = GetVehicleHealth(vehicle)
-            SetVehicleHealth(vehicle, health + 250)
+            UseItemFromInventory(player, "toolbox", { vehicle = vehicle })
         else
             AddPlayerChat(player, "You need tools to repair this vehicle!")
             CallRemoteEvent(player, "PlayErrorSound")

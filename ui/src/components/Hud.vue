@@ -9,7 +9,7 @@
     <div id="boss-health" v-if="boss_health">
       <div class="health-bar" :style="{ width: boss_health + '%' }"></div>
     </div>
-    <div id="interaction-message" v-if="interaction_message">
+    <div id="interaction-message" v-if="interaction_message && !show_spinner">
       <span class="key">E</span><br />
       {{ interaction_message }}
     </div>

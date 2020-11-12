@@ -8,6 +8,8 @@
 #### USE
 
 ```
+Called AFTER duration delay
+
 # items/toolbox.lua
 AddEvent("items:toolbox:use", function(player, item_cfg, options)
 ```

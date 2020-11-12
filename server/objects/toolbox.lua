@@ -9,20 +9,26 @@ RegisterObject("toolbox", {
         sound = "sounds/toolbox.wav",
         animation = {
             name = "BARCLEAN01",
-            duration = 10000
+            duration = 10000,
+            spinner = true
         }
     },
-    recipe = {
-        metal = 10
-    },
-    price = 40,
+    recipe = nil,
     attachment = {
-        x = -41,
-        y = 2.78,
-        z = -8,
-        rx = -69.33,
-        ry = 14.33,
-        rz = -13.42,
-        bone = "hand_r"
-    }
+        x = 16,
+        y = -12.6,
+        z = 43.8,
+        rx = 0,
+        ry = 90,
+        rz = 86.2,
+        bone = "foot_r"
+    },
+    price = 50,
 })
+
+AddEvent("items:toolbox:use", function(player, item_cfg, options)
+  SetVehicleHealth(options.vehicle, GetVehicleHealth(options.vehicle) + 250)
+
+  local health_percentage = GetVehicleHealthPercentage(options.vehicle)
+  CallRemoteEvent(player, "ShowMessage", "Vehicle health is now " .. health_percentage .. "%%")
+end)

@@ -12,7 +12,7 @@ end
 
 function RegisterObject(item, meta)
     Objects[item] = meta
-    log.debug("Registering object: "..item)
+    log.debug("Registering object: " .. item)
 end
 
 AddEvent("OnPackageStop", function()
@@ -28,14 +28,23 @@ function PlayInteraction(player, item, after_use_callback)
     if item_cfg['interaction']['animation'] then
         SetPlayerAnimation(player, item_cfg['interaction']['animation']['name'])
         if item_cfg['interaction']['animation']['duration'] then
-            CallRemoteEvent(player, "ShowSpinner")
-            
+            if item_cfg['interaction']['animation']['spinner'] then
+                CallRemoteEvent(player, "ShowSpinner")
+            end
+
             Delay(item_cfg['interaction']['animation']['duration'], function()
                 SetPlayerAnimation(player, "STOP")
-                CallRemoteEvent(player, "HideSpinner")
+                if item_cfg['interaction']['animation']['spinner'] then
+                    CallRemoteEvent(player, "HideSpinner")
+                end
 
-                after_use_callback()
+                if after_use_callback then
+                    after_use_callback()
+                end
             end)
+        elseif after_use_callback then
+            -- no animation or delay
+            after_use_callback()
         end
     end
     if item_cfg['interaction']['sound'] then
@@ -44,12 +53,12 @@ function PlayInteraction(player, item, after_use_callback)
 end
 
 function PlaySoundSync(player, sound, distance)
-  local distance = distance or 1000
-  local x,y,z = GetPlayerLocation(player)
-  for k,ply in pairs(GetAllPlayers()) do
-      local _x,_y,_z = GetPlayerLocation(ply)
-      if GetDistance3D(x, y, z, _x, _y, _z) <= distance then
-          CallRemoteEvent(ply, "Play3DSound", sound, x, y, z)
-      end
-  end
+    local distance = distance or 1000
+    local x, y, z = GetPlayerLocation(player)
+    for k, ply in pairs(GetAllPlayers()) do
+        local _x, _y, _z = GetPlayerLocation(ply)
+        if GetDistance3D(x, y, z, _x, _y, _z) <= distance then
+            CallRemoteEvent(ply, "Play3DSound", sound, x, y, z)
+        end
+    end
 end

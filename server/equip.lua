@@ -40,12 +40,6 @@ function EquipObject(player, item)
 
     local item_cfg = GetItemConfig(item)
 
-    -- if item is a resource, do nothing
-    if item_cfg['type'] ~= 'equipable' and item_cfg['type'] ~= 'usable' then
-        log.debug "not equipable"
-        return
-    end
-
     if item_cfg['attachment'] == nil then
         log.debug "not attachable"
         return
@@ -97,7 +91,9 @@ function EquipObject(player, item)
     CallEvent("items:" .. item .. ":equip", player, object)
 
     -- sync inventory
-    CallEvent("SyncInventory", player)
+    if item_cfg['type'] == 'equipable' then
+        CallEvent("SyncInventory", player)
+    end
 end
 
 function UnequipFromBone(player, bone)

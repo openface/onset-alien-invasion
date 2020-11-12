@@ -105,7 +105,7 @@ end)
 -- 5 rear?
 -- 6 rear?
 
-AddRemoteEvent("InspectOrRepairVehicle", function(player, vehicle)
+AddRemoteEvent("RepairVehicle", function(player, vehicle)
     log.info(GetPlayerName(player) .. " inspects vehicle "..vehicle)
     local damage = GetVehicleHealth(vehicle)
 

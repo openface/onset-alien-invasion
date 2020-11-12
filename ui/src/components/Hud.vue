@@ -10,6 +10,7 @@
       <div class="health-bar" :style="{ width: boss_health + '%' }"></div>
     </div>
     <div id="interaction-message" v-if="interaction_message">
+      <span class="key">E</span><br />
       {{ interaction_message }}
     </div>
   </div>
@@ -68,9 +69,7 @@ export default {
       );
       this.EventBus.$emit("ShowBanner", "Welcome to the invasion!");
 
-      this.EventBus.$emit("ShowInteractionMessage",'Hit [E] To Search');
-      setTimeout(() => this.EventBus.$emit("HideInteractionMessage"), 3000);
-
+      this.EventBus.$emit("ShowInteractionMessage",'Search');
 
       this.EventBus.$emit("SetBossHealth", 100);
       setTimeout(() => this.EventBus.$emit("SetBossHealth", 80), 1000);
@@ -84,6 +83,7 @@ export default {
 </script>
 
 <style scoped>
+
 /**
  * Banner
  */
@@ -92,7 +92,6 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 600px;
   text-align: center;
   text-shadow: 10px 10px rgba(0, 0, 0, 0.2);
   color: #fff;
@@ -107,15 +106,28 @@ export default {
  */
 
 #interaction-message {
+  text-transform:uppercase;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #fff;
-  font-size: 16px;
+  color: rgba(255,255,255, 0.9);
+  font-size: 14px;
   font-weight: bold;
   font-family: Helvetica;
-  text-shadow: 2px 2px rgba(0, 0, 0, 0.2);
+  text-shadow: 3px 3px rgba(0, 0, 0, 0.1);
+  width:300px;
+  text-align:center;
+}
+
+#interaction-message .key {
+  color:#000;
+  font-size:18px;
+  padding:0 5px;
+  background:rgba(255,255,255, 0.9);
+  box-shadow: 3px 3px rgba(0, 0, 0, 0.1);
+  border-radius:20%;
+  line-height:1.5em;
 }
 
 /**

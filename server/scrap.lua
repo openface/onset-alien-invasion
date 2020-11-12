@@ -15,7 +15,7 @@ AddEvent("OnPackageStart", function()
 
     local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/server/data/scrapheaps.json")
     for _, v in pairs(_table) do
-        CreateProp(v, { message = "Hit [E] to Search", remote_event = "SearchForScrap"})
+        CreateProp(v, { message = "Search", remote_event = "SearchForScrap"})
     end
 end)
 

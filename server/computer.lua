@@ -29,10 +29,10 @@ local SatelliteTerminalPropConfig = {
 AddEvent("OnPackageStart", function()
     log.info "Creating computer props..."
     -- garage computer
-    CreateProp(GarageComputerPropConfig, { message = "Press [E] to Interact", event = "InteractGarageComputer" })
+    CreateProp(GarageComputerPropConfig, { message = "Interact", event = "InteractGarageComputer" })
 
     -- satellite terminal
-    CreateProp(SatelliteTerminalPropConfig, { message = "Press [E] to Interact", event = "InteractSatelliteTerminal" })
+    CreateProp(SatelliteTerminalPropConfig, { message = "Interact", event = "InteractSatelliteTerminal" })
 end)
 
 AddEvent("OnPackageStop", function()

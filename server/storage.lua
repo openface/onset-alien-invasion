@@ -3,7 +3,7 @@ AddEvent("OnPackageStart", function()
     
     local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/server/data/storages.json")
     for _, v in pairs(_table) do
-        CreateProp(v, { message = "Hit [E] to Open", remote_event = "OpenStorage", options = { type = 'object' } })
+        CreateProp(v, { message = "Open", remote_event = "OpenStorage", options = { type = 'object' } })
     end
 end)
 

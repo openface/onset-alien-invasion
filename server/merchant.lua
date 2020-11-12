@@ -3,7 +3,7 @@ AddEvent("OnPackageStart", function()
 
   local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/server/data/merchants.json")
   for _, v in pairs(_table) do
-      CreateProp(v, { message = "Hit [E] to Interact", remote_event = "GetMerchantData" })
+      CreateProp(v, { message = "Interact", remote_event = "GetMerchantData" })
   end
 end)
 

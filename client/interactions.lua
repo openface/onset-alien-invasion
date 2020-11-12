@@ -53,17 +53,17 @@ AddEvent("OnGameTick", function()
             end
         elseif hitStruct.type == 'tree' then
             -- foliage component
-            ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','Press [E] to Harvest')")
+            ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','Harvest')")
             ActiveProp = {
                 object = hitObject,
                 remote_event = "HarvestTree"
             }
         elseif hitStruct.type == 'vehicle' then
             -- vehicle component
-            ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','Press [E] to Inspect/Repair')")
+            ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','Repair')")
             ActiveProp = {
                 object = hitObject,
-                remote_event = "InspectOrRepairVehicle"
+                remote_event = "RepairVehicle"
             }
         end
 

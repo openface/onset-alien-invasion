@@ -100,15 +100,20 @@ export default {
 </script>
 
 <style scoped>
+#hud {
+    height:100%;
+    position: relative;
+}
 
 /**
  * Banner
  */
 #banner {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  width: 80%;
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   text-align: center;
   text-shadow: 10px 10px rgba(0, 0, 0, 0.2);
   color: #fff;

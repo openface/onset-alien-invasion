@@ -31,6 +31,12 @@ AddRemoteEvent("ShowMessage", function(msg)
     ShowMessage(msg)
 end)
 
+-- error
+AddRemoteEvent("ShowError", function(msg)
+    ExecuteWebJS(HudUI, "EmitEvent('ShowMessage','" .. msg .. "')")
+    SetSoundVolume(CreateSound("client/sounds/error.wav"), 0.5)
+end)
+
 -- boss health bar
 function SetBossHealth(percentage)
     ExecuteWebJS(HudUI, "EmitEvent('SetBossHealth'," .. percentage .. ")")

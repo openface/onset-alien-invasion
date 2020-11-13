@@ -14,7 +14,7 @@
       {{ interaction_message }}
     </div>
     <div id="progress" v-if="show_spinner">
-      <loading-progress :indeterminate="true" size="64" rotate fillDuration="3" rotationDuration="4" />
+      <loading-progress :indeterminate="true" size="40" rotate fillDuration="3" rotationDuration="4" />
     </div>
   </div>
 </template>
@@ -218,7 +218,7 @@ export default {
   stroke-width: 16;
 }
 #progress >>> .vue-progress-path .progress {
-  stroke: rgba(255,255,255, 0.9);
+  stroke: rgba(255,255,255, 0.6);
 }
 #progress >>> .vue-progress-path .background {
   stroke: rgba(0, 0, 0, 0.4);

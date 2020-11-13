@@ -1,7 +1,7 @@
 local LastHitObject
 local LastHitStruct
 local ActiveProp
-local TraceRange = 500.0
+local TraceRange = 600.0
 local Debug = false
 
 AddEvent("OnGameTick", function()
@@ -58,6 +58,13 @@ AddEvent("OnGameTick", function()
                 object = hitObject,
                 remote_event = "HarvestTree"
             }
+        elseif hitStruct.type == 'water' then
+            -- water component
+            ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','Go Fishing')")
+            ActiveProp = {
+                object = hitObject,
+                remote_event = "GoFishing"
+            }
         elseif hitStruct.type == 'vehicle' then
             -- vehicle component
             ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','Repair')")
@@ -92,18 +99,24 @@ function PlayerLookRaycast()
         return
     end
 
-    -- AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName() .." id:"..Comp:GetUniqueID())
+    --AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName() .." id:"..Comp:GetUniqueID())
     return ProcessHitComponent(Comp)
 end
 
 -- given a SMC, returns interactive component or object along
 -- with a structure describing it
 function ProcessHitComponent(Comp)
-    -- trees
+    -- environment
     if string.find(Comp:GetName(), "FoliageInstancedStaticMeshComponent") then
         -- foliage tree
         return Comp:GetUniqueID(), {
             type = 'tree',
+            component = Comp
+        }
+    elseif string.find(Comp:GetName(), "BrushComponent0") then
+        -- water
+        return Comp:GetUniqueID(), {
+            type = 'water',
             component = Comp
         }
     end

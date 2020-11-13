@@ -24,7 +24,9 @@ function GetItemType(item)
         return 'weapon'
     else
         local item_cfg = GetItemConfig(item)
-        return item_cfg['type']
+        if item_cfg then
+            return item_cfg['type']
+        end
     end
 end
 

@@ -19,6 +19,15 @@ AddEvent("OnPackageStop", function()
     Objects = {}
 end)
 
+function GetItemType(item)
+    if WeaponsConfig[item] then
+        return 'weapon'
+    else
+        local item_cfg = GetItemConfig(item)
+        return item_cfg['type']
+    end
+end
+
 -- 
 function PlayInteraction(player, item, after_use_callback)
     local item_cfg = GetItemConfig(item)

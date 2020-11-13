@@ -170,7 +170,11 @@ AddRemoteEvent("DropItemFromInventory", function(player, item, x, y, z)
     SetPlayerAnimation(player, "CARRY_SETDOWN")
 
     Delay(1000, function()
-        RemoveFromInventory(player, item)
+        if GetItemType(item) == 'weapon' then
+            RemoveWeapon(player, item)
+        else
+            RemoveFromInventory(player, item)
+        end
 
         -- spawn object near player
         CreatePickupNearPlayer(player, item)

@@ -1,8 +1,11 @@
-local Config = require("packages/" .. GetPackageName() .. "/config")
+-- add game package to lua path
+package.path = package.path .. ";" .. "./packages/" .. GetPackageName() .. "/?.lua"
+
+-- config file
+local Config = require("config")
 
 -- global Log
-log = require("packages/" .. GetPackageName() .. "/server/vendor/log")
-
+log = require("server.vendor.log")
 if Config.log_level ~= nil then
     log.level = Config.log_level
 end

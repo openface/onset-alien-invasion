@@ -20,8 +20,8 @@ AddEvent("OnPackageStop", function()
         LightComponents[object] = nil
     end
     for object, particle in pairs(Particles) do
-      particle:Destroy()
-      Particles[object] = nil
+        particle:Destroy()
+        Particles[object] = nil
     end
 end)
 
@@ -37,9 +37,13 @@ AddEvent("OnObjectStreamIn", function(object)
     end
 end)
 
+-- TODO: not sure this actually works
 AddEvent("OnObjectStreamOut", function(object)
     if LightComponents[object] ~= nil and GetObjectPropertyValue(object, "component") == nil then
         RemoveLightComponent(object)
+    end
+    if Particles[object] ~= nil and GetObjectPropertyValue(object, "particle") == nil then
+        RemoveParticle(object)
     end
 end)
 
@@ -51,7 +55,11 @@ AddEvent("OnObjectNetworkUpdatePropertyValue", function(object, PropertyName, Pr
             RemoveLightComponent(object)
         end
     elseif PropertyName == "particle" then
-        AddParticleToObject(object, PropertyValue)
+        if PropertyValue ~= false then
+            AddParticleToObject(object, PropertyValue)
+        else
+            RemoveParticle(object)
+        end
     end
 end)
 
@@ -83,8 +91,10 @@ function AddLightComponentToObject(object, component_cfg)
 
     light_component:SetIntensity(component_cfg.intensity)
     light_component:SetLightColor(FLinearColor(255, 255, 255, 0), true)
-    light_component:SetRelativeLocation(FVector(component_cfg.position.x, component_cfg.position.y, component_cfg.position.z))
-    light_component:SetRelativeRotation(FRotator(component_cfg.position.rx, component_cfg.position.ry, component_cfg.position.rz))
+    light_component:SetRelativeLocation(FVector(component_cfg.position.x, component_cfg.position.y,
+                                            component_cfg.position.z))
+    light_component:SetRelativeRotation(FRotator(component_cfg.position.rx, component_cfg.position.ry,
+                                            component_cfg.position.rz))
 
     LightComponents[object] = light_component
 end
@@ -101,16 +111,19 @@ end
 -- particles
 --
 function AddParticleToObject(object, particle_cfg)
-    local HitEffect = GetWorld():SpawnEmitterAttached(
-        UParticleSystem.LoadFromAsset(particle_cfg.path), 
-        GetObjectStaticMeshComponent(object), 
-        "", 
-        FVector(particle_cfg.position.x,particle_cfg.position.y,particle_cfg.position.z), 
-        FRotator(particle_cfg.position.rx,particle_cfg.position.ry,particle_cfg.position.rz),
-        EAttachLocation.KeepRelativeOffset
-    )
+    local HitEffect = GetWorld():SpawnEmitterAttached(UParticleSystem.LoadFromAsset(particle_cfg.path),
+                          GetObjectStaticMeshComponent(object), "", FVector(particle_cfg.position.x,
+                              particle_cfg.position.y, particle_cfg.position.z), FRotator(particle_cfg.position.rx,
+                              particle_cfg.position.ry, particle_cfg.position.rz), EAttachLocation.KeepRelativeOffset)
     if particle_cfg.scale ~= nil then
         HitEffect:SetRelativeScale3D(FVector(particle_cfg.scale.x, particle_cfg.scale.y, particle_cfg.scale.z))
     end
     Particles[object] = HitEffect
+end
+
+function RemoveParticle(object)
+    if Particles[object] ~= nil then
+        Particles[object]:Destroy()
+        Particles[object] = nil
+    end
 end

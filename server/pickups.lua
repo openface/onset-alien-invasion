@@ -18,7 +18,7 @@ end)
 function CreatePickupNearPlayer(player, item)
     local x, y, z = GetPlayerLocation(player)
     local x, y = randomPointInCircle(x, y, 150)
-    if WeaponsConfig[item] then
+    if GetItemType(item) == 'weapon' then
         CreateWeaponPickup(item, x, y, z - 75)
     else
         CreateObjectPickup(item, x, y, z - 75)
@@ -31,7 +31,7 @@ function CreateObjectPickup(item, x, y, z)
         log.debug("Invalid object " .. item)
         return
     end
-    log.debug("Creating item " .. item .. " modelid " .. item_cfg['modelid'])
+    log.debug("Creating object pickup " .. item .. " modelid " .. item_cfg['modelid'])
 
     local pickup = CreatePickup(item_cfg['modelid'], x, y, z)
     SetPickupPropertyValue(pickup, '_name', item) -- todo: rename to _item
@@ -44,10 +44,10 @@ end
 
 function CreateWeaponPickup(item, x, y, z)
     if not WeaponsConfig[item] then
-        log.debug("Invalid object " .. item)
+        log.debug("Invalid weapon " .. item)
         return
     end
-    log.debug("Creating item " .. item .. " modelid " .. WeaponsConfig[item].modelid)
+    log.debug("Creating weapon pickup " .. item .. " modelid " .. WeaponsConfig[item].modelid)
 
     local pickup = CreatePickup(WeaponsConfig[item].modelid, x, y, z)
     SetPickupPropertyValue(pickup, '_name', item) -- todo: rename to _item

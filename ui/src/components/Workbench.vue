@@ -23,6 +23,7 @@
         </div>
       </div>
     </div>
+
     <div id="progress" v-if="IsBusy()">
       <loading-progress :indeterminate="true" size="40" rotate fillDuration="3" rotationDuration="4" />
     </div>

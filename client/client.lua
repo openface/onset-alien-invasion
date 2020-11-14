@@ -50,7 +50,9 @@ end)
 
 AddEvent("OnNPCStreamIn", function(npc)
     local clothing = GetNPCPropertyValue(npc, "clothing")
-    if (clothing ~= nil) then
+    local type = GetNPCPropertyValue(npc, "type")
+
+    if (clothing ~= nil and type ~= "alien") then
         SetNPCClothingPreset(npc, clothing)
     end
 end)

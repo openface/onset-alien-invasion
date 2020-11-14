@@ -69,6 +69,7 @@
         "client/interactions.lua"
     ],
     "files": [
+        "client/pak/Aliens.pak",
         "client/pak/Mothership.pak",
         "client/pak/AlienInvasion.pak",
         "client/sounds/alien.wav",

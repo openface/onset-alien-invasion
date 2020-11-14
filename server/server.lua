@@ -1,5 +1,6 @@
 local SpawnLocation = { x = -102037, y = 194299, z = 1400 }
 local PlayerRespawnSecs = 20 -- 20 secs
+local Debug = false
 
 AddCommand("pos", function(player)
     if not IsAdmin(player) then
@@ -83,9 +84,11 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
     SetPlayerPropertyValue(player, "inventory", {})
     SetPlayerPropertyValue(player, "equipped", {})
 
-    -- parachute down to the island
-    SetPlayerLocation(player, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z + 30000)
-    AttachPlayerParachute(player, true)
+    if not Debug then
+        -- parachute down to the island
+        SetPlayerLocation(player, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z + 30000)
+        AttachPlayerParachute(player, true)
+    end
 
     local chopper = CreateObject(1847, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z + 31000)
     Delay(20000, function(chopper)

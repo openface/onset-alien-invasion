@@ -1,14 +1,49 @@
 local AmbientSound
 local AttackSound
 
+LoadPak("Aliens", "/Aliens/", "../../../OnsetModding/Plugins/Aliens/Content/")
+
 AddEvent("OnPackageStop", function()
     if AmbientSound ~= nil then
         DestroySound(AmbientSound)
     end
     if AttackSound ~= nil then
-      DestroySound(AttackSound)
-  end
+        DestroySound(AttackSound)
+    end
 end)
+
+AddEvent("OnNPCStreamIn", function(npc)
+    local type = GetNPCPropertyValue(npc, "type")
+
+    if (type == "alien") then
+        ApplyAlienSkin(npc)
+    end
+end)
+
+function ApplyAlienSkin(npc)
+    local skin = Random(1,5)
+
+    local SkeletalMeshComponent = GetNPCSkeletalMeshComponent(npc, "Body")
+    SkeletalMeshComponent:SetSkeletalMesh(USkeletalMesh.LoadFromAsset("/Aliens/Insect/Mesh/Skin/SK_Insect_skin"..skin))
+
+    local SkeletalMeshComponent = GetNPCSkeletalMeshComponent(npc, "Clothing0")
+    SkeletalMeshComponent:SetSkeletalMesh(nil)
+
+    local SkeletalMeshComponent = GetNPCSkeletalMeshComponent(npc, "Clothing1")
+    SkeletalMeshComponent:SetSkeletalMesh(nil)
+
+    local SkeletalMeshComponent = GetNPCSkeletalMeshComponent(npc, "Clothing4")
+    SkeletalMeshComponent:SetSkeletalMesh(nil)
+
+    local SkeletalMeshComponent = GetNPCSkeletalMeshComponent(npc, "Clothing5")
+    SkeletalMeshComponent:SetSkeletalMesh(nil)
+
+    local SkeletalMeshComponent = GetNPCSkeletalMeshComponent(npc, "Clothing3")
+    SkeletalMeshComponent:SetSkeletalMesh(nil)
+
+    local SkeletalMeshComponent = GetNPCSkeletalMeshComponent(npc, "Clothing2")
+    SkeletalMeshComponent:SetSkeletalMesh(nil)
+end
 
 AddRemoteEvent("AlienAttacking", function(npc)
     if AmbientSound == nil then

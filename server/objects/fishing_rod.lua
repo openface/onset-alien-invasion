@@ -1,6 +1,6 @@
 RegisterObject("fishing_rod", {
     name = "Fishing Rod",
-    type = 'usable',
+    type = 'resource',
     interaction = {
         sound = "sounds/fishing.mp3",
         animation = { name = "FISHING", duration = 10000 }

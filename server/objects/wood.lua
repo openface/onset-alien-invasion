@@ -12,11 +12,7 @@ RegisterObject("wood", {
     attachment = nil,
     recipe = nil,
     price = nil,
-    interaction = {
-        animation = {
-            name = "REVIVE"
-        }
-    }
+    interaction = nil -- animation sequence is done in event
 })
 
 local Campfires = {}
@@ -26,7 +22,10 @@ AddEvent("items:wood:use", function(player, item_cfg)
     local object = CreateObject(20007, x + 50, y, z - 100)
     Campfires[object] = object
 
-    Delay(8000, function()
+    SetPlayerAnimation(player, "REVIVE")
+
+    Delay(10000, function()
+        SetPlayerAnimation(player, "STOP")
         SetObjectPropertyValue(object, "particle", {
             path = "/AlienInvasion/Particles/P_Campfire",
             position = {

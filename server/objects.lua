@@ -34,6 +34,9 @@ end
 function PlayInteraction(player, item, after_use_callback)
     local item_cfg = GetItemConfig(item)
     if not item_cfg['interaction'] then
+        if after_use_callback then
+            after_use_callback()
+        end
         return
     end
     if item_cfg['interaction']['animation'] then

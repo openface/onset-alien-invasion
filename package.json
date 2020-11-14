@@ -43,6 +43,7 @@
     "server/objects/axe.lua",
     "server/objects/binoculars.lua",
     "server/objects/fishing_rod.lua",
+    "server/objects/water_bottle.lua",
 
     "server/vendor/json.lua",
     "server/vendor/file.lua",

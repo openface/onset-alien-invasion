@@ -82,6 +82,8 @@ end)
 -- returns the object and a structure or nil
 function PlayerLookRaycast()
     local camX, camY, camZ = GetCameraLocation()
+    if not camX then return end
+
     local camForwardX, camForwardY, camForwardZ = GetCameraForwardVector()
 
     local Start = FVector(camX, camY, camZ)

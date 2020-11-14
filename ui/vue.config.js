@@ -1,5 +1,5 @@
 module.exports = {
-  publicPath: "./",
-  runtimeCompiler: true,
-  filenameHashing: false,
-}
+    publicPath: "./",
+    runtimeCompiler: true,
+    filenameHashing: false,
+};

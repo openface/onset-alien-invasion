@@ -11,7 +11,7 @@ RegisterObject("water_bottle", {
     },
     modelid = 1022,
     max_use = 3,
-    use_label = "Eat",
+    use_label = "Drink",
     max_carry = 2,
     attachment = {
         x = -6,

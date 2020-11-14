@@ -9,7 +9,10 @@
         <div id="boss-health" v-if="boss_health">
             <div class="health-bar" :style="{ width: boss_health + '%' }"></div>
         </div>
-        <div id="interaction-message" v-if="interaction_message && !show_spinner">
+        <div
+            id="interaction-message"
+            v-if="interaction_message && !show_spinner"
+        >
             <span class="key">E</span><br />
             {{ interaction_message }}
         </div>
@@ -18,7 +21,7 @@
                 :progress="progress"
                 size="40"
                 rotate
-                fillDuration="3" 
+                fillDuration="3"
                 rotationDuration="4"
             />
         </div>
@@ -36,7 +39,7 @@ export default {
             interaction_message: null,
             show_spinner: false,
             duration: null,
-            progress: 0
+            progress: 0,
         };
     },
     methods: {
@@ -67,7 +70,7 @@ export default {
         },
         ShowSpinner: function(seconds) {
             this.show_spinner = true;
-            this.duration = (seconds * 1000);
+            this.duration = seconds * 1000;
 
             const start = new Date().valueOf();
             const end = start + this.duration;
@@ -81,7 +84,7 @@ export default {
                 }
                 this.progress = ((now - start) / (end - start) / 100) * 100;
             }, 100);
-        }
+        },
     },
     mounted() {
         this.EventBus.$on("ShowMessage", this.ShowMessage);

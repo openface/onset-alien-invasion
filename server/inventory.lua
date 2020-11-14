@@ -38,6 +38,7 @@ function SyncInventory(player)
             ['quantity'] = item['quantity'],
             ['type'] = item['type'],
             ['equipped'] = IsItemEquipped(player, item['item']),
+            ['use_label'] = item['use_label'],
             ['used'] = item['used']
         })
     end
@@ -76,6 +77,7 @@ function AddToInventory(player, item)
             name = item_cfg['name'],
             modelid = item_cfg['modelid'],
             image = item_cfg['image'],
+            use_label = item_cfg['use_label'],
             quantity = 1,
             used = 0
         })

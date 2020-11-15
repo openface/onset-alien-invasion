@@ -2,8 +2,15 @@ local Props = {}
 
 function CreateProp(config, options)
     log.debug("Creating interactive prop:", config['modelID'])
-    local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'], config['ry'],
-                       config['rz'], config['sx'], config['sy'], config['sz'])
+
+    local rx = config['rx'] or 0
+    local ry = config['ry'] or 0
+    local rz = config['rz'] or 0
+    local sx = config['sx'] or 0
+    local sy = config['sy'] or 0
+    local sz = config['sz'] or 0
+
+    local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], rx, ry, rz, sx, sy, sz)
     SetObjectPropertyValue(object, "prop", options)
     table.insert(Props, object)
 end

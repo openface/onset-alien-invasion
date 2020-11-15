@@ -79,7 +79,6 @@ end)
 
 AddEvent("OnShowMainMenu", function ()
     ShowMouseCursor(true)
-    SetInputMode(INPUT_UI)
 end)
 
 AddEvent("OnHideMainMenu", function ()
@@ -91,8 +90,11 @@ AddEvent("OnHideMainMenu", function ()
       end
     end
 
-    ShowMouseCursor(false)
-    SetInputMode(INPUT_GAME)
+    if EditingObject then
+        ShowMouseCursor(true)
+    else
+        ShowMouseCursor(false)
+    end
 end)
 
 -- skydive

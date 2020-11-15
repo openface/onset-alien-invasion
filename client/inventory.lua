@@ -14,7 +14,7 @@ AddEvent("OnPackageStop", function()
 end)
 
 AddEvent('OnKeyPress', function(key)
-    if IsShiftPressed() or IsAltPressed() or GetWebVisibility(InventoryUI) == WEB_HIDDEN then
+    if IsShiftPressed() or IsAltPressed() or EditingObject or GetWebVisibility(InventoryUI) == WEB_HIDDEN then
         return
     end
     if not IsPlayerInVehicle() then
@@ -36,14 +36,16 @@ end)
 
 AddEvent('OnKeyRelease', function(key)
     if GetWebVisibility(InventoryUI) == WEB_HIDDEN then
-      return
+        return
     end
 
     if key == 'Tab' and not IsPlayerInVehicle() then
         -- item inventory
         SetWebVisibility(InventoryUI, WEB_HITINVISIBLE)
         ExecuteWebJS(InventoryUI, "EmitEvent('HideInventory')")
-        ShowMouseCursor(false)
+        if not EditingObject then
+            ShowMouseCursor(false)
+        end
         SetInputMode(INPUT_GAME)
     end
 end)
@@ -75,7 +77,7 @@ end)
 
 -- place item
 AddEvent("PlaceItem", function(item)
-    PlaceItem(player, item)
+    CallRemoteEvent("PlaceItem", item)
 end)
 
 -- sort inventory

@@ -18,12 +18,12 @@
         </div>
         <div id="progress" v-if="show_spinner">
             <loading-progress
-                :progress="progress"
+                :indeterminate="true"
                 size="40"
-                counterClockwise
                 rotate
-                rotationDuration="100"
-                 />
+                fillDuration="3"
+                rotationDuration="4"
+            />
         </div>
     </div>
 </template>
@@ -38,7 +38,6 @@ export default {
             boss_health: null,
             interaction_message: null,
             show_spinner: false,
-            progress: 0,
         };
     },
     methods: {
@@ -68,25 +67,8 @@ export default {
             this.interaction_message = null;
         },
         ShowSpinner: function(ms) {
-            if (this.show_spinner == true) {
-                window.console.log("Error: Cannot start more than one spinner at a time!")
-                return;
-            }
             this.show_spinner = true;
-
-            const start = new Date().valueOf();
-            const end = start + ms;
-            const int = setInterval(() => {
-                const now = new Date().valueOf();
-                if (now >= (end + 100)) {
-                    // if finished
-                    this.show_spinner = false;
-                    clearInterval(int);
-                    return;
-                }
-                this.progress = ((now - start) / (end - start) / 100) * 100;
-                window.console.log(this.progress)
-            }, 100);
+            setTimeout(() => this.show_spinner = false, ms);
         },
     },
     mounted() {

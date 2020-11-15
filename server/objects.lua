@@ -32,6 +32,7 @@ end
 
 -- 
 function PlayInteraction(player, item, after_use_callback)
+    log.debug("Playing interaction for item "..item)
     local item_cfg = GetItemConfig(item)
     if not item_cfg['interaction'] then
         if after_use_callback then
@@ -45,6 +46,7 @@ function PlayInteraction(player, item, after_use_callback)
         local duration = item_cfg['interaction']['animation']['duration'] or 2000 -- default animation delay
         if item_cfg['interaction']['animation']['spinner'] then
             CallRemoteEvent(player, "ShowSpinner", duration)
+            AddPlayerChat(player, "spinner")
         end
 
         Delay(duration, function()

@@ -1,9 +1,8 @@
 local SpawnLocation = { x = -102037, y = 194299, z = 1400 }
 local PlayerRespawnSecs = 20 -- 20 secs
-local Debug = false
 
 AddCommand("pos", function(player)
-    if not IsAdmin(player) then
+    if not Player.IsAdmin(player) then
         return
     end
     local x, y, z = GetPlayerLocation(player)
@@ -37,7 +36,7 @@ end)
 
 -- console input from client
 AddRemoteEvent("ConsoleInput", function(player, input)
-    if not IsAdmin(player) then
+    if not Player.IsAdmin(player) then
       return
     end
 
@@ -84,7 +83,7 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
     SetPlayerPropertyValue(player, "inventory", {})
     SetPlayerPropertyValue(player, "equipped", {})
 
-    if not Debug then
+    if not Player.IsAdmin(player) then
         -- parachute down to the island
         SetPlayerLocation(player, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z + 30000)
         AttachPlayerParachute(player, true)

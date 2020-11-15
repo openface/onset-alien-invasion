@@ -20,7 +20,7 @@ AddEvent("OnPackageStart", function()
 end)
 
 AddCommand("scrap", function(player, amt)
-    if not IsAdmin(player) then
+    if not Player.IsAdmin(player) then
         return
     end
     local amt = amt or 1

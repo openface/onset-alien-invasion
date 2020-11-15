@@ -3,7 +3,7 @@ local PartObjectID = 1437
 local NumSpawnedParts = 25 -- maximum number of parts to spawn
 
 AddCommand("ppos", function(player)
-    if not IsAdmin(player) then
+    if not Player.IsAdmin(player) then
         return
     end
     local x, y, z = GetPlayerLocation(player)

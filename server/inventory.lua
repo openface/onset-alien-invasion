@@ -223,12 +223,19 @@ function UseItemFromInventory(player, item, options)
     local _item = GetItemFromInventory(player, item)
     log.debug(GetPlayerName(player) .. " uses item " .. item .. " from inventory")
 
+    -- equipable items get equipped and that's it
+    if item_cfg['type'] == 'equipable' then
+        EquipObject(player, item)
+        return
+    end
+
     if item_cfg['max_use'] and _item['used'] > item_cfg['max_use'] then
         log.error "Max use exceeded!"
         return
     end
 
     EquipObject(player, item)
+
     PlayInteraction(player, item, function()
         -- increment used
         if item_cfg['max_use'] then

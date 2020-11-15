@@ -23,6 +23,7 @@
         "server/weapons.lua",
         "server/storage.lua",
         "server/props.lua",
+        "server/player.lua",
         "server/objects/armyhat.lua",
         "server/objects/banana.lua",
         "server/objects/bandage.lua",

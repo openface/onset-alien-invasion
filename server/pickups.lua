@@ -8,7 +8,7 @@ AddEvent("OnPackageStop", function()
 end)
 
 AddCommand("item", function(player, item)
-    if not IsAdmin(player) then
+    if not Player.IsAdmin(player) then
         return
     end
     CreatePickupNearPlayer(player, item)

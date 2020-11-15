@@ -11,14 +11,14 @@ local AlienRetargetCooldown = {} -- aliens re-target on every weapon hit w/ cool
 local AlienSpawnsEnabled = true
 
 AddCommand("alien", function(player)
-    if not IsAdmin(player) then
+    if not Player.IsAdmin(player) then
         return
     end
     SpawnAlienNearPlayer(player)
 end)
 
 AddCommand("togaliens", function(player)
-    if not IsAdmin(player) then
+    if not Player.IsAdmin(player) then
         return
     end
     AlienSpawnsEnabled = not AlienSpawnsEnabled
@@ -291,7 +291,7 @@ AddEvent("OnNPCReachTarget", function(npc)
         SetNPCAnimation(npc, "KUNGFU", false)
 
         -- return home if attacking an admin
-        -- if IsAdmin(target) then
+        -- if Player.IsAdmin(target) then
         --    AlienReturn(npc)
         --    return
         -- end

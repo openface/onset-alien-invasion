@@ -61,7 +61,9 @@ function EquipObject(player, item)
     UnequipFromBone(player, item_cfg['attachment']['bone'])
 
     -- equipable animations
-    PlayInteraction(player, item)
+    if item_cfg['type'] == 'equipable' then
+        PlayInteraction(player, item)
+    end
 
     local x, y, z = GetPlayerLocation(player)
     local attached_object = CreateObject(item_cfg['modelid'], x, y, z)

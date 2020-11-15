@@ -20,10 +20,10 @@
             <loading-progress
                 :progress="progress"
                 size="40"
+                counterClockwise
                 rotate
-                fillDuration="3"
-                rotationDuration="4"
-            />
+                rotationDuration="100"
+                 />
         </div>
     </div>
 </template>
@@ -38,7 +38,6 @@ export default {
             boss_health: null,
             interaction_message: null,
             show_spinner: false,
-            duration: null,
             progress: 0,
         };
     },
@@ -68,21 +67,25 @@ export default {
         HideInteractionMessage: function() {
             this.interaction_message = null;
         },
-        ShowSpinner: function(seconds) {
+        ShowSpinner: function(ms) {
+            if (this.show_spinner == true) {
+                window.console.log("Error: Cannot start more than one spinner at a time!")
+                return;
+            }
             this.show_spinner = true;
-            this.duration = seconds * 1000;
 
             const start = new Date().valueOf();
-            const end = start + this.duration;
+            const end = start + ms;
             const int = setInterval(() => {
                 const now = new Date().valueOf();
-                if (now >= end) {
+                if (now >= (end + 100)) {
                     // if finished
                     this.show_spinner = false;
                     clearInterval(int);
                     return;
                 }
                 this.progress = ((now - start) / (end - start) / 100) * 100;
+                window.console.log(this.progress)
             }, 100);
         },
     },
@@ -113,7 +116,8 @@ export default {
                 1000
             );
 
-            this.EventBus.$emit("ShowSpinner", 5);
+            this.EventBus.$emit("ShowSpinner", 5000);
+            setTimeout(() => this.EventBus.$emit("ShowSpinner", 2000), 7000);
 
             this.EventBus.$emit("SetBossHealth", 100);
             setTimeout(() => this.EventBus.$emit("SetBossHealth", 80), 1000);

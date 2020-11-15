@@ -1,8 +1,8 @@
 -- add game package to lua path
 package.path = package.path .. ";" .. "./packages/" .. GetPackageName() .. "/?.lua"
 
--- config file
-local Config = require("config")
+-- global Config
+Config = require("config")
 
 -- global Log
 log = require("server.vendor.log")
@@ -36,12 +36,3 @@ function dump(o)
     end
 end
 
-function IsAdmin(player)
-    steam_id = GetPlayerSteamId(player)
-    for _, id in ipairs(Config.admin_steam_ids) do
-        if id == steam_id then
-            return true
-        end
-    end
-    return false
-end

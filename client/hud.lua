@@ -45,13 +45,11 @@ AddRemoteEvent("SetBossHealth", SetBossHealth)
 AddEvent("SetBossHealth", SetBossHealth)
 
 -- spinner
-function ShowSpinner(seconds)
-    ExecuteWebJS(HudUI, "EmitEvent('ShowSpinner'," .. seconds ..")")
-end
 AddRemoteEvent("ShowSpinner", function(seconds)
-    ShowSpinner(seconds)
+    print "spinner"
+    print(seconds)
+    ExecuteWebJS(HudUI, "EmitEvent('ShowSpinner'," .. seconds .. ")")
 end)
-
 
 -- inventory
 AddRemoteEvent("SetInventory", function(data)

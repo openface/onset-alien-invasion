@@ -73,6 +73,11 @@ AddEvent("UseItem", function(item)
     CallRemoteEvent("UseItemFromInventory", item)
 end)
 
+-- place item
+AddEvent("PlaceItem", function(item)
+    PlaceItem(player, item)
+end)
+
 -- sort inventory
 AddEvent("UpdateInventory", function(data)
     CallRemoteEvent("UpdateInventory", data)

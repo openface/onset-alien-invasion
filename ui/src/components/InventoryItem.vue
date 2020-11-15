@@ -27,6 +27,9 @@
                     >Put Away</a
                 >
             </div>
+            <div v-else-if="item.type == 'prop'">
+                <a @click="PlaceItem(item.item)">Place</a>
+            </div>
             <a @click="DropItem(item.item)">Drop</a>
         </div>
     </div>
@@ -63,6 +66,9 @@ export default {
         },
         UseItem: function(item) {
             this.CallEvent("UseItem", item);
+        },
+        PlaceItem: function(item) {
+            this.CallEvent("PlaceItem", item);
         },
         PlayClick() {
             if (!this.dragging) {

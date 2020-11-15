@@ -24,6 +24,7 @@
         "server/storage.lua",
         "server/props.lua",
         "server/player.lua",
+
         "server/objects/armyhat.lua",
         "server/objects/banana.lua",
         "server/objects/bandage.lua",
@@ -44,6 +45,8 @@
         "server/objects/binoculars.lua",
         "server/objects/fishing_rod.lua",
         "server/objects/water_bottle.lua",
+        "server/objects/wooden_chair.lua",
+
         "server/vendor/json.lua",
         "server/vendor/file.lua",
         "server/vendor/log.lua"
@@ -67,7 +70,8 @@
         "client/storage.lua",
         "client/water.lua",
         "client/vehicles.lua",
-        "client/interactions.lua"
+        "client/interactions.lua",
+        "client/placement.lua"
     ],
     "files": [
         "client/pak/Aliens.pak",

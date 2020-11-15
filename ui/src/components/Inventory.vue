@@ -130,11 +130,6 @@ export default {
         HideInventory: function() {
             this.inventory_visible = false;
         },
-        range: function(start, end) {
-            return Array(end - start + 1)
-                .fill()
-                .map((_, idx) => start + idx);
-        },
         UpdateInventory: function(e) {
             window.console.log(e);
 
@@ -226,11 +221,11 @@ export default {
                     },
                     {
                         index: 10,
-                        item: "medkit",
-                        name: "Medical Kit",
+                        item: "wooden_chair",
+                        name: "Wooden Chair",
                         modelid: 15,
                         quantity: 4,
-                        type: "usable",
+                        type: "prop",
                         equipped: false,
                     },
                 ],

@@ -31,10 +31,10 @@ function CreateObjectPickup(item, x, y, z)
         log.debug("Invalid object " .. item)
         return
     end
-    log.debug("Creating object pickup " .. item .. " modelid " .. item_cfg['modelid'])
+    log.debug("Creating object pickup " .. item .. " modelid " .. item_cfg['modelid'] .. " type ".. item_cfg['type'])
 
     local pickup = CreatePickup(item_cfg['modelid'], x, y, z)
-    SetPickupPropertyValue(pickup, '_name', item) -- todo: rename to _item
+    SetPickupPropertyValue(pickup, '_name', item)
     SetPickupPropertyValue(pickup, '_text', CreateText3D(item_cfg['name'], 8, x, y, z + 100, 0, 0, 0))
     if item_cfg['scale'] ~= nil then
         SetPickupScale(pickup, item_cfg['scale'].x, item_cfg['scale'].y, item_cfg['scale'].z)

@@ -1,13 +1,13 @@
-RegisterObject("wooden_chair", {
-    name = "Wooden Chair",
+RegisterObject("wooden_table", {
+    name = "Wooden Table",
     type = 'placeable',
     interaction = {
         animation = { name = "SIT" }
     },
-    modelid = 1262,
+    modelid = 1247,
     max_carry = 1,
     recipe = {
-        wood = 10
+        wood = 40
     },
-    price = 25
+    price = 50,
 })

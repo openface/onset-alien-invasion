@@ -104,8 +104,9 @@ function SelectEditableObject(object)
     end
 
     EditingObject = object
-    SetObjectEditable(object, EditMode)
-    SetObjectOutline(object, true)
+
+    SetObjectEditable(EditingObject, EditMode)
+    SetObjectOutline(EditingObject, true)
 
     SetInputMode(INPUT_GAMEANDUI)
     ShowMouseCursor(true)
@@ -135,6 +136,7 @@ function CancelEditTimer(x, y, z)
     end
 
     local px, py, pz = GetPlayerLocation()
+    AddPlayerChat(GetDistance3D(px, py, pz, x, y, z))
     if GetDistance3D(px, py, pz, x, y, z) > 1500 then
         AddPlayerChat("You are too far away to edit the object!")
 

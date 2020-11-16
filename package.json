@@ -47,6 +47,7 @@
         "server/objects/fishing_rod.lua",
         "server/objects/water_bottle.lua",
         "server/objects/wooden_chair.lua",
+        "server/objects/wooden_table.lua",
 
         "server/vendor/json.lua",
         "server/vendor/file.lua",

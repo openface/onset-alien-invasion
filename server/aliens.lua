@@ -238,7 +238,6 @@ function ResetAlien(npc)
         local x, y, z = GetNPCLocation(npc)
         SetNPCTargetLocation(npc, x, y, z)
         SetNPCPropertyValue(npc, 'target', nil, true)
-        SetNPCAnimation(npc, "THROATSLIT", false)
         CallRemoteEvent(player, 'AlienNoLongerAttacking', npc)
 
         -- wait a bit then walk back home, little alien
@@ -288,7 +287,6 @@ AddEvent("OnNPCReachTarget", function(npc)
     if dist < 200 then
         -- we're in close range, attack player
         log.debug("NPC (ID " .. npc .. ") hit player " .. GetPlayerName(target))
-        SetNPCAnimation(npc, "KUNGFU", false)
 
         -- return home if attacking an admin
         -- if Player.IsAdmin(target) then
@@ -299,13 +297,6 @@ AddEvent("OnNPCReachTarget", function(npc)
         ApplyPlayerDamage(target)
 
         if GetPlayerHealth(target) <= 0 then
-            -- critical hit, dance and go home
-            Delay(2000, function()
-                local dances = {"DANCE01", "DANCE02", "DANCE03", "DANCE04", "DANCE05", "DANCE06", "DANCE07", "DANCE08",
-                                "DANCE09", "DANCE10", "DANCE11", "DANCE12", "DANCE13", "DANCE14", "DANCE15", "DANCE16",
-                                "DANCE17", "DANCE18", "DANCE19", "DANCE20"}
-                SetNPCAnimation(npc, dances[math.random(#dances)], true)
-            end)
             Delay(8000, function()
                 AlienReturn(npc)
             end)

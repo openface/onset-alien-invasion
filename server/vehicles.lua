@@ -51,6 +51,8 @@ AddEvent("OnPlayerEnterVehicle", function(player, vehicle, seat)
     if seat == 1 then
         StartVehicleEngine(vehicle)
         SetVehicleLightEnabled(vehicle, true)
+
+        CallRemoteEvent(player, "ShowMessage", "[H] Horn  [L] Lights  [J] Hood  [K] Trunk")
     end
 end)
 
@@ -101,7 +103,7 @@ function GetVehicleHealthPercentage(vehicle)
     return math.floor(GetVehicleHealth(vehicle) / VehicleMaxHealth * 100.0)
 end
 
-AddRemoteEvent("RepairVehicle", function(player, vehicle)
+AddRemoteEvent("prop:RepairVehicle", function(player, vehicle)
     log.info(GetPlayerName(player) .. " inspects vehicle " .. vehicle)
 
     local health_percentage = GetVehicleHealthPercentage(vehicle)

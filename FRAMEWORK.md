@@ -10,6 +10,7 @@ Most item configuration options are optional.  Here is a sample pulled together 
 RegisterObject("wooden_chair", {        -- [required] unique id / item name
     name = "Wooden Chair",              -- [required] display name
     type = 'prop',                      -- [required] item type (see Item Types)
+    category = 'Furniture',             -- [required] item category for merchant grouping
     interaction = {
         animation = { 
             name = "SIT",               -- animation to play when equipping/using

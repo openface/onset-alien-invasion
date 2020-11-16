@@ -1,36 +1,40 @@
 <template>
     <div id="container">
-        <div id="inner">
+        <div id="inner" :class="IsBusy() ? 'blurred' : ''">
             <div id="title">MERCHANT</div>
-            <div class="grid" :class="IsBusy() ? 'blurred' : ''">
-                <div
-                    class="item"
-                    v-for="item in merchant_items"
-                    :key="item.item"
-                    @mouseenter="!IsBusy ? PlayClick() : null"
-                >
-                    <div class="pic">
-                        <img :src="getImageUrl(item)" />
-                    </div>
-                    <div class="details">
-                        <div class="name">{{ item.name }}</div>
-                        <div class="info">
-                            $<b>{{ item.price }}</b>
+            <div v-for="(items, category) in merchant_items" :key="category">
+                <div class="category">{{ category }}</div>
+
+                <div class="grid">
+                    <div
+                        class="item"
+                        v-for="item in items"
+                        :key="item.item"
+                        @mouseenter="!IsBusy() ? PlayClick() : null"
+                    >
+                        <div class="pic">
+                            <img :src="getImageUrl(item)" />
                         </div>
-                        <div class="action">
-                            <div v-if="player_cash >= item.price">
-                                <button class="buy" @click="BuyItem(item.item)">
-                                    BUY
-                                </button>
-                            </div>
-                            <div v-else>
-                                <button class="need_cash" disabled="true">
-                                    NEED CASH
-                                </button>
+                        <div class="details">
+                            <div class="name">{{ item.name }}</div>
+                            <div class="action">
+                                <div v-if="player_cash >= item.price">
+                                    <button
+                                        class="buy"
+                                        @click="BuyItem(item.item)"
+                                    >
+                                        BUY ($<b>{{ item.price }}</b>)
+                                    </button>
+                                </div>
+                                <div v-else>
+                                    <button class="need_cash" disabled="true">
+                                        BUY ($<b>{{ item.price }}</b>)
+                                    </button>
+                                </div>
                             </div>
                         </div>
+                        <br style="clear:both;" />
                     </div>
-                    <br style="clear:both;" />
                 </div>
             </div>
         </div>
@@ -48,6 +52,7 @@
 </template>
 
 <script>
+import groupBy from "lodash/groupBy";
 export default {
     name: "Merchant",
     data() {
@@ -59,7 +64,13 @@ export default {
     },
     methods: {
         LoadMerchantData: function(data) {
-            this.merchant_items = data["merchant_items"];
+            this.merchant_items = groupBy(data["merchant_items"], function(
+                item
+            ) {
+                return item.category;
+            });
+            window.console.log(this.merchant_items);
+            //this.merchant_items = data["merchant_items"];
             this.player_cash = data["player_cash"];
         },
         BuyItem: function(item) {
@@ -101,88 +112,109 @@ export default {
                 player_cash: 100,
                 merchant_items: [
                     {
-                        item: "armor",
-                        name: "Vest",
+                        item: "vest",
+                        name: "Kevlar Vest",
                         price: 10,
                         modelid: 843,
+                        category: "Military Surplus",
                     },
                     {
-                        item: "foobar",
-                        name: "Foobar",
+                        item: "armyhat",
+                        name: "Army Hat",
                         price: 10,
                         modelid: 843,
+                        category: "Military Surplus",
                     },
                     {
-                        item: "food2",
-                        name: "Food",
+                        item: "banana",
+                        name: "Banana",
                         price: 10,
                         modelid: 843,
+                        category: "Grocery",
                     },
                     {
                         item: "flashlight",
                         name: "Flashlight",
                         price: 150,
                         modelid: 843,
+                        category: "Supplies",
                     },
                     {
-                        item: "food4",
-                        name: "Food",
+                        item: "beer",
+                        name: "Beer",
                         price: 10,
                         modelid: 843,
+                        category: "Grocery",
                     },
                     {
-                        item: "food5",
-                        name: "Food",
+                        item: "binoculars",
+                        name: "Binoculars",
                         price: 10,
                         modelid: 843,
+                        category: "Supplies",
                     },
                     {
-                        item: "food6",
-                        name: "Food",
+                        item: "boxhead",
+                        name: "Boxhead",
                         price: 10,
                         modelid: 843,
+                        category: "Miscellaneous",
                     },
                     {
-                        item: "food7",
-                        name: "Food",
+                        item: "chainsaw",
+                        name: "Chainsaw",
                         price: 10,
                         modelid: 843,
+                        category: "Supplies",
                     },
                     {
-                        item: "food20",
-                        name: "Food",
+                        item: "fishing_rod",
+                        name: "Fishing Rod",
                         price: 10,
                         modelid: 843,
+                        category: "Supplies",
                     },
                     {
-                        item: "flashlight0",
-                        name: "Flashlight",
+                        item: "headphones",
+                        name: "Headphones",
                         price: 10,
                         modelid: 843,
+                        category: "Miscellaneous",
                     },
                     {
-                        item: "food40",
-                        name: "Food",
+                        item: "landmine",
+                        name: "Landmine",
                         price: 10,
                         modelid: 843,
+                        category: "Military Surplus",
                     },
                     {
-                        item: "food50",
-                        name: "Food",
+                        item: "lantern",
+                        name: "Lantern",
                         price: 10,
                         modelid: 843,
+                        category: "Supplies",
                     },
                     {
-                        item: "food60",
-                        name: "Food",
+                        item: "water_bottle",
+                        name: "Water Bottle",
                         price: 10,
                         modelid: 843,
+                        category: "Grocery",
                     },
                     {
-                        item: "food70",
-                        name: "Food",
+                        item: "wooden_chair",
+                        name: "Wooden Chair",
                         price: 10,
                         modelid: 843,
+                        category: "Furniture",
+                    },
+                    {
+                        item: "wooden_table",
+                        name: "Wooden Table",
+                        price: 10,
+                        modelid: 843,
+                        category: "Furniture",
                     },
                 ],
             });
@@ -231,6 +263,11 @@ export default {
 #progress >>> .vue-progress-path .background {
     stroke: rgba(0, 0, 0, 0.4);
 }
+.category {
+    margin-top:10px;
+    text-transform: uppercase;
+    font-size:12px;
+}
 .grid {
     display: flex;
     flex-wrap: wrap;
@@ -246,7 +283,7 @@ export default {
     height: 60px;
     background: rgba(255, 255, 255, 0.1);
 }
-.grid:not(.blurred) item:hover {
+#inner:not(.blurred) .item:hover {
     background: rgba(255, 255, 255, 0.2);
 }
 .item .pic {
@@ -263,9 +300,9 @@ export default {
     width: 150px;
 }
 .item .details .name {
-    font-weight: bold;
-    font-size: 14px;
+    font-size: 18px;
     color: #fff;
+    margin-bottom:18px;
 }
 .item .details .info {
     font-size: 11px;
@@ -288,7 +325,7 @@ button.buy {
     background: #1770ff;
     color: #fff;
 }
-.grid:not(.blurred) button.buy:hover:not([disabled]) {
+#inner:not(.blurred) button.buy:hover:not([disabled]) {
     cursor: pointer;
     background: #3684ff;
 }

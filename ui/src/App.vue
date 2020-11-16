@@ -1,17 +1,13 @@
 <template>
-    <router-view></router-view>
+  <router-view></router-view>
 </template>
 
 <script>
 export default {
-    name: "app",
-};
+  name: 'app'
+}
 </script>
 
 <style>
-body {
-    user-select: none;
-    overflow: hidden;
-    height: 100%;
-}
+body { user-select: none; overflow: hidden; height: 100%; }
 </style>

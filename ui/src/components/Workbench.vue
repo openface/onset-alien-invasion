@@ -1,12 +1,12 @@
 <template>
     <div id="container">
-        <div id="inner">
+        <div id="inner" :class="IsBusy() ? 'blurred' : ''">
             <div id="title">WORKBENCH</div>
-            <div class="grid" :class="IsBusy() ? 'blurred' : ''">
+            <div class="grid">
                 <div v-for="item in items" :key="item.item">
                     <div
                         class="item"
-                        @mouseenter="!IsBusy ? PlayClick() : null"
+                        @mouseenter="!IsBusy() ? PlayClick() : null"
                     >
                         <div class="pic">
                             <img :src="getImageUrl(item)" />
@@ -80,6 +80,9 @@ export default {
                 setTimeout(() => this.EventBus.$emit("BuildDenied"), 5000);
                 //setTimeout(() => this.EventBus.$emit("CompleteBuild", { player_resources: { plastic: 10, wood: 5 }}), 5000);
             }
+        },
+        PlayClick() {
+            this.CallEvent("PlayClick");
         },
     },
     mounted() {
@@ -284,7 +287,7 @@ export default {
     height: 60px;
     background: rgba(255, 255, 255, 0.1);
 }
-.grid:not(.blurred) item:hover {
+#inner:not(.blurred) .item:hover {
     background: rgba(255, 255, 255, 0.2);
 }
 .item .pic {
@@ -332,7 +335,7 @@ button.build {
     background: #1770ff;
     color: #fff;
 }
-.grid:not(.blurred) button.build:hover:not([disabled]) {
+#inner:not(.blurred) button.build:hover:not([disabled]) {
     background: rgba(255, 255, 255, 0.2);
     cursor: pointer;
     background: #3684ff;

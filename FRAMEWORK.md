@@ -4,11 +4,12 @@
 
 #### Inventory Configuration
 
-Full Non-Working Example:
+Most item configuration options are optional.  Here is a sample pulled together from various objects:
+
 ```
-RegisterObject("wooden_chair", {        -- unique id / item name
-    name = "Wooden Chair",              -- display name
-    type = 'prop',                      -- item type (see Item Types)
+RegisterObject("wooden_chair", {        -- [required] unique id / item name
+    name = "Wooden Chair",              -- [required] display name
+    type = 'prop',                      -- [required] item type (see Item Types)
     interaction = {
         animation = { 
             name = "SIT",               -- animation to play when equipping/using
@@ -17,15 +18,16 @@ RegisterObject("wooden_chair", {        -- unique id / item name
         },
         sound = "sounds/squeak.mp3"     -- sound to play during interaction with object
     },
-    modelid = 1262,                     -- object modelid
-    max_carry = 1,                      -- maximum number that can be carried in inventory
-    recipe = {                          -- resources required to build this item (workbench)
+    modelid = 1262,                     -- [required] object modelid
+    image = "survival/SM_Axe-Neo.png",  -- 2D image for objects using a custom asset
+    max_carry = 1,                      -- [required] maximum number that can be carried in inventory
+    recipe = {                          -- resources required to build this item at workbench (nil = non-buildable)
         metal = 20,
         plastic = 5,
         wood = 2,
         computer_part = 1
     },
-    price = 150,                        -- cash required to purchase this item (merchant)
+    price = 150,                        -- cash required to purchase this item at merchant (nil = non-purchasable)
     attachment = {                      -- how to attach this item to player when equipped/using
         x = -20, 
         y = 5, 
@@ -34,6 +36,29 @@ RegisterObject("wooden_chair", {        -- unique id / item name
         ry = 180, 
         rz = 10, 
         bone = "hand_r" 
+    },
+    component = {                       -- light component to attach to object
+        type = "pointlight",            -- pointlight, spotlight, or rectlight
+        position = {
+            x = 3,
+            y = 0,
+            z = 20,
+            rx = 0,
+            ry = 0,
+            rz = 0
+        },
+        intensity = 5000                -- light intensity
+    },
+    particle = {                        -- particle to emit for this object
+        path = "/Game/Geometry/OldTown/Effects/PS_LanternFire",
+        position = {                    -- relative position to object
+            x = 0, 
+            y = 0, 
+            z = 17, 
+            rx = 0, 
+            ry = 0, 
+            rz = 0 
+        },
     },
     prop_options = {                    -- creates interactive props
         message = "Sit",
@@ -48,26 +73,26 @@ RegisterObject("wooden_chair", {        -- unique id / item name
 
 ## Inventory Item Types
 
-#### WEAPON
+#### weapon
 - Weapons are their own system, but are loosely integrated into the inventory
 - Can be dropped from inventory
 - Can only carry 2 weapons in slots 2,3.  (slot 1 is reserved for fists/disarm)
 
-#### RESOURCE
+#### resource
 - Can be used but not directly (Eg. Fishing rod is used by interacting with water)
 - Does not adhere to max_uses or track uses
 - Found in the world by scavenging scrap heaps
 
-#### EQUIPPABLE
+#### equipable
 - Can be used directory from inventory to equip
 - Does not adhere to max_uses or tracks uses
 - Plays interaction when equipping
 
-#### USABLE
+#### usable
 - Can be used directory from inventory
 - Adheres to max_uses and trackes item uses
 
-#### PLACEABLE
+#### placeable
 - Interactive props that can be stored in inventory
 - Can be placed into the world from inventory (cannot become a pickup again)
 - When dropped instead of placed, they are pickups
@@ -87,11 +112,25 @@ AddRemoteEvent("SearchForScrap", function(player)
 
 ## Item Event Callbacks
 
-#### USE
+#### After Use
 
 ```
-Called AFTER interaction duration delay
+AddEvent("items:beer:use", function(player)
+    -- drunk effect
+end)
+```
 
-# items/toolbox.lua
-AddEvent("items:toolbox:use", function(player, item_cfg, options)
+#### After Equip
+```
+AddEvent("items:vest:equip", function(player, object)
+    SetPlayerArmor(player, 100)
+end)
+```
+
+#### After Unequip
+
+```
+AddEvent("items:vest:unequip", function(player, object)
+    SetPlayerArmor(player, 0)
+end)
 ```

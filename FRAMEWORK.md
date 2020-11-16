@@ -69,7 +69,7 @@ RegisterObject("wooden_chair", {        -- unique id / item name
 
 #### PLACEABLE
 - Interactive props that can be stored in inventory
-- Can be placed into the world from inventory
+- Can be placed into the world from inventory (cannot become a pickup again)
 - When dropped instead of placed, they are pickups
 - Can be interacted with using `prop_options` (Eg. Press [E] to sit in a chair)
 - Placeable objects are editable (rotation and location)

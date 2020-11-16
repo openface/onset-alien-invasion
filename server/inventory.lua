@@ -158,7 +158,10 @@ function RemoveFromInventory(player, item, amount)
 
     if new_qty == 0 then
         log.debug("items:" .. item .. ":drop")
-        UnequipObject(player, item)
+
+        if item_cfg['type'] == 'equipable' then
+            UnequipObject(player, item)
+        end
     end
 
     -- inventory updated
@@ -169,7 +172,7 @@ end
 AddRemoteEvent("DropItemFromInventory", function(player, item, x, y, z)
     log.info("Player " .. GetPlayerName(player) .. " drops item " .. item)
 
-    SetPlayerAnimation(player, "CARRY_SETDOWN")
+    --SetPlayerAnimation(player, "CARRY_SETDOWN")
 
     Delay(1000, function()
         if GetItemType(item) == 'weapon' then

@@ -13,11 +13,13 @@ AddEvent("OnPackageStop", function()
 end)
 
 AddRemoteEvent("PlaceItem", function(player, item, loc)
-    log.debug("placing" .. item)
     local item_cfg = GetItemConfig(item)
-    if not item_cfg then
+    if not item_cfg or item_cfg['type'] ~= "placeable" then
+        log.error("Cannot place invalid or non-placeable item!")
         return
     end
+
+    RemoveFromInventory(player, item)
 
     local object = CreateObject(item_cfg['modelid'], loc.x, loc.y, loc.z)
     if not object then

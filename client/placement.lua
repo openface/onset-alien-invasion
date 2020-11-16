@@ -13,7 +13,7 @@ AddEvent('OnRenderHUD', function()
     if PlacementPendingItem then
         local x, y, z = GetMouseHitLocation()
         SetDrawColor(RGB(255, 255, 0))
-        DrawCircle3D(x, y, z + 10.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 10.0)
+        DrawCircle3D(x, y, z + 10.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 20.0)
     end
 end)
 
@@ -138,7 +138,6 @@ function CancelEditTimer(x, y, z)
     end
 
     local px, py, pz = GetPlayerLocation()
-    AddPlayerChat(GetDistance3D(px, py, pz, x, y, z))
     if GetDistance3D(px, py, pz, x, y, z) > 1500 then
         AddPlayerChat("You are too far away to edit the object!")
 

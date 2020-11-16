@@ -95,7 +95,6 @@ end)
 
 AddRemoteEvent("ObjectPlaced", function(object)
     PlacementPendingItem = nil
-    AddPlayerChat("Item has been placed")
 end)
 
 function SelectEditableObject(object)

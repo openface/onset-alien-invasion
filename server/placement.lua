@@ -38,6 +38,7 @@ AddRemoteEvent("PlaceItem", function(player, item, loc)
 
     CallRemoteEvent(player, "ObjectPlaced", object)
 
+    AddPlayerChat(player, "A "..item_cfg["name"] .. " has been placed.")
     log.debug(GetPlayerName(player) .. " placed object " .. object .. " item " .. item)
 end)
 

@@ -164,11 +164,11 @@ AddEvent("OnKeyPress", function(key)
         ActiveProp = nil
     elseif StandingPlayerLocation and key == 'Space Bar' then
         -- unsitting
-        
         local actor = GetPlayerActor(GetPlayerId())
         actor:SetActorEnableCollision(true)
 
         CallRemoteEvent("prop:StopSitting", StandingPlayerLocation)
+        StandingPlayerLocation = nil
     end
 end)
 

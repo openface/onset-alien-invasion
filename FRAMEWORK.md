@@ -21,6 +21,8 @@ RegisterObject("wooden_chair", {        -- [required] unique id / item name
     modelid = 1262,                     -- [required] object modelid
     image = "survival/SM_Axe-Neo.png",  -- 2D image for objects using a custom asset
     max_carry = 1,                      -- [required] maximum number that can be carried in inventory
+    max_use = 1,                        -- for usable types, number of times it can be used
+    use_label = "Activate",             -- for usable types, the alternate name for "Use"
     recipe = {                          -- resources required to build this item at workbench (nil = non-buildable)
         metal = 20,
         plastic = 5,

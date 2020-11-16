@@ -11,6 +11,7 @@ RegisterObject("landmine", {
     modelid = 1030,
     max_carry = 3,
     max_use = 1,
+    use_label = "Activate",
     recipe = {
         metal = 20,
         plastic = 2

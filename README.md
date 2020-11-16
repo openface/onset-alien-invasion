@@ -2,7 +2,7 @@
 
 Alien Invasion is a gamemode for [Onset](https://playonset.com/) written in Lua and VueJS.
 
-[![ALIEN INVASION](https://i.gyazo.com/1129300daf9ca739218af7137979757f.gif)](https://gyazo.com/1129300daf9ca739218af7137979757f)
+[![ALIEN INVASION](https://i.gyazo.com/81411c6f822a754156df834fba6cdd1d.png)](https://gyazo.com/81411c6f822a754156df834fba6cdd1d)
 
 ## The Game
 

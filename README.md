@@ -2,7 +2,7 @@
 
 Alien Invasion is a gamemode for [Onset](https://playonset.com/) written in Lua and VueJS.
 
-[![ALIEN INVASION](https://i.imgur.com/vJQt3de.jpg?1)](https://i.imgur.com/vJQt3de.jpg?1)
+[![ALIEN INVASION](https://i.gyazo.com/1129300daf9ca739218af7137979757f.gif)](https://gyazo.com/1129300daf9ca739218af7137979757f)
 
 ## The Game
 
@@ -28,6 +28,15 @@ The satellite computer has enough power to communicate with the mothership. Sear
 * Scrap heaps provide resources such as metal shards, plastic tarps, and computer parts.
 * Workbench system for building items with resources that you find at the scrap heaps.
 * Inventory system with interactive objects and hotbar selection.
+* Merchant system for purchasing items
+* Interactive world props (tree, water, items)
+
+### Direction
+
+While Alien Invasion started life as a simple AI shooter gamemode for Onset, the original
+purpose of this project was to learn Lua scripting for Onset.  This project has since
+grown quite a bit with features not really applicable to a simple alien shooter, and that
+is OK.  This code will continue to morph and shift into something more general and widely-usable for other Onset gamemodes in the future.
 
 
 ### Thanks

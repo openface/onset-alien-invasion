@@ -28,6 +28,10 @@ AddRemoteEvent("PlaceItem", function(player, item, loc)
     SetObjectPropertyValue(object, "placeable", true)
     SetObjectPropertyValue(object, "placed_by", GetPlayerSteamId(player))
 
+    if item_cfg['prop_options'] then
+        SetObjectPropertyValue(object, "prop", item_cfg['prop_options'])
+    end
+
     PlacedObjects[object] = true
 
     CallRemoteEvent(player, "ObjectPlaced", object)

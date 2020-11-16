@@ -22,6 +22,13 @@ AddEvent("OnKeyPress", function(key)
         -- pointing mode for selecting object to edit
         SetInputMode(INPUT_GAMEANDUI)
         ShowMouseCursor(true)
+
+        -- outline all placeable items nearby
+        for _,object in pairs(GetStreamedObjects()) do
+            if GetObjectPropertyValue(object, "placeable") == true then
+                SetObjectOutline(object, true)
+            end            
+        end
     end
 end)
 
@@ -30,12 +37,22 @@ AddEvent("OnKeyRelease", function(key)
         -- stop editing
         SetInputMode(INPUT_GAME)
         ShowMouseCursor(false)
-        StopEditingObject()
+
+        for _,object in pairs(GetStreamedObjects()) do
+            if GetObjectPropertyValue(object, "placeable") == true then
+                SetObjectOutline(object, false)
+            end            
+        end
+
+        if EditingObject then
+            StopEditingObject()
+        end
     end
 end)
 
 AddEvent("OnKeyPress", function(key)
     if PlacementPendingItem and key == 'Left Mouse Button' then
+        -- initial placement of object
         local x, y, z, distance = GetMouseHitLocation()
         if distance > 1000 then
             ShowMessage("Cannot place object that far away!")
@@ -54,6 +71,7 @@ AddEvent("OnKeyPress", function(key)
             SelectEditableObject(hitid)
         end
     elseif EditingObject and key == 'Right Mouse Button' then
+        -- object is being edited
         if EditMode == EDIT_LOCATION then
             EditMode = EDIT_ROTATION
         elseif EditMode == EDIT_ROTATION then
@@ -81,6 +99,10 @@ AddRemoteEvent("ObjectPlaced", function(object)
 end)
 
 function SelectEditableObject(object)
+    if GetObjectPropertyValue(object, "placeable") ~= true then
+        return
+    end
+
     EditingObject = object
     SetObjectEditable(object, EditMode)
     SetObjectOutline(object, true)
@@ -118,8 +140,6 @@ function CancelEditTimer(x, y, z)
 
         SetObjectEditable(EditingObject, EDIT_NONE)
         SetObjectOutline(EditingObject, false)
-
-        CallRemoteEvent("CancelEditObject", EditingObject)
 
         EditingObject = nil
         PendingPlacement = false

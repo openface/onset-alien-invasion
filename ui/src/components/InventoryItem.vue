@@ -27,7 +27,7 @@
                     >Put Away</a
                 >
             </div>
-            <div v-else-if="item.type == 'prop'">
+            <div v-else-if="item.type == 'placeable'">
                 <a @click="PlaceItem(item.item)">Place</a>
             </div>
             <a @click="DropItem(item.item)">Drop</a>

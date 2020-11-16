@@ -1,6 +1,6 @@
 RegisterObject("wooden_chair", {
     name = "Wooden Chair",
-    type = 'prop',
+    type = 'placeable',
     interaction = {
         animation = { name = "SIT" }
     },

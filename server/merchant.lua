@@ -7,7 +7,7 @@ AddEvent("OnPackageStart", function()
   end
 end)
 
-AddRemoteEvent("GetMerchantData", function(player)
+AddRemoteEvent("prop:GetMerchantData", function(player)
     local item_data = {}
     for key,item in pairs(GetItemConfigs()) do
         if item['price'] ~= nil then

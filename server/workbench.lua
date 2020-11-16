@@ -8,7 +8,7 @@ AddEvent("OnPackageStart", function()
   end
 end)
 
-AddRemoteEvent("GetWorkbenchData", function(player)
+AddRemoteEvent("prop:GetWorkbenchData", function(player)
     local item_data = {}
     for key,item in pairs(GetItemConfigs()) do
         if item['recipe'] ~= nil then
@@ -26,7 +26,7 @@ AddRemoteEvent("GetWorkbenchData", function(player)
         ["item_data"] = item_data,
         ["player_resources"] = GetPlayerResources(player)
     }
-    --log.debug(dump(json_encode(_send)))
+    log.debug(dump(json_encode(_send)))
     CallRemoteEvent(player, "LoadWorkbenchData", json_encode(_send))
 end)
 

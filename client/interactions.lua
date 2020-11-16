@@ -49,7 +49,7 @@ AddEvent("OnGameTick", function()
                     remote_event = prop_options['remote_event'] or nil,
                     options = prop_options['options']
                 }
-                -- AddPlayerChat(dump(ActiveProp))
+                --AddPlayerChat(dump(ActiveProp))
             end
         elseif hitStruct.type == 'tree' then
             -- foliage component
@@ -152,11 +152,11 @@ AddEvent("OnKeyPress", function(key)
         -- call prop events
         
         if ActiveProp['client_event'] then
-            -- AddPlayerChat("calling client event: "..ActiveProp['event'])
+            --AddPlayerChat("calling client event: "..ActiveProp['event'])
             CallEvent("prop:" .. ActiveProp['client_event'], ActiveProp['object'], ActiveProp['options'])
         end
         if ActiveProp['remote_event'] then
-            -- AddPlayerChat("calling remote event: "..ActiveProp['remote_event'])
+            --AddPlayerChat("calling remote event: "..ActiveProp['remote_event'])
             CallRemoteEvent("prop:" .. ActiveProp['remote_event'], ActiveProp['object'], ActiveProp['options'])
         end
         ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")

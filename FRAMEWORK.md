@@ -110,6 +110,13 @@ CreateProp(v, { message = "Search", remote_event = "SearchForScrap"})
 AddRemoteEvent("SearchForScrap", function(player)
 ```
 
+### Built-in Interactive Prop Definitions
+
+- Sitting in a chair
+- Fishing in water
+- Harvesting tree
+- Repairing vehicle
+
 ## Item Event Callbacks
 
 #### After Use

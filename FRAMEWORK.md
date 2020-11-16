@@ -4,20 +4,26 @@
 
 #### Inventory Configuration
 
-
+Full Non-Working Example:
 ```
 RegisterObject("wooden_chair", {        -- unique id / item name
     name = "Wooden Chair",              -- display name
     type = 'prop',                      -- item type (see Item Types)
     interaction = {
-        animation = { name = "SIT" }    -- animation to play when equipping/using
-        sound = ""                      -- sound to play when equipping/using
+        animation = { 
+            name = "SIT",               -- animation to play when equipping/using
+            duration = "4000"           -- milliseconds to delay for animation (default 2000)
+            spinner = false             -- shows a spinner for the duration of interaction
+        },
+        sound = "sounds/squeak.mp3"     -- sound to play during interaction with object
     },
-    modelid = 1262,                     -- modelid
+    modelid = 1262,                     -- object modelid
     max_carry = 1,                      -- maximum number that can be carried in inventory
     recipe = {                          -- resources required to build this item (workbench)
         metal = 20,
-        plastic = 5
+        plastic = 5,
+        wood = 2,
+        computer_part = 1
     },
     price = 150,                        -- cash required to purchase this item (merchant)
     attachment = {                      -- how to attach this item to player when equipped/using
@@ -28,6 +34,14 @@ RegisterObject("wooden_chair", {        -- unique id / item name
         ry = 180, 
         rz = 10, 
         bone = "hand_r" 
+    },
+    prop_options = {                    -- creates interactive props
+        message = "Sit",
+        client_event = "SitInChair",
+        remote_event = "SitInChair",
+        options = {
+            type = 'object',
+        }
     }
 })
 ```
@@ -53,12 +67,13 @@ RegisterObject("wooden_chair", {        -- unique id / item name
 - Can be used directory from inventory
 - Adheres to max_uses and trackes item uses
 
-#### PROP
+#### PLACEABLE
 - Interactive props that can be stored in inventory
-- Can be mounted into the world from inventory
-- When dropped, they are pickups
-- Can be interacted with (Eg. Press [E] to sit in a chair)
-- TODO: how to move them around within the world or unmount them from world
+- Can be placed into the world from inventory
+- When dropped instead of placed, they are pickups
+- Can be interacted with using `prop_options` (Eg. Press [E] to sit in a chair)
+- Placeable objects are editable (rotation and location)
+- Player can hold Left Ctrl to see all placeable objects and click to edit objects nearby
 
 ## Interactive World Props
 
@@ -70,12 +85,12 @@ CreateProp(v, { message = "Search", remote_event = "SearchForScrap"})
 AddRemoteEvent("SearchForScrap", function(player)
 ```
 
-## Item Callbacks
+## Item Event Callbacks
 
 #### USE
 
 ```
-Called AFTER duration delay
+Called AFTER interaction duration delay
 
 # items/toolbox.lua
 AddEvent("items:toolbox:use", function(player, item_cfg, options)

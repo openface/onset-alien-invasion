@@ -334,3 +334,4 @@ AddRemoteEvent("UseItemHotkey", function(player, key)
         UseItemFromInventory(player, item)
     end
 end)
+

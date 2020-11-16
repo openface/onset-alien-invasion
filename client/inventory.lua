@@ -14,7 +14,7 @@ AddEvent("OnPackageStop", function()
 end)
 
 AddEvent('OnKeyPress', function(key)
-    if IsShiftPressed() or IsAltPressed() or GetWebVisibility(InventoryUI) == WEB_HIDDEN then
+    if IsShiftPressed() or IsAltPressed() or EditingObject or GetWebVisibility(InventoryUI) == WEB_HIDDEN then
         return
     end
     if not IsPlayerInVehicle() then
@@ -36,7 +36,7 @@ end)
 
 AddEvent('OnKeyRelease', function(key)
     if GetWebVisibility(InventoryUI) == WEB_HIDDEN then
-      return
+        return
     end
 
     if key == 'Tab' and not IsPlayerInVehicle() then

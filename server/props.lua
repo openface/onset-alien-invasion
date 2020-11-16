@@ -2,8 +2,15 @@ local Props = {}
 
 function CreateProp(config, options)
     log.debug("Creating interactive prop:", config['modelID'])
-    local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'], config['ry'],
-                       config['rz'], config['sx'], config['sy'], config['sz'])
+
+    local rx = config['rx'] or 0
+    local ry = config['ry'] or 0
+    local rz = config['rz'] or 0
+    local sx = config['sx'] or 0
+    local sy = config['sy'] or 0
+    local sz = config['sz'] or 0
+
+    local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], rx, ry, rz, sx, sy, sz)
     SetObjectPropertyValue(object, "prop", options)
     table.insert(Props, object)
 end
@@ -16,10 +23,10 @@ AddEvent("OnPackageStop", function()
 end)
 
 --
--- Foliage
+-- Chopping
 --
 
-AddRemoteEvent("HarvestTree", function(player)
+AddRemoteEvent("prop:HarvestTree", function(player)
     if GetInventoryCount(player, "axe") == 0 then
         AddPlayerChat(player, "You need an axe to harvest this!")
         CallRemoteEvent(player, "PlayErrorSound")
@@ -37,10 +44,10 @@ AddRemoteEvent("HarvestTree", function(player)
 end)
 
 --
--- Water
+-- Fishing
 --
 
-AddRemoteEvent("GoFishing", function(player)
+AddRemoteEvent("prop:GoFishing", function(player)
     if GetInventoryCount(player, "fishing_rod") == 0 then
         CallRemoteEvent(player, "ShowError", "You need a fishing rod to do this right!")
         return
@@ -54,4 +61,19 @@ AddRemoteEvent("GoFishing", function(player)
         AddToInventory(player, "wood")
     end)
 
+end)
+
+--
+-- Sitting
+--
+
+AddRemoteEvent("prop:SitInChair", function(player, object, options)
+    SetPlayerAnimation(player, "SIT04")
+    log.debug(GetPlayerName(player).." sitting...")
+end)
+
+AddRemoteEvent("prop:StopSitting", function(player, loc)
+    SetPlayerAnimation(player, "STOP")
+    SetPlayerLocation(player, loc.x, loc.y, loc.z)
+    log.debug(GetPlayerName(player).." no longer sitting...")
 end)

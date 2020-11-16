@@ -30,6 +30,7 @@ RegisterObject("landmine", {
 -- TODO: it would be better to have each landmine maintain it's own timer 
 -- and let the owner of the landmine enable/disable it
 
+-- TODO: use hit event instead of timer!
 
 local Landmines = {}
 local LandmineTimer

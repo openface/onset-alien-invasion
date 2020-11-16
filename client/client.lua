@@ -77,11 +77,6 @@ AddRemoteEvent("ClientSetTime", function(time)
     SetTime(time)
 end)
 
-AddEvent("OnShowMainMenu", function ()
-    ShowMouseCursor(true)
-    SetInputMode(INPUT_UI)
-end)
-
 AddEvent("OnHideMainMenu", function ()
     -- hide any visible UIs
     for _,ui in pairs(GetAllWebUI()) do
@@ -90,9 +85,6 @@ AddEvent("OnHideMainMenu", function ()
         SetWebVisibility(ui, WEB_HIDDEN)
       end
     end
-
-    ShowMouseCursor(false)
-    SetInputMode(INPUT_GAME)
 end)
 
 -- skydive

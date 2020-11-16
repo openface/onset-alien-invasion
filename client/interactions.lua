@@ -45,7 +45,7 @@ AddEvent("OnGameTick", function()
                 ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop_options['message'] .. "')")
                 ActiveProp = {
                     object = hitObject,
-                    event = prop_options['event'] or nil,
+                    client_event = prop_options['client_event'] or nil,
                     remote_event = prop_options['remote_event'] or nil,
                     options = prop_options['options']
                 }
@@ -82,7 +82,9 @@ end)
 -- returns the object and a structure or nil
 function PlayerLookRaycast()
     local camX, camY, camZ = GetCameraLocation()
-    if not camX then return end
+    if not camX then
+        return
+    end
 
     local camForwardX, camForwardY, camForwardZ = GetCameraForwardVector()
 
@@ -101,7 +103,7 @@ function PlayerLookRaycast()
         return
     end
 
-    --AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName() .." id:"..Comp:GetUniqueID())
+    -- AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName() .." id:"..Comp:GetUniqueID())
     return ProcessHitComponent(Comp)
 end
 
@@ -146,18 +148,67 @@ function ProcessHitComponent(Comp)
 end
 
 AddEvent("OnKeyPress", function(key)
-    if key == "E" then
-        if ActiveProp ~= nil then
-            if ActiveProp['event'] then
-                -- AddPlayerChat("calling event: "..ActiveProp['event'])
-                CallEvent(ActiveProp['event'], ActiveProp['object'], ActiveProp['options'])
-            elseif ActiveProp['remote_event'] then
-                -- AddPlayerChat("calling remote event: "..ActiveProp['remote_event'])
-                CallRemoteEvent(ActiveProp['remote_event'], ActiveProp['object'], ActiveProp['options'])
-            end
-            ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
-            SetObjectOutline(ActiveProp['object'], false)
-            ActiveProp = nil
+    if ActiveProp ~= nil and key == "E" then
+        -- call prop events
+        
+        if ActiveProp['client_event'] then
+            -- AddPlayerChat("calling client event: "..ActiveProp['event'])
+            CallEvent("prop:" .. ActiveProp['client_event'], ActiveProp['object'], ActiveProp['options'])
         end
+        if ActiveProp['remote_event'] then
+            -- AddPlayerChat("calling remote event: "..ActiveProp['remote_event'])
+            CallRemoteEvent("prop:" .. ActiveProp['remote_event'], ActiveProp['object'], ActiveProp['options'])
+        end
+        ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
+        SetObjectOutline(ActiveProp['object'], false)
+        ActiveProp = nil
+    elseif StandingPlayerLocation and key == 'Space Bar' then
+        -- unsitting
+        
+        local actor = GetPlayerActor(GetPlayerId())
+        actor:SetActorEnableCollision(true)
+
+        CallRemoteEvent("prop:StopSitting", StandingPlayerLocation)
     end
 end)
+
+--
+-- Sitting
+--
+
+-- Thanks Pindrought!
+AddEvent("prop:SitInChair", function(object, options)
+    -- save previous location
+    local x, y, z = GetPlayerLocation()
+    StandingPlayerLocation = {
+        x = x,
+        y = y,
+        z = z
+    }
+
+    local actorYAdjustment = 90
+
+    local modelid = GetObjectModel(object)
+    local chairYAdjustment = 0
+    if (modelid == 952) then -- Not all chairs are rotated properly by default, so you'll have to test for each chair model that you want to use and adjust y accordingly
+        chairYAdjustment = 180
+    end
+
+    local x, y, z = GetObjectLocation(object)
+    local rX, rY, rZ = GetObjectRotation(object)
+    local locationVector = FVector(x, y, z)
+    local forwardVector = FVector(0, 1, 0)
+    local rotator = FRotator(rX, rY + chairYAdjustment, rZ)
+    forwardVector = rotator:RotateVector(forwardVector)
+    local magnitude = 30 -- Magnitude of vector for placing player (bigger = further away, smaller = closer)
+    forwardVector = forwardVector * FVector(magnitude, magnitude, magnitude)
+    locationVector = locationVector + forwardVector
+    locationVector.Z = locationVector.Z + 100
+
+    local actor = GetPlayerActor(GetPlayerId())
+    actor:SetActorEnableCollision(false) -- Disable player collision so that the player will not be pushed off the chair
+
+    actor:SetActorLocation(locationVector)
+    actor:SetActorRotation(FRotator(rX, rY + actorYAdjustment + chairYAdjustment, rZ))
+end)
+

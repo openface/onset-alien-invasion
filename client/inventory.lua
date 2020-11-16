@@ -43,9 +43,7 @@ AddEvent('OnKeyRelease', function(key)
         -- item inventory
         SetWebVisibility(InventoryUI, WEB_HITINVISIBLE)
         ExecuteWebJS(InventoryUI, "EmitEvent('HideInventory')")
-        if not EditingObject then
-            ShowMouseCursor(false)
-        end
+        ShowMouseCursor(false)
         SetInputMode(INPUT_GAME)
     end
 end)
@@ -73,11 +71,6 @@ end)
 -- use item
 AddEvent("UseItem", function(item)
     CallRemoteEvent("UseItemFromInventory", item)
-end)
-
--- place item
-AddEvent("PlaceItem", function(item)
-    CallRemoteEvent("PlaceItem", item)
 end)
 
 -- sort inventory

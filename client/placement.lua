@@ -103,6 +103,8 @@ function SelectEditableObject(object)
         return
     end
 
+    AddPlayerChat("Editing object. Use Right-click to change edit mode.")
+
     EditingObject = object
 
     SetObjectEditable(EditingObject, EditMode)

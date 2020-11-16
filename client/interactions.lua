@@ -148,26 +148,44 @@ function ProcessHitComponent(Comp)
 end
 
 AddEvent("OnKeyPress", function(key)
-    if key == "E" then
-        if ActiveProp ~= nil then
-            if ActiveProp['client_event'] then
-                -- AddPlayerChat("calling client event: "..ActiveProp['event'])
-                CallEvent("prop:" .. ActiveProp['client_event'], ActiveProp['object'], ActiveProp['options'])
-            end
-            if ActiveProp['remote_event'] then
-                -- AddPlayerChat("calling remote event: "..ActiveProp['remote_event'])
-                CallRemoteEvent("prop:" .. ActiveProp['remote_event'], ActiveProp['object'], ActiveProp['options'])
-            end
-            ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
-            SetObjectOutline(ActiveProp['object'], false)
-            ActiveProp = nil
+    if ActiveProp ~= nil and key == "E" then
+        -- call prop events
+        
+        if ActiveProp['client_event'] then
+            -- AddPlayerChat("calling client event: "..ActiveProp['event'])
+            CallEvent("prop:" .. ActiveProp['client_event'], ActiveProp['object'], ActiveProp['options'])
         end
+        if ActiveProp['remote_event'] then
+            -- AddPlayerChat("calling remote event: "..ActiveProp['remote_event'])
+            CallRemoteEvent("prop:" .. ActiveProp['remote_event'], ActiveProp['object'], ActiveProp['options'])
+        end
+        ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
+        SetObjectOutline(ActiveProp['object'], false)
+        ActiveProp = nil
+    elseif StandingPlayerLocation and key == 'Space Bar' then
+        -- unsitting
+        
+        local actor = GetPlayerActor(GetPlayerId())
+        actor:SetActorEnableCollision(true)
+
+        CallRemoteEvent("prop:StopSitting", StandingPlayerLocation)
     end
 end)
 
--- TODO: this should somehow belong in objects/wooden_chair.lua but run on client
--- Thanks Pindrought
+--
+-- Sitting
+--
+
+-- Thanks Pindrought!
 AddEvent("prop:SitInChair", function(object, options)
+    -- save previous location
+    local x, y, z = GetPlayerLocation()
+    StandingPlayerLocation = {
+        x = x,
+        y = y,
+        z = z
+    }
+
     local actorYAdjustment = 90
 
     local modelid = GetObjectModel(object)
@@ -193,3 +211,4 @@ AddEvent("prop:SitInChair", function(object, options)
     actor:SetActorLocation(locationVector)
     actor:SetActorRotation(FRotator(rX, rY + actorYAdjustment + chairYAdjustment, rZ))
 end)
+

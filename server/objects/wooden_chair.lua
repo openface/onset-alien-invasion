@@ -17,8 +17,3 @@ RegisterObject("wooden_chair", {
     }
 })
 
-AddRemoteEvent("prop:SitInChair", function(player, object, options)
-    SetPlayerAnimation(player, "SIT04")
-
-    log.debug("sitting...")
-end)

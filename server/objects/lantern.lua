@@ -1,6 +1,7 @@
 RegisterObject("lantern", {
     name = "Lantern",
     type = 'equipable',
+    category = "Supplies",
     modelid = 553,
     max_carry = 1,
     recipe = {

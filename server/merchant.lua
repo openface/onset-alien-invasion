@@ -14,6 +14,7 @@ AddRemoteEvent("GetMerchantData", function(player)
             table.insert(item_data, {
                 item = key,
                 name = item['name'],
+                category = item['category'],
                 modelid = item['modelid'],
                 image = item['image'],
                 price = item['price']

@@ -1,6 +1,7 @@
 RegisterObject("banana", {
     name = "Banana",
     type = "usable",
+    category = "Grocery",
     recipe = nil,
     price = 3,
     interaction = {

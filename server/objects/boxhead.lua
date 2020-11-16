@@ -1,6 +1,7 @@
 RegisterObject("boxhead", {
     name = "Boxhead",
     type = 'equipable',
+    category = "Miscellaneous",
     modelid = 406,
     max_carry = 1,
     recipe = {

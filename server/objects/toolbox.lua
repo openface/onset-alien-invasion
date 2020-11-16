@@ -1,6 +1,7 @@
 RegisterObject("toolbox", {
     name = "Toolbox",
     type = 'resource',
+    category = "Supplies",
     pickup_sound = "sounds/toolbox.wav",
     modelid = 551,
     max_carry = 1,

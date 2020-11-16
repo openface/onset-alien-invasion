@@ -1,6 +1,7 @@
 RegisterObject("landmine", {
     name = "Landmine",
     type = 'usable',
+    category = "Military Surplus",
     interaction = {
         sound = "sounds/shovel.wav",
         animation = {

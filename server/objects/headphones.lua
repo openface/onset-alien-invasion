@@ -1,6 +1,7 @@
 RegisterObject("headphones", {
     name = "Headphones",
     type = 'equipable',
+    category = "Miscellaneous",
     modelid = 828,
     max_carry = 1,
     recipe = {

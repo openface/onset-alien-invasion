@@ -1,6 +1,7 @@
 RegisterObject("armyhat", {
     name = "Officer Hat",
     type = 'equipable',
+    category = "Military Surplus",
     recipe = {
         metal = 2,
         plastic = 1

@@ -1,6 +1,7 @@
 RegisterObject("chainsaw", {
     name = "Chainsaw",
     type = 'usable',
+    category = "Supplies",
     interaction = {
         sound = "sounds/chainsaw.wav",
         animation = { name = "FISHING", duration = 4000 }

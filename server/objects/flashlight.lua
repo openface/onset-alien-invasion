@@ -1,6 +1,7 @@
 RegisterObject("flashlight", {
     name = "Flashlight",
     type = 'equipable',
+    category = "Supplies",
     modelid = 1271,
     max_carry = 1,
     interaction = {

@@ -1,6 +1,7 @@
 RegisterObject("axe", {
     name = "Axe",
     type = 'usable',
+    category = "Supplies",
     interaction = {
         sound = "sounds/chopping_wood.mp3",
         animation = { name = "PICKAXE_SWING" }

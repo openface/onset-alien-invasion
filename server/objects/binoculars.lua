@@ -1,6 +1,7 @@
 RegisterObject("binoculars", {
     name = "Binoculars",
     type = 'usable',
+    category = "Supplies",
     interaction = {
         animation = { name = "WATCHING", duration = 5000 }
     },

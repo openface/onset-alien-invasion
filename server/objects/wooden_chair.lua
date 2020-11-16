@@ -1,6 +1,7 @@
 RegisterObject("wooden_chair", {
     name = "Wooden Chair",
     type = 'placeable',
+    category = "Furniture",
     modelid = 1262,
     max_carry = 1,
     recipe = {

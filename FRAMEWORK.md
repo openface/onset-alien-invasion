@@ -112,10 +112,11 @@ AddRemoteEvent("SearchForScrap", function(player)
 
 ### Built-in Interactive Prop Definitions
 
-- Sitting in a chair
-- Fishing in water
-- Harvesting tree
-- Repairing vehicle
+#### Sitting in a chair
+#### Fishing in water
+#### Harvesting tree
+#### Repairing vehicle
+#### Opening storage
 
 ## Item Event Callbacks
 

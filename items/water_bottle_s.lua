@@ -2,7 +2,6 @@ RegisterObject("water_bottle", {
     name = "Water Bottle",
     type = "usable",
     category = "Grocery",
-    recipe = nil,
     price = 5,
     interaction = {
         sound = "sounds/drink.wav",

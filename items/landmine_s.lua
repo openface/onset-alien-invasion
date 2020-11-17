@@ -12,10 +12,6 @@ RegisterObject("landmine", {
     max_carry = 3,
     max_use = 1,
     use_label = "Activate",
-    recipe = {
-        metal = 20,
-        plastic = 2
-    },
     price = 50,
     attachment = {
         x = 10.3,

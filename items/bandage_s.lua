@@ -2,7 +2,6 @@ RegisterObject("bandage", {
   name = "Bandage",
   type = "usable",
   category = "Supplies",
-  recipe = nil,
   price = 2,
   interaction = {
       sound = "sounds/cloth.mp3",

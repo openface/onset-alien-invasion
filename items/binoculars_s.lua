@@ -8,10 +8,6 @@ RegisterObject("binoculars", {
     modelid = 20004,
     image = "survival/SM_Binocular.png",
     max_carry = 1,
-    recipe = {
-        metal = 20,
-        plastic = 5
-    },
     price = 75,
     attachment = { 
       x = -10, 

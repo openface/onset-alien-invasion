@@ -22,12 +22,19 @@
                                 </span>
                             </div>
                             <div class="action">
-                                <button
-                                    class="build"
-                                    @click="BuildItem(item.item)"
-                                >
-                                    BUILD NOW
-                                </button>
+                                <div v-if="hasEnoughResources(item)">
+                                    <button
+                                        class="build"
+                                        @click="BuildItem(item.item)"
+                                    >
+                                        BUILD NOW
+                                    </button>
+                                </div>
+                                <div v-else>
+                                    <button class="need_scrap" disabled="true">
+                                        NEED RESOURCES
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -77,12 +84,34 @@ export default {
             this.CallEvent("BuildItem", item);
 
             if (!this.InGame) {
-                setTimeout(() => this.EventBus.$emit("BuildDenied"), 5000);
-                //setTimeout(() => this.EventBus.$emit("CompleteBuild", { player_resources: { plastic: 10, wood: 5 }}), 5000);
+                //setTimeout(() => this.EventBus.$emit("BuildDenied"), 5000);
+                setTimeout(() => this.EventBus.$emit("CompleteBuild", { player_resources: { plastic: 10, wood: 5 }}), 5000);
             }
         },
         PlayClick() {
             this.CallEvent("PlayClick");
+        },
+        hasEnoughResources(item) {
+            if (Object.keys(this.player_resources).length == 0) {
+                // No resources at all
+                return false;
+            }
+            for (const resource in item.recipe) {
+                //console.log(`*** ${resource}: ${this.recipe[resource]}`);
+                if (this.player_resources[resource]) {
+                    //console.log(`need ${this.recipe[resource]}, have: ${this.player_resources[resource]}`);
+                    if (
+                        this.player_resources[resource] < item.recipe[resource]
+                    ) {
+                        // Not enough of that resource
+                        return false;
+                    }
+                } else {
+                    // No resource
+                    return false;
+                }
+            }
+            return true;
         },
     },
     mounted() {
@@ -108,10 +137,10 @@ export default {
                         modelid: 843,
                     },
                     {
-                        item: "foobar",
-                        name: "Foobar",
+                        item: "boxhead",
+                        name: "Boxhead",
                         recipe: {
-                            plastic: 2,
+                            wood: 1,
                         },
                         modelid: 843,
                     },

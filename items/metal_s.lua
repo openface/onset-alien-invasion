@@ -8,6 +8,4 @@ RegisterObject("metal", {
         z = 0.2
     },
     max_carry = 25,
-    recipe = nil,
-    attachment = nil
 })

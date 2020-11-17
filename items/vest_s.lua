@@ -11,10 +11,6 @@ RegisterObject("vest", {
     modelid = 843,
     max_carry = 2,
     auto_equip = true,
-    recipe = {
-        metal = 2,
-        plastic = 15
-    },
     price = 100,
     attachment = {
         x = -17,

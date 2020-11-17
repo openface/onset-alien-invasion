@@ -75,7 +75,11 @@ AddRemoteEvent("BuildItem", function(player, item)
     SetPlayerAnimation(player, "BARCLEAN01")
     Delay(15000, function()
         SetPlayerAnimation(player, "STOP")
-        CallRemoteEvent(player, "CompleteBuild", json_encode(GetPlayerResources(player)))
+
+        local _send = {
+            ["player_resources"] = GetPlayerResources(player)
+        }
+        CallRemoteEvent(player, "CompleteBuild", json_encode(_send))
 
         AddPlayerChat(player, item_cfg['name'].." has been added to your inventory.")
         AddToInventory(player, item)
@@ -86,7 +90,9 @@ function GetPlayerResources(player)
     local inventory = GetPlayerPropertyValue(player, "inventory")
     local resources = {}
     for _,item in pairs(inventory) do
-        if item['type'] == 'resource' then
+        -- todo: figure out how to make wood a usable resource
+        -- so that we don't hardcode them here
+        if item['type'] == 'resource' or item['item'] == 'wood' then
             resources[item['item']] = item['quantity']
         end
     end

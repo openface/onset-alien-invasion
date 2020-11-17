@@ -14,7 +14,6 @@ RegisterObject("toolbox", {
             spinner = true
         }
     },
-    recipe = nil,
     attachment = {
         x = 16,
         y = -12.6,

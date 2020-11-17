@@ -9,10 +9,6 @@ RegisterObject("axe", {
     modelid = 20002,
     image = "survival/SM_Axe-Neo.png",
     max_carry = 1,
-    recipe = {
-        metal = 20,
-        plastic = 5
-    },
     price = 150,
     attachment = { 
       x = -10.8, 

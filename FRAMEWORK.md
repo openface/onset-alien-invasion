@@ -80,7 +80,8 @@ RegisterObject("wooden_chair", {        -- [required] unique id / item name
 - Can only carry 2 weapons in slots 2,3.  (slot 1 is reserved for fists/disarm)
 
 #### resource
-- Can be used but not directly (Eg. Fishing rod is used by interacting with water)
+- Used at the workbench to build them from them
+- Can be used but not directly (Eg. Fishing Rod is used by interacting with water)
 - Does not adhere to max_uses or track uses
 - Found in the world by scavenging scrap heaps
 
@@ -92,6 +93,7 @@ RegisterObject("wooden_chair", {        -- [required] unique id / item name
 #### usable
 - Can be used directory from inventory
 - Adheres to max_uses and trackes item uses
+- Plays interaction when using
 
 #### placeable
 - Interactive props that can be stored in inventory

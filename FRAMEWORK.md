@@ -1,8 +1,6 @@
 # Framework API
 
-## Registering Item
-
-#### Inventory Configuration
+## Items
 
 Most item configuration options are optional.  Here is a sample pulled together from various objects:
 
@@ -144,4 +142,55 @@ end)
 AddEvent("items:vest:unequip", function(player, object)
     SetPlayerArmor(player, 0)
 end)
+```
+
+## Merchants
+
+```
+RegisterMerchant("Store", {
+    "x": -99669.5703125,
+    "y": 197139.015625,
+    "z": 1231.4288330078,
+    "rx": -0.0026842642109841,
+    "sx": 1,
+    "rz": -0.0026855466421694,
+    "ry": -178.4490814209,
+    "modelID": 571,
+    "sz": 1,
+    "sy": 1
+  })
+```
+
+## Storages
+
+```
+RegisterStorage("Crate",   {
+    "rz": 0,
+    "sz": 1,
+    "y": 192622.484375,
+    "x": -103740.4765625,
+    "sx": 1,
+    "z": 1215,
+    "modelID": 1013,
+    "sy": 1,
+    "ry": 0,
+    "rx": 0
+  })
+```
+
+## Scrapheaps
+
+```
+RegisterScrapheap({
+    "rz": 0,
+    "sz": 1,
+    "y": 177447.8125,
+    "x": -107744.359375,
+    "sx": 1,
+    "z": 1205.9958496094,
+    "modelID": 345,
+    "sy": 1,
+    "ry": 0,
+    "rx": 0
+  })
 ```

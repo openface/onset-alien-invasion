@@ -1,12 +1,29 @@
+local Workbenches = {}
 
 AddEvent("OnPackageStart", function()
-  log.info("Loading workbenches...")
+    log.info("Loading workbenches...")
 
-  local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/server/data/workbenches.json")
-  for _, v in pairs(_table) do
-      CreateProp(v, { message = "Interact", remote_event = "GetWorkbenchData" })
-  end
+    local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/server/data/workbenches.json")
+    for _, config in pairs(_table) do
+        -- todo: workbench name is hardcoded for now
+        RegisterWorkbench("Workbench", config)
+    end
 end)
+
+AddEvent("OnPackageStop", function()
+    log.info "Destroying all workbenches..."
+    for _, object in pairs(Workbenches) do
+        DestroyObject(object)
+    end
+end)
+
+function RegisterWorkbench(name, config)
+    log.debug("Registering workbench: " .. name)
+    local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'],
+                           config['ry'], config['rz'], config['sx'], config['sy'], config['sz'])
+    SetObjectPropertyValue(object, "prop", { message = "Interact", remote_event = "GetWorkbenchData" })
+    Workbenches[object] = true
+end
 
 AddRemoteEvent("prop:GetWorkbenchData", function(player)
     local item_data = {}

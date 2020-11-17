@@ -1,3 +1,4 @@
+local Scrapheaps = {}
 local ScrapCooldown = 60000 * 5 -- can only search a scrap point every 10 minutes
 
 -- weighted resource loot
@@ -11,13 +12,29 @@ local Resources = {
 local CurrentlySearching = {}
 
 AddEvent("OnPackageStart", function()
-    log.info("Loading scrap heaps...")
+    log.info("Loading scrapheaps...")
 
     local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/server/data/scrapheaps.json")
-    for _, v in pairs(_table) do
-        CreateProp(v, { message = "Search", remote_event = "SearchForScrap"})
+    for _, config in pairs(_table) do
+        -- todo: merchant name is hardcoded for now
+        RegisterScrapheap(config)
     end
 end)
+
+AddEvent("OnPackageStop", function()
+    log.info "Destroying all scrapheaps..."
+    for _, object in pairs(Scrapheaps) do
+        DestroyObject(object)
+    end
+end)
+
+function RegisterScrapheap(config)
+    log.debug("Registering scrapheap")
+    local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'],
+                           config['ry'], config['rz'], config['sx'], config['sy'], config['sz'])
+    SetObjectPropertyValue(object, "prop", { message = "Search", remote_event = "SearchForScrap"})
+    Scrapheaps[object] = true
+end
 
 AddCommand("scrap", function(player, amt)
     if not Player.IsAdmin(player) then
@@ -30,7 +47,7 @@ AddCommand("scrap", function(player, amt)
 end)
 
 -- search for scrap
-AddRemoteEvent("SearchForScrap", function(player)
+AddRemoteEvent("prop:SearchForScrap", function(player)
     if CurrentlySearching[player] ~= nil then
         return
     end

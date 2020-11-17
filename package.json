@@ -7,6 +7,7 @@
         "server/time.lua",
         "server/world.lua",
         "server/player.lua",
+        "server/props.lua",
 
         "aliens/aliens_s.lua",
         "lootbox/lootbox_s.lua",
@@ -24,7 +25,6 @@
         "equip/equip_s.lua",
         "weapons/weapons_s.lua",
         "storage/storage_s.lua",
-        "props/props_s.lua",
         "placement/placement_s.lua",
 
         "items/armyhat_s.lua",

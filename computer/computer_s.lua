@@ -1,7 +1,9 @@
+local Computers = {}
+
 local PartsCollected = 0
 local PartsRequired = 5
 
-local GarageComputerPropConfig = {
+local GarageComputerConfig = {
   rz = -0.0069580078125,
   sz = 1,
   y = 193889.953125,
@@ -13,7 +15,7 @@ local GarageComputerPropConfig = {
   ry = -91.021797180176,
   rx = -0.0069599621929228
 }
-local SatelliteTerminalPropConfig = {
+local SatelliteTerminalConfig = {
   rz = -0.002716064453125,
   sz = 1,
   y = 201182.859375,
@@ -29,17 +31,30 @@ local SatelliteTerminalPropConfig = {
 AddEvent("OnPackageStart", function()
     log.info "Creating computer props..."
     -- garage computer
-    CreateProp(GarageComputerPropConfig, { message = "Interact", client_event = "InteractGarageComputer" })
+    RegisterComputer("Garage Computer", GarageComputerConfig, { message = "Interact", client_event = "InteractGarageComputer" })
 
     -- satellite terminal
-    CreateProp(SatelliteTerminalPropConfig, { message = "Interact", client_event = "InteractSatelliteTerminal" })
+    RegisterComputer("Satellite Terminal", SatelliteTerminalConfig, { message = "Interact", client_event = "InteractSatelliteTerminal" })
 end)
 
 AddEvent("OnPackageStop", function()
+    log.info "Destroying all computers..."
+    for _, object in pairs(Computers) do
+        DestroyObject(object)
+    end
+
     PartsCollected = 0
     PartsRequired = 0
     UpdateAllPlayersSatelliteStatus(0)
 end)
+
+function RegisterComputer(name, config, prop_options)
+    log.debug("Registering computer: " .. name)
+    local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'],
+                           config['ry'], config['rz'], config['sx'], config['sy'], config['sz'])
+    SetObjectPropertyValue(object, "prop", prop_options)
+    Computers[object] = true
+end
 
 -- called when interacting with satellite with a computer_part in your inventory
 AddRemoteEvent("InteractSatelliteComputer", function(player, object)
@@ -107,5 +122,5 @@ end)
 
 AddEvent("ComputerPartPickedUp", function(player)
   AddPlayerChatAll(GetPlayerName(player)..' has found a computer part!')
-  CallRemoteEvent(player, "ComputerPartPickedup", { x = SatelliteTerminalPropConfig.x, y = SatelliteTerminalPropConfig.y, z = SatelliteTerminalPropConfig.z })
+  CallRemoteEvent(player, "ComputerPartPickedup", { x = SatelliteTerminalConfig.x, y = SatelliteTerminalConfig.y, z = SatelliteTerminalConfig.z })
 end)

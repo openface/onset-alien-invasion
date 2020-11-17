@@ -1,11 +1,29 @@
+local Storages = {}
+
 AddEvent("OnPackageStart", function()
-    log.info("Loading scrap heaps...")
-    
+    log.info("Loading storages...")
+
     local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/server/data/storages.json")
-    for _, v in pairs(_table) do
-        CreateProp(v, { message = "Open", remote_event = "OpenStorage", options = { type = 'object' } })
+    for _, config in pairs(_table) do
+        -- todo: storage name is hardcoded for now
+        RegisterStorage("Container", config)
     end
 end)
+
+AddEvent("OnPackageStop", function()
+    log.info "Destroying all storages..."
+    for _, object in pairs(Storages) do
+        DestroyObject(object)
+    end
+end)
+
+function RegisterStorage(name, config)
+    log.debug("Registering storage: " .. name)
+    local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'],
+                           config['ry'], config['rz'], config['sx'], config['sy'], config['sz'])
+    SetObjectPropertyValue(object, "prop", { message = "Open", remote_event = "OpenStorage", options = { type = 'object' } })
+    Storages[object] = true
+end
 
 AddRemoteEvent("prop:OpenStorage", function(player, object, options)
     log.info(GetPlayerName(player).." opens storage "..object.. " type "..options['type'])

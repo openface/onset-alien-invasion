@@ -81,7 +81,7 @@ AddRemoteEvent("BuildItem", function(player, item)
         }
         CallRemoteEvent(player, "CompleteBuild", json_encode(_send))
 
-        AddPlayerChat(player, item_cfg['name'].." has been added to your inventory.")
+        CallRemoteEvent(player, "ShowMessage", item_cfg['name'].." has been added to your inventory.")
         AddToInventory(player, item)
     end)
 end)

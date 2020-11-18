@@ -2,6 +2,11 @@ RegisterObject("flashlight", {
     name = "Flashlight",
     type = 'equipable',
     category = "Supplies",
+    recipe = {
+        metal = 10,
+        plastic = 5,
+        computer_part = 1
+    },
     modelid = 1271,
     max_carry = 1,
     interaction = {

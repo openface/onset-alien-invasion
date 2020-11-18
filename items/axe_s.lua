@@ -2,6 +2,10 @@ RegisterObject("axe", {
     name = "Axe",
     type = 'usable',
     category = "Supplies",
+    recipe = {
+        metal = 20,
+        plastic = 5
+    },
     interaction = {
         sound = "sounds/chopping_wood.mp3",
         animation = { name = "PICKAXE_SWING" }

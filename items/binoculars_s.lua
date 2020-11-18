@@ -2,6 +2,10 @@ RegisterObject("binoculars", {
     name = "Binoculars",
     type = 'usable',
     category = "Supplies",
+    recipe = {
+        metal = 20,
+        plastic = 5
+    },
     interaction = {
         animation = { name = "WATCHING", duration = 5000 }
     },

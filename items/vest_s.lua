@@ -2,6 +2,10 @@ RegisterObject("vest", {
     name = "Kevlar Vest",
     type = 'equipable',
     category = "Military Surplus",
+    recipe = {
+        metal = 2,
+        plastic = 15
+    },
     interaction = {
         sound = "sounds/backpack.wav",
         animation = {

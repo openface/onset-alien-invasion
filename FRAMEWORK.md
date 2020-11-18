@@ -105,12 +105,14 @@ RegisterObject("wooden_chair", {        -- [required] unique id / item name
 
 ## Interactive World Props
 
+WIP
+
 ```
-CreateProp(v, { message = "Search", remote_event = "SearchForScrap"})
+SetObjectPropertyValue(object, "prop", { message = "Interact", remote_event = "GetWorkbenchData", options = { id = config['id'] } })
 ```
 
 ```
-AddRemoteEvent("SearchForScrap", function(player)
+AddRemoteEvent("prop:GetWorkbenchData", function(player, object, options)
 ```
 
 ### Built-in Interactive Prop Definitions

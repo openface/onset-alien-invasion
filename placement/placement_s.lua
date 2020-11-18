@@ -8,6 +8,7 @@ end)
 AddEvent("OnPackageStop", function()
     for object in pairs(PlacedObjects) do
         log.debug("Destroying placed object " .. object)
+        PlacedObjects[object] = nil
         DestroyObject(object)
     end
 end)

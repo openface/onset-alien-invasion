@@ -13,6 +13,7 @@ end)
 AddEvent("OnPackageStop", function()
     log.info "Destroying all storages..."
     for _, object in pairs(Storages) do
+        Storages[object] = nil
         DestroyObject(object)
     end
 end)

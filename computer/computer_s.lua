@@ -40,6 +40,7 @@ end)
 AddEvent("OnPackageStop", function()
     log.info "Destroying all computers..."
     for _, object in pairs(Computers) do
+        Computers[object] = nil
         DestroyObject(object)
     end
 

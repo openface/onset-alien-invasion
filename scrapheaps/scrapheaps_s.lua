@@ -24,6 +24,7 @@ end)
 AddEvent("OnPackageStop", function()
     log.info "Destroying all scrapheaps..."
     for _, object in pairs(Scrapheaps) do
+        Scrapheaps[object] = nil
         DestroyObject(object)
     end
 end)

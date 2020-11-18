@@ -3,29 +3,31 @@ local Workbenches = {}
 AddEvent("OnPackageStart", function()
     log.info("Loading workbenches...")
 
-    local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/server/data/workbenches.json")
+    local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/workbench/workbenches.json")
     for _, config in pairs(_table) do
         -- todo: workbench name is hardcoded for now
-        RegisterWorkbench("Workbench", config)
+        RegisterWorkbench(config)
     end
 end)
 
 AddEvent("OnPackageStop", function()
     log.info "Destroying all workbenches..."
     for _, object in pairs(Workbenches) do
+        Workbenches[object] = nil
         DestroyObject(object)
     end
 end)
 
-function RegisterWorkbench(name, config)
-    log.debug("Registering workbench: " .. name)
+function RegisterWorkbench(config)
+    log.debug("Registering workbench: " .. config['name'])
     local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'],
                            config['ry'], config['rz'], config['sx'], config['sy'], config['sz'])
-    SetObjectPropertyValue(object, "prop", { message = "Interact", remote_event = "GetWorkbenchData" })
+    SetObjectPropertyValue(object, "prop", { message = "Interact", remote_event = "GetWorkbenchData", options = { id = config['id'], name = config['name'] } })
     Workbenches[object] = true
 end
 
-AddRemoteEvent("prop:GetWorkbenchData", function(player)
+AddRemoteEvent("prop:GetWorkbenchData", function(player, object, options)
+    log.debug("Workbench: "..options['id'])
     local item_data = {}
     for key,item in pairs(GetItemConfigs()) do
         if item['recipe'] ~= nil then
@@ -40,6 +42,7 @@ AddRemoteEvent("prop:GetWorkbenchData", function(player)
     end
 
     local _send = {
+        ["workbench_name"] = options['name'],
         ["item_data"] = item_data,
         ["player_resources"] = GetPlayerResources(player)
     }

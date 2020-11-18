@@ -7,7 +7,6 @@
         "server/time.lua",
         "server/world.lua",
         "server/player.lua",
-        "server/props.lua",
 
         "aliens/aliens_s.lua",
         "lootbox/lootbox_s.lua",
@@ -26,6 +25,8 @@
         "weapons/weapons_s.lua",
         "storage/storage_s.lua",
         "placement/placement_s.lua",
+        "props/props_s.lua",
+
 
         "items/armyhat_s.lua",
         "items/banana_s.lua",
@@ -74,8 +75,8 @@
         "inventory/inventory_c.lua",
         "storage/storage_c.lua",
         "vehicles/vehicles_c.lua",
-        "interactions/interactions_c.lua",
-        "placement/placement_c.lua"
+        "placement/placement_c.lua",
+        "props/props_c.lua"
     ],
     "files": [
         "client/pak/Aliens.pak",

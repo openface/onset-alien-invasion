@@ -29,9 +29,8 @@ end)
 
 function DespawnVehicles()
     for _, veh in pairs(Vehicles) do
-        -- log.debug("Destroying vehicle: "..veh)
-        DestroyVehicle(veh)
         Vehicles[veh] = nil
+        DestroyVehicle(veh)
     end
 end
 
@@ -43,7 +42,7 @@ function SpawnVehicles()
         local veh = CreateVehicle(23, pos[1], pos[2], pos[3])
         SetVehicleRespawnParams(veh, false, VehicleRespawnTime, true)
         SetVehicleHealth(veh, VehicleMaxHealth)
-        Vehicles[veh] = veh
+        Vehicles[veh] = true
     end
 end
 

@@ -1,7 +1,7 @@
 <template>
     <div id="container">
         <div id="inner" :class="IsBusy() ? 'blurred' : ''">
-            <div id="title">WORKBENCH</div>
+            <div id="title">{{ workbench_name }}</div>
             <div class="grid">
                 <div v-for="item in items" :key="item.item">
                     <div
@@ -59,6 +59,7 @@ export default {
     name: "Workbench",
     data() {
         return {
+            workbench_name: null,
             items: {},
             player_resources: {},
             is_busy: false,
@@ -69,6 +70,7 @@ export default {
             return this.is_busy;
         },
         LoadWorkbenchData: function(data) {
+            this.workbench_name = data['workbench_name'];
             this.items = data["item_data"];
             this.player_resources = data["player_resources"];
         },
@@ -121,6 +123,7 @@ export default {
 
         if (!this.InGame) {
             this.EventBus.$emit("LoadWorkbenchData", {
+                workbench_name: "Workbench",
                 player_resources: {
                     plastic: 2,
                     wood: 2,
@@ -299,6 +302,7 @@ export default {
     font-weight: bold;
     font-family: impact;
     text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
+    text-transform: uppercase;
 }
 
 .grid {

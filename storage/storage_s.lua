@@ -3,7 +3,7 @@ local Storages = {}
 AddEvent("OnPackageStart", function()
     log.info("Loading storages...")
 
-    local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/server/data/storages.json")
+    local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/storages/storages.json")
     for _, config in pairs(_table) do
         -- todo: storage name is hardcoded for now
         RegisterStorage("Container", config)

@@ -14,10 +14,9 @@ local CurrentlySearching = {}
 AddEvent("OnPackageStart", function()
     log.info("Loading scrapheaps...")
 
-    local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/server/data/scrapheaps.json")
+    local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/scrapheaps/scrapheaps.json")
     for _, config in pairs(_table) do
-        -- todo: merchant name is hardcoded for now
-        RegisterScrapheap(config)
+        CreateScrapheap(config)
     end
 end)
 
@@ -29,8 +28,8 @@ AddEvent("OnPackageStop", function()
     end
 end)
 
-function RegisterScrapheap(config)
-    log.debug("Registering scrapheap")
+function CreateScrapheap(config)
+    log.debug("Creating scrapheap")
     local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'],
                            config['ry'], config['rz'], config['sx'], config['sy'], config['sz'])
     SetObjectPropertyValue(object, "prop", { message = "Search", remote_event = "SearchForScrap"})

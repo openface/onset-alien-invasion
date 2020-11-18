@@ -151,7 +151,7 @@ end)
 ## Merchants
 
 ```
-RegisterMerchant("Store", {
+CreateMerchant("Store", {
     "x": -99669.5703125,
     "y": 197139.015625,
     "z": 1231.4288330078,
@@ -167,8 +167,10 @@ RegisterMerchant("Store", {
 
 ## Storages
 
+Storages are stationary fixtures created when the server starts.  They cannot be moved.
+
 ```
-RegisterStorage("Crate",   {
+CreateStorage("Crate",   {
     "rz": 0,
     "sz": 1,
     "y": 192622.484375,
@@ -185,7 +187,7 @@ RegisterStorage("Crate",   {
 ## Scrapheaps
 
 ```
-RegisterScrapheap({
+CreateScrapheap({
     "rz": 0,
     "sz": 1,
     "y": 177447.8125,
@@ -197,4 +199,23 @@ RegisterScrapheap({
     "ry": 0,
     "rx": 0
   })
+```
+
+## Workbenches
+
+```
+CreateWorkbench({
+    "id": 1,
+    "name": "Workbench 1",
+    "rz": 0,
+    "sz": 1,
+    "y": 193639.828125,
+    "x": -105958.46875,
+    "sx": 1,
+    "z": 1301.0041503906,
+    "modelID": 1101,
+    "sy": 1,
+    "ry": 1.6349707841873,
+    "rx": 0
+})
 ```

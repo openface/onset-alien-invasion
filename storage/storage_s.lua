@@ -3,10 +3,10 @@ local Storages = {}
 AddEvent("OnPackageStart", function()
     log.info("Loading storages...")
 
-    local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/storages/storages.json")
+    local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/storage/storages.json")
     for _, config in pairs(_table) do
         -- todo: storage name is hardcoded for now
-        RegisterStorage("Container", config)
+        CreateStorage("Container", config)
     end
 end)
 
@@ -18,8 +18,8 @@ AddEvent("OnPackageStop", function()
     end
 end)
 
-function RegisterStorage(name, config)
-    log.debug("Registering storage: " .. name)
+function CreateStorage(name, config)
+    log.debug("Creating storage: " .. name)
     local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'],
                            config['ry'], config['rz'], config['sx'], config['sy'], config['sz'])
     SetObjectPropertyValue(object, "prop", { message = "Open", remote_event = "OpenStorage", options = { type = 'object' } })

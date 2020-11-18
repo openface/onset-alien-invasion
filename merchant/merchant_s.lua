@@ -3,7 +3,7 @@ local Merchants = {}
 AddEvent("OnPackageStart", function()
     log.info("Loading merchants...")
 
-    local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/server/data/merchants.json")
+    local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/merchant/merchants.json")
     for _, config in pairs(_table) do
         -- todo: merchant name is hardcoded for now
         RegisterMerchant("Store", config)

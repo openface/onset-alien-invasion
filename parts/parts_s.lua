@@ -12,11 +12,11 @@ AddCommand("ppos", function(player)
     log.debug(string)
     table.insert(PartsLocations, { x, y, z })
 
-    File_SaveJSONTable("packages/"..GetPackageName().."/server/data/parts.json", PartsLocations)
+    File_SaveJSONTable("packages/"..GetPackageName().."/parts/parts.json", PartsLocations)
 end)
 
 AddEvent("OnPackageStart", function()
-    PartsLocations = File_LoadJSONTable("packages/"..GetPackageName().."/server/data/parts.json")
+    PartsLocations = File_LoadJSONTable("packages/"..GetPackageName().."/parts/parts.json")
     SpawnParts()
 end)
 

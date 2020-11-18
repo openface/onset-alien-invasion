@@ -5,8 +5,7 @@ AddEvent("OnPackageStart", function()
 
     local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/workbench/workbenches.json")
     for _, config in pairs(_table) do
-        -- todo: workbench name is hardcoded for now
-        RegisterWorkbench(config)
+        CreateWorkbench(config)
     end
 end)
 
@@ -18,8 +17,8 @@ AddEvent("OnPackageStop", function()
     end
 end)
 
-function RegisterWorkbench(config)
-    log.debug("Registering workbench: " .. config['name'])
+function CreateWorkbench(config)
+    log.debug("Creating workbench: " .. config['name'])
     local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'],
                            config['ry'], config['rz'], config['sx'], config['sy'], config['sz'])
     SetObjectPropertyValue(object, "prop", { message = "Interact", remote_event = "GetWorkbenchData", options = { id = config['id'], name = config['name'] } })

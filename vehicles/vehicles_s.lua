@@ -13,11 +13,11 @@ AddCommand("vpos", function(player)
     log.debug(string)
     table.insert(VehicleLocations, {x, y, z})
 
-    File_SaveJSONTable("packages/" .. GetPackageName() .. "/server/data/vehicles.json", VehicleLocations)
+    File_SaveJSONTable("packages/" .. GetPackageName() .. "/vehicles/vehicles.json", VehicleLocations)
 end)
 
 AddEvent("OnPackageStart", function()
-    VehicleLocations = File_LoadJSONTable("packages/" .. GetPackageName() .. "/server/data/vehicles.json")
+    VehicleLocations = File_LoadJSONTable("packages/" .. GetPackageName() .. "/vehicles/vehicles.json")
     SpawnVehicles()
 end)
 

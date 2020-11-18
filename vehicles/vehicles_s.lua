@@ -28,7 +28,7 @@ AddEvent("OnPackageStop", function()
 end)
 
 function DespawnVehicles()
-    for _, veh in pairs(Vehicles) do
+    for veh in pairs(Vehicles) do
         Vehicles[veh] = nil
         DestroyVehicle(veh)
     end

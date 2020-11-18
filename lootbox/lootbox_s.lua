@@ -22,11 +22,11 @@ AddCommand("lpos", function(player)
     log.debug(string)
     table.insert(LootLocations, { x, y, z })
 
-    File_SaveJSONTable("packages/"..GetPackageName().."/lootboxes/lootboxes.json", LootLocations)
+    File_SaveJSONTable("packages/"..GetPackageName().."/lootbox/lootboxes.json", LootLocations)
 end)
 
 AddEvent("OnPackageStart", function()
-    LootLocations = File_LoadJSONTable("packages/"..GetPackageName().."/lootboxes/lootboxes.json")
+    LootLocations = File_LoadJSONTable("packages/"..GetPackageName().."/lootbox/lootboxes.json")
 
     -- spawn random loot area
 	  LootTimer = CreateTimer(function()

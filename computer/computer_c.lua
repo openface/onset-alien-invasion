@@ -36,7 +36,7 @@ function ShowComputerTimer(object_location)
 end
 
 -- interacting with garage computer
-AddEvent("InteractGarageComputer", function(object)
+AddEvent("prop:InteractGarageComputer", function(object)
     local x, y, z = GetObjectLocation(object)
     SetSoundVolume(CreateSound3D("client/sounds/modem.mp3", x, y, z, 1500), 0.7)
     SetWebVisibility(ComputerUI, WEB_HITINVISIBLE)
@@ -49,7 +49,7 @@ AddEvent("InteractGarageComputer", function(object)
 end)
 
 -- interacting with satellite computer requires computer_part
-AddEvent("InteractSatelliteTerminal", function(object)
+AddEvent("prop:InteractSatelliteTerminal", function(object)
     if SatelliteWaypoint ~= nil then
         DestroyWaypoint(SatelliteWaypoint)
     end

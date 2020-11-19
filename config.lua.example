@@ -6,4 +6,6 @@ Config.admin_steam_ids = { }
 -- logging level
 Config.log_level = "info"
 
+Config.SpawnLocation = { x = -106884.28125, y = 197996.78125, z = 1298.3040771484 }
+
 return Config

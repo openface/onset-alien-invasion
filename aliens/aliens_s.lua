@@ -1,12 +1,7 @@
 local AlienHealth = 300
 local AlienAttackRange = 5000
 local AlienAttackDamage = 50
-local SafeLocation = {
-    x = -102037,
-    y = 194299,
-    z = 1400
-}
-local SafeRange = 5000
+local SafeRange = 6000
 local AlienRetargetCooldown = {} -- aliens re-target on every weapon hit w/ cooldown period
 local AlienSpawnsEnabled = true
 
@@ -97,7 +92,7 @@ function IsPlayerAttackable(player)
 
     -- don't attack if player is in safe zone
     local x, y, z = GetPlayerLocation(player)
-    local distance = GetDistance3D(x, y, z, SafeLocation.x, SafeLocation.y, SafeLocation.z)
+    local distance = GetDistance3D(x, y, z, Config.SpawnLocation.x, Config.SpawnLocation.y, Config.SpawnLocation.z)
     if distance < SafeRange then
         log.debug(GetPlayerName(player) .. " is in safe zone")
         return false

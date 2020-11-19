@@ -1,4 +1,3 @@
-local SpawnLocation = { x = -102037, y = 194299, z = 1400 }
 local PlayerRespawnSecs = 20 -- 20 secs
 
 AddCommand("pos", function(player)
@@ -49,8 +48,8 @@ end)
 
 -- welcome message
 AddEvent("OnPlayerJoin", function(player)
-    local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 6000)
-    SetPlayerSpawnLocation(player, x, y, SpawnLocation.z, 180)
+    local x, y = randomPointInCircle(Config.SpawnLocation.x, Config.SpawnLocation.y, 6000)
+    SetPlayerSpawnLocation(player, x, y, Config.SpawnLocation.z, 180)
 
     SetPlayerRespawnTime(player, PlayerRespawnSecs * 1000)
 
@@ -85,11 +84,11 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
 
     if not Player.IsAdmin(player) then
         -- parachute down to the island
-        SetPlayerLocation(player, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z + 30000)
+        SetPlayerLocation(player, Config.SpawnLocation.x, Config.SpawnLocation.y, Config.SpawnLocation.z + 30000)
         AttachPlayerParachute(player, true)
     end
 
-    local chopper = CreateObject(1847, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z + 31000)
+    local chopper = CreateObject(1847, Config.SpawnLocation.x, Config.SpawnLocation.y, Config.SpawnLocation.z + 31000)
     Delay(20000, function(chopper)
         DestroyObject(chopper)
     end, chopper)

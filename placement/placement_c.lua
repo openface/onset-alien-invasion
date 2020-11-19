@@ -19,15 +19,19 @@ end)
 
 AddEvent("OnKeyPress", function(key)
     if key == "Left Ctrl" then
-        -- pointing mode for selecting object to edit
-        SetInputMode(INPUT_GAMEANDUI)
-        ShowMouseCursor(true)
-
+        local found_editable_object = false
         -- outline all placeable items nearby
         for _,object in pairs(GetStreamedObjects()) do
             if GetObjectPropertyValue(object, "placeable") == true then
                 SetObjectOutline(object, true)
+                found_editable_object = true
             end            
+        end
+
+        if found_editable_object then
+            -- pointing mode for selecting object to edit
+            SetInputMode(INPUT_GAMEANDUI)
+            ShowMouseCursor(true)
         end
     end
 end)

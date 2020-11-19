@@ -46,6 +46,15 @@ AddRemoteEvent("ConsoleInput", function(player, input)
     log.debug("console: " .. input)
 end)
 
+AddEvent("OnConsoleInput", function(input)
+    if input == "" then return end
+    if input == "quit" or input == "exit" then
+        ServerExit("Exiting via console command")
+    end
+    -- run lua
+    load(input)()
+end)
+
 -- welcome message
 AddEvent("OnPlayerJoin", function(player)
     local x, y = randomPointInCircle(Config.SpawnLocation.x, Config.SpawnLocation.y, 6000)

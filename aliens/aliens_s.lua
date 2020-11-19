@@ -90,6 +90,8 @@ function IsPlayerAttackable(player)
         return false
     end
 
+    if Player.IsAdmin(player) then return false end
+
     -- don't attack if player is in safe zone
     local x, y, z = GetPlayerLocation(player)
     local distance = GetDistance3D(x, y, z, Config.SpawnLocation.x, Config.SpawnLocation.y, Config.SpawnLocation.z)

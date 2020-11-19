@@ -82,6 +82,9 @@ AddEvent("OnKeyPress", function(key)
             EditMode = EDIT_LOCATION
         end
         SetObjectEditable(EditingObject, EditMode)
+    elseif EditingObject and key == 'Backspace' then
+        -- put back into player inventory
+        CallRemoteEvent("UnplaceItem", EditingObject)
     end
 end)
 
@@ -95,6 +98,8 @@ end)
 -- place item from inventory UI
 AddEvent("PlaceItem", function(item)
     PlacementPendingItem = item
+
+    AddPlayerChat("Click where you would like to place this item.")
 end)
 
 AddRemoteEvent("ObjectPlaced", function(object)
@@ -106,7 +111,7 @@ function SelectEditableObject(object)
         return
     end
 
-    AddPlayerChat("Editing object. Use Right-click to change edit mode.")
+    AddPlayerChat("Editing object. While holding CTRL, you can reposition the item and use right-click to alternate between location and rotation. Hit [BACKSPACE] to unplace item.")
 
     EditingObject = object
 
@@ -130,8 +135,6 @@ function StopEditingObject()
     CallRemoteEvent("FinalizeObjectPlacement", EditingObject)
 
     EditingObject = nil
-
-    AddPlayerChat("Object placed.")
 end
 
 -- timer used to cancel object placement if player walks away

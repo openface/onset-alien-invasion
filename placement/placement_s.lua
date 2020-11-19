@@ -38,8 +38,9 @@ AddRemoteEvent("PlaceItem", function(player, item, loc)
     PlacedObjects[object] = true
 
     CallRemoteEvent(player, "ObjectPlaced", object)
+    AddPlayerChat(player, "Object placed.")
 
-    AddPlayerChat(player, "A "..item_cfg["name"] .. " has been placed.")
+    AddPlayerChat(player, item_cfg["name"] .. " has been placed.")
     log.debug(GetPlayerName(player) .. " placed object " .. object .. " item " .. item)
 end)
 
@@ -48,3 +49,18 @@ AddRemoteEvent("FinalizeObjectPlacement", function(player, object)
     log.debug(GetPlayerName(player) .. " placed object " .. object)
 end)
 
+AddRemoteEvent("UnplaceItem", function(player, object)
+    local item = GetObjectPropertyValue(object, "item")
+    if not item_cfg or item_cfg['type'] ~= "placeable" then
+        log.error("Cannot unplace invalid or non-placeable item!")
+        return
+    end
+
+    PlacedObjects[object] = nil
+    DestroyObject(object)
+
+    AddToInventory(player, item)
+
+    AddPlayerChat(player, item_cfg["name"] .. " has been added to your inventory.")
+    log.debug(GetPlayerName(player) .. " unplaced object " .. object .. " item " .. item)
+end)

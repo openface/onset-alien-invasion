@@ -26,7 +26,7 @@
         "storage/storage_s.lua",
         "placement/placement_s.lua",
         "props/props_s.lua",
-
+        "doors/doors_s.lua",
 
         "items/armyhat_s.lua",
         "items/banana_s.lua",

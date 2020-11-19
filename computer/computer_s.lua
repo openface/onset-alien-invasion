@@ -31,10 +31,10 @@ local SatelliteTerminalConfig = {
 AddEvent("OnPackageStart", function()
     log.info "Creating computer props..."
     -- garage computer
-    RegisterComputer("Garage Computer", GarageComputerConfig, { message = "Interact", client_event = "InteractGarageComputer" })
+    CreateComputer("Garage Computer", GarageComputerConfig, { message = "Interact", client_event = "InteractGarageComputer" })
 
     -- satellite terminal
-    RegisterComputer("Satellite Terminal", SatelliteTerminalConfig, { message = "Interact", client_event = "InteractSatelliteTerminal" })
+    CreateComputer("Satellite Terminal", SatelliteTerminalConfig, { message = "Interact", client_event = "InteractSatelliteTerminal" })
 end)
 
 AddEvent("OnPackageStop", function()
@@ -49,8 +49,8 @@ AddEvent("OnPackageStop", function()
     UpdateAllPlayersSatelliteStatus(0)
 end)
 
-function RegisterComputer(name, config, prop_options)
-    log.debug("Registering computer: " .. name)
+function CreateComputer(name, config, prop_options)
+    log.debug("Creating computer: " .. name)
     local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'],
                            config['ry'], config['rz'], config['sx'], config['sy'], config['sz'])
     SetObjectPropertyValue(object, "prop", prop_options)

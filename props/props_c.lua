@@ -103,7 +103,7 @@ function PlayerLookRaycast()
         return
     end
 
-    -- AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName() .." id:"..Comp:GetUniqueID())
+    --AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName() .." id:"..Comp:GetUniqueID())
     return ProcessHitComponent(Comp)
 end
 

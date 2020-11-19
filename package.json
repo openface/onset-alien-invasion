@@ -60,6 +60,7 @@
         "client/effects.lua",
         "client/hud.lua",
         "client/water.lua",
+        "client/undermap.lua",
 
         "character/character_c.lua",
         "aliens/aliens_c.lua",

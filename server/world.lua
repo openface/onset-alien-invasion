@@ -69,7 +69,7 @@ AddEvent("OnPackageStart", function()
 
             -- log.debug("Creating object:",v['modelID'])
         else
-            -- log.debug("Creating door:",v['doorID'])
+            log.debug("Creating door:",v['doorID'])
             CreateDoor(v['doorID'], v['x'], v['y'], v['z'], v['yaw'], true)
         end
     end

@@ -108,7 +108,8 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
 
     -- add loot items to inventory
     AddToInventory(player, 'vest')
-    AddToInventory(player, LootWeapons[math.random(#LootWeapons)])
+    AddToInventory(player, 'bandage')
+    AddWeapon(player, LootWeapons[math.random(#LootWeapons)])
 
     DestroyPickup(pickup)
 

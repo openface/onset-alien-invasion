@@ -71,5 +71,6 @@ AddEvent("items:landmine:use", function(player, item_cfg)
 
     Delay(10 * 1000, function()
         UnpauseTimer(LandmineTimer)
+        AddPlayerChat(player, "Landmine is now activated!")
     end)
 end)

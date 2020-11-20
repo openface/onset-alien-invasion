@@ -7,6 +7,7 @@ Alien Invasion is a gamemode for [Onset](https://playonset.com/) written in Lua 
 ## The Game
 
 ### Synopsis
+
 The world has been invaded by nearly indestructible killers from outer space.
 
 Upon joining the server, you will be part of a group of desperate lone survivors of the invasion whose only mission is to stay alive long enough to defeat the mothership.
@@ -28,8 +29,9 @@ The satellite computer has enough power to communicate with the mothership. Sear
 * Scrap heaps provide resources such as metal shards, plastic tarps, and computer parts.
 * Workbench system for building items with resources that you find at the scrap heaps.
 * Inventory system with interactive objects and hotbar selection.
-* Merchant system for purchasing items
-* Interactive world props (tree, water, items)
+* Merchant system for purchasing items with cash.
+* Interactive world props (tree, water, certain items)
+* Storage containers that spawn random items.
 
 ### Direction
 
@@ -37,7 +39,6 @@ While Alien Invasion started life as a simple AI shooter gamemode for Onset, the
 purpose of this project was to learn Lua scripting for Onset.  This project has since
 grown quite a bit with features not really applicable to a simple alien shooter, and that
 is OK.  This code will continue to morph and shift into something more general and widely-usable for other Onset gamemodes in the future.
-
 
 ### Thanks
 

@@ -26,6 +26,9 @@ AddEvent("OnPackageStop", function()
     for _, object in pairs(Scrapheaps) do
         Scrapheaps[object] = nil
         DestroyObject(object)
+
+        -- clean cooldown list
+        SearchCooldown = {}
     end
 end)
 
@@ -74,7 +77,7 @@ AddRemoteEvent("prop:SearchForScrap", function(player, object, options)
         if math.random(1, 2) == 1 then
             -- found something
             PickupScrap(player)
-
+            -- track time of last search for this player for cooldown period
             SearchCooldown[player][object] = (os.time() + SearchCooldownSeconds)
         else
             -- not found

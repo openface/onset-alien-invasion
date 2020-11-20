@@ -18,31 +18,49 @@ AddEvent("OnPackageStop", function()
     end
 end)
 
+-- world created storage container
 function CreateStorage(name, config)
     log.debug("Creating storage: " .. name)
-    local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'],
-                           config['ry'], config['rz'], config['sx'], config['sy'], config['sz'])
-    SetObjectPropertyValue(object, "prop", { message = "Open", remote_event = "OpenStorage", options = { type = 'object' } })
+    local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'], config['ry'],
+                       config['rz'], config['sx'], config['sy'], config['sz'])
+    SetObjectPropertyValue(object, "prop", {
+        message = "Open",
+        remote_event = "OpenStorage",
+        options = {
+            type = 'object'
+        }
+    })
+
+    -- provide random things
+    local items = getTableKeys(GetItemConfigs())
+    local random_items = getRandomSample(items, 3)
+
+    local random_content = {}
+    for _,item in pairs(random_items) do
+        table.insert(random_content, { item = item, quantity = 1 })
+    end
+    ReplaceStorageContents(object, 'object', random_content)
+
     Storages[object] = true
 end
 
 AddRemoteEvent("prop:OpenStorage", function(player, object, options)
-    log.info(GetPlayerName(player).." opens storage "..object.. " type "..options['type'])
+    log.info(GetPlayerName(player) .. " opens storage " .. object .. " type " .. options['type'])
 
     PlaySoundSync(player, "sounds/storage_open.wav")
 
     local storage_items
     if options['type'] == 'vehicle' then
-      storage_items = GetVehiclePropertyValue(object, "storage") or {}
+        storage_items = GetVehiclePropertyValue(object, "storage") or {}
     else
-      storage_items = GetObjectPropertyValue(object, "storage") or {}
+        storage_items = GetObjectPropertyValue(object, "storage") or {}
     end
 
     local _send = {
-      object = object,
-      type = options['type'],
-      storage_items = storage_items,
-      inventory_items = {}
+        object = object,
+        type = options['type'],
+        storage_items = storage_items,
+        inventory_items = {}
     }
 
     -- inventory
@@ -56,7 +74,7 @@ AddRemoteEvent("prop:OpenStorage", function(player, object, options)
             ['modelid'] = item['modelid'],
             ['image'] = item['image'],
             ['quantity'] = item['quantity'],
-            ['type'] = item['type'],
+            ['type'] = item['type']
         })
     end
 
@@ -65,29 +83,34 @@ AddRemoteEvent("prop:OpenStorage", function(player, object, options)
 end)
 
 -- updates storage from storage UI sorting
+-- [1] = { ["quantity"] = 1,["index"] = 1,["item"] = axe,}
 AddRemoteEvent("UpdateStorage", function(player, object, type, data)
-  local storage_items = json_decode(data)
-  log.debug(GetPlayerName(player) .. " updates storage:" ..object.." data:"..dump(new_storage).. " type:"..type)
+    local storage_items = json_decode(data)
+    log.debug(GetPlayerName(player) .. " updates storage:" .. object .. " type:" .. type)
 
-  local new_storage = {}
-  for i,item in ipairs(storage_items) do
-    -- lookup item configuration before storing it to ensure they are still valid
-    local item_cfg = GetItemConfig(item.item)
-    if item_cfg then
-      new_storage[i] = {
-        item = item.item,
-        quantity = item.quantity,
-        name = item_cfg['name'],
-        modelid = item_cfg['modelid'],
-        image = item_cfg['image'],
-        type = item_cfg['type']
-      }
-    end
-  end
-
-  if type == 'vehicle' then
-    SetVehiclePropertyValue(object, "storage", new_storage)
-  else
-    SetObjectPropertyValue(object, "storage", new_storage)
-  end
+    ReplaceStorageContents(object, type, data)
 end)
+
+function ReplaceStorageContents(object, type, data)
+    local new_storage = {}
+    for i, item in ipairs(data) do
+        -- lookup item configuration before storing it to ensure they are still valid
+        local item_cfg = GetItemConfig(item.item)
+        if item_cfg then
+            new_storage[i] = {
+                item = item.item,
+                quantity = item.quantity,
+                name = item_cfg['name'],
+                modelid = item_cfg['modelid'],
+                image = item_cfg['image'],
+                type = item_cfg['type']
+            }
+        end
+    end
+
+    if type == 'vehicle' then
+        SetVehiclePropertyValue(object, "storage", new_storage)
+    else
+        SetObjectPropertyValue(object, "storage", new_storage)
+    end
+end

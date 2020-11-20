@@ -21,6 +21,24 @@ function randomPointInCircle(x, y, radius)
     return x + randX, y + randY
 end
 
+-- random sample of table
+function getRandomSample(tab, amount)
+    local shuffled = {}
+    for i,pos in ipairs(tab) do
+        local p = math.random(1, #shuffled+1)
+        table.insert(shuffled, p, pos)
+    end
+    return { table.unpack(shuffled, 1, amount) }
+end
+
+function getTableKeys(tab)
+    local keyset = {}
+    for k, v in pairs(tab) do
+        keyset[#keyset + 1] = k
+    end
+    return keyset
+end
+
 function dump(o)
     if type(o) == 'table' then
         local s = '{ '

@@ -20,21 +20,17 @@ AddEvent("OnPackageStart", function()
     SpawnParts()
 end)
 
+-- randomly spawn a subset of parts
 function SpawnParts()
     log.debug "Spawning parts..."
 
     -- Remove all computer_parts from world
     DestroyObjectPickupsByName('computer_part')
 
-    -- randomize part locations
-    local shuffled = {}
-    for i,pos in ipairs(PartsLocations) do
-        local p = math.random(1, #shuffled+1)
-        table.insert(shuffled, p, pos)
-    end
+    local random_part_locations = getRandomSample(PartsLocations, NumSpawnedParts)
 
-    -- randomly spawn a subset of parts
-    for _,pos in pairs({table.unpack(shuffled, 1, NumSpawnedParts)}) do
+    for _,pos in pairs(random_part_locations) do
+        log.debug("Creating part pickup")
         CreateObjectPickup('computer_part', pos[1], pos[2], pos[3])
     end
 end

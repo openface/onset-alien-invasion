@@ -174,9 +174,9 @@ end)
 
 --
 -- Sitting
+-- Thanks Pindrought!
 --
 
--- Thanks Pindrought!
 AddEvent("prop:SitInChair", function(object, options)
     -- save previous location
     local x, y, z = GetPlayerLocation()

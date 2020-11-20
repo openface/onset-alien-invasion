@@ -8,7 +8,7 @@ RegisterObject("axe", {
     },
     interaction = {
         sound = "sounds/chopping_wood.mp3",
-        animation = { name = "PICKAXE_SWING" }
+        animation = { name = "PICKAXE_SWING", duration = 5000 }
     },
     modelid = 20002,
     image = "survival/SM_Axe-Neo.png",

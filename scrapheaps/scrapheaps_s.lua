@@ -1,5 +1,6 @@
 local Scrapheaps = {}
-local ScrapCooldown = 60000 * 5 -- can only search a scrap point every 10 minutes
+local SearchCooldownSeconds = 60 * 5 -- can only search a scrap point every 5 minutes
+local SearchCooldown = {}
 
 -- weighted resource loot
 -- higher weight == more common
@@ -47,9 +48,19 @@ AddCommand("scrap", function(player, amt)
 end)
 
 -- search for scrap
-AddRemoteEvent("prop:SearchForScrap", function(player)
+AddRemoteEvent("prop:SearchForScrap", function(player, object, options)
     if CurrentlySearching[player] ~= nil then
         return
+    end
+    if not SearchCooldown[player] then
+        SearchCooldown[player] = {}
+    end
+
+    if SearchCooldown[player][object] then
+        if os.time() < SearchCooldown[player][object] then
+            CallRemoteEvent(player, "ShowError", "Already searched here!")
+            return
+        end
     end
 
     CallRemoteEvent(player, "SearchingScrap")
@@ -63,8 +74,11 @@ AddRemoteEvent("prop:SearchForScrap", function(player)
         if math.random(1, 2) == 1 then
             -- found something
             PickupScrap(player)
+
+            SearchCooldown[player][object] = (os.time() + SearchCooldownSeconds)
         else
             -- not found
+            SearchCooldown[player][object] = nil
             AddPlayerChat(player, "You were unable to find anything useful.")
             log.debug("Player " .. GetPlayerName(player) .. " searched but found nothing.")
         end

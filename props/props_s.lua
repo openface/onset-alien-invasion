@@ -2,7 +2,7 @@
 -- Chopping
 --
 
-AddRemoteEvent("prop:HarvestTree", function(player)
+AddRemoteEvent("prop:HarvestTree", function(player, object, options)
     if GetInventoryCount(player, "axe") == 0 then
         AddPlayerChat(player, "You need an axe to harvest this!")
         CallRemoteEvent(player, "PlayErrorSound")
@@ -23,7 +23,7 @@ end)
 -- Fishing
 --
 
-AddRemoteEvent("prop:GoFishing", function(player)
+AddRemoteEvent("prop:GoFishing", function(player, object, options)
     if GetInventoryCount(player, "fishing_rod") == 0 then
         CallRemoteEvent(player, "ShowError", "You need a fishing rod to do this right!")
         return

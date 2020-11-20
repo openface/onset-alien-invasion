@@ -1,4 +1,3 @@
--- weapon handler
 WeaponPatch = ImportPackage("Onset_Weapon_Patch")
 
 -- weapon map

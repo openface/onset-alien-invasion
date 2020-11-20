@@ -21,6 +21,9 @@ function CreateInteractiveDoor(config)
     log.debug("Creating door")
     local door = CreateDoor(config['doorID'], config['x'], config['y'], config['z'], config['yaw'], true)
     SetDoorOpen(door, true) -- close door by default (should be false according to wiki)
+
+    SetDoorPropertyValue(door, "owner", "12345") -- GetPlayerSteamId(player)
+    
     Doors[door] = true
 end
 
@@ -30,6 +33,13 @@ AddEvent("OnPlayerInteractDoor", function(player, door, bWantsOpen)
     local bIsDoorOpen = not IsDoorOpen(door)
 
     AddPlayerChat(player, "Door: " .. door .. ", open: ".. tostring(bIsDoorOpen) ..", wants: ".. tostring(bWantsOpen))
+
+    local owner = GetDoorPropertyValue(door, "owner")
+    if GetPlayerSteamId(player) ~= GetDoorPropertyValue(door, "owner") then
+        -- door is locked
+        CallRemoteEvent(player, "ShowError", "Locked")
+        return
+    end
 
     if bIsDoorOpen then
         log.debug("closing")

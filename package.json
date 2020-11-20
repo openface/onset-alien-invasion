@@ -2,9 +2,6 @@
     "author": "openface",
     "version": "0.2",
     "server_scripts": [
-        "default/WorldDoors.lua",
-        "default/ConsoleFunctions_s.lua",
-
         "server/util.lua",
         "server/server.lua",
         "server/time.lua",
@@ -59,9 +56,6 @@
         "server/vendor/log.lua"
     ],
     "client_scripts": [
-        "default/Weapons.lua",
-        "default/ConsoleFunctions_c.lua",
-
         "client/client.lua",
         "client/effects.lua",
         "client/hud.lua",

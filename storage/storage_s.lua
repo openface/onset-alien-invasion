@@ -93,8 +93,7 @@ end)
 AddRemoteEvent("UpdateStorage", function(player, object, type, data)
     local storage_items = json_decode(data)
     log.debug(GetPlayerName(player) .. " updates storage:" .. object .. " type:" .. type)
-
-    ReplaceStorageContents(object, type, data)
+    ReplaceStorageContents(object, type, storage_items)
 end)
 
 function ReplaceStorageContents(object, type, data)

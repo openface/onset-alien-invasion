@@ -24,18 +24,20 @@ function CreateInteractiveDoor(config)
     Doors[door] = true
 end
 
+-- the door open state here is backwards (bug in onset)
 AddEvent("OnPlayerInteractDoor", function(player, door, bWantsOpen)
-	AddPlayerChat(player, "Door: "..door..", "..tostring(bWantsOpen))
+    local bWantsOpen = not bWantsOpen
+    local bIsDoorOpen = not IsDoorOpen(door)
 
-    -- Let the players open/close the door by default.
-    -- the boolean here is backwards (bug in onset)
-    if IsDoorOpen(door) then
-        --log.debug("closing")
-		SetDoorOpen(door, true)
+    AddPlayerChat(player, "Door: " .. door .. ", open: ".. tostring(bIsDoorOpen) ..", wants: ".. tostring(bWantsOpen))
+
+    if bIsDoorOpen then
+        log.debug("closing")
+        SetDoorOpen(door, true)
     else
-        --log.debug("opening")
-		SetDoorOpen(door, false)
-	end
+        log.debug("opening")
+        SetDoorOpen(door, false)
+    end
 end)
 
 AddCommand("closedoors", function(player)

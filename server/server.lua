@@ -27,7 +27,10 @@ end)
 
 -- Setup world
 AddEvent("OnPackageStart", function()
-
+    if IsPackageStarted('default') then
+        log.warn("Alien Invasion is not compatible with the onset default package.  Please remove the default package from your server_config.json")
+        return
+    end
 end)
 
 AddEvent("OnPackageStop", function()

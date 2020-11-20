@@ -1,7 +1,7 @@
 <template>
     <div id="container">
         <div id="inner">
-            <div id="title">STORAGE</div>
+            <div id="title">{{ storage_name }}</div>
 
             <draggable
                 ghost-class="ghost"
@@ -79,6 +79,7 @@ export default {
     },
     data() {
         return {
+            storage_name: null,
             storage_items: [],
             inventory_items: [],
             dragging: false,
@@ -118,6 +119,7 @@ export default {
     },
     methods: {
         SetStorageData: function(data) {
+            this.storage_name = data.storage_name;
             this.object = data.object;
             this.type = data.type;
             this.storage_items = data.storage_items;
@@ -165,6 +167,7 @@ export default {
             this.EventBus.$emit("SetStorageData", {
                 object: 666,
                 type: "object",
+                storage_name: "Crate",
                 storage_items: [
                     {
                         item: "boxhead",
@@ -240,6 +243,7 @@ export default {
     font-weight: bold;
     font-family: impact;
     text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
+    text-transform: uppercase;
 }
 .subtitle {
     color: #fff;

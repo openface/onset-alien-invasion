@@ -1,5 +1,7 @@
 [
     {
+        "name": "Container",
+        "random_spawn": 3,
         "rz": 0,
         "sz": 1,
         "y": 192622.484375,
@@ -12,6 +14,8 @@
         "rx": 0
     },
     {
+        "name": "Wooden Box",
+        "random_spawn": 3,
         "ry": 0,
         "modelID": 504,
         "y": 193553.4375,
@@ -24,6 +28,8 @@
         "sy": 1
     },
     {
+        "name": "Wooden Box",
+        "random_spawn": 3,
         "ry": 0,
         "modelID": 504,
         "y": 201102.140625,
@@ -36,6 +42,8 @@
         "sy": 1
     },
     {
+        "name": "Wooden Box",
+        "random_spawn": 3,
         "ry": 0,
         "modelID": 505,
         "y": 200898.84375,
@@ -48,6 +56,8 @@
         "sy": 1
     },
     {
+        "name": "Wooden Box",
+        "random_spawn": 3,
         "ry": 0,
         "modelID": 505,
         "y": 201197.6875,

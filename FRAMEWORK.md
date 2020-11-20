@@ -167,17 +167,19 @@ CreateMerchant("Store", {
 
 ## Storages
 
-Storages are stationary fixtures created when the server starts.  They cannot be moved.
+Storages are stationary fixtures created when the server starts.  They cannot be moved.  They spawn with random items.
 
 ```
-CreateStorage("Crate",   {
+CreateStorage({
+    "name": "Wooden Box",           -- name of storage container
+    "random_spawn": 3,              -- number of random items to spawn (nil to disable)
     "rz": 0,
     "sz": 1,
     "y": 192622.484375,
     "x": -103740.4765625,
     "sx": 1,
     "z": 1215,
-    "modelID": 1013,
+    "modelID": 1013,                -- model id
     "sy": 1,
     "ry": 0,
     "rx": 0

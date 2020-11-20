@@ -5,8 +5,8 @@ AddEvent("OnPackageStart", function()
 
     local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/storage/storages.json")
     for _, config in pairs(_table) do
-        -- todo: storage name is hardcoded for now
-        CreateStorage("Container", config)
+        -- todo: move storage name to config
+        CreateStorage(config)
     end
 end)
 
@@ -19,28 +19,33 @@ AddEvent("OnPackageStop", function()
 end)
 
 -- world created storage container
-function CreateStorage(name, config)
-    log.debug("Creating storage: " .. name)
+function CreateStorage(config)
+    log.debug("Creating storage: " .. config['name'])
     local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'], config['ry'],
                        config['rz'], config['sx'], config['sy'], config['sz'])
     SetObjectPropertyValue(object, "prop", {
         message = "Open",
         remote_event = "OpenStorage",
         options = {
-            type = 'object'
+            type = 'object',
+            name = config['name']
         }
     })
 
     -- provide random things
-    local items = getTableKeys(GetItemConfigs())
-    local random_items = getRandomSample(items, 3)
+    if config['random_spawn'] then
+        local items = getTableKeys(GetItemConfigs())
+        local random_items = getRandomSample(items, config['random_spawn'])
 
-    local random_content = {}
-    for _,item in pairs(random_items) do
-        table.insert(random_content, { item = item, quantity = 1 })
+        local random_content = {}
+        for _, item in pairs(random_items) do
+            table.insert(random_content, {
+                item = item,
+                quantity = 1
+            })
+        end
+        ReplaceStorageContents(object, 'object', random_content)
     end
-    ReplaceStorageContents(object, 'object', random_content)
-
     Storages[object] = true
 end
 
@@ -59,6 +64,7 @@ AddRemoteEvent("prop:OpenStorage", function(player, object, options)
     local _send = {
         object = object,
         type = options['type'],
+        storage_name = options['name'],
         storage_items = storage_items,
         inventory_items = {}
     }

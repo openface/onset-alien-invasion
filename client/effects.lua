@@ -3,7 +3,7 @@ local Particles = {}
 
 AddEvent("OnPackageStart", function()
     for object in pairs(GetStreamedObjects()) do
-        local component_cfg = GetObjectPropertyValue(object, "component")
+        local component_cfg = GetObjectPropertyValue(object, "light_component")
         if component_cfg ~= nil then
             AddLightComponentToObject(object, component_cfg)
         end
@@ -26,9 +26,11 @@ AddEvent("OnPackageStop", function()
 end)
 
 AddEvent("OnObjectStreamIn", function(object)
-    local component_cfg = GetObjectPropertyValue(object, "component")
+    local component_cfg = GetObjectPropertyValue(object, "light_component")
     if component_cfg ~= nil then
-        AddLightComponentToObject(object, component_cfg)
+        if GetObjectPropertyValue(object, "light_enabled") then
+            AddLightComponentToObject(object, component_cfg)
+        end
     end
 
     local particle_cfg = GetObjectPropertyValue(object, "particle")
@@ -37,20 +39,23 @@ AddEvent("OnObjectStreamIn", function(object)
     end
 end)
 
--- TODO: not sure this actually works
 AddEvent("OnObjectStreamOut", function(object)
-    if LightComponents[object] ~= nil and GetObjectPropertyValue(object, "component") == nil then
-        RemoveLightComponent(object)
-    end
-    if Particles[object] ~= nil and GetObjectPropertyValue(object, "particle") == nil then
-        RemoveParticle(object)
-    end
+    RemoveLightComponent(object)
+    RemoveParticle(object)
 end)
 
 AddEvent("OnObjectNetworkUpdatePropertyValue", function(object, PropertyName, PropertyValue)
-    if PropertyName == "component" then
+    if PropertyName == "light_component" then
+        -- light component config is added. this would never happen
         if PropertyValue ~= false then
             AddLightComponentToObject(object, PropertyValue)
+        else
+            RemoveLightComponent(object)
+        end
+    elseif PropertyName == "light_enabled" then
+        -- light is being toggled
+        if PropertyValue == true then
+            AddLightComponentToObject(object, GetObjectPropertyValue(object, "light_component"))
         else
             RemoveLightComponent(object)
         end

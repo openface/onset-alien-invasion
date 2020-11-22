@@ -131,7 +131,7 @@ export default {
                 .map((_, idx) => start + idx);
         },
         UpdateStorage: function(object, type) {
-            window.console.log("object:" + object);
+            //window.console.log("object:" + object);
 
             var data = this.storage_items.map(function(item, index) {
                 return {
@@ -143,9 +143,7 @@ export default {
 
             this.CallEvent("UpdateStorage", object, type, JSON.stringify(data));
         },
-        UpdateInventory: function(e) {
-            window.console.log(e);
-
+        UpdateInventory: function() {
             var data = this.inventory_items.map(function(item, index) {
                 return {
                     item: item.item,
@@ -155,9 +153,6 @@ export default {
             });
 
             this.CallEvent("UpdateInventory", JSON.stringify(data));
-        },
-        log: function(evt) {
-            window.console.log(evt);
         },
     },
     mounted() {
@@ -262,7 +257,10 @@ export default {
     grid-gap: 0.7em;
 }
 .grid-move {
-    transition: all 0.3s;
+    transition: transform 0.2s;
+}
+.no-move {
+    transition: transform 0s;
 }
 .ghost {
     opacity: 1;

@@ -5,7 +5,6 @@
         "server/util.lua",
         "server/server.lua",
         "server/time.lua",
-        "server/world.lua",
         "server/player.lua",
 
         "aliens/aliens_s.lua",
@@ -27,6 +26,7 @@
         "placement/placement_s.lua",
         "props/props_s.lua",
         "doors/doors_s.lua",
+        "world/world_s.lua",
 
         "items/armyhat_s.lua",
         "items/banana_s.lua",
@@ -113,6 +113,7 @@
         "client/sounds/purchase.mp3",
         "client/sounds/chopping_wood.mp3",
         "client/sounds/fishing.mp3",
+        "client/sounds/switch.mp3",
 
         "ui/dist/index.html",
         "ui/dist/js/app.js",

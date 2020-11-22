@@ -18,7 +18,7 @@ AddEvent("OnPackageStop", function()
 end)
 
 function CreateInteractiveDoor(config)
-    log.debug("Creating door")
+    log.debug("Creating interactive door")
     local door = CreateDoor(config['doorID'], config['x'], config['y'], config['z'], config['yaw'], true)
     SetDoorOpen(door, true) -- close door by default (should be false according to wiki)
 

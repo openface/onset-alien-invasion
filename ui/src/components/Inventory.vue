@@ -296,7 +296,7 @@ export default {
     margin: 10px 0;
 }
 .grid-move {
-    transition: all 0.3s;
+    transition: transform 0.2s;
 }
 .ghost {
     opacity: 1;

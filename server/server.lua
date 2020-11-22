@@ -6,23 +6,23 @@ AddCommand("pos", function(player)
     end
     local x, y, z = GetPlayerLocation(player)
     local heading = GetPlayerHeading(player)
-    string = "Location: "..x.." "..y.." "..z.." Heading: "..heading
+    string = "Location: " .. x .. " " .. y .. " " .. z .. " Heading: " .. heading
     AddPlayerChat(player, string)
     log.debug(string)
 end)
 
 AddCommand("players", function(player)
     for _, v in pairs(GetAllPlayers()) do
-        AddPlayerChat(player, '['..v..'] '..GetPlayerName(v))
+        AddPlayerChat(player, '[' .. v .. '] ' .. GetPlayerName(v))
     end
 end)
 
 AddCommand("anim", function(player, anim)
-  log.debug("Animation:", anim)
-  SetPlayerAnimation(player, "STOP")
-  if anim ~= nil then
-    SetPlayerAnimation(player, string.upper(anim))
-  end
+    log.debug("Animation:", anim)
+    SetPlayerAnimation(player, "STOP")
+    if anim ~= nil then
+        SetPlayerAnimation(player, string.upper(anim))
+    end
 end)
 
 AddEvent("OnPackageStart", function()
@@ -34,18 +34,20 @@ end)
 -- console input from client
 AddRemoteEvent("ConsoleInput", function(player, input)
     if not Player.IsAdmin(player) then
-      return
+        return
     end
 
     if input == "stats" then
-      print("Objects: " .. tostring(GetObjectCount()))
+        print("Objects: " .. tostring(GetObjectCount()))
     end
 
     log.debug("console: " .. input)
 end)
 
 AddEvent("OnConsoleInput", function(input)
-    if input == "" then return end
+    if input == "" then
+        return
+    end
     if input == "quit" or input == "exit" then
         ServerExit("Exiting via console command")
     end
@@ -60,11 +62,12 @@ AddEvent("OnPlayerJoin", function(player)
 
     SetPlayerRespawnTime(player, PlayerRespawnSecs * 1000)
 
-    AddPlayerChatAll('<span color="#eeeeeeaa">'..GetPlayerName(player)..' has joined the server</>')
+    AddPlayerChatAll('<span color="#eeeeeeaa">' .. GetPlayerName(player) .. ' has joined the server</>')
     AddPlayerChat(player, '<span color="#ffffffff">Welcome to Alien Invasion by oweff!</>')
     AddPlayerChat(player, '<span color="#eeeeeeaa">Hit [T] to chat, [TAB] for inventory, [P] for player list</>')
     AddPlayerChat(player, '<span color="#eeeeeeaa">Hit [E] when near interactive objects to interact with them</>')
-    AddPlayerChat(player, '<span color="#ffffffff">Go to the computer in the garage for game information..  Good luck!</>')
+    AddPlayerChat(player,
+        '<span color="#ffffffff">Go to the computer in the garage for game information..  Good luck!</>')
 end)
 
 -- Player spawn
@@ -106,27 +109,28 @@ end)
 AddEvent("OnPlayerDeath", function(player, killer)
     if player ~= killer then
         BumpPlayerStat(killer, 'player_kills')
-        log.info(GetPlayerName(player)..' has been killed by '..GetPlayerName(killer)..'!')
-        AddPlayerChatAll(GetPlayerName(player)..' has been killed by '..GetPlayerName(killer)..'!')
+        log.info(GetPlayerName(player) .. ' has been killed by ' .. GetPlayerName(killer) .. '!')
+        AddPlayerChatAll(GetPlayerName(player) .. ' has been killed by ' .. GetPlayerName(killer) .. '!')
     else
-        AddPlayerChatAll(GetPlayerName(player)..' has been taken!')
-        log.info(GetPlayerName(player)..' has been taken')
+        AddPlayerChatAll(GetPlayerName(player) .. ' has been taken!')
+        log.info(GetPlayerName(player) .. ' has been taken')
     end
 
     -- stats
     BumpPlayerStat(player, 'deaths')
-    AddPlayerChat(player, "YOU ARE DEAD!  You must wait ".. PlayerRespawnSecs .." seconds to respawn...")
+    AddPlayerChat(player, "YOU ARE DEAD!  You must wait " .. PlayerRespawnSecs .. " seconds to respawn...")
 end)
 
 -- Log auth
 AddEvent("OnPlayerSteamAuth", function(player)
-    log.info("Player "..GetPlayerName(player).." (ID "..player..") authenticated with steam ID "..GetPlayerSteamId(player))
+    log.info("Player " .. GetPlayerName(player) .. " (ID " .. player .. ") authenticated with steam ID " ..
+                 GetPlayerSteamId(player))
 end)
 
 -- Chat
 AddEvent("OnPlayerChat", function(player, message)
-    AddPlayerChatAll('<span color="#eeeeeeaa"><'..GetPlayerName(player)..'></> '..message)
-    log.debug("<"..GetPlayerName(player).."> "..message)
+    AddPlayerChatAll('<span color="#eeeeeeaa"><' .. GetPlayerName(player) .. '></> ' .. message)
+    log.debug("<" .. GetPlayerName(player) .. "> " .. message)
 end)
 
 -- Water is a killer

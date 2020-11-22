@@ -2,7 +2,7 @@ local LastHitObject
 local LastHitStruct
 local ActiveProp
 local TraceRange = 600.0
-local Debug = true
+local Debug = false
 
 AddEvent("OnGameTick", function()
 
@@ -107,7 +107,7 @@ function ProcessHitResult(HitResult)
         return
     end
 
-    AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName() .." id:"..Comp:GetUniqueID())
+    --AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName() .." id:"..Comp:GetUniqueID())
 
     -- environment
     if string.find(Comp:GetName(), "FoliageInstancedStaticMeshComponent") then

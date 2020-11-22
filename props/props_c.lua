@@ -2,7 +2,7 @@ local LastHitObject
 local LastHitStruct
 local ActiveProp
 local TraceRange = 600.0
-local Debug = false
+local Debug = true
 
 AddEvent("OnGameTick", function()
 
@@ -56,7 +56,7 @@ AddEvent("OnGameTick", function()
             ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','Harvest')")
             ActiveProp = {
                 object = hitObject,
-                remote_event = "HarvestTree"
+                remote_event = "HarvestTree",
             }
         elseif hitStruct.type == 'water' then
             -- water component
@@ -93,35 +93,36 @@ function PlayerLookRaycast()
     local bResult, HitResult = UKismetSystemLibrary.LineTraceSingle(GetPlayerActor(), Start, End,
                                    ETraceTypeQuery.TraceTypeQuery1, true, {}, EDrawDebugTrace.None, true,
                                    FLinearColor(1.0, 0.0, 0.0, 1.0), FLinearColor(0.0, 1.0, 0.0, 1.0), 10.0)
-    if bResult ~= true then
-        return
+    if bResult == true and HitResult then
+        return ProcessHitResult(HitResult)
     end
+end
 
+-- returns interactive component or object along
+-- with a structure describing it
+function ProcessHitResult(HitResult)
     local Actor = HitResult:GetActor()
     local Comp = HitResult:GetComponent()
     if not Comp then
         return
     end
 
-    --AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName() .." id:"..Comp:GetUniqueID())
-    return ProcessHitComponent(Comp)
-end
+    AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName() .." id:"..Comp:GetUniqueID())
 
--- given a SMC, returns interactive component or object along
--- with a structure describing it
-function ProcessHitComponent(Comp)
     -- environment
     if string.find(Comp:GetName(), "FoliageInstancedStaticMeshComponent") then
         -- foliage tree
         return Comp:GetUniqueID(), {
             type = 'tree',
-            component = Comp
+            component = Comp,
+            actor = Actor
         }
     elseif string.find(Comp:GetName(), "BrushComponent0") then
         -- water
         return Comp:GetUniqueID(), {
             type = 'water',
-            component = Comp
+            component = Comp,
+            actor = Actor
         }
     end
 
@@ -150,7 +151,6 @@ end
 AddEvent("OnKeyPress", function(key)
     if ActiveProp ~= nil and key == "E" then
         -- call prop events
-        
         if ActiveProp['client_event'] then
             --AddPlayerChat("calling client event: "..ActiveProp['event'])
             CallEvent("prop:" .. ActiveProp['client_event'], ActiveProp['object'], ActiveProp['options'])

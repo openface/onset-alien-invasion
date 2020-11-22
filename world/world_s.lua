@@ -48,6 +48,26 @@ local LightingConfig = {
         intensity = 50000
     }
 }
+
+local GarbageConfig = {
+    [1397] = true,
+    [364] = true,
+    [363] = true,
+    [366] = true,
+    [367] = true,
+    [362] = true,
+    [352] = true,
+    [349] = true,
+    [353] = true,
+    [344] = true,
+    [347] = true,
+    [354] = true,
+    [365] = true,
+    [350] = true,
+    [351] = true,
+    [359] = true,
+}
+
 local WorldObjects = {}
 
 AddEvent("OnPackageStart", function()
@@ -65,7 +85,9 @@ AddEvent("OnPackageStart", function()
                                v['sy'], v['sz'])
 
             if LightingConfig[v['modelID']] then
-                AddLightingProps(object, LightingConfig[v['modelID']])
+                AddLightingProp(object, LightingConfig[v['modelID']])
+            elseif GarbageConfig[v['modelID']] then
+                AddGarbageProp(object)
             end
 
             WorldObjects[object] = true
@@ -81,7 +103,18 @@ AddEvent("OnPackageStop", function()
     end
 end)
 
-function AddLightingProps(object, component_config)
+--
+-- Garbage
+--
+function AddGarbageProp(object)
+    SetObjectPropertyValue(object, "prop", { message = "Search", remote_event = "SearchForScrap"})
+end
+
+--
+-- Lighting
+--
+
+function AddLightingProp(object, component_config)
     log.debug("Adding light prop to object "..object)
 
     SetObjectPropertyValue(object, "light_component", component_config)

@@ -11,7 +11,6 @@
         "lootbox/lootbox_s.lua",
         "vehicles/vehicles_s.lua",
         "parts/parts_s.lua",
-        "scrapheaps/scrapheaps_s.lua",
         "boss/boss_s.lua",
         "computer/computer_s.lua",
         "workbench/workbench_s.lua",
@@ -27,6 +26,7 @@
         "props/props_s.lua",
         "doors/doors_s.lua",
         "world/world_s.lua",
+        "world/garbage_s.lua",
 
         "items/armyhat_s.lua",
         "items/banana_s.lua",
@@ -66,7 +66,6 @@
         "aliens/aliens_c.lua",
         "lootbox/lootbox_c.lua",
         "pickups/pickups_c.lua",
-        "scrapheaps/scrapheaps_c.lua",
         "boss/boss_c.lua",
         "computer/computer_c.lua",
         "workbench/workbench_c.lua",
@@ -77,7 +76,8 @@
         "storage/storage_c.lua",
         "vehicles/vehicles_c.lua",
         "placement/placement_c.lua",
-        "props/props_c.lua"
+        "props/props_c.lua",
+        "world/garbage_c.lua"
     ],
     "files": [
         "client/pak/Aliens.pak",

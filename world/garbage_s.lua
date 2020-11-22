@@ -1,4 +1,3 @@
-local Scrapheaps = {}
 local SearchCooldownSeconds = 60 * 5 -- can only search a scrap point every 5 minutes
 local SearchCooldown = {}
 
@@ -11,34 +10,6 @@ local Resources = {
     metal = 5
 }
 local CurrentlySearching = {}
-
-AddEvent("OnPackageStart", function()
-    log.info("Loading scrapheaps...")
-
-    local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/scrapheaps/scrapheaps.json")
-    for _, config in pairs(_table) do
-        CreateScrapheap(config)
-    end
-end)
-
-AddEvent("OnPackageStop", function()
-    log.info "Destroying all scrapheaps..."
-    for _, object in pairs(Scrapheaps) do
-        Scrapheaps[object] = nil
-        DestroyObject(object)
-
-        -- clean cooldown list
-        SearchCooldown = {}
-    end
-end)
-
-function CreateScrapheap(config)
-    log.debug("Creating scrapheap")
-    local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'],
-                           config['ry'], config['rz'], config['sx'], config['sy'], config['sz'])
-    SetObjectPropertyValue(object, "prop", { message = "Search", remote_event = "SearchForScrap"})
-    Scrapheaps[object] = true
-end
 
 AddCommand("scrap", function(player, amt)
     if not Player.IsAdmin(player) then

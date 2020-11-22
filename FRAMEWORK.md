@@ -186,23 +186,6 @@ CreateStorage({
   })
 ```
 
-## Scrapheaps
-
-```
-CreateScrapheap({
-    "rz": 0,
-    "sz": 1,
-    "y": 177447.8125,
-    "x": -107744.359375,
-    "sx": 1,
-    "z": 1205.9958496094,
-    "modelID": 345,
-    "sy": 1,
-    "ry": 0,
-    "rx": 0
-  })
-```
-
 ## Workbenches
 
 ```

@@ -117,11 +117,12 @@ AddRemoteEvent("prop:GetWorkbenchData", function(player, object, options)
 
 ### Built-in Interactive Prop Definitions
 
-#### Sitting in a chair
+#### Sitting in chairs
 #### Fishing in water
-#### Harvesting tree
-#### Repairing vehicle
-#### Opening storage
+#### Harvesting trees
+#### Repairing vehicles
+#### Searching garbage piles
+#### Turning on/off lights
 
 ## Item Event Callbacks
 

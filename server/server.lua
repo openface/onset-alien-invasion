@@ -57,8 +57,8 @@ end)
 
 -- welcome message
 AddEvent("OnPlayerJoin", function(player)
-    local x, y = randomPointInCircle(Config.SpawnLocation.x, Config.SpawnLocation.y, 6000)
-    SetPlayerSpawnLocation(player, x, y, Config.SpawnLocation.z, 180)
+    local x, y = randomPointInCircle(Player.SpawnLocation.x, Player.SpawnLocation.y, 6000)
+    SetPlayerSpawnLocation(player, x, y, Player.SpawnLocation.z, 180)
 
     SetPlayerRespawnTime(player, PlayerRespawnSecs * 1000)
 
@@ -72,9 +72,8 @@ end)
 
 -- Player spawn
 AddEvent("OnPlayerSpawn", function(player)
-    SetPlayerArmor(player, 0)
-
     -- cleansing
+    SetPlayerArmor(player, 0)
     ClearInventory(player)
     SetPlayerPropertyValue(player, "equipped", {})
 
@@ -94,11 +93,11 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
 
     if not Player.IsAdmin(player) then
         -- parachute down to the island
-        SetPlayerLocation(player, Config.SpawnLocation.x, Config.SpawnLocation.y, Config.SpawnLocation.z + 30000)
+        SetPlayerLocation(player, Player.SpawnLocation.x, Player.SpawnLocation.y, Player.SpawnLocation.z + 30000)
         AttachPlayerParachute(player, true)
     end
 
-    local chopper = CreateObject(1847, Config.SpawnLocation.x, Config.SpawnLocation.y, Config.SpawnLocation.z + 31000)
+    local chopper = CreateObject(1847, Player.SpawnLocation.x, Player.SpawnLocation.y, Player.SpawnLocation.z + 31000)
     Delay(20000, function(chopper)
         DestroyObject(chopper)
     end, chopper)
@@ -123,8 +122,12 @@ end)
 
 -- Log auth
 AddEvent("OnPlayerSteamAuth", function(player)
+    local steamid =  GetPlayerSteamId(player)
     log.info("Player " .. GetPlayerName(player) .. " (ID " .. player .. ") authenticated with steam ID " ..
-                 GetPlayerSteamId(player))
+                 steamid)
+    if not Player.get(steamid) then
+        Player.create({ steamid = steamid })
+    end
 end)
 
 -- Chat
@@ -142,3 +145,4 @@ end)
 AddRemoteEvent("DropParachute", function(player)
     AttachPlayerParachute(player, false)
 end)
+

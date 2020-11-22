@@ -3,10 +3,11 @@
     "version": "0.2",
     "server_scripts": [
         "server/util.lua",
+        "server/database.lua",
         "server/server.lua",
         "server/time.lua",
-        "server/player.lua",
-
+        "server/models/player.lua",
+        
         "aliens/aliens_s.lua",
         "lootbox/lootbox_s.lua",
         "vehicles/vehicles_s.lua",

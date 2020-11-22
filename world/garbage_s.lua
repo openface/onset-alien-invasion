@@ -37,7 +37,8 @@ AddRemoteEvent("prop:SearchForScrap", function(player, object, options)
         end
     end
 
-    CallRemoteEvent(player, "SearchingScrap")
+    PlaySoundSync(player, "sounds/search.mp3")
+
     CurrentlySearching[player] = true
     SetPlayerAnimation(player, "PICKUP_MIDDLE")
 

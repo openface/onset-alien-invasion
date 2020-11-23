@@ -126,7 +126,6 @@ AddEvent("OnPlayerSteamAuth", function(player)
     log.info("Player " .. GetPlayerName(player) .. " (ID " .. player .. ") authenticated with steam ID " ..
                  steamid)
     if not Player.exists(steamid) then
-        log.info(dump(Player.exists(steamid)))
         Player.create({ steamid = steamid })
     end
 end)

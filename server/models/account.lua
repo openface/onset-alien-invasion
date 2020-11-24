@@ -1,10 +1,18 @@
 Account = {}
 Account.__index = Account
 
+local CACHE = Cache:new(3600)
+
 function Account.get(steamid)
-    log.debug("getting player " .. steamid)
-    local query = mariadb_prepare(DB, "SELECT * FROM accounts WHERE steamid = '?' LIMIT 1", tostring(steamid))
-    return mariadb_await_query(DB, query)
+    local account = CACHE:get(tostring(steamid))
+    if not account then
+        log.debug("getting player " .. steamid)
+        local query = mariadb_prepare(DB, "SELECT * FROM accounts WHERE steamid = '?' LIMIT 1", tostring(steamid))
+        mariadb_await_query(DB, query)
+        local account = mariadb_get_assoc(1)
+        CACHE:put(tostring(steamid), account)
+    end
+    return account
 end
 
 function Account.create(data)

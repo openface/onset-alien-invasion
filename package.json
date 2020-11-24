@@ -3,6 +3,7 @@
     "version": "0.2",
     "server_scripts": [
         "server/util.lua",
+        "server/cache.lua",
         "server/database.lua",
         "server/server.lua",
         "server/time.lua",

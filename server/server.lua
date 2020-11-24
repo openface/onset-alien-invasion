@@ -1,7 +1,12 @@
 local PlayerRespawnSecs = 20 -- 20 secs
+SpawnLocation = {
+    x = -106884.28125,
+    y = 197996.78125,
+    z = 1298.3040771484
+}
 
 AddCommand("pos", function(player)
-    if not Player.IsAdmin(player) then
+    if not Account.IsAdmin(GetPlayerSteamId(player)) then
         return
     end
     local x, y, z = GetPlayerLocation(player)
@@ -33,7 +38,7 @@ end)
 
 -- console input from client
 AddRemoteEvent("ConsoleInput", function(player, input)
-    if not Player.IsAdmin(player) then
+    if not Account.IsAdmin(GetPlayerSteamId(player)) then
         return
     end
 
@@ -57,8 +62,8 @@ end)
 
 -- welcome message
 AddEvent("OnPlayerJoin", function(player)
-    local x, y = randomPointInCircle(Player.SpawnLocation.x, Player.SpawnLocation.y, 6000)
-    SetPlayerSpawnLocation(player, x, y, Player.SpawnLocation.z, 180)
+    local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 6000)
+    SetPlayerSpawnLocation(player, x, y, SpawnLocation.z, 180)
 
     SetPlayerRespawnTime(player, PlayerRespawnSecs * 1000)
 
@@ -91,13 +96,13 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
     SetPlayerPropertyValue(player, "inventory", {})
     SetPlayerPropertyValue(player, "equipped", {})
 
-    if not Player.IsAdmin(player) then
+    if not Account.IsAdmin(GetPlayerSteamId(player)) then
         -- parachute down to the island
-        SetPlayerLocation(player, Player.SpawnLocation.x, Player.SpawnLocation.y, Player.SpawnLocation.z + 30000)
+        SetPlayerLocation(player, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z + 30000)
         AttachPlayerParachute(player, true)
     end
 
-    local chopper = CreateObject(1847, Player.SpawnLocation.x, Player.SpawnLocation.y, Player.SpawnLocation.z + 31000)
+    local chopper = CreateObject(1847, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z + 31000)
     Delay(20000, function(chopper)
         DestroyObject(chopper)
     end, chopper)
@@ -125,8 +130,10 @@ AddEvent("OnPlayerSteamAuth", function(player)
     local steamid =  GetPlayerSteamId(player)
     log.info("Player " .. GetPlayerName(player) .. " (ID " .. player .. ") authenticated with steam ID " ..
                  steamid)
-    if not Player.exists(steamid) then
-        Player.create({ steamid = steamid })
+
+    if not Account.exists(steamid) then
+        log.info("Creating new account for player "..GetPlayerName(player))
+        Account.create({ steamid = steamid })
     end
 end)
 

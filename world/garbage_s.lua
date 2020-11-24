@@ -12,7 +12,7 @@ local Resources = {
 local CurrentlySearching = {}
 
 AddCommand("scrap", function(player, amt)
-    if not Player.IsAdmin(player) then
+    if not Account.IsAdmin(GetPlayerSteamId(player)) then
         return
     end
     local amt = amt or 1

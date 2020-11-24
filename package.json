@@ -6,8 +6,8 @@
         "server/database.lua",
         "server/server.lua",
         "server/time.lua",
-        "server/models/player.lua",
-        
+        "server/models/account.lua",
+
         "aliens/aliens_s.lua",
         "lootbox/lootbox_s.lua",
         "vehicles/vehicles_s.lua",

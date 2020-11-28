@@ -31,8 +31,7 @@ function Account.exists(steamid)
 end
 
 function Account.IsAdmin(steamid)
-    local result = Account.get(steamid)
-    local row = mariadb_get_assoc(1)
+    local row = Account.get(steamid)
     if row["is_admin"] == "1" then
         return true
     else

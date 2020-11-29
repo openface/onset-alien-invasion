@@ -92,9 +92,7 @@ function GetPlayerResources(player)
     local inventory = GetPlayerPropertyValue(player, "inventory")
     local resources = {}
     for _,item in pairs(inventory) do
-        -- todo: figure out how to make wood a usable resource
-        -- so that we don't hardcode them here
-        if item['type'] == 'resource' or item['item'] == 'wood' then
+        if item['type'] == 'resource' then
             resources[item['item']] = item['quantity']
         end
     end

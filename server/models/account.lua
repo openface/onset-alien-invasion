@@ -9,7 +9,7 @@ function Account.get(steamid)
         log.debug("getting player " .. steamid)
         local query = mariadb_prepare(DB, "SELECT * FROM accounts WHERE steamid = '?' LIMIT 1", tostring(steamid))
         mariadb_await_query(DB, query)
-        local account = mariadb_get_assoc(1)
+        account = mariadb_get_assoc(1)
         CACHE:put(tostring(steamid), account)
     end
     return account
@@ -32,6 +32,7 @@ end
 
 function Account.IsAdmin(steamid)
     local row = Account.get(steamid)
+    print(dump(row))
     if row["is_admin"] == "1" then
         return true
     else

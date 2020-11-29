@@ -52,6 +52,7 @@
         "items/water_bottle_s.lua",
         "items/wooden_chair_s.lua",
         "items/wooden_table_s.lua",
+        "items/campfire_s.lua",
 
         "server/vendor/json.lua",
         "server/vendor/file.lua",
@@ -141,6 +142,7 @@
         "ui/dist/img/25.jpg",
         "ui/dist/img/SM_Axe-Neo.png",
         "ui/dist/img/SM_Binocular.png",
-        "ui/dist/img/SM_FishingRod.png"
+        "ui/dist/img/SM_FishingRod.png",
+        "ui/dist/img/SM_Campfire.png"
     ]
 }

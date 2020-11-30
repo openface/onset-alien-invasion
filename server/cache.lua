@@ -45,7 +45,7 @@ function Cache:put(key, value)
 end
 
 function Cache:remove(key)
-    return table.remove(self._data, key)
+    self._data[key] = nil
 end
 
 function Cache:clearExpiredData()

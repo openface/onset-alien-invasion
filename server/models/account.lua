@@ -32,7 +32,7 @@ end
 
 function Account.IsAdmin(steamid)
     local row = Account.get(steamid)
-    if row["is_admin"] == "1" then
+    if row and row["is_admin"] == "1" then
         return true
     else
         return false

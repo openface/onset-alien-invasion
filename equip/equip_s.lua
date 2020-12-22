@@ -1,23 +1,8 @@
-AddEvent("OnPackageStop", function()
-    for _, player in pairs(GetAllPlayers()) do
-        DestroyEquippedObjectsForPlayer(player)
-    end
-end)
-
--- destroy equipped objects on death
-AddEvent("OnPlayerDeath", function(player, killer)
-    DestroyEquippedObjectsForPlayer(player)
-end)
-
--- destroy vest on quit
-AddEvent("OnPlayerQuit", function(player)
-    DestroyEquippedObjectsForPlayer(player)
-end)
-
 -- clear equipped store for all players
-function DestroyEquippedObjectsForPlayer(player)
-    equipped = GetPlayerPropertyValue(player, "equipped")
+function ClearEquipped(player)
+    local equipped = GetPlayerPropertyValue(player, "equipped")
     if equipped == nil then
+        SetPlayerPropertyValue(player, "equipped", {})
         return
     end
 
@@ -32,6 +17,13 @@ function DestroyEquippedObjectsForPlayer(player)
 
     -- stop any animation player might be in
     SetPlayerAnimation(player, "STOP")
+end
+
+function SyncEquipped(player)
+    local equipped = GetPlayerPropertyValue(player, "equipped")
+    for item, object in pairs(equipped) do
+        AttachItemToPlayer(player, item)
+    end
 end
 
 function EquipObject(player, item)
@@ -65,6 +57,27 @@ function EquipObject(player, item)
         PlayInteraction(player, item)
     end
 
+    attached_object = AttachItemToPlayer(player, item)
+
+    -- update equipped store
+    local equipped = GetPlayerPropertyValue(player, "equipped")
+    equipped[item] = attached_object
+    SetPlayerPropertyValue(player, "equipped", equipped)
+    log.trace("EQUIPPED: ", dump(equipped))
+
+    -- call EQUIP event on object
+    CallEvent("items:" .. item .. ":equip", player, object)
+
+    -- sync inventory
+    if item_cfg['type'] == 'equipable' then
+        CallEvent("SyncInventory", player)
+    end
+end
+
+-- attaches directly without any checking
+function AttachItemToPlayer(player, item)
+    local item_cfg = GetItemConfig(item)
+
     local x, y, z = GetPlayerLocation(player)
     local attached_object = CreateObject(item_cfg['modelid'], x, y, z)
 
@@ -81,23 +94,10 @@ function EquipObject(player, item)
 
     -- set particle config to object
     if item_cfg['particle'] ~= nil then
-        log.debug("particle")
         SetObjectPropertyValue(attached_object, "particle", item_cfg['particle'])
     end
 
-    -- update equipped store
-    local equipped = GetPlayerPropertyValue(player, "equipped")
-    equipped[item] = attached_object
-    SetPlayerPropertyValue(player, "equipped", equipped)
-    log.trace("EQUIPPED: ", dump(equipped))
-
-    -- call EQUIP event on object
-    CallEvent("items:" .. item .. ":equip", player, object)
-
-    -- sync inventory
-    if item_cfg['type'] == 'equipable' then
-        CallEvent("SyncInventory", player)
-    end
+    return attached_object
 end
 
 function UnequipFromBone(player, bone)

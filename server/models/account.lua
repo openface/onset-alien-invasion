@@ -17,7 +17,7 @@ end
 
 function Account.create(data)
     local query = mariadb_prepare(DB, "INSERT INTO accounts (steamid) VALUES ('?')", tostring(data["steamid"]))
-    log.trace("Creating account: "..query)
+    log.trace("Creating account: " .. query)
     mariadb_async_query(DB, query)
 end
 
@@ -41,10 +41,10 @@ end
 
 function Account.update(steamid, data)
     CACHE:remove(tostring(steamid))
-    local query = mariadb_prepare(DB, "UPDATE accounts SET location = '?', inventory = '?' WHERE steamid = '?'", 
-                                        json_encode(data['location']), 
-                                        json_encode(data['inventory']),
-                                        tostring(steamid))
-    log.trace("Updating account: "..query)
+    local query = mariadb_prepare(DB,
+                      "UPDATE accounts SET location = '?', inventory = '?', weapons = '?', equipped = '?' WHERE steamid = '?'",
+                      json_encode(data['location']), json_encode(data['inventory']), json_encode(data['weapons']),
+                      json_encode(data['equipped']), tostring(steamid))
+    log.trace("Updating account: " .. query)
     mariadb_async_query(DB, query)
 end

@@ -25,6 +25,13 @@ AddEvent("OnPackageStop", function()
     end
 end)
 
+function SyncWeapons(player)
+    local weapons = GetPlayerPropertyValue(player, "weapons")
+    for _,w in pairs(weapons) do
+        WeaponPatch.SetWeapon(player, WeaponsConfig[w['item']].weapon_id, 100, false, w['slot'], true)
+    end
+end
+
 -- add weapon to player
 function AddWeapon(player, item)
     item_cfg = WeaponsConfig[item]

@@ -5,6 +5,7 @@ SpawnLocation = {
     z = 1298.3040771484
 }
 local SavePlayerTimer
+local PlayerSaveTime = 1000 * 60 -- 60 secs
 
 AddEvent("OnPackageStop", function()
     for _, player in pairs(GetAllPlayers()) do
@@ -43,7 +44,6 @@ AddEvent("OnPlayerSpawn", function(player)
 
     -- cleansing
     SetPlayerArmor(player, 0)
-
     ClearInventory(player)
     ClearEquipped(player)
 end)
@@ -125,7 +125,7 @@ AddEvent("OnPlayerSteamAuth", function(player)
         SetPlayerPropertyValue(player, "weapons", json_decode(account['weapons']))
         SetPlayerPropertyValue(player, "equipped", json_decode(account['equipped']))
 
-        Delay(2000, function(player)
+        Delay(2500, function(player)
             SyncInventory(player)
             SyncEquipped(player)
             SyncWeapons(player)
@@ -153,7 +153,7 @@ local SavePlayerTimer = CreateTimer(function(vehicle)
             SavePlayer(player)
         end
     end
-end, 1000 * 10)
+end, PlayerSaveTime)
 
 function SavePlayer(player)
     local x, y, z = GetPlayerLocation(player)

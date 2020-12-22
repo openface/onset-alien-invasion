@@ -104,11 +104,6 @@ function IsPlayerAttackable(player)
 end
 
 function SpawnAlienNearPlayer(player)
-    -- no spawning aliens if player is in safe distance
-    if not IsPlayerAttackable(player) then
-        return
-    end
-
     local x, y, z = GetPlayerLocation(player)
     local x, y = randomPointInCircle(x, y, AlienAttackRange + 500) -- some buffer
     -- CreateObject(303, x, y, z+100, 0, 0, 0, 10, 10, 200) -- TODO remove me

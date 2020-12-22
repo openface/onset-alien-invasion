@@ -7,8 +7,8 @@ end)
 
 -- get inventory data and send to UI
 function SyncInventory(player)
-    local inventory = GetPlayerPropertyValue(player, "inventory")
-    local weapons = GetPlayerPropertyValue(player, "weapons")
+    local inventory = PlayerData[player].inventory
+    local weapons = PlayerData[player].weapons
 
     local _send = {
         weapons = {},
@@ -50,8 +50,9 @@ AddEvent("SyncInventory", SyncInventory)
 
 --
 function ClearInventory(player)
-    SetPlayerPropertyValue(player, "inventory", {})
-    SetPlayerPropertyValue(player, "weapons", {})
+    PlayerData[player].inventory = {}
+    PlayerData[player].weapons = {}
+
     SyncInventory(player)
 end
 
@@ -63,7 +64,7 @@ function AddToInventory(player, item)
         return
     end
 
-    local inventory = GetPlayerPropertyValue(player, "inventory")
+    local inventory = PlayerData[player].inventory
     local curr_qty = GetInventoryCount(player, item)
 
     if curr_qty > 0 then
@@ -81,7 +82,7 @@ function AddToInventory(player, item)
             quantity = 1,
             used = 0
         })
-        SetPlayerPropertyValue(player, "inventory", inventory)
+        PlayerData[player].inventory = inventory
     end
 
     -- auto-equip when added
@@ -94,7 +95,8 @@ end
 
 -- private function to update inventory item quantity
 function SetItemQuantity(player, item, quantity)
-    local inventory = GetPlayerPropertyValue(player, "inventory")
+    local inventory = PlayerData[player].inventory
+
     for i, _item in ipairs(inventory) do
         if _item['item'] == item then
             if quantity > 0 then
@@ -107,13 +109,14 @@ function SetItemQuantity(player, item, quantity)
             break
         end
     end
-    SetPlayerPropertyValue(player, "inventory", inventory)
+    PlayerData[player].inventory = inventory
     log.debug(GetPlayerName(player) .. " inventory item " .. item .. " quantity set to " .. quantity)
     -- CallEvent("SyncInventory", player)
 end
 
 function IncrementItemUsed(player, item)
-    local inventory = GetPlayerPropertyValue(player, "inventory")
+    local inventory = PlayerData[player].inventory
+
     for i, _item in ipairs(inventory) do
         if _item['item'] == item then
             -- delete if this is the last use
@@ -125,7 +128,7 @@ function IncrementItemUsed(player, item)
             else
                 log.debug('increment used by 1')
                 inventory[i]['used'] = _item['used'] + 1
-                SetPlayerPropertyValue(player, "inventory", inventory)
+                PlayerData[player].inventory = inventory
                 CallEvent("SyncInventory", player)
             end
 
@@ -148,7 +151,7 @@ function RemoveFromInventory(player, item, amount)
         return
     end
 
-    local inventory = GetPlayerPropertyValue(player, "inventory")
+    local inventory = PlayerData[player].inventory
 
     local amount = amount or 1
     local curr_qty = GetInventoryCount(player, item)
@@ -188,7 +191,7 @@ end)
 
 -- get carry count for given item
 function GetInventoryCount(player, item)
-    local inventory = GetPlayerPropertyValue(player, "inventory")
+    local inventory = PlayerData[player].inventory
     for _, _item in pairs(inventory) do
         if _item['item'] == item then
             return _item['quantity']
@@ -199,7 +202,7 @@ end
 
 -- get carry count for given item type
 function GetInventoryCountByType(player, type)
-    local inventory = GetPlayerPropertyValue(player, "inventory")
+    local inventory = PlayerData[player].inventory
     local n = 0
     for _, _item in pairs(inventory) do
         if _item['type'] == type then
@@ -210,7 +213,7 @@ function GetInventoryCountByType(player, type)
 end
 
 function GetInventoryAvailableSlots(player)
-    local inventory = GetPlayerPropertyValue(player, "inventory")
+    local inventory = PlayerData[player].inventory
     local count = 0
     for _ in pairs(inventory) do
         count = count + 1
@@ -258,7 +261,7 @@ end
 AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
 
 function GetItemFromInventory(player, item)
-    local inventory = GetPlayerPropertyValue(player, "inventory")
+    local inventory = PlayerData[player].inventory
     for i, _item in ipairs(inventory) do
         if _item['item'] == item then
             return _item
@@ -277,7 +280,7 @@ AddRemoteEvent("UpdateInventory", function(player, data)
     local items = json_decode(data)
     log.debug(GetPlayerName(player) .. " updating inventory:", dump(items))
 
-    local inventory = GetPlayerPropertyValue(player, "inventory")
+    local inventory = PlayerData[player].inventory
     local new_inventory = {}
 
     for _, item in pairs(items) do
@@ -293,7 +296,7 @@ AddRemoteEvent("UpdateInventory", function(player, data)
         }
     end
     log.trace("NEW INVENTORY", dump(new_inventory))
-    SetPlayerPropertyValue(player, "inventory", new_inventory)
+    PlayerData[player].inventory = new_inventory
 
     CheckEquippedFromInventory(player)
     CallEvent("SyncInventory", player)
@@ -307,8 +310,9 @@ end)
 
 -- clear inventory on player death
 AddEvent("OnPlayerDeath", function(player, killer)
-    SetPlayerPropertyValue(player, "inventory", {})
-    SetPlayerPropertyValue(player, "weapons", {})
+    PlayerData[player].inventory = {}
+    PlayerData[player].weapons = {}
+
     CallEvent("SyncInventory", player)
 end)
 
@@ -319,8 +323,7 @@ end)
 
 -- item hotkeys
 AddRemoteEvent("UseItemHotkey", function(player, key)
-    local inventory = GetPlayerPropertyValue(player, "inventory")
-    -- log.trace(dump(inventory))
+    local inventory = PlayerData[player].inventory
 
     -- find valid hotbar items
     local usable_items = {}

@@ -7,21 +7,35 @@ SpawnLocation = {
 local SavePlayerTimer
 local PlayerSaveTime = 1000 * 60 -- 60 secs
 
+PlayerData = {}
+
 AddEvent("OnPackageStop", function()
     for _, player in pairs(GetAllPlayers()) do
-        ClearEquipped(player)
+        ClearEquippedObjects(player)
     end
 end)
 
--- destroy vest on quit
+-- player disconnected
 AddEvent("OnPlayerQuit", function(player)
+    log.debug("OnPlayerQuit")
+    if PlayerData[player] == nil then return end
+    
     SavePlayer(player)
-    ClearEquipped(player)
+    ClearEquippedObjects(player)
+
+    PlayerData[player] = nil
 end)
 
 -- joins the server, happens just before initial spawn
 AddEvent("OnPlayerJoin", function(player)
     log.debug("OnPlayerJoin")
+
+    -- initialize PlayerData
+    PlayerData[player] = {
+        inventory = nil,
+        weapons = nil,
+        equipped = nil
+    }
 
     -- randomized spawn location
     x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 6000)
@@ -45,7 +59,7 @@ AddEvent("OnPlayerSpawn", function(player)
     -- cleansing
     SetPlayerArmor(player, 0)
     ClearInventory(player)
-    ClearEquipped(player)
+    ClearEquippedObjects(player)
 end)
 
 AddRemoteEvent("SelectCharacter", function(player, preset)
@@ -55,7 +69,7 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
     SetPlayerDimension(player, 0)
 
     ClearInventory(player)
-    ClearEquipped(player)
+    ClearEquippedObjects(player)
 
     -- spawning in a new character
     local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 6000)
@@ -83,7 +97,7 @@ AddEvent("OnPlayerDeath", function(player, killer)
     end
 
     -- clear attached objects from world
-    ClearEquipped(player)
+    ClearEquippedObjects(player)
 
     -- clear player data on death
     Account.update(GetPlayerSteamId(player), {
@@ -98,7 +112,7 @@ AddEvent("OnPlayerDeath", function(player, killer)
     AddPlayerChat(player, "YOU ARE DEAD!  You must wait " .. PlayerRespawnSecs .. " seconds to respawn...")
 end)
 
--- Log auth
+-- Happens after spawn!
 AddEvent("OnPlayerSteamAuth", function(player)
     log.debug("OnPlayerSteamAuth")
 
@@ -121,9 +135,9 @@ AddEvent("OnPlayerSteamAuth", function(player)
         local account = Account.get(GetPlayerSteamId(player))
 
         -- setup inventory
-        SetPlayerPropertyValue(player, "inventory", json_decode(account['inventory']))
-        SetPlayerPropertyValue(player, "weapons", json_decode(account['weapons']))
-        SetPlayerPropertyValue(player, "equipped", json_decode(account['equipped']))
+        PlayerData[player].inventory = json_decode(account['inventory'])
+        PlayerData[player].weapons = json_decode(account['weapons'])
+        PlayerData[player].equipped = json_decode(account['equipped'])
 
         Delay(2500, function(player)
             SyncInventory(player)
@@ -156,6 +170,8 @@ local SavePlayerTimer = CreateTimer(function(vehicle)
 end, PlayerSaveTime)
 
 function SavePlayer(player)
+    if PlayerData[player] == nil then return end
+
     local x, y, z = GetPlayerLocation(player)
     Account.update(GetPlayerSteamId(player), {
         location = {
@@ -163,8 +179,8 @@ function SavePlayer(player)
             y = y,
             z = z
         },
-        inventory = GetPlayerPropertyValue(player, 'inventory'),
-        weapons = GetPlayerPropertyValue(player, 'weapons'),
-        equipped = GetPlayerPropertyValue(player, 'equipped')
+        inventory = PlayerData[player].inventory,
+        weapons = PlayerData[player].weapons,
+        equipped = PlayerData[player].equipped
     })
 end

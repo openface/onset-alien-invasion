@@ -74,7 +74,7 @@ AddEvent("prop:InteractSatelliteTerminal", function(object)
 end)
 
 function HasComputerPart()
-    local inventory = GetPlayerPropertyValue(GetPlayerId(), "inventory")
+    local inventory = PlayerData[player].inventory
     for _, item in pairs(inventory) do
         -- log.debug(item['item'])
         if item['item'] == 'computer_part' then

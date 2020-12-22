@@ -1,8 +1,7 @@
 -- clear equipped store for all players
-function ClearEquipped(player)
-    local equipped = GetPlayerPropertyValue(player, "equipped")
+function ClearEquippedObjects(player)
+    local equipped = PlayerData[player].equipped
     if equipped == nil then
-        SetPlayerPropertyValue(player, "equipped", {})
         return
     end
 
@@ -12,15 +11,12 @@ function ClearEquipped(player)
         DestroyObject(object)
     end
 
-    -- clear player equipment
-    SetPlayerPropertyValue(player, "equipped", {})
-
     -- stop any animation player might be in
     SetPlayerAnimation(player, "STOP")
 end
 
 function SyncEquipped(player)
-    local equipped = GetPlayerPropertyValue(player, "equipped")
+    local equipped = PlayerData[player].equipped
     for item, object in pairs(equipped) do
         AttachItemToPlayer(player, item)
     end
@@ -60,9 +56,9 @@ function EquipObject(player, item)
     attached_object = AttachItemToPlayer(player, item)
 
     -- update equipped store
-    local equipped = GetPlayerPropertyValue(player, "equipped")
+    local equipped = PlayerData[player].equipped
     equipped[item] = attached_object
-    SetPlayerPropertyValue(player, "equipped", equipped)
+    PlayerData[player].equipped = equipped
     log.trace("EQUIPPED: ", dump(equipped))
 
     -- call EQUIP event on object
@@ -123,9 +119,9 @@ function UnequipObject(player, item)
     local item_cfg = GetItemConfig(item)
 
     -- remove from equipped list
-    local equipped = GetPlayerPropertyValue(player, "equipped")
+    local equipped = PlayerData[player].equipped
     equipped[item] = nil
-    SetPlayerPropertyValue(player, "equipped", equipped)
+    PlayerData[player].equipped = equipped
 
     log.trace("EQUIPPED: ", dump(equipped))
 
@@ -141,7 +137,7 @@ function UnequipObject(player, item)
 end
 
 function GetEquippedObject(player, item)
-    return GetPlayerPropertyValue(player, "equipped")[item] or nil
+    return PlayerData[player].equipped[item] or nil
 end
 
 function IsItemEquipped(player, item)
@@ -153,7 +149,7 @@ function IsItemEquipped(player, item)
 end
 
 function GetEquippedObjectNameFromBone(player, bone)
-    local equipped = GetPlayerPropertyValue(player, "equipped")
+    local equipped = PlayerData[player].equipped
     for _, object in pairs(equipped) do
         if GetObjectPropertyValue(object, "_bone") == bone then
             -- log.debug "found bone"
@@ -164,8 +160,8 @@ end
 
 -- unequip items no longer in player inventory
 function CheckEquippedFromInventory(player)
-  local equipped = GetPlayerPropertyValue(player, "equipped")
-  local inventory = GetPlayerPropertyValue(player, "inventory")
+  local equipped = PlayerData[player].equipped
+  local inventory = PlayerData[player].inventory
 
   for item,_ in pairs(equipped) do
     if GetInventoryCount(player,item) == 0 then

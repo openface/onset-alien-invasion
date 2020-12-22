@@ -89,7 +89,7 @@ AddRemoteEvent("BuildItem", function(player, item)
 end)
 
 function GetPlayerResources(player)
-    local inventory = GetPlayerPropertyValue(player, "inventory")
+    local inventory = PlayerData[player].inventory
     local resources = {}
     for _,item in pairs(inventory) do
         if item['type'] == 'resource' then

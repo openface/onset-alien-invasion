@@ -70,7 +70,7 @@ AddRemoteEvent("prop:OpenStorage", function(player, object, options)
     }
 
     -- inventory
-    local inventory = GetPlayerPropertyValue(player, "inventory")
+    local inventory = PlayerData[player].inventory
     for index, item in ipairs(inventory) do
         -- usable, equipable, resource
         table.insert(_send.inventory_items, {

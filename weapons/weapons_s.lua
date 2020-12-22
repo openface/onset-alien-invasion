@@ -26,7 +26,7 @@ AddEvent("OnPackageStop", function()
 end)
 
 function SyncWeapons(player)
-    local weapons = GetPlayerPropertyValue(player, "weapons")
+    local weapons = PlayerData[player].weapons
     for _,w in pairs(weapons) do
         WeaponPatch.SetWeapon(player, WeaponsConfig[w['item']].weapon_id, 100, false, w['slot'], true)
     end
@@ -46,7 +46,7 @@ function AddWeapon(player, item)
         return
     end
 
-    local weapons = GetPlayerPropertyValue(player, "weapons")
+    local weapons = PlayerData[player].weapons
     -- add new item to store
     table.insert(weapons, {
         item = item,
@@ -55,20 +55,20 @@ function AddWeapon(player, item)
         modelid = item_cfg['modelid'],
         slot = slot
     })
-    SetPlayerPropertyValue(player, "weapons", weapons)
+    PlayerData[player].weapons = weapons
     CallEvent("SyncInventory", player)
 end
 
 function RemoveWeapon(player, item)
     UnequipWeapon(player, item)
-    local weapons = GetPlayerPropertyValue(player, "weapons")
+    local weapons = PlayerData[player].weapons
     for i, _weapon in ipairs(weapons) do
         if _weapon['item'] == item then
             table.remove(weapons, i)
             break
         end
     end
-    SetPlayerPropertyValue(player, "weapons", weapons)
+    PlayerData[player].weapons = weapons
     CallEvent("SyncInventory", player)
 end
 

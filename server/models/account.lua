@@ -48,3 +48,10 @@ function Account.update(steamid, data)
     log.trace("Updating account: " .. query)
     mariadb_async_query(DB, query)
 end
+
+function Account.updateColumn(steamid, column, value)
+    local query = mariadb_prepare(DB, "UPDATE accounts SET ? = '?' WHERE steamid = '?'", column, value, tostring(steamid))
+    log.trace("Updating account: " .. query)
+    mariadb_async_query(DB, query)
+end
+

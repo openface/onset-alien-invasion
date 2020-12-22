@@ -1,10 +1,3 @@
-AddEvent("OnPackageStop", function()
-    log.info "Resetting player inventories..."
-    for _, player in pairs(GetAllPlayers()) do
-        ClearInventory(player)
-    end
-end)
-
 -- get inventory data and send to UI
 function SyncInventory(player)
     local inventory = PlayerData[player].inventory
@@ -47,14 +40,6 @@ function SyncInventory(player)
 end
 AddRemoteEvent("SyncInventory", SyncInventory)
 AddEvent("SyncInventory", SyncInventory)
-
---
-function ClearInventory(player)
-    PlayerData[player].inventory = {}
-    PlayerData[player].weapons = {}
-
-    SyncInventory(player)
-end
 
 -- add object to inventory
 function AddToInventory(player, item)

@@ -12,7 +12,7 @@ end)
 
 AddEvent("OnPackageStop", function()
     log.info "Destroying all merchants..."
-    for _, object in pairs(Merchants) do
+    for object in pairs(Merchants) do
         Merchants[object] = nil
         DestroyObject(object)
     end

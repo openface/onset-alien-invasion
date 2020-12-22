@@ -64,18 +64,23 @@ AddEvent("OnPlayerSpawn", function(player)
 
     -- cleansing
     SetPlayerArmor(player, 0)
-    ClearInventory(player)
-    ClearEquippedObjects(player)
+    
+    PlayerData[player].inventory = {}
+    PlayerData[player].weapons = {}
+    PlayerData[player].equipped = {}
+    SyncInventory(player)
 end)
 
 AddRemoteEvent("SelectCharacter", function(player, preset)
     SetPlayerPropertyValue(player, 'clothing', preset, true)
+    Account.updateColumn(GetPlayerSteamId(player), "clothing", preset)
 
     -- join the others as a new character
     SetPlayerDimension(player, 0)
 
-    ClearInventory(player)
-    ClearEquippedObjects(player)
+    PlayerData[player].inventory = {}
+    PlayerData[player].weapons = {}
+    PlayerData[player].equipped = {}
 
     -- spawning in a new character
     local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 6000)
@@ -83,11 +88,6 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
     SetPlayerLocation(player, x, y, SpawnLocation.z + 30000)
 
     AttachPlayerParachute(player, true)
-
-    local chopper = CreateObject(1847, x, y, SpawnLocation.z + 31000)
-    Delay(20000, function(chopper)
-        DestroyObject(chopper)
-    end, chopper)
 end)
 
 -- killer is never a NPC so we have to guess
@@ -131,14 +131,22 @@ AddEvent("OnPlayerSteamAuth", function(player)
             steamid = steamid
         })
 
-        -- new character
+        -- new character gets character selection screen
         SetPlayerDimension(player, math.random(1, 999))
         CallRemoteEvent(player, "ShowCharacterSelection")
+
+        local chopper = CreateObject(1847, x, y, SpawnLocation.z + 31000)
+        Delay(1000 * 25, function(chopper)
+            DestroyObject(chopper)
+        end, chopper)
     else
         log.info("Existing account player " .. GetPlayerName(player) .. " logging on.")
 
         -- existing player logging on
         local account = Account.get(GetPlayerSteamId(player))
+
+        -- player has never selected a character
+        if account['clothing'] == nil then return end
 
         -- setup inventory
         LoadPlayer(player)
@@ -156,11 +164,17 @@ function LoadPlayer(player)
 
     -- existing player logging on
     local account = Account.get(GetPlayerSteamId(player))
+    if account == nil then return end
+
+    log.debug("Initializing player from database")
 
     -- setup inventory
     PlayerData[player].inventory = json_decode(account['inventory'])
     PlayerData[player].weapons = json_decode(account['weapons'])
     PlayerData[player].equipped = json_decode(account['equipped'])
+
+    -- setup properties
+    SetPlayerPropertyValue(player, 'clothing', account['clothing'], true)
 
     Delay(2500, function(player)
         SyncInventory(player)

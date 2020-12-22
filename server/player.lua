@@ -9,6 +9,12 @@ local PlayerSaveTime = 1000 * 60 -- 60 secs
 
 PlayerData = {}
 
+AddEvent("OnPackageStart", function()
+    for _, player in pairs(GetAllPlayers()) do
+        LoadPlayer(player)
+    end
+end)
+
 AddEvent("OnPackageStop", function()
     for _, player in pairs(GetAllPlayers()) do
         ClearEquippedObjects(player)
@@ -135,21 +141,33 @@ AddEvent("OnPlayerSteamAuth", function(player)
         local account = Account.get(GetPlayerSteamId(player))
 
         -- setup inventory
-        PlayerData[player].inventory = json_decode(account['inventory'])
-        PlayerData[player].weapons = json_decode(account['weapons'])
-        PlayerData[player].equipped = json_decode(account['equipped'])
-
-        Delay(2500, function(player)
-            SyncInventory(player)
-            SyncEquipped(player)
-            SyncWeapons(player)
-        end, player)
+        LoadPlayer(player)
 
         -- player is already spawned, relocate them
         local loc = json_decode(account['location'])
         SetPlayerLocation(player, loc['x'], loc['y'], loc['z'])
     end
 end)
+
+function LoadPlayer(player)
+    if PlayerData[player] == nil then
+        PlayerData[player] = {}
+    end
+
+    -- existing player logging on
+    local account = Account.get(GetPlayerSteamId(player))
+
+    -- setup inventory
+    PlayerData[player].inventory = json_decode(account['inventory'])
+    PlayerData[player].weapons = json_decode(account['weapons'])
+    PlayerData[player].equipped = json_decode(account['equipped'])
+
+    Delay(2500, function(player)
+        SyncInventory(player)
+        SyncEquipped(player)
+        SyncWeapons(player)
+    end, player)
+end
 
 -- Chat
 AddEvent("OnPlayerChat", function(player, message)

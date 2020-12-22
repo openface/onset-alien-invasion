@@ -17,12 +17,14 @@
         "computer/computer_s.lua",
         "workbench/workbench_s.lua",
         "merchant/merchant_s.lua",
+
         "inventory/inventory_s.lua",
+        "inventory/equip_s.lua",
+        "inventory/weapons_s.lua",
+
         "scoreboard/scoreboard_s.lua",
         "pickups/pickups_s.lua",
         "objects/objects_s.lua",
-        "equip/equip_s.lua",
-        "weapons/weapons_s.lua",
         "storage/storage_s.lua",
         "placement/placement_s.lua",
         "props/props_s.lua",

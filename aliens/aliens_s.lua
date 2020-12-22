@@ -94,7 +94,7 @@ function IsPlayerAttackable(player)
 
     -- don't attack if player is in safe zone
     local x, y, z = GetPlayerLocation(player)
-    local distance = GetDistance3D(x, y, z, Player.SpawnLocation.x, Player.SpawnLocation.y, Player.SpawnLocation.z)
+    local distance = GetDistance3D(x, y, z, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z)
     if distance < SafeRange then
         log.debug(GetPlayerName(player) .. " is in safe zone")
         return false

@@ -43,7 +43,7 @@ function SyncInventory(player)
         })
     end
     CallRemoteEvent(player, "SetInventory", json_encode(_send))
-    log.trace("INVENTORY SYNC: " .. json_encode(_send))
+    log.trace("INVENTORY SYNC ("..GetPlayerName(player).."): " .. json_encode(_send))
 end
 AddRemoteEvent("SyncInventory", SyncInventory)
 AddEvent("SyncInventory", SyncInventory)

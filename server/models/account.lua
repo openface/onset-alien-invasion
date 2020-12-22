@@ -6,7 +6,7 @@ local CACHE = Cache:new(3600)
 function Account.get(steamid)
     local account = CACHE:get(tostring(steamid))
     if not account then
-        log.debug("getting player " .. steamid)
+        log.trace("getting player " .. steamid)
         local query = mariadb_prepare(DB, "SELECT * FROM accounts WHERE steamid = '?' LIMIT 1", tostring(steamid))
         mariadb_await_query(DB, query)
         account = mariadb_get_assoc(1)
@@ -16,8 +16,8 @@ function Account.get(steamid)
 end
 
 function Account.create(data)
-    log.info("creating player " .. dump(data))
     local query = mariadb_prepare(DB, "INSERT INTO accounts (steamid) VALUES ('?')", tostring(data["steamid"]))
+    log.trace("Creating account: "..query)
     mariadb_async_query(DB, query)
 end
 
@@ -32,10 +32,19 @@ end
 
 function Account.IsAdmin(steamid)
     local row = Account.get(steamid)
-    print(dump(row))
     if row["is_admin"] == "1" then
         return true
     else
         return false
     end
+end
+
+function Account.update(steamid, data)
+    CACHE:remove(tostring(steamid))
+    local query = mariadb_prepare(DB, "UPDATE accounts SET location = '?', inventory = '?' WHERE steamid = '?'", 
+                                        json_encode(data['location']), 
+                                        json_encode(data['inventory']),
+                                        tostring(steamid))
+    log.trace("Updating account: "..query)
+    mariadb_async_query(DB, query)
 end

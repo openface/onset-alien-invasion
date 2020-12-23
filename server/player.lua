@@ -5,20 +5,26 @@ SpawnLocation = {
     z = 1298.3040771484
 }
 local SavePlayerTimer
-local PlayerSaveTime = 1000 * 60 -- 60 secs
+local PlayerSaveTime = 1000 * 10 -- 60 secs
 
 PlayerData = {}
 
 AddEvent("OnPackageStart", function()
-    for _, player in pairs(GetAllPlayers()) do
-        LoadPlayer(player)
-    end
+    SavePlayerTimer = CreateTimer(function()
+        for player,_ in pairs(PlayerData) do
+            if IsValidPlayer(player) and GetPlayerDimension(player) == 0 and not IsPlayerDead(player) then
+                SavePlayer(player)
+            end
+        end
+    end, PlayerSaveTime)
 end)
 
 AddEvent("OnPackageStop", function()
     for _, player in pairs(GetAllPlayers()) do
         ClearEquippedObjects(player)
     end
+
+    DestroyTimer(SavePlayerTimer)
 end)
 
 -- player disconnected
@@ -201,17 +207,9 @@ AddRemoteEvent("DropParachute", function(player)
     AttachPlayerParachute(player, false)
 end)
 
-local SavePlayerTimer = CreateTimer(function(vehicle)
-    for player in pairs(GetAllPlayers()) do
-        if IsValidPlayer(player) and GetPlayerDimension(player) == 0 and not IsPlayerDead(player) then
-            SavePlayer(player)
-        end
-    end
-end, PlayerSaveTime)
-
 function SavePlayer(player)
     if PlayerData[player] == nil then return end
-
+    log.info("Saving player: "..GetPlayerName(player))
     local x, y, z = GetPlayerLocation(player)
     Account.update(GetPlayerSteamId(player), {
         location = {

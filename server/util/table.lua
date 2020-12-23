@@ -123,17 +123,20 @@ function Table.new(conn, name, fields)
     self.update = function(params, where)
         local update_query = "UPDATE "..self.name.." SET "
         local counter = 0
+        local formatted_value
 
         for column,value in pairs(params) do
             if counter ~= 0 then
                 update_query = update_query .. ", "
             end
 
-            if type(value) ~= "number" then
-                value = "'"..value.."'"
+            if ValidateDataType(value, self.fields[field]) then
+                formatted_value = FormatValue(value, self.fields[column])
+            else
+                log.error("Invalid type for table "..self.name.." in column "..field)
             end
 
-            update_query = update_query .. column ..' = '..value
+            update_query = update_query .. column ..' = '..formatted_value
             counter = counter + 1
         end
 
@@ -141,9 +144,8 @@ function Table.new(conn, name, fields)
         update_query = update_query .. " " .. self._where(where)
         log.debug(update_query)
 
-        local query = mariadb_prepare(self.conn, update_query)
-        local result = mariadb_query(self.conn, query)
-        return true
+        local result = mariadb_async_query(self.conn, update_query)
+        return result
     end
 
     -- selects rows
@@ -183,10 +185,12 @@ function Table.new(conn, name, fields)
         local counter = 0
         local condition = ""
         local equation
+        local field_type
 
         for column,value in pairs(where) do
+            field_type = self.fields[column].type
 
-            if type(value) ~= "number" then
+            if field_type ~= "number" and field_type ~= "bool" then
                 value = "'"..value.."'"
             end
 

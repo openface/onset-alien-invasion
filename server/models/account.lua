@@ -16,10 +16,10 @@ AddEvent("OnPackageStart", function()
 end)
 
 function Account.get(steamid)
-    local account = CACHE:get(tostring(steamid))
+    local account = CACHE:get(steamid)
     if not account then
         account = SelectFirst("accounts", { steamid = steamid })
-        CACHE:put(tostring(steamid), account)
+        CACHE:put(steamid, account)
     end
     return account
 end
@@ -51,13 +51,13 @@ function Account.IsAdmin(steamid)
 end
 
 function Account.update(steamid, data)
-    CACHE:remove(tostring(steamid))
-    local query = mariadb_prepare(DB,
-                      "UPDATE accounts SET location = '?', inventory = '?', weapons = '?', equipped = '?' WHERE steamid = '?'",
-                      json_encode(data['location']), json_encode(data['inventory']), json_encode(data['weapons']),
-                      json_encode(data['equipped']), tostring(steamid))
-    log.trace("Updating account: " .. query)
-    mariadb_async_query(DB, query)
+    CACHE:remove(steamid)
+    UpdateRows("accounts", {
+        location = data['location'],
+        inventory = data['inventory'],
+        weapons = data['weapons'],
+        equipped = data['equipped']
+    }, { steamid = tostring(steamid) })
 end
 
 function Account.updateColumn(steamid, column, value)

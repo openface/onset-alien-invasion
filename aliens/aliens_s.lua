@@ -20,6 +20,7 @@ AddCommand("togaliens", function(player)
     log.info("Alien spawning is now ", AlienSpawnsEnabled)
 end)
 
+-- TODO destroy these timers when package stops
 AddEvent("OnPackageStart", function()
     -- re-spawn on a timer
     CreateTimer(function()

@@ -23,6 +23,7 @@ function Cache:new(timeout)
 end
 
 function Cache:get(key)
+    key = tostring(key)
     local item = self._data[key]
     if item then
         item.lastAccess = os.time()
@@ -33,6 +34,7 @@ function Cache:get(key)
 end
 
 function Cache:put(key, value)
+    key = tostring(key)
     if value == nil then
         print("Cache value cannot be nil.")
         return false
@@ -45,6 +47,7 @@ function Cache:put(key, value)
 end
 
 function Cache:remove(key)
+    key = tostring(key)
     self._data[key] = nil
 end
 

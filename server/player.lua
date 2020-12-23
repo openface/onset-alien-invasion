@@ -71,25 +71,6 @@ AddEvent("OnPlayerSpawn", function(player)
     SyncInventory(player)
 end)
 
-AddRemoteEvent("SelectCharacter", function(player, preset)
-    SetPlayerPropertyValue(player, 'clothing', preset, true)
-    Account.updateColumn(GetPlayerSteamId(player), "clothing", preset)
-
-    -- join the others as a new character
-    SetPlayerDimension(player, 0)
-
-    PlayerData[player].inventory = {}
-    PlayerData[player].weapons = {}
-    PlayerData[player].equipped = {}
-
-    -- spawning in a new character
-    local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 6000)
-    SetPlayerSpawnLocation(player, x, y, SpawnLocation.z, 180)
-    SetPlayerLocation(player, x, y, SpawnLocation.z + 30000)
-
-    AttachPlayerParachute(player, true)
-end)
-
 -- killer is never a NPC so we have to guess
 -- if player is killed by themselves, assume it's an alien?
 AddEvent("OnPlayerDeath", function(player, killer)
@@ -126,30 +107,21 @@ AddEvent("OnPlayerSteamAuth", function(player)
     log.info("Player " .. GetPlayerName(player) .. " (ID " .. player .. ") authenticated with steam ID " .. steamid)
 
     if not Account.exists(steamid) then
-        log.info("Creating new account for player " .. GetPlayerName(player))
-        Account.create({
-            steamid = steamid
-        })
-
         -- new character gets character selection screen
         SetPlayerDimension(player, math.random(1, 999))
         CallRemoteEvent(player, "ShowCharacterSelection")
-
-        local chopper = CreateObject(1847, x, y, SpawnLocation.z + 31000)
-        Delay(1000 * 25, function(chopper)
-            DestroyObject(chopper)
-        end, chopper)
     else
-        log.info("Existing account player " .. GetPlayerName(player) .. " logging on.")
+        log.info("Loading existing character for player " .. GetPlayerName(player))
 
         -- existing player logging on
         local account = Account.get(GetPlayerSteamId(player))
-
-        -- player has never selected a character
-        if account['clothing'] == nil then return end
+        if not account then 
+            log.error "Account not found!"
+            return
+        end
 
         -- setup inventory
-        LoadPlayer(player)
+        InitializePlayer(player)
 
         -- player is already spawned, relocate them
         local loc = json_decode(account['location'])
@@ -157,16 +129,50 @@ AddEvent("OnPlayerSteamAuth", function(player)
     end
 end)
 
-function LoadPlayer(player)
+-- new character selected
+AddRemoteEvent("SelectCharacter", function(player, preset)
+    log.info("Creating new account for player " .. GetPlayerName(player))
+
+    -- new player spawn location
+    local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 6000)
+    local z = SpawnLocation.z
+    SetPlayerSpawnLocation(player, x, y, z, 180)
+
+    Account.create({
+        steamid = GetPlayerSteamId(player),
+        clothing = preset,
+        inventory = {},
+        weapons = {},
+        equipped = {},
+        location = { x = x, y = y, z = z }
+    })
+
+    -- join the others as a new character
+    SetPlayerDimension(player, 0)
+
+    -- initialize PlayerData
+    InitializePlayer(player)
+
+    -- spawn a new character up in the sky
+    SetPlayerLocation(player, x, y, SpawnLocation.z + 30000)
+    AttachPlayerParachute(player, true)
+
+    local chopper = CreateObject(1847, x, y, SpawnLocation.z + 31000)
+    Delay(1000 * 25, function(chopper)
+        DestroyObject(chopper)
+    end, chopper)
+end)
+
+-- initialize player from database values
+function InitializePlayer(player)
     if PlayerData[player] == nil then
         PlayerData[player] = {}
     end
 
     -- existing player logging on
     local account = Account.get(GetPlayerSteamId(player))
-    if account == nil then return end
 
-    log.debug("Initializing player from database")
+    log.debug("Initializing player from database "..dump(account))
 
     -- setup inventory
     PlayerData[player].inventory = json_decode(account['inventory'])

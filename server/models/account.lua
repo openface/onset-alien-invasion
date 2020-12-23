@@ -16,7 +16,10 @@ function Account.get(steamid)
 end
 
 function Account.create(data)
-    local query = mariadb_prepare(DB, "INSERT INTO accounts (steamid) VALUES ('?')", tostring(data["steamid"]))
+    local query = mariadb_prepare(DB,
+                      "INSERT INTO accounts (steamid,clothing,location,inventory,weapons,equipped) VALUES ('?','?','?','?','?','?')",
+                      tostring(data["steamid"]), data['clothing'], json_encode(data['location']),
+                      json_encode(data['inventory']), json_encode(data['weapons']), json_encode(data['equipped']))
     log.trace("Creating account: " .. query)
     mariadb_async_query(DB, query)
 end
@@ -50,7 +53,8 @@ function Account.update(steamid, data)
 end
 
 function Account.updateColumn(steamid, column, value)
-    local query = mariadb_prepare(DB, "UPDATE accounts SET ? = '?' WHERE steamid = '?'", column, value, tostring(steamid))
+    local query = mariadb_prepare(DB, "UPDATE accounts SET ? = '?' WHERE steamid = '?'", column, value,
+                      tostring(steamid))
     log.trace("Updating account: " .. query)
     mariadb_async_query(DB, query)
 end

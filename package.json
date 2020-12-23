@@ -39,6 +39,7 @@
         "server/util/cache.lua",
         "server/util/log.lua",
         "server/util/misc.lua",
+        "server/util/table.lua",
 
         "server/models/account.lua"
     ],

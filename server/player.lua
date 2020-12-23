@@ -141,9 +141,6 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
     Account.create({
         steamid = GetPlayerSteamId(player),
         clothing = preset,
-        inventory = {},
-        weapons = {},
-        equipped = {},
         location = { x = x, y = y, z = z }
     })
 
@@ -171,8 +168,13 @@ function InitializePlayer(player)
 
     -- existing player logging on
     local account = Account.get(GetPlayerSteamId(player))
+    if not account then
+        log.error("Error initializing player from database!")
+        KickPlayer(player, "Error initializing player!")
+        return
+    end
 
-    log.debug("Initializing player from database "..dump(account))
+    log.debug("Initializing player from database")
 
     -- setup inventory
     PlayerData[player].inventory = json_decode(account['inventory'])

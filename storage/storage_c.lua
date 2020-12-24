@@ -48,7 +48,7 @@ AddRemoteEvent("LoadStorageData", function(data)
     ExecuteWebJS(StorageUI, "EmitEvent('SetStorageData'," .. data .. ")")
     -- AddPlayerChat("data:"..dump(data))
     local x, y, z = GetPlayerLocation(GetPlayerId())
-    storage_timer = CreateTimer(OpenStorageTimer, 1000, {
+    storage_timer = CreateTimer(OpenStorageTimer, 400, {
         x = x,
         y = y,
         z = z

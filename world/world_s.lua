@@ -74,21 +74,21 @@ local GarbageConfig = {
 
 local WorldStorageObjects = {}
 local StorageLootSpawnTimer
-local StorageLootSpawnInterval = 1000 * 60 * 60 * 2 -- 2 hours
+local StorageLootSpawnInterval = 1000 * 60 * 15 -- 15 minutes
 local StorageConfig = {
-    [504] = 1,
-    [505] = 1,
-    [556] = 1,
-    [561] = 2,
-    [994] = 2,
-    [1005] = 1,
-    [1006] = 2,
-    [1007] = 2,
-    [1009] = 1,
-    [1013] = 2,
-    [1014] = 2,
-    [1015] = 2,
-    [1016] = 2
+    [504] = true,
+    [505] = true,
+    [556] = true,
+    [561] = true,
+    [994] = true,
+    [1005] = true,
+    [1006] = true,
+    [1007] = true,
+    [1009] = true,
+    [1013] = true,
+    [1014] = true,
+    [1015] = true,
+    [1016] = true
 }
 
 local WorldObjects = {}
@@ -114,7 +114,7 @@ AddEvent("OnPackageStart", function()
             elseif StorageConfig[v['modelID']] then
                 WorldStorageObjects[object] = true
                 AddStorageProp(object)
-                SpawnStorageLoot(object, StorageConfig[v['modelID']])
+                SpawnStorageLoot(object)
             end
 
             WorldObjects[object] = true
@@ -124,8 +124,8 @@ AddEvent("OnPackageStart", function()
     log.info("Alien Invasion world loaded!")
 
     StorageLootSpawnTimer = CreateTimer(function()
-        for object,level in pairs(WorldStorageObjects) do
-            SpawnStorageLoot(object,level)
+        for object in pairs(WorldStorageObjects) do
+            SpawnStorageLoot(object)
         end
     end, StorageLootSpawnInterval)
 end)
@@ -193,20 +193,12 @@ function AddStorageProp(object)
     })
 end
 
--- level is 1 common or 2 military
-function SpawnStorageLoot(object, level)
+function SpawnStorageLoot(object)
     if not IsValidObject(object) then return end
 
-    local items
-    local random_items
-    log.info("Spawning new loot for storage "..GetObjectModel(object).. " object ".. object .." level "..level)
-    if level == 1 then
-        items = getTableKeys(GetItemConfigs())
-        random_items = getRandomSample(items, math.random(0, 2))
-    elseif level == 2 then
-        items = getTableKeys(WeaponsConfig)
-        random_items = getRandomSample(items, math.random(0, 1))
-    end
+    log.debug("Spawning new loot for storage "..GetObjectModel(object).. " object ".. object)
+    local items = getTableKeys(GetItemConfigs())
+    local random_items = getRandomSample(items, math.random(0, 2))
 
     local random_content = {}
     for _, item in pairs(random_items) do
@@ -215,7 +207,6 @@ function SpawnStorageLoot(object, level)
             quantity = 1
         })
     end
-    log.debug(dump(random_content))
-
+    log.trace(dump(random_content))
     ReplaceStorageContents(object, 'object', random_content)
 end

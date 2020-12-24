@@ -66,6 +66,10 @@ local GarbageConfig = {
     [350] = true,
     [351] = true,
     [359] = true,
+    [660] = true,
+    [665] = true,
+    [653] = true,
+    [661] = true,
 }
 
 local WorldObjects = {}

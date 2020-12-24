@@ -121,7 +121,3 @@ AddRemoteEvent("DropParachute", function(player)
     CallRemoteEvent(player, "SetSatelliteStatus", GetSatelliteStatus())
 end)
 
-AddEvent("ComputerPartPickedUp", function(player)
-  AddPlayerChatAll(GetPlayerName(player)..' has found a computer part!')
-  CallRemoteEvent(player, "ComputerPartPickedup", { x = SatelliteTerminalConfig.x, y = SatelliteTerminalConfig.y, z = SatelliteTerminalConfig.z })
-end)

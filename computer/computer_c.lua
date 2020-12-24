@@ -1,8 +1,6 @@
 local ComputerUI
 
 local computer_timer
-
-local SatelliteWaypoint
 local SatelliteStatus
 
 AddEvent("OnPackageStart", function()
@@ -21,9 +19,6 @@ end)
 AddEvent("OnPackageStop", function()
     DestroyTextBox(SatelliteStatus)
     DestroyWebUI(ComputerUI)
-    if SatelliteWaypoint ~= nil then
-      DestroyWaypoint(SatelliteWaypoint)
-    end
 end)
 
 -- timer used to hide computer screen once player walks away
@@ -50,10 +45,6 @@ end)
 
 -- interacting with satellite computer requires computer_part
 AddEvent("prop:InteractSatelliteTerminal", function(object)
-    if SatelliteWaypoint ~= nil then
-        DestroyWaypoint(SatelliteWaypoint)
-    end
-
     local x, y, z = GetObjectLocation(object)
 
     -- ensure player has computer_part
@@ -110,20 +101,3 @@ function SetSatelliteStatus(percent)
 end
 AddEvent("SetSatelliteStatus", SetSatelliteStatus)
 AddRemoteEvent("SetSatelliteStatus", SetSatelliteStatus)
-
--- clear satellite waypoint on death
-AddEvent("OnPlayerDeath", function(killer)
-  if SatelliteWaypoint ~= nil then
-    DestroyWaypoint(SatelliteWaypoint)
-  end
-end)
-
-AddRemoteEvent('ComputerPartPickedup', function(waypoint_loc)
-  SetSoundVolume(CreateSound("client/sounds/part_pickup.wav"), 1)
-  ShowMessage("You have found a computer part.  Use this on the satellite computer!")
-
-  if SatelliteWaypoint ~= nil then
-    DestroyWaypoint(SatelliteWaypoint)
-  end
-  SatelliteWaypoint = CreateWaypoint(waypoint_loc.x, waypoint_loc.y, waypoint_loc.z + 50, "Satellite Terminal")
-end)

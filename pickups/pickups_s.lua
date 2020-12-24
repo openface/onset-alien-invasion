@@ -114,12 +114,6 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
 
         log.debug("Player " .. GetPlayerName(player) .. " picks up item " .. item)
 
-        -- CallEvent("items:"..item..":pickup", player, pickup)
-        -- TODO: where does this belong??
-        if item == 'computer_part' then
-            CallEvent("ComputerPartPickedUp", player)
-        end
-
         -- adds to player inventory and syncs
         AddToInventory(player, item)
         DestroyText3D(GetPickupPropertyValue(pickup, '_text'))

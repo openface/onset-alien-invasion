@@ -24,12 +24,12 @@ function Account.get(steamid)
     return account
 end
 
-function Account.create(data)
+function Account.create(data, callback)
     InsertRow("accounts", {
         steamid = data['steamid'],
         clothing = data['clothing'],
-        location = json_encode(data['location']),
-    })
+        location = json_encode(data['location'])
+    }, callback)
 end
 
 function Account.exists(steamid)
@@ -60,10 +60,11 @@ function Account.update(steamid, data)
     }, { steamid = tostring(steamid) })
 end
 
-function Account.updateColumn(steamid, column, value)
+--[[ function Account.updateColumn(steamid, column, value)
     local query = mariadb_prepare(DB, "UPDATE accounts SET ? = '?' WHERE steamid = '?'", column, value,
                       tostring(steamid))
     log.trace("Updating account: " .. query)
     mariadb_async_query(DB, query)
 end
 
+ ]]

@@ -6,7 +6,6 @@
         "server/database.lua",
         "server/player.lua",
         "server/server.lua",
-        "server/player.lua",
         "server/time.lua",
 
         "aliens/aliens_s.lua",

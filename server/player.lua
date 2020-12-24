@@ -93,13 +93,12 @@ AddEvent("OnPlayerDeath", function(player, killer)
     ClearEquippedObjects(player)
 
     -- clear player data on death
-    Account.update(GetPlayerSteamId(player), {
-        location = nil,
+--[[     Account.update(GetPlayerSteamId(player), {
         inventory = nil,
         equipped = nil,
         weapons = nil
     })
-
+ ]]
     -- stats
     BumpPlayerStat(player, 'deaths')
     AddPlayerChat(player, "YOU ARE DEAD!  You must wait " .. PlayerRespawnSecs .. " seconds to respawn...")
@@ -148,22 +147,22 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
         steamid = GetPlayerSteamId(player),
         clothing = preset,
         location = { x = x, y = y, z = z }
-    })
+    }, function()
+        -- join the others as a new character
+        SetPlayerDimension(player, 0)
 
-    -- join the others as a new character
-    SetPlayerDimension(player, 0)
+        -- initialize PlayerData
+        InitializePlayer(player)
 
-    -- initialize PlayerData
-    InitializePlayer(player)
+        -- spawn a new character up in the sky
+        SetPlayerLocation(player, x, y, SpawnLocation.z + 30000)
+        AttachPlayerParachute(player, true)
 
-    -- spawn a new character up in the sky
-    SetPlayerLocation(player, x, y, SpawnLocation.z + 30000)
-    AttachPlayerParachute(player, true)
-
-    local chopper = CreateObject(1847, x, y, SpawnLocation.z + 31000)
-    Delay(1000 * 25, function(chopper)
-        DestroyObject(chopper)
-    end, chopper)
+        local chopper = CreateObject(1847, x, y, SpawnLocation.z + 31000)
+        Delay(1000 * 25, function(chopper)
+            DestroyObject(chopper)
+        end, chopper)
+    end)
 end)
 
 -- initialize player from database values

@@ -82,7 +82,7 @@ function Table.new(conn, name, fields)
     --
     -- INSERT 
     --
-    self.insert = function(params)
+    self.insert = function(params, callback)
         local insert_query = "INSERT INTO `" .. self.name .. "` ("
 
         local column_string
@@ -113,7 +113,11 @@ function Table.new(conn, name, fields)
         insert_query = insert_query .. ") VALUES (" .. values_string .. ")"
 
         log.debug(insert_query)
-        local result = mariadb_async_query(self.conn, insert_query)
+        if callback then
+            local result = mariadb_query(self.conn, insert_query, callback)
+        else
+            local result = mariadb_async_query(self.conn, insert_query)
+        end
         return result
     end
 

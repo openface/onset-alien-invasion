@@ -53,8 +53,8 @@ function InitTable(name, fields, force_recreate)
     Tables[name].create_schema(force_recreate)
 end
 
-function InsertRow(name, params)
-    return Tables[name].insert(params)
+function InsertRow(name, params, callback)
+    return Tables[name].insert(params, callback)
 end
 
 function UpdateRows(name, params, where)

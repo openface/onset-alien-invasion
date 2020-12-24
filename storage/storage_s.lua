@@ -1,35 +1,3 @@
-
---[[ -- world created storage container
-function CreateStorage(config)
-    log.debug("Creating storage: " .. config['name'])
-    local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'], config['ry'],
-                       config['rz'], config['sx'], config['sy'], config['sz'])
-    SetObjectPropertyValue(object, "prop", {
-        message = "Open",
-        remote_event = "OpenStorage",
-        options = {
-            type = 'object',
-            name = config['name']
-        }
-    })
-
-    -- provide random things
-    if config['random_spawn'] then
-        local items = getTableKeys(GetItemConfigs())
-        local random_items = getRandomSample(items, config['random_spawn'])
-
-        local random_content = {}
-        for _, item in pairs(random_items) do
-            table.insert(random_content, {
-                item = item,
-                quantity = 1
-            })
-        end
-        ReplaceStorageContents(object, 'object', random_content)
-    end
-    Storages[object] = true
-end ]]
-
 AddRemoteEvent("prop:OpenStorage", function(player, object, options)
     log.info(GetPlayerName(player) .. " opens storage " .. object .. " type " .. options['type'])
 
@@ -77,6 +45,7 @@ AddRemoteEvent("UpdateStorage", function(player, object, type, data)
     ReplaceStorageContents(object, type, storage_items)
 end)
 
+-- type is either 'object' or 'vehicle'
 function ReplaceStorageContents(object, type, data)
     local new_storage = {}
     for i, item in ipairs(data) do

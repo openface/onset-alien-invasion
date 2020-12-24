@@ -72,6 +72,9 @@ local GarbageConfig = {
     [661] = true,
 }
 
+local WorldStorageObjects = {}
+local StorageLootSpawnTimer
+local StorageLootSpawnInterval = 1000 * 60 * 60 * 2 -- 2 hours
 local StorageConfig = {
     [1013] = true,
     [504] = true,
@@ -102,6 +105,7 @@ AddEvent("OnPackageStart", function()
                 AddGarbageProp(object)
             elseif StorageConfig[v['modelID']] then
                 AddStorageProp(object)
+                WorldStorageObjects[object] = true
             end
 
             WorldObjects[object] = true
@@ -109,12 +113,21 @@ AddEvent("OnPackageStart", function()
         end
     end
     log.info("Alien Invasion world loaded!")
+
+    StorageLootSpawnTimer = CreateTimer(function()
+        for object in pairs(WorldStorageObjects) do
+            SpawnStorageLoot(object)
+        end
+    end, StorageLootSpawnInterval)
+
 end)
 
 AddEvent("OnPackageStop", function()
     for object in pairs(WorldObjects) do
         DestroyObject(object)
     end
+
+    DestroyTimer(StorageLootSpawnTimer)
 end)
 
 --
@@ -163,4 +176,20 @@ function AddStorageProp(object)
             name = "Storage Container"
         }
     })
+end
+
+function SpawnStorageLoot(object)
+    if not IsValidObject(object) then return end
+
+    log.info("Spawning new loot for storage "..object)
+    local items = getTableKeys(GetItemConfigs())
+    local random_items = getRandomSample(items, 1)
+    local random_content = {}
+    for _, item in pairs(random_items) do
+        table.insert(random_content, {
+            item = item,
+            quantity = 1
+        })
+    end
+    ReplaceStorageContents(object, 'object', random_content)
 end

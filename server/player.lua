@@ -17,6 +17,10 @@ AddEvent("OnPackageStart", function()
             end
         end
     end, PlayerSaveTime)
+
+    for _, player in pairs(GetAllPlayers()) do
+        InitializePlayer(player)
+    end
 end)
 
 AddEvent("OnPackageStop", function()

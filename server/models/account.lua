@@ -3,17 +3,15 @@ Account.__index = Account
 
 local CACHE = Cache:new(3600)
 
-AddEvent("OnPackageStart", function()
-    InitTable("accounts", {
-        steamid = { type = 'char', length = 17, unique = true },
-        is_admin = { type = 'bool', default = false },
-        clothing = { type = 'number', length = 11 },
-        location = { type = 'json' },
-        weapons = { type = 'json' },
-        equipped = { type = 'json' },
-        inventory = { type = 'json' }
-    }, true) 
-end)
+InitTable("accounts", {
+    steamid = { type = 'char', length = 17, unique = true },
+    is_admin = { type = 'bool', default = false },
+    clothing = { type = 'number', length = 11 },
+    location = { type = 'json' },
+    weapons = { type = 'json' },
+    equipped = { type = 'json' },
+    inventory = { type = 'json' }
+}) 
 
 function Account.get(steamid)
     local account = CACHE:get(steamid)

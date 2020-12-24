@@ -64,9 +64,15 @@ AddEvent("OnPlayerStreamIn", function(player)
     end
 
     TogglePlayerTag(player, "name", false)
-		TogglePlayerTag(player, "health", false)
-		TogglePlayerTag(player, "armor", false)
-		TogglePlayerTag(player, "voice", false)
+    TogglePlayerTag(player, "health", false)
+    TogglePlayerTag(player, "armor", false)
+    TogglePlayerTag(player, "voice", false)
+end)
+
+AddEvent("OnPlayerNetworkUpdatePropertyValue", function(player, PropertyName, PropertyValue)
+    if PropertyName == "clothing" and PropertyValue ~= nil then
+        SetPlayerClothingPreset(player, PropertyValue)
+    end    
 end)
 
 AddEvent("OnPlayerTalking", function(player)

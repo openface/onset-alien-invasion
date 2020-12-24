@@ -115,7 +115,7 @@ SetObjectPropertyValue(object, "prop", { message = "Interact", remote_event = "G
 AddRemoteEvent("prop:GetWorkbenchData", function(player, object, options)
 ```
 
-### Built-in Interactive Prop Definitions
+### Built-in Interactive Props
 
 #### Sitting in chairs
 #### Fishing in water

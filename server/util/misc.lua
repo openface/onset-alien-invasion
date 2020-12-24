@@ -1,18 +1,3 @@
--- add game package to lua path
-package.path = package.path .. ";" .. "./packages/" .. GetPackageName() .. "/?.lua"
-
--- global Config
-Config = require("config")
-
--- global Log
-log = require("server.vendor.log")
-if Config.log_level ~= nil then
-    log.level = Config.log_level
-end
-
--- generate randomness
-math.randomseed(os.time())
-
 function randomPointInCircle(x, y, radius)
     local randX, randY
     repeat
@@ -53,4 +38,3 @@ function dump(o)
         return tostring(o)
     end
 end
-

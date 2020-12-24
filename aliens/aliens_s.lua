@@ -6,20 +6,21 @@ local AlienRetargetCooldown = {} -- aliens re-target on every weapon hit w/ cool
 local AlienSpawnsEnabled = true
 
 AddCommand("alien", function(player)
-    if not Player.IsAdmin(player) then
+    if not IsAdmin(GetPlayerSteamId(player)) then
         return
     end
     SpawnAlienNearPlayer(player)
 end)
 
 AddCommand("togaliens", function(player)
-    if not Player.IsAdmin(player) then
+    if not IsAdmin(GetPlayerSteamId(player)) then
         return
     end
     AlienSpawnsEnabled = not AlienSpawnsEnabled
     log.info("Alien spawning is now ", AlienSpawnsEnabled)
 end)
 
+-- TODO destroy these timers when package stops
 AddEvent("OnPackageStart", function()
     -- re-spawn on a timer
     CreateTimer(function()
@@ -90,11 +91,11 @@ function IsPlayerAttackable(player)
         return false
     end
 
-    if Player.IsAdmin(player) then return false end
+    if IsAdmin(GetPlayerSteamId(player)) then return false end
 
     -- don't attack if player is in safe zone
     local x, y, z = GetPlayerLocation(player)
-    local distance = GetDistance3D(x, y, z, Config.SpawnLocation.x, Config.SpawnLocation.y, Config.SpawnLocation.z)
+    local distance = GetDistance3D(x, y, z, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z)
     if distance < SafeRange then
         log.debug(GetPlayerName(player) .. " is in safe zone")
         return false
@@ -104,11 +105,6 @@ function IsPlayerAttackable(player)
 end
 
 function SpawnAlienNearPlayer(player)
-    -- no spawning aliens if player is in safe distance
-    if not IsPlayerAttackable(player) then
-        return
-    end
-
     local x, y, z = GetPlayerLocation(player)
     local x, y = randomPointInCircle(x, y, AlienAttackRange + 500) -- some buffer
     -- CreateObject(303, x, y, z+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
@@ -286,7 +282,7 @@ AddEvent("OnNPCReachTarget", function(npc)
         log.debug("NPC (ID " .. npc .. ") hit player " .. GetPlayerName(target))
 
         -- return home if attacking an admin
-        -- if Player.IsAdmin(target) then
+        -- if IsAdmin(GetPlayerSteamId(target)) then
         --    AlienReturn(npc)
         --    return
         -- end

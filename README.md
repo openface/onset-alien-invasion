@@ -20,6 +20,7 @@ The satellite computer has enough power to communicate with the mothership. Sear
 
 ### Features
 
+* Persistent world, player data is saved every minute.
 * Character selection at spawn, skydive with parachute into the island.
 * The garage computer terminal will provide instructions/clues about the mission.
 * Supply drops at random locations every few minutes provide health, armor, and a weapon. (uses waypoints)

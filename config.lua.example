@@ -1,11 +1,17 @@
 local Config = {}
 
--- list of steam ids allowed to perform admin commands
-Config.admin_steam_ids = { }
-
 -- logging level
 Config.log_level = "info"
 
-Config.SpawnLocation = { x = -106884.28125, y = 197996.78125, z = 1298.3040771484 }
+-- database
+Config.database = {
+    log_level = "info",
+    name = "ai",
+    host = "localhost",
+    port = 3306,
+    user = "root",
+    password = "",
+    charset = "utf8mb4",
+}
 
 return Config

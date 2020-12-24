@@ -12,7 +12,7 @@ end)
 
 AddEvent("OnPackageStop", function()
     log.info "Destroying all storages..."
-    for _, object in pairs(Storages) do
+    for object in pairs(Storages) do
         Storages[object] = nil
         DestroyObject(object)
     end
@@ -70,7 +70,7 @@ AddRemoteEvent("prop:OpenStorage", function(player, object, options)
     }
 
     -- inventory
-    local inventory = GetPlayerPropertyValue(player, "inventory")
+    local inventory = PlayerData[player].inventory
     for index, item in ipairs(inventory) do
         -- usable, equipable, resource
         table.insert(_send.inventory_items, {

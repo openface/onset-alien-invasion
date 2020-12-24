@@ -1,22 +1,6 @@
-AddEvent("OnPackageStop", function()
-    for _, player in pairs(GetAllPlayers()) do
-        DestroyEquippedObjectsForPlayer(player)
-    end
-end)
-
--- destroy equipped objects on death
-AddEvent("OnPlayerDeath", function(player, killer)
-    DestroyEquippedObjectsForPlayer(player)
-end)
-
--- destroy vest on quit
-AddEvent("OnPlayerQuit", function(player)
-    DestroyEquippedObjectsForPlayer(player)
-end)
-
 -- clear equipped store for all players
-function DestroyEquippedObjectsForPlayer(player)
-    equipped = GetPlayerPropertyValue(player, "equipped")
+function ClearEquippedObjects(player)
+    local equipped = PlayerData[player].equipped
     if equipped == nil then
         return
     end
@@ -27,11 +11,15 @@ function DestroyEquippedObjectsForPlayer(player)
         DestroyObject(object)
     end
 
-    -- clear player equipment
-    SetPlayerPropertyValue(player, "equipped", {})
-
     -- stop any animation player might be in
     SetPlayerAnimation(player, "STOP")
+end
+
+function SyncEquipped(player)
+    local equipped = PlayerData[player].equipped
+    for item, object in pairs(equipped) do
+        AttachItemToPlayer(player, item)
+    end
 end
 
 function EquipObject(player, item)
@@ -65,6 +53,27 @@ function EquipObject(player, item)
         PlayInteraction(player, item)
     end
 
+    attached_object = AttachItemToPlayer(player, item)
+
+    -- update equipped store
+    local equipped = PlayerData[player].equipped
+    equipped[item] = attached_object
+    PlayerData[player].equipped = equipped
+    log.trace("EQUIPPED: ", dump(equipped))
+
+    -- call EQUIP event on object
+    CallEvent("items:" .. item .. ":equip", player, object)
+
+    -- sync inventory
+    if item_cfg['type'] == 'equipable' then
+        CallEvent("SyncInventory", player)
+    end
+end
+
+-- attaches directly without any checking
+function AttachItemToPlayer(player, item)
+    local item_cfg = GetItemConfig(item)
+
     local x, y, z = GetPlayerLocation(player)
     local attached_object = CreateObject(item_cfg['modelid'], x, y, z)
 
@@ -81,23 +90,10 @@ function EquipObject(player, item)
 
     -- set particle config to object
     if item_cfg['particle'] ~= nil then
-        log.debug("particle")
         SetObjectPropertyValue(attached_object, "particle", item_cfg['particle'])
     end
 
-    -- update equipped store
-    local equipped = GetPlayerPropertyValue(player, "equipped")
-    equipped[item] = attached_object
-    SetPlayerPropertyValue(player, "equipped", equipped)
-    log.trace("EQUIPPED: ", dump(equipped))
-
-    -- call EQUIP event on object
-    CallEvent("items:" .. item .. ":equip", player, object)
-
-    -- sync inventory
-    if item_cfg['type'] == 'equipable' then
-        CallEvent("SyncInventory", player)
-    end
+    return attached_object
 end
 
 function UnequipFromBone(player, bone)
@@ -123,9 +119,9 @@ function UnequipObject(player, item)
     local item_cfg = GetItemConfig(item)
 
     -- remove from equipped list
-    local equipped = GetPlayerPropertyValue(player, "equipped")
+    local equipped = PlayerData[player].equipped
     equipped[item] = nil
-    SetPlayerPropertyValue(player, "equipped", equipped)
+    PlayerData[player].equipped = equipped
 
     log.trace("EQUIPPED: ", dump(equipped))
 
@@ -141,7 +137,7 @@ function UnequipObject(player, item)
 end
 
 function GetEquippedObject(player, item)
-    return GetPlayerPropertyValue(player, "equipped")[item] or nil
+    return PlayerData[player].equipped[item] or nil
 end
 
 function IsItemEquipped(player, item)
@@ -153,7 +149,7 @@ function IsItemEquipped(player, item)
 end
 
 function GetEquippedObjectNameFromBone(player, bone)
-    local equipped = GetPlayerPropertyValue(player, "equipped")
+    local equipped = PlayerData[player].equipped
     for _, object in pairs(equipped) do
         if GetObjectPropertyValue(object, "_bone") == bone then
             -- log.debug "found bone"
@@ -164,8 +160,8 @@ end
 
 -- unequip items no longer in player inventory
 function CheckEquippedFromInventory(player)
-  local equipped = GetPlayerPropertyValue(player, "equipped")
-  local inventory = GetPlayerPropertyValue(player, "inventory")
+  local equipped = PlayerData[player].equipped
+  local inventory = PlayerData[player].inventory
 
   for item,_ in pairs(equipped) do
     if GetInventoryCount(player,item) == 0 then

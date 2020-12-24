@@ -1,5 +1,5 @@
 AddCommand("pos", function(player)
-    if not Account.IsAdmin(GetPlayerSteamId(player)) then
+    if not IsAdmin(GetPlayerSteamId(player)) then
         return
     end
     local x, y, z = GetPlayerLocation(player)
@@ -25,7 +25,7 @@ end)
 
 -- console input from client
 AddRemoteEvent("ConsoleInput", function(player, input)
-    if not Account.IsAdmin(GetPlayerSteamId(player)) then
+    if not IsAdmin(GetPlayerSteamId(player)) then
         return
     end
 

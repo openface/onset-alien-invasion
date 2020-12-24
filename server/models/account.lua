@@ -39,7 +39,7 @@ function Account.exists(steamid)
     end
 end
 
-function Account.IsAdmin(steamid)
+function IsAdmin(steamid)
     local row = Account.get(steamid)
     if row and row["is_admin"] == "1" then
         return true
@@ -57,12 +57,3 @@ function Account.update(steamid, data)
         equipped = data['equipped']
     }, { steamid = tostring(steamid) })
 end
-
---[[ function Account.updateColumn(steamid, column, value)
-    local query = mariadb_prepare(DB, "UPDATE accounts SET ? = '?' WHERE steamid = '?'", column, value,
-                      tostring(steamid))
-    log.trace("Updating account: " .. query)
-    mariadb_async_query(DB, query)
-end
-
- ]]

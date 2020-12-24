@@ -5,7 +5,17 @@ SpawnLocation = {
     z = 1298.3040771484
 }
 local SavePlayerTimer
-local PlayerSaveTime = 1000 * 10 -- 60 secs
+local PlayerSaveTime = 1000 * 60 -- 60 secs
+
+InitTable("accounts", {
+    steamid = { type = 'char', length = 17, unique = true },
+    is_admin = { type = 'bool', default = false },
+    clothing = { type = 'number', length = 11 },
+    location = { type = 'json' },
+    weapons = { type = 'json' },
+    equipped = { type = 'json' },
+    inventory = { type = 'json' }
+}) 
 
 PlayerData = {}
 
@@ -97,12 +107,12 @@ AddEvent("OnPlayerDeath", function(player, killer)
     ClearEquippedObjects(player)
 
     -- clear player data on death
---[[     Account.update(GetPlayerSteamId(player), {
-        inventory = nil,
-        equipped = nil,
-        weapons = nil
-    })
- ]]
+    UpdateRows("accounts", {
+        inventory = {},
+        weapons = {},
+        equipped = {}
+    }, { steamid = GetPlayerSteamId(player) })
+
     -- stats
     BumpPlayerStat(player, 'deaths')
     AddPlayerChat(player, "YOU ARE DEAD!  You must wait " .. PlayerRespawnSecs .. " seconds to respawn...")
@@ -115,19 +125,15 @@ AddEvent("OnPlayerSteamAuth", function(player)
     local steamid = GetPlayerSteamId(player)
     log.info("Player " .. GetPlayerName(player) .. " (ID " .. player .. ") authenticated with steam ID " .. steamid)
 
-    if not Account.exists(steamid) then
+    local account = SelectFirst("accounts", { steamid = steamid })
+    if not account then
+        log.info("New account starting...")
+
         -- new character gets character selection screen
         SetPlayerDimension(player, math.random(1, 999))
         CallRemoteEvent(player, "ShowCharacterSelection")
     else
         log.info("Loading existing character for player " .. GetPlayerName(player))
-
-        -- existing player logging on
-        local account = Account.get(GetPlayerSteamId(player))
-        if not account then 
-            log.error "Account not found!"
-            return
-        end
 
         -- setup inventory
         InitializePlayer(player)
@@ -147,10 +153,10 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
     local z = SpawnLocation.z
     SetPlayerSpawnLocation(player, x, y, z, 180)
 
-    Account.create({
+    InsertRow("accounts", {
         steamid = GetPlayerSteamId(player),
         clothing = preset,
-        location = { x = x, y = y, z = z }
+        location = json_encode({ x = x, y = y, z = z })
     }, function()
         -- join the others as a new character
         SetPlayerDimension(player, 0)
@@ -176,7 +182,7 @@ function InitializePlayer(player)
     end
 
     -- existing player logging on
-    local account = Account.get(GetPlayerSteamId(player))
+    local account = SelectFirst("accounts", { steamid = GetPlayerSteamId(player) })
     if not account then
         log.error("Error initializing player from database!")
         KickPlayer(player, "Error initializing player!")
@@ -214,14 +220,20 @@ function SavePlayer(player)
     if PlayerData[player] == nil then return end
     log.info("Saving player: "..GetPlayerName(player))
     local x, y, z = GetPlayerLocation(player)
-    Account.update(GetPlayerSteamId(player), {
-        location = {
-            x = x,
-            y = y,
-            z = z
-        },
+
+    UpdateRows("accounts", {
+        location = { x = x, y = y, z =z },
         inventory = PlayerData[player].inventory,
         weapons = PlayerData[player].weapons,
         equipped = PlayerData[player].equipped
-    })
+    }, { steamid = GetPlayerSteamId(player) })
+end
+
+function IsAdmin(steamid)
+    account = SelectFirst("accounts", { steamid = steamid })
+    if account and account["is_admin"] == "1" then
+        return true
+    else
+        return false
+    end
 end

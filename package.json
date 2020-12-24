@@ -3,6 +3,14 @@
     "version": "0.3",
     "server_scripts": [
         "server/boot.lua",
+
+        "server/util/json.lua",
+        "server/util/file.lua",
+        "server/util/cache.lua",
+        "server/util/log.lua",
+        "server/util/misc.lua",
+        "server/util/table.lua",
+
         "server/database.lua",
         "server/player.lua",
         "server/server.lua",
@@ -31,16 +39,7 @@
         "world/world_s.lua",
         "world/garbage_s.lua",
 
-        "items/*.lua",
-
-        "server/util/json.lua",
-        "server/util/file.lua",
-        "server/util/cache.lua",
-        "server/util/log.lua",
-        "server/util/misc.lua",
-        "server/util/table.lua",
-
-        "server/models/account.lua"
+        "items/*.lua"
     ],
     "client_scripts": [
         "client/client.lua",

@@ -4,7 +4,7 @@ local VehicleRespawnTime = 5 * 60 * 1000 -- 5 mins
 local VehicleMaxHealth = 1000
 
 AddCommand("vpos", function(player)
-    if not Account.IsAdmin(GetPlayerSteamId(player)) then
+    if not IsAdmin(GetPlayerSteamId(player)) then
         return
     end
     local x, y, z = GetPlayerLocation(player)

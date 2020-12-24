@@ -6,14 +6,14 @@ local AlienRetargetCooldown = {} -- aliens re-target on every weapon hit w/ cool
 local AlienSpawnsEnabled = true
 
 AddCommand("alien", function(player)
-    if not Account.IsAdmin(GetPlayerSteamId(player)) then
+    if not IsAdmin(GetPlayerSteamId(player)) then
         return
     end
     SpawnAlienNearPlayer(player)
 end)
 
 AddCommand("togaliens", function(player)
-    if not Account.IsAdmin(GetPlayerSteamId(player)) then
+    if not IsAdmin(GetPlayerSteamId(player)) then
         return
     end
     AlienSpawnsEnabled = not AlienSpawnsEnabled
@@ -91,7 +91,7 @@ function IsPlayerAttackable(player)
         return false
     end
 
-    if Account.IsAdmin(GetPlayerSteamId(player)) then return false end
+    if IsAdmin(GetPlayerSteamId(player)) then return false end
 
     -- don't attack if player is in safe zone
     local x, y, z = GetPlayerLocation(player)
@@ -282,7 +282,7 @@ AddEvent("OnNPCReachTarget", function(npc)
         log.debug("NPC (ID " .. npc .. ") hit player " .. GetPlayerName(target))
 
         -- return home if attacking an admin
-        -- if Account.IsAdmin(GetPlayerSteamId(target)) then
+        -- if IsAdmin(GetPlayerSteamId(target)) then
         --    AlienReturn(npc)
         --    return
         -- end

@@ -19,14 +19,14 @@ AddEvent("OnPackageStop", function()
 end)
 
 AddCommand("boss", function(player)
-    if not Account.IsAdmin(GetPlayerSteamId(player)) then
+    if not IsAdmin(GetPlayerSteamId(player)) then
         return
     end
     CallEvent("SpawnBoss")
 end)
 
 AddCommand("noboss", function(player)
-    if not Account.IsAdmin(GetPlayerSteamId(player)) then
+    if not IsAdmin(GetPlayerSteamId(player)) then
         return
     end
     DespawnBoss()

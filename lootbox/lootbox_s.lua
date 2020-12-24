@@ -4,7 +4,7 @@ local LootWeapons = { 'ak47', 'ak47g', 'auto_shotgun', 'shotgun', 'm16a4', 'ump'
 local LootTimer
 
 AddCommand("loot", function(player)
-    if not Account.IsAdmin(GetPlayerSteamId(player)) then
+    if not IsAdmin(GetPlayerSteamId(player)) then
         return
     end
     local x, y, z = GetPlayerLocation(player)
@@ -13,7 +13,7 @@ AddCommand("loot", function(player)
 end)
 
 AddCommand("lpos", function(player)
-    if not Account.IsAdmin(GetPlayerSteamId(player)) then
+    if not IsAdmin(GetPlayerSteamId(player)) then
         return
     end
     local x, y, z = GetPlayerLocation(player)

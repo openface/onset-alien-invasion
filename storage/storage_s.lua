@@ -1,24 +1,5 @@
-local Storages = {}
 
-AddEvent("OnPackageStart", function()
-    log.info("Loading storages...")
-
-    local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/storage/storages.json")
-    for _, config in pairs(_table) do
-        -- todo: move storage name to config
-        CreateStorage(config)
-    end
-end)
-
-AddEvent("OnPackageStop", function()
-    log.info "Destroying all storages..."
-    for object in pairs(Storages) do
-        Storages[object] = nil
-        DestroyObject(object)
-    end
-end)
-
--- world created storage container
+--[[ -- world created storage container
 function CreateStorage(config)
     log.debug("Creating storage: " .. config['name'])
     local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'], config['ry'],
@@ -47,7 +28,7 @@ function CreateStorage(config)
         ReplaceStorageContents(object, 'object', random_content)
     end
     Storages[object] = true
-end
+end ]]
 
 AddRemoteEvent("prop:OpenStorage", function(player, object, options)
     log.info(GetPlayerName(player) .. " opens storage " .. object .. " type " .. options['type'])

@@ -19,7 +19,6 @@
         "aliens/aliens_s.lua",
         "lootbox/lootbox_s.lua",
         "vehicles/vehicles_s.lua",
-        "parts/parts_s.lua",
         "boss/boss_s.lua",
         "computer/computer_s.lua",
         "workbench/workbench_s.lua",

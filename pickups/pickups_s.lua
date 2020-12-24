@@ -65,15 +65,6 @@ function DestroyObjectPickup(pickup)
     Pickups[pickup] = nil
 end
 
-function DestroyObjectPickupsByName(name)
-    log.debug("Destroying object pickup by name ", name)
-    for _, pickup in pairs(Pickups) do
-        if GetPickupPropertyValue(pickup, '_name') == name then
-            DestroyObjectPickup(pickup)
-        end
-    end
-end
-
 AddEvent("OnPlayerPickupHit", function(player, pickup)
     local item = GetPickupPropertyValue(pickup, '_name')
     if item == nil then

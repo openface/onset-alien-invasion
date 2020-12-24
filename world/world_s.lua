@@ -66,10 +66,18 @@ local GarbageConfig = {
     [350] = true,
     [351] = true,
     [359] = true,
+    [499] = true,
     [660] = true,
-    [665] = true,
     [653] = true,
     [661] = true,
+}
+
+local StorageConfig = {
+    [1013] = true,
+    [504] = true,
+    [505] = true,
+    [556] = true,
+    [561] = true,
 }
 
 local WorldObjects = {}
@@ -92,6 +100,8 @@ AddEvent("OnPackageStart", function()
                 AddLightingProp(object, LightingConfig[v['modelID']])
             elseif GarbageConfig[v['modelID']] then
                 AddGarbageProp(object)
+            elseif StorageConfig[v['modelID']] then
+                AddStorageProp(object)
             end
 
             WorldObjects[object] = true
@@ -139,3 +149,18 @@ AddRemoteEvent("prop:ToggleLight", function(player, object, options)
     SetObjectPropertyValue(object, "light_enabled", not light_enabled)
     PlaySoundSync(player, "sounds/switch.mp3")
 end)
+
+--
+-- Storage
+--
+
+function AddStorageProp(object)
+    SetObjectPropertyValue(object, "prop", {
+        message = "Open",
+        remote_event = "OpenStorage",
+        options = {
+            type = 'object',
+            name = "Storage Container"
+        }
+    })
+end

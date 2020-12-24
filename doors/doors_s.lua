@@ -27,27 +27,21 @@ function CreateInteractiveDoor(config)
     Doors[door] = true
 end
 
--- the door open state here is backwards (bug in onset)
 AddEvent("OnPlayerInteractDoor", function(player, door, bWantsOpen)
-    local bWantsOpen = not bWantsOpen
-    local bIsDoorOpen = not IsDoorOpen(door)
+    local bWantsOpen = not bWantsOpen -- the door open state here is backwards (bug in onset)
+    local bIsDoorOpen = IsDoorOpen(door)
 
     AddPlayerChat(player, "Door: " .. door .. ", open: ".. tostring(bIsDoorOpen) ..", wants: ".. tostring(bWantsOpen))
 
     local owner = GetDoorPropertyValue(door, "owner")
-    if GetPlayerSteamId(player) ~= GetDoorPropertyValue(door, "owner") then
+    if not bIsDoorOpen and GetPlayerSteamId(player) ~= GetDoorPropertyValue(door, "owner") then
         -- door is locked
         CallRemoteEvent(player, "ShowError", "Locked")
+        SetDoorOpen(door, true) -- closes door (bugged boolean)
         return
     end
 
-    if bIsDoorOpen then
-        log.debug("closing")
-        SetDoorOpen(door, true)
-    else
-        log.debug("opening")
-        SetDoorOpen(door, false)
-    end
+    SetDoorOpen(door, bWantsOpen)
 end)
 
 AddCommand("closedoors", function(player)

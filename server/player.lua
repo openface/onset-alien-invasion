@@ -58,9 +58,9 @@ AddEvent("OnPlayerJoin", function(player)
 
     -- initialize PlayerData
     PlayerData[player] = {
-        inventory = nil,
-        weapons = nil,
-        equipped = nil
+        inventory = {},
+        weapons = {},
+        equipped = {}
     }
 
     -- randomized spawn location
@@ -84,10 +84,14 @@ AddEvent("OnPlayerSpawn", function(player)
 
     -- cleansing
     SetPlayerArmor(player, 0)
-    
-    PlayerData[player].inventory = {}
-    PlayerData[player].weapons = {}
-    PlayerData[player].equipped = {}
+
+    -- initialize PlayerData
+    PlayerData[player] = {
+        inventory = {},
+        weapons = {},
+        equipped = {}
+    }
+
     SyncInventory(player)
 end)
 

@@ -1,3 +1,5 @@
+local VNPCS = ImportPackage("vnpcs")
+
 local AlienHealth = 300
 local AlienAttackRange = 5000
 local AlienAttackDamage = 50
@@ -41,6 +43,9 @@ AddEvent("OnPackageStop", function()
     AlienRetargetCooldown = {}
     for _, npc in pairs(GetAllNPC()) do
         if (GetNPCPropertyValue(npc, 'type') == 'alien') then
+
+            VNPCS.StopVNPC(npc)
+
             DestroyNPC(npc)
         end
     end
@@ -91,7 +96,7 @@ function IsPlayerAttackable(player)
         return false
     end
 
-    if IsAdmin(GetPlayerSteamId(player)) then return false end
+    --if IsAdmin(GetPlayerSteamId(player)) then return false end
 
     -- don't attack if player is in safe zone
     local x, y, z = GetPlayerLocation(player)
@@ -112,7 +117,6 @@ function SpawnAlienNearPlayer(player)
 
     SetNPCHealth(npc, AlienHealth)
     SetNPCRespawnTime(npc, 99999999) -- disable respawns
-    SetNPCPropertyValue(npc, 'clothing', math.random(23, 24))
     SetNPCPropertyValue(npc, 'type', 'alien')
     SetNPCPropertyValue(npc, 'location', {x, y, z})
 
@@ -176,9 +180,11 @@ AddEvent("OnNPCDeath", function(npc, killer)
         BumpPlayerStat(adjusted_killer, 'alien_kills')
     end
     SetNPCRagdoll(npc, true)
+    VNPCS.StopVNPC(npc)
     Delay(120 * 1000, function()
         log.debug("NPC (ID " .. npc .. ") is dead.. despawning")
         AlienRetargetCooldown[npc] = nil
+ 
         DestroyNPC(npc)
     end)
 end)
@@ -191,7 +197,9 @@ function SetAlienTarget(npc, player)
         SetNPCPropertyValue(npc, 'target', player, true)
 
         -- alien has a new target
-        SetNPCFollowPlayer(npc, player, math.random(325, 360)) -- random speed
+        --SetNPCFollowPlayer(npc, player, math.random(325, 360)) -- random speed
+        VNPCS.SetVNPCFollowPlayer(npc, player, 50)
+
         CallRemoteEvent(player, 'AlienAttacking', npc)
     else
         -- target is in a vehicle
@@ -199,7 +207,9 @@ function SetAlienTarget(npc, player)
         SetNPCPropertyValue(npc, 'target', player, true)
 
         -- alien has a new target vehicle
-        SetNPCFollowVehicle(npc, vehicle, 400)
+        --SetNPCFollowVehicle(npc, vehicle, 400)
+        VNPCS.SetVNPCFollowVehicle(npc, vehicle, 50)
+
         local x, y, z = GetNPCLocation(npc)
         local vx, vy, vz = GetVehicleLocation(vehicle)
         local dist = GetDistance3D(x, y, z, vx, vy, vz)
@@ -229,7 +239,11 @@ function ResetAlien(npc)
         log.debug("NPC (ID " .. npc .. ") target "..GetPlayerName(player).." is no longer attackable")
         -- target is out of range, alien is sad
         local x, y, z = GetNPCLocation(npc)
-        SetNPCTargetLocation(npc, x, y, z)
+
+        --SetNPCTargetLocation(npc, x, y, z)
+        --VNPCS.StopVNPC(npc)
+        VNPCS.SetVNPCTargetLocation(npc, x, y, z)
+
         SetNPCPropertyValue(npc, 'target', nil, true)
         CallRemoteEvent(player, 'AlienNoLongerAttacking', npc)
 
@@ -240,9 +254,16 @@ function ResetAlien(npc)
     end
 end
 
+AddEvent("OnVNPCReachTargetFailed", function(npc)
+    log.error("OnVNPCReachTargetFailed")
+    VNPCS.StopVNPC(npc)
+    AlienRetargetCooldown[npc] = nil
+    DestroyNPC(npc)
+end)
+
 -- kills players when reached
-AddEvent("OnNPCReachTarget", function(npc)
-    -- log.debug("NPC (ID "..npc..") reached target")
+AddEvent("OnVNPCReachTarget", function(npc)
+    log.debug("NPC (ID "..npc..") reached target")
     if GetNPCPropertyValue(npc, 'type') ~= 'alien' then
         return
     end
@@ -257,6 +278,9 @@ AddEvent("OnNPCReachTarget", function(npc)
         -- alien is back in starting position
         log.debug("NPC (ID " .. npc .. ") back at starting position.. despawning")
         AlienRetargetCooldown[npc] = nil
+
+        VNPCS.StopVNPC(npc)
+
         DestroyNPC(npc)
         return
     end
@@ -286,6 +310,8 @@ AddEvent("OnNPCReachTarget", function(npc)
         --    AlienReturn(npc)
         --    return
         -- end
+
+        SetNPCAnimation(npc, "SHOUT01", false)
 
         ApplyPlayerDamage(target)
 
@@ -326,7 +352,10 @@ function AlienReturn(npc)
     SetNPCPropertyValue(npc, 'target', nil, true)
 
     local location = GetNPCPropertyValue(npc, 'location')
-    SetNPCTargetLocation(npc, location[1], location[2], location[3], 800)
+
+    --SetNPCTargetLocation(npc, location[1], location[2], location[3], 800)
+    VNPCS.SetVNPCTargetLocation(npc, location[1], location[2], location[3])
+
 end
 
 -- get nearest player to npc

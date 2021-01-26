@@ -16,11 +16,19 @@ AddEvent("OnNPCStreamIn", function(npc)
     local type = GetNPCPropertyValue(npc, "type")
 
     if (type == "alien") then
-        ApplyAlienSkin(npc)
+--        if Random(0, 1) == 0 then
+            ApplyAlienSkin(npc)
+--        else
+--            ApplyFlyingAlienSkin(npc)
+--        end
     end
 end)
 
 function ApplyAlienSkin(npc)
+    SetNPCClothingPreset(npc, Random(23, 24))
+end
+
+function ApplyFlyingAlienSkin(npc)
     local skin = Random(1,5)
 
     local SkeletalMeshComponent = GetNPCSkeletalMeshComponent(npc, "Body")
@@ -47,11 +55,10 @@ end
 
 AddRemoteEvent("AlienAttacking", function(npc)
     if AmbientSound == nil then
-        AmbientSound = CreateSound("client/sounds/ambience.mp3")
-        SetSoundVolume(AmbientSound, 2.5)
+        AmbientSound = CreateSound("client/sounds/chased.mp3", true)
+        SetSoundVolume(AmbientSound, 0.5)
+        ShowMessage("You have been spotted!")
     end
-
-    AddPlayerChat('You are being attacked by an alien... RUN!')
 
     -- alien attack sound
     if AttackSound == nil then
@@ -64,7 +71,7 @@ AddRemoteEvent("AlienAttacking", function(npc)
 end)
 
 AddRemoteEvent('AlienNoLongerAttacking', function()
-    AddPlayerChat('You are safe for now.')
+    ShowMessage("You are safe for now!")
 
     if AmbientSound ~= nil then
         DestroySound(AmbientSound)
@@ -77,4 +84,10 @@ end)
 AddRemoteEvent("OnAlienHit", function()
     SetSoundVolume(CreateSound("client/sounds/pain.mp3"), 1)
     InvokeDamageFX(1000)
+end)
+
+AddEvent("OnPlayerSpawn", function()
+    if AmbientSound ~= nil then
+        DestroySound(AmbientSound)
+    end
 end)

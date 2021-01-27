@@ -1,5 +1,6 @@
 local AmbientSound
 local AttackSound
+local AliensAttacking = {}
 
 --LoadPak("Aliens", "/Aliens/", "../../../OnsetModding/Plugins/Aliens/Content/")
 
@@ -60,7 +61,12 @@ end
 
 AddRemoteEvent("AlienAttacking", function(npc)
     SetSoundVolume(AmbientSound, 0.5)
-    ShowMessage("You have been spotted!")
+
+    if #AliensAttacking == 0 then
+        ShowMessage("You have been spotted!")
+    end
+
+    AliensAttacking[npc] = true
 
     -- alien attack sound
     if AttackSound == nil then
@@ -72,11 +78,15 @@ AddRemoteEvent("AlienAttacking", function(npc)
     end
 end)
 
-AddRemoteEvent('AlienNoLongerAttacking', function()
-    ShowMessage("You are safe for now.")
+AddRemoteEvent('AlienNoLongerAttacking', function(npc)
+    if AliensAttacking[npc] then
+        AliensAttacking[npc] = nil
+    end
 
-    --SetSoundFadeOut(AmbientSound, 1000, 0.0)
-    SetSoundVolume(AmbientSound, 0.0)
+    if #AliensAttacking == 0 then
+        ShowMessage("You are safe for now.")
+        SetSoundVolume(AmbientSound, 0.0)
+    end
 
     if AttackSound ~= nil then
         DestroySound(AttackSound)

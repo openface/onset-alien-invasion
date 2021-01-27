@@ -96,6 +96,10 @@ function IsPlayerAttackable(player)
         return false
     end
 
+    if IsPlayerDead(target) or not IsValidPlayer(target) then
+        return false
+    end
+
     --if IsAdmin(GetPlayerSteamId(player)) then return false end
 
     -- don't attack if player is in safe zone
@@ -174,7 +178,7 @@ AddEvent("OnNPCDeath", function(npc, killer)
         adjusted_killer = killer
     end
     if adjusted_killer ~= 0 then
-        CallRemoteEvent(adjusted_killer, 'AlienNoLongerAttacking')
+        CallRemoteEvent(adjusted_killer, 'AlienNoLongerAttacking', npc)
         AddPlayerChatAll(GetPlayerName(adjusted_killer) .. ' has killed an alien!')
         log.info("NPC (ID " .. npc .. ") killed by player " .. GetPlayerName(adjusted_killer))
         BumpPlayerStat(adjusted_killer, 'alien_kills')
@@ -238,18 +242,23 @@ function ResetAlien(npc)
     elseif (GetNPCPropertyValue(npc, 'target') == player) then
         log.debug("NPC (ID " .. npc .. ") target "..GetPlayerName(player).." is no longer attackable")
         -- target is out of range, alien is sad
-        local x, y, z = GetNPCLocation(npc)
+        --local x, y, z = GetNPCLocation(npc)
 
         --SetNPCTargetLocation(npc, x, y, z)
-        VNPCS.SetVNPCTargetLocation(npc, x, y, z)
+        --VNPCS.SetVNPCTargetLocation(npc, x, y, z)
 
         SetNPCPropertyValue(npc, 'target', nil, true)
-        CallRemoteEvent(player, 'AlienNoLongerAttacking')
+        CallRemoteEvent(player, 'AlienNoLongerAttacking', npc)
 
         -- wait a bit then walk back home, little alien
         Delay(15 * 1000, function()
             AlienReturn(npc)
         end)
+    elseif GetNPCPropertyValue(npc, 'returning') ~= nil then
+        -- no target or nearest player out of range and not returning
+        CallRemoteEvent(player, 'AlienNoLongerAttacking', npc)
+
+        AlienReturn(npc)
     end
 end
 
@@ -272,7 +281,7 @@ AddEvent("OnVNPCReachTargetFailed", function(npc)
     
 --[[     local targeted_player = GetNPCPropertyValue(npc, 'target')
     if targeted_player ~= nil then
-        CallRemoteEvent(targeted_player, 'AlienNoLongerAttacking')
+        CallRemoteEvent(targeted_player, 'AlienNoLongerAttacking', npc)
     end
 
     DestroyNPC(npc)

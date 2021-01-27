@@ -96,7 +96,7 @@ function IsPlayerAttackable(player)
         return false
     end
 
-    if IsPlayerDead(target) or not IsValidPlayer(target) then
+    if IsPlayerDead(player) or not IsValidPlayer(player) then
         return false
     end
 
@@ -178,7 +178,7 @@ AddEvent("OnNPCDeath", function(npc, killer)
         adjusted_killer = killer
     end
     if adjusted_killer ~= 0 then
-        CallRemoteEvent(adjusted_killer, 'AlienNoLongerAttacking', npc)
+        CallRemoteEvent(adjusted_killer, 'AlienNoLongerAttacking')
         AddPlayerChatAll(GetPlayerName(adjusted_killer) .. ' has killed an alien!')
         log.info("NPC (ID " .. npc .. ") killed by player " .. GetPlayerName(adjusted_killer))
         BumpPlayerStat(adjusted_killer, 'alien_kills')
@@ -192,6 +192,10 @@ AddEvent("OnNPCDeath", function(npc, killer)
 end)
 
 function SetAlienTarget(npc, player)
+    if not IsPlayerAttackable(player) then
+        return
+    end
+
     SetNPCPropertyValue(npc, 'returning', nil)
 
     local vehicle = GetPlayerVehicle(player)
@@ -241,24 +245,15 @@ function ResetAlien(npc)
         SetAlienTarget(npc, player)
     elseif (GetNPCPropertyValue(npc, 'target') == player) then
         log.debug("NPC (ID " .. npc .. ") target "..GetPlayerName(player).." is no longer attackable")
-        -- target is out of range, alien is sad
-        --local x, y, z = GetNPCLocation(npc)
-
-        --SetNPCTargetLocation(npc, x, y, z)
-        --VNPCS.SetVNPCTargetLocation(npc, x, y, z)
-
+        -- target is out of range, stop following
         SetNPCPropertyValue(npc, 'target', nil, true)
-        CallRemoteEvent(player, 'AlienNoLongerAttacking', npc)
+        VNPCS.StopVNPC(npc)
+        CallRemoteEvent(player, 'AlienNoLongerAttacking')
 
         -- wait a bit then walk back home, little alien
         Delay(15 * 1000, function()
             AlienReturn(npc)
         end)
-    elseif GetNPCPropertyValue(npc, 'returning') ~= nil then
-        -- no target or nearest player out of range and not returning
-        CallRemoteEvent(player, 'AlienNoLongerAttacking', npc)
-
-        AlienReturn(npc)
     end
 end
 
@@ -267,6 +262,7 @@ AddEvent("OnNPCDestroyed", function(npc)
         return
     end
 
+    log.info("Despawned alien "..npc)
     AlienRetargetCooldown[npc] = nil
 end)
 
@@ -278,22 +274,33 @@ AddEvent("OnVNPCReachTargetFailed", function(npc)
 
     VNPCS.StopVNPC(npc)
     SetNPCAnimation(npc, "DONTKNOW", false)
+
+    local target = GetNPCPropertyValue(npc, 'target')
     
---[[     local targeted_player = GetNPCPropertyValue(npc, 'target')
-    if targeted_player ~= nil then
-        CallRemoteEvent(targeted_player, 'AlienNoLongerAttacking', npc)
+    if target == nil then
+        log.error("Alien is confused.  Despawning.")
+        DestroyNPC(npc)
+        return
     end
 
-    DestroyNPC(npc)
- ]]
+    if IsPlayerDead(target) or GetPlayerHealth(target) <= 0 then
+        Delay(8000, function()
+            AlienReturn(npc)
+        end)
+    else
+       -- alien is stuck, summon an alien friend and go away
+       log.debug("Stuck alien.. spawning a friend")
+       SpawnAlienNearPlayer(target)
+       AlienReturn(npc)
+    end
 end)
 
 -- kills players when reached
 AddEvent("OnVNPCReachTarget", function(npc)
-    log.debug("NPC (ID "..npc..") reached target")
     if GetNPCPropertyValue(npc, 'type') ~= 'alien' then
         return
     end
+    log.debug("NPC (ID "..npc..") reached target")
 
     local health = GetNPCHealth(npc)
     if (health == false or health <= 0) then
@@ -317,6 +324,7 @@ AddEvent("OnVNPCReachTarget", function(npc)
 
     if IsPlayerDead(target) or not IsValidPlayer(target) then
         -- target was dead or gone when we got here
+        log.debug("NPC (ID " .. npc ..") reached dead target")
         return
     end
 
@@ -326,24 +334,17 @@ AddEvent("OnVNPCReachTarget", function(npc)
 
     if dist < 200 then
         -- we're in close range, attack player
+        -- TODO: this attack through walls, needs a line of sight check
         log.debug("NPC (ID " .. npc .. ") hit player " .. GetPlayerName(target))
-
-        -- return home if attacking an admin
-        -- if IsAdmin(GetPlayerSteamId(target)) then
-        --    AlienReturn(npc)
-        --    return
-        -- end
 
         SetNPCAnimation(npc, "SHOUT01", false)
 
         ApplyPlayerDamage(target)
-
-        if GetPlayerHealth(target) <= 0 then
-            Delay(8000, function()
-                AlienReturn(npc)
-            end)
-            return
-        end
+    elseif dist < 500 then
+        -- occurs when player is behind an unreachable boundary
+        log.debug("Player out of boundary")
+        SetNPCAnimation(npc, "SHOUT01", false)
+        return
     end
 
     SetAlienTarget(npc, target)
@@ -371,14 +372,14 @@ function AlienReturn(npc)
         return
     end
 
+    log.debug("Alien is returning...")
     SetNPCPropertyValue(npc, 'returning', true)
     SetNPCPropertyValue(npc, 'target', nil, true)
 
     local location = GetNPCPropertyValue(npc, 'location')
 
     --SetNPCTargetLocation(npc, location[1], location[2], location[3], 800)
-    VNPCS.SetVNPCTargetLocation(npc, location[1], location[2], location[3])
-
+    VNPCS.SetVNPCTargetLocation(npc, location[1], location[2], location[3], 300)
 end
 
 -- get nearest player to npc

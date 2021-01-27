@@ -1,13 +1,12 @@
 local BossInitialHealth = 3000
-local BossDamageAmount = 5 -- hurts players this much every interval
 local BossDamageRange = 10000
 local WeaponData
 local BossHealth = BossInitialHealth
 local Boss
 local BossTargetedLocation
-local BossHurtTimer
 local BossBombTimer
 local BossKillers = {}
+local MAX_BOSS_DURATION = 1000 * 90 -- 90 seconds
 local FakeBossModelID = 91212
 
 AddEvent("OnPackageStart", function()
@@ -31,6 +30,10 @@ AddCommand("noboss", function(player)
     end
     DespawnBoss()
 end)
+
+function IsBossPresent()
+    return Boss ~= nil
+end
 
 function SpawnBoss()
     if Boss ~= nil then
@@ -64,10 +67,16 @@ function SpawnBoss()
     SetObjectMoveTo(Boss, to_x, to_y, BossTargetedLocation.z + 7000, 2500)
 
     -- reset boss health
-    BossHealth = BossInitialHealth
+    BossHealth = BossInitialHealth  
 
     -- give it time for boss to land before attacking
     Delay(6000, StartBossFight)
+
+    Delay(10000, function()
+        for i = 1,7 do 
+            SpawnAlienNearPlayer(target)
+        end
+    end)
 end
 AddEvent("SpawnBoss", SpawnBoss)
 
@@ -78,28 +87,6 @@ function StartBossFight()
         return
     end
 
-    -- hurt all players near the initial targeted player every 5 seconds
-    BossHurtTimer = CreateTimer(function()
-        if Boss ~= nil then
-            -- find targets within 3d range of initial target
-            local targets = GetBossTargets()
-            log.debug("Boss targets: " .. dump(targets))
-
-            if next(targets) == nil then
-                -- no targets found, mothership leaves
-                log.warn "Mothership has no targets"
-                DespawnBoss()
-                return
-            end
-
-            for _, ply in pairs(targets) do
-                -- hurt player
-                CallRemoteEvent(ply, "BossHurtPlayer")
-                SetPlayerHealth(ply, GetPlayerHealth(ply) - BossDamageAmount)
-            end
-        end
-    end, 5 * 1000)
-
     -- random explosions on the ground
     BossBombTimer = CreateTimer(function()
         if BossTargetedLocation ~= nil then
@@ -107,19 +94,10 @@ function StartBossFight()
             CreateExplosion(10, ex, ey, BossTargetedLocation.z, true, 15000, 1000000)
         end
     end, 2500)
+
+    Delay(MAX_BOSS_DURATION, DespawnBoss)
 end
 AddEvent("StartBossFight", StartBossFight)
-
-function GetBossTargets()
-    local targets = {}
-    for _, ply in pairs(GetPlayersInRange3D(BossTargetedLocation.x, BossTargetedLocation.y, BossTargetedLocation.z,
-                            BossDamageRange)) do
-        if IsValidPlayer(ply) and not IsPlayerDead(ply) and GetPlayerDimension(ply) == 0 then
-            table.insert(targets, ply)
-        end
-    end
-    return targets
-end
 
 function DespawnBoss()
     if Boss == nil then
@@ -130,14 +108,15 @@ function DespawnBoss()
         CallRemoteEvent(ply, "DespawnBoss", Boss)
     end
 
-    DestroyTimer(BossHurtTimer)
     DestroyTimer(BossBombTimer)
     DestroyObject(Boss)
     Boss = nil
     BossTargetedLocation = nil
     BossHealth = BossInitialHealth
-    BossTargets = {}
     BossKillers = {}
+
+    -- despawn all aliens
+    ClearAliens()
 
     log.info "Mothership despawned"
 end

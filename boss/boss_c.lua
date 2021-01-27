@@ -64,9 +64,3 @@ AddRemoteEvent("DespawnBoss", function(boss)
         CallEvent("SetBossHealth", 0)
     end)
 end)
-
--- mothership hurts player
-AddRemoteEvent("BossHurtPlayer", function()
-    SetSoundVolume(CreateSound("client/sounds/pain.mp3"), 1)
-    InvokeDamageFX(1000)
-end)

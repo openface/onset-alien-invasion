@@ -41,11 +41,7 @@ AddEvent("OnPackageStart", function()
 end)
 
 AddEvent("OnPackageStop", function()
-    for _, npc in pairs(GetAllNPC()) do
-        if (GetNPCPropertyValue(npc, 'type') == 'alien') then
-            DestroyNPC(npc)
-        end
-    end
+    ClearAliens()
 
     DestroyTimer(AlienSpawnTimer)
     DestroyTimer(AlienAttackTimer)
@@ -68,6 +64,14 @@ function SpawnAliens()
     end
 end
 
+function ClearAliens()
+    for _, npc in pairs(GetAllNPC()) do
+        if (GetNPCPropertyValue(npc, 'type') == 'alien') then
+            DestroyNPC(npc)
+        end
+    end
+end
+
 function IsPlayerAttackable(player)
     if player == nil or player == 0 then return false end
 
@@ -80,6 +84,8 @@ function IsPlayerAttackable(player)
     if IsPlayerDead(player) or not IsValidPlayer(player) then
         return false
     end
+
+    if IsBossPresent() then return true end
 
     --if IsAdmin(GetPlayerSteamId(player)) then return false end
 

@@ -65,41 +65,6 @@
                     <p>Good luck</p>
                 </div>
 
-                <div v-else-if="screen == 'satellite'">
-                    <div v-if="percentage == 100">
-                        <p><b>SATELLITE IS FULLY OPERATIONAL!</b></p>
-
-                        <p>
-                            Commencing satellite transmission... OK<br />
-                            Waiting for signal acknowledgement... OK
-                        </p>
-
-                        <p>Signal received. Standby for response.</p>
-                    </div>
-                    <div v-else>
-                        <p>Installing new component...</p>
-
-                        <p class="blinking">
-                            SATELLITE COMMUNICATIONS ARE NOW
-                            <b>{{ percentage }}%</b> OPERATIONAL.
-                        </p>
-
-                        <p>
-                            <b
-                                >The chance of being attacked by aliens has
-                                INCREASED!</b
-                            >
-                        </p>
-
-                        <p>
-                            Continue collecting satellite parts to initiate
-                            signal transmission from this satellite. Once enough
-                            parts are acquired, the satellite will be
-                            operational.
-                        </p>
-                    </div>
-                </div>
-
                 <div v-else-if="screen == 'satellite-transmission'">
                     <p>
                         Commencing satellite transmission... OK<br />
@@ -120,13 +85,11 @@ export default {
     data() {
         return {
             screen: null, // garage, satellite
-            percentage: null,
         };
     },
     methods: {
-        SetComputerScreen: function(screen, percentage) {
+        SetComputerScreen: function(screen) {
             this.screen = screen;
-            this.percentage = percentage;
         },
     },
     mounted() {

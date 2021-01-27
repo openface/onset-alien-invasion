@@ -195,29 +195,10 @@ AddEvent("OnPlayerWeaponShot",
 
                 DespawnBoss()
 
-                AddPlayerChatAll("Mothership has been destroyed!")
                 for _, ply in pairs(players) do
-                    CallRemoteEvent(ply, "ShowBanner", "MOTHERSHIP HAS BEEN DESTROYED!")
+                    CallRemoteEvent(ply, "ShowBanner", "MOTHERSHIP HAS BEEN DEFEATED!")
                 end
-                log.info "Mothership has been destroyed"
-
-                --
-                -- start new round
-                --
-                Delay(10000, function()
-                    for _, ply in pairs(players) do
-                        CallRemoteEvent(ply, "ShowBanner", "NEW GAME BEGINS NOW!")
-                    end
-
-                    -- respawn all computer parts
-                    SpawnParts()
-
-                    -- respawn all vehicles
-                    SpawnVehicles()
-
-                    -- reset satellite status for everyone
-                    UpdateAllPlayersSatelliteStatus(0)
-                end)
+                log.info "Mothership has been defeated"
             end
         end
     end)

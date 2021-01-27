@@ -57,31 +57,12 @@ function SpawnAliens()
         return
     end
 
-    -- calculate spawn density based on satellite status
-    local satellite_percentage = GetSatelliteStatus()
-    if satellite_percentage >= 80 then
-        chance = 1
-    elseif satellite_percentage >= 60 then
-        chance = 2
-    elseif satellite_percentage >= 40 then
-        chance = 2
-    elseif satellite_percentage >= 20 then
-        chance = 3
-    else
-        chance = 3
-    end
-
     -- create alien npcs
     for _, ply in pairs(GetAllPlayers()) do
         if IsPlayerAttackable(ply) then
             -- chance to spawn
-            if math.random(1, chance) == 1 then
+            if math.random(1, 2) == 1 then
                 SpawnAlienNearPlayer(ply)
-            end
-
-            -- spawn boss randomly
-            if satellite_percentage >= 60 and math.random(1, 3) then
-                CallEvent("SpawnBoss")
             end
         end
     end

@@ -1,7 +1,6 @@
 local ComputerUI
 
 local computer_timer
-local SatelliteStatus
 
 AddEvent("OnPackageStart", function()
     ComputerUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
@@ -9,15 +8,9 @@ AddEvent("OnPackageStart", function()
     SetWebAlignment(ComputerUI, 0.0, 0.0)
     SetWebAnchors(ComputerUI, 0.0, 0.0, 1.0, 1.0)
     SetWebVisibility(ComputerUI, WEB_HIDDEN)
-
-    SatelliteStatus = CreateTextBox(0, 0, "", "center")
-    SetTextBoxAnchors(SatelliteStatus, 0.0, 0.0, 1.0, 0.03)
-    SetTextBoxAlignment(SatelliteStatus, 1.0, 0.0)
-    SetSatelliteStatus(0)
 end)
 
 AddEvent("OnPackageStop", function()
-    DestroyTextBox(SatelliteStatus)
     DestroyWebUI(ComputerUI)
 end)
 
@@ -43,42 +36,25 @@ AddEvent("prop:InteractGarageComputer", function(object)
     })
 end)
 
--- interacting with satellite computer requires computer_part
+-- interacting with satellite computer
 AddEvent("prop:InteractSatelliteTerminal", function(object)
     local x, y, z = GetObjectLocation(object)
 
-    -- ensure player has computer_part
-    if HasComputerPart() ~= true then
-        ShowMessage("You are missing a critical computer part!")
-        SetSoundVolume(CreateSound("client/sounds/error.wav"), 0.5)
-    else
-        SetSoundVolume(CreateSound3D("client/sounds/modem.mp3", x, y, z, 1500), 0.7)
-        CallRemoteEvent("InteractSatelliteComputer", object)
+    SetSoundVolume(CreateSound3D("client/sounds/modem.mp3", x, y, z, 1500), 0.7)
+    CallRemoteEvent("InteractSatelliteComputer", object)
 
-        local x, y, z = GetObjectLocation(object)
-        computer_timer = CreateTimer(ShowComputerTimer, 1000, {
-          x = x,
-          y = y,
-          z = z
-        })
-    end
+    local x, y, z = GetObjectLocation(object)
+    computer_timer = CreateTimer(ShowComputerTimer, 1000, {
+        x = x,
+        y = y,
+        z = z
+    })
 end)
 
-function HasComputerPart()
-    local inventory = PlayerData[player].inventory
-    for _, item in pairs(inventory) do
-        -- log.debug(item['item'])
-        if item['item'] == 'computer_part' then
-            return true
-        end
-    end
-    return false
-end
-
 -- shows the satellite UI
-AddRemoteEvent("ShowSatelliteComputer", function(percentage)
+AddRemoteEvent("ShowSatelliteComputer", function()
     SetWebVisibility(ComputerUI, WEB_HITINVISIBLE)
-    ExecuteWebJS(ComputerUI, "EmitEvent('SetComputerScreen','satellite'," .. percentage .. ")")
+    ExecuteWebJS(ComputerUI, "EmitEvent('SetComputerScreen','satellite-transmission')")
 end)
 
 -- occurs just before boss arrives
@@ -90,14 +66,3 @@ AddRemoteEvent("BeginSatelliteTransmission", function(object)
         SetSoundVolume(CreateSound3D("client/sounds/alert.mp3", x, y, z, 10000), 1)
     end)
 end)
-
--- shows satellite progress on player screen
-function SetSatelliteStatus(percent)
-    if percent == nil then
-        SetTextBoxText(SatelliteStatus, "")
-    else
-        SetTextBoxText(SatelliteStatus, "SATELLITE STATUS: " .. percent .. "% OPERATIONAL")
-    end
-end
-AddEvent("SetSatelliteStatus", SetSatelliteStatus)
-AddRemoteEvent("SetSatelliteStatus", SetSatelliteStatus)

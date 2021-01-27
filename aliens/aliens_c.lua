@@ -1,7 +1,7 @@
 local AmbientSound
 local AttackSound
 
-LoadPak("Aliens", "/Aliens/", "../../../OnsetModding/Plugins/Aliens/Content/")
+--LoadPak("Aliens", "/Aliens/", "../../../OnsetModding/Plugins/Aliens/Content/")
 
 AddEvent("OnPackageStop", function()
     if AmbientSound ~= nil then
@@ -28,7 +28,7 @@ function ApplyAlienSkin(npc)
     SetNPCClothingPreset(npc, Random(23, 24))
 end
 
-function ApplyFlyingAlienSkin(npc)
+--[[ function ApplyFlyingAlienSkin(npc)
     local skin = Random(1,5)
 
     local SkeletalMeshComponent = GetNPCSkeletalMeshComponent(npc, "Body")
@@ -52,7 +52,8 @@ function ApplyFlyingAlienSkin(npc)
     local SkeletalMeshComponent = GetNPCSkeletalMeshComponent(npc, "Clothing2")
     SkeletalMeshComponent:SetSkeletalMesh(nil)
 end
-
+ ]]
+ 
 AddRemoteEvent("AlienAttacking", function(npc)
     if AmbientSound == nil then
         AmbientSound = CreateSound("client/sounds/chased.mp3", true)

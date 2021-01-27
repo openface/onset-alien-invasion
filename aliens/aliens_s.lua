@@ -6,6 +6,8 @@ local AlienAttackDamage = 50
 local SafeRange = 6000
 local AlienRetargetCooldown = {} -- aliens re-target on every weapon hit w/ cooldown period
 local AlienSpawnsEnabled = true
+local AlienSpawnTimer
+local AlienAttackTimer
 
 AddCommand("alien", function(player)
     if not IsAdmin(GetPlayerSteamId(player)) then
@@ -22,15 +24,14 @@ AddCommand("togaliens", function(player)
     log.info("Alien spawning is now ", AlienSpawnsEnabled)
 end)
 
--- TODO destroy these timers when package stops
 AddEvent("OnPackageStart", function()
     -- re-spawn on a timer
-    CreateTimer(function()
+    AlienSpawnTimer = CreateTimer(function()
         SpawnAliens()
     end, 60000) -- alien spawn tick every minute
 
     -- process timer for all aliens
-    CreateTimer(function()
+    AlienAttackTimer = CreateTimer(function()
         for _, npc in pairs(GetAllNPC()) do
             if (GetNPCPropertyValue(npc, 'type') == 'alien') then
                 ResetAlien(npc)
@@ -43,12 +44,12 @@ AddEvent("OnPackageStop", function()
     AlienRetargetCooldown = {}
     for _, npc in pairs(GetAllNPC()) do
         if (GetNPCPropertyValue(npc, 'type') == 'alien') then
-
-            VNPCS.StopVNPC(npc)
-
             DestroyNPC(npc)
         end
     end
+
+    DestroyTimer(AlienSpawnTimer)
+    DestroyTimer(AlienAttackTimer)
 end)
 
 function SpawnAliens()
@@ -241,7 +242,6 @@ function ResetAlien(npc)
         local x, y, z = GetNPCLocation(npc)
 
         --SetNPCTargetLocation(npc, x, y, z)
-        --VNPCS.StopVNPC(npc)
         VNPCS.SetVNPCTargetLocation(npc, x, y, z)
 
         SetNPCPropertyValue(npc, 'target', nil, true)
@@ -256,7 +256,6 @@ end
 
 AddEvent("OnVNPCReachTargetFailed", function(npc)
     log.error("OnVNPCReachTargetFailed")
-    VNPCS.StopVNPC(npc)
     AlienRetargetCooldown[npc] = nil
     DestroyNPC(npc)
 end)
@@ -278,9 +277,6 @@ AddEvent("OnVNPCReachTarget", function(npc)
         -- alien is back in starting position
         log.debug("NPC (ID " .. npc .. ") back at starting position.. despawning")
         AlienRetargetCooldown[npc] = nil
-
-        VNPCS.StopVNPC(npc)
-
         DestroyNPC(npc)
         return
     end

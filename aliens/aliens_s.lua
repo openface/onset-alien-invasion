@@ -250,9 +250,6 @@ function ResetAlien(npc)
         Delay(15 * 1000, function()
             AlienReturn(npc)
         end)
-    else
-        -- no target and nowhere to got
-        log.debug("NPC (ID " .. npc ..") has no target")
     end
 end
 

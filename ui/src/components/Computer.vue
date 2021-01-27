@@ -24,7 +24,8 @@
                     <ul>
                         <li>
                             This house and it's perimeter is a SAFE ZONE from
-                            alien attack.
+                            aliens.  We are not sure why.  However if the mothership
+                            is nearby, there is no safe zone.
                         </li>
 
                         <li>
@@ -46,19 +47,10 @@
                         </li>
 
                         <li>
-                            The mothership is on it's way to this island! YOUR
-                            MISSION IS TO DESTROY IT!. You will need supplies
-                            before you can fight back! If you are unable to
-                            fight, running away is your best chance for
+                            THE SATELLITE TERMINAL IS A DIRECT LINK TO THE MOTHERSHIP.
+                            But you will need supplies before you can fight back! 
+                            If you are unable to fight, running away is your best chance for
                             survival.
-                        </li>
-
-                        <li>
-                            FIND THE MISSING SATELLITE PARTS! Scavenge the area
-                            to find computer parts and bring them back to the
-                            satellite terminal. Once the satellite is
-                            operational, it will draw the mothership in for an
-                            attack.
                         </li>
                     </ul>
 

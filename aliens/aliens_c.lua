@@ -4,12 +4,16 @@ local AttackSound
 --LoadPak("Aliens", "/Aliens/", "../../../OnsetModding/Plugins/Aliens/Content/")
 
 AddEvent("OnPackageStop", function()
-    if AmbientSound ~= nil then
-        DestroySound(AmbientSound)
-    end
+    DestroySound(AmbientSound)
+
     if AttackSound ~= nil then
         DestroySound(AttackSound)
     end
+end)
+
+AddEvent("OnPackageStart", function()
+    AmbientSound = CreateSound("client/sounds/chased.mp3", true)
+    SetSoundVolume(AmbientSound, 0.0)
 end)
 
 AddEvent("OnNPCStreamIn", function(npc)
@@ -53,13 +57,10 @@ end
     SkeletalMeshComponent:SetSkeletalMesh(nil)
 end
  ]]
- 
+
 AddRemoteEvent("AlienAttacking", function(npc)
-    if AmbientSound == nil then
-        AmbientSound = CreateSound("client/sounds/chased.mp3", true)
-        SetSoundVolume(AmbientSound, 0.5)
-        ShowMessage("You have been spotted!")
-    end
+    SetSoundVolume(AmbientSound, 0.5)
+    ShowMessage("You have been spotted!")
 
     -- alien attack sound
     if AttackSound == nil then
@@ -72,11 +73,11 @@ AddRemoteEvent("AlienAttacking", function(npc)
 end)
 
 AddRemoteEvent('AlienNoLongerAttacking', function()
-    ShowMessage("You are safe for now!")
+    ShowMessage("You are safe for now.")
 
-    if AmbientSound ~= nil then
-        DestroySound(AmbientSound)
-    end
+    --SetSoundFadeOut(AmbientSound, 1000, 0.0)
+    SetSoundVolume(AmbientSound, 0.0)
+
     if AttackSound ~= nil then
         DestroySound(AttackSound)
     end
@@ -88,7 +89,5 @@ AddRemoteEvent("OnAlienHit", function()
 end)
 
 AddEvent("OnPlayerSpawn", function()
-    if AmbientSound ~= nil then
-        DestroySound(AmbientSound)
-    end
+    SetSoundVolume(AmbientSound, 0.0)
 end)

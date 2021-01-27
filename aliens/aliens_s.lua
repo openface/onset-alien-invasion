@@ -41,7 +41,6 @@ AddEvent("OnPackageStart", function()
 end)
 
 AddEvent("OnPackageStop", function()
-    AlienRetargetCooldown = {}
     for _, npc in pairs(GetAllNPC()) do
         if (GetNPCPropertyValue(npc, 'type') == 'alien') then
             DestroyNPC(npc)
@@ -89,7 +88,7 @@ function SpawnAliens()
 end
 
 function IsPlayerAttackable(player)
-    if player == nil then return false end
+    if player == nil or player == 0 then return false end
 
     -- don't attack if player is in lobby (character selection)
     if GetPlayerDimension(player) ~= 0 then
@@ -184,13 +183,13 @@ AddEvent("OnNPCDeath", function(npc, killer)
     VNPCS.StopVNPC(npc)
     Delay(120 * 1000, function()
         log.debug("NPC (ID " .. npc .. ") is dead.. despawning")
-        AlienRetargetCooldown[npc] = nil
- 
         DestroyNPC(npc)
     end)
 end)
 
 function SetAlienTarget(npc, player)
+    SetNPCPropertyValue(npc, 'returning', nil)
+
     local vehicle = GetPlayerVehicle(player)
     if vehicle == 0 then
         -- target is on foot
@@ -233,8 +232,8 @@ function ResetAlien(npc)
 
     local player, nearest_dist = GetNearestPlayer(npc)
 
-    if player ~= 0 and IsPlayerAttackable(player) then
-        -- we found a target
+    if IsPlayerAttackable(player) and nearest_dist < AlienAttackRange then
+        -- we found a nearby target
         SetAlienTarget(npc, player)
     elseif (GetNPCPropertyValue(npc, 'target') == player) then
         log.debug("NPC (ID " .. npc .. ") target "..GetPlayerName(player).." is no longer attackable")
@@ -245,19 +244,42 @@ function ResetAlien(npc)
         VNPCS.SetVNPCTargetLocation(npc, x, y, z)
 
         SetNPCPropertyValue(npc, 'target', nil, true)
-        CallRemoteEvent(player, 'AlienNoLongerAttacking', npc)
+        CallRemoteEvent(player, 'AlienNoLongerAttacking')
 
         -- wait a bit then walk back home, little alien
         Delay(15 * 1000, function()
             AlienReturn(npc)
         end)
+    else
+        -- no target and nowhere to got
+        log.debug("NPC (ID " .. npc ..") has no target")
     end
 end
 
+AddEvent("OnNPCDestroyed", function(npc)
+    if GetNPCPropertyValue(npc, 'type') ~= 'alien' then
+        return
+    end
+
+    AlienRetargetCooldown[npc] = nil
+end)
+
 AddEvent("OnVNPCReachTargetFailed", function(npc)
     log.error("OnVNPCReachTargetFailed")
-    AlienRetargetCooldown[npc] = nil
+    if GetNPCPropertyValue(npc, 'type') ~= 'alien' then
+        return
+    end
+
+    VNPCS.StopVNPC(npc)
+    SetNPCAnimation(npc, "DONTKNOW", false)
+    
+--[[     local targeted_player = GetNPCPropertyValue(npc, 'target')
+    if targeted_player ~= nil then
+        CallRemoteEvent(targeted_player, 'AlienNoLongerAttacking')
+    end
+
     DestroyNPC(npc)
+ ]]
 end)
 
 -- kills players when reached
@@ -276,7 +298,6 @@ AddEvent("OnVNPCReachTarget", function(npc)
     if returning == true then
         -- alien is back in starting position
         log.debug("NPC (ID " .. npc .. ") back at starting position.. despawning")
-        AlienRetargetCooldown[npc] = nil
         DestroyNPC(npc)
         return
     end

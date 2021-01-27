@@ -1,4 +1,8 @@
 WeaponPatch = ImportPackage("Onset_Weapon_Patch")
+if WeaponPatch == nil then
+    print("Missing Onset_Weapon_Patch package!")
+    ServerExit()
+end
 
 -- weapon map
 WeaponsConfig = {

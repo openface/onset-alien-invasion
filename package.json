@@ -64,7 +64,6 @@
         "world/garbage_c.lua"
     ],
     "files": [
-        "client/pak/Aliens.pak",
         "client/pak/Mothership.pak",
         "client/pak/AlienInvasion.pak",
         "client/sounds/*.wav",

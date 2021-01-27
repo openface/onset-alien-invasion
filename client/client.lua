@@ -139,6 +139,19 @@ function SetThirdPerson()
     SetCameraViewDistance(375)
 end
 
+AddEvent("OnKeyPress", function(key)
+    if key == "Middle Mouse Button" then
+        SetCameraFoV(60)
+    end
+end)
+
+AddEvent("OnKeyRelease", function(key)
+    if key == "Middle Mouse Button" then
+        SetCameraFoV(90)
+    end
+end)
+
+
 AddRemoteEvent('PlayErrorSound', function()
     SetSoundVolume(CreateSound("client/sounds/error.wav"), 0.5)
 end)

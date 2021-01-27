@@ -1,15 +1,32 @@
 local AmbientSound
 local AttackSound
-
-LoadPak("Aliens", "/Aliens/", "../../../OnsetModding/Plugins/Aliens/Content/")
+local AmbientSoundTimer
 
 AddEvent("OnPackageStop", function()
-    if AmbientSound ~= nil then
-        DestroySound(AmbientSound)
-    end
+    DestroySound(AmbientSound)
+
     if AttackSound ~= nil then
         DestroySound(AttackSound)
     end
+
+    DestroyTimer(AmbientSoundTimer)
+end)
+
+AddEvent("OnPackageStart", function()
+    AmbientSound = CreateSound("client/sounds/chased.mp3", true)
+    SetSoundVolume(AmbientSound, 0.0)
+
+    AmbientSoundTimer = CreateTimer(function()
+        local targetted = false
+        for k, v in pairs(GetStreamedNPC()) do
+            if GetNPCPropertyValue(v, 'target') == GetPlayerId() then
+                targetted = true
+            end
+        end
+        if targetted == false then
+            SetSafeAmbience()
+        end
+    end, 10000)
 end)
 
 AddEvent("OnNPCStreamIn", function(npc)
@@ -21,37 +38,13 @@ AddEvent("OnNPCStreamIn", function(npc)
 end)
 
 function ApplyAlienSkin(npc)
-    local skin = Random(1,5)
-
-    local SkeletalMeshComponent = GetNPCSkeletalMeshComponent(npc, "Body")
-    SkeletalMeshComponent:SetSkeletalMesh(USkeletalMesh.LoadFromAsset("/Aliens/Insect/Mesh/Skin/SK_Insect_skin"..skin))
-
-    local SkeletalMeshComponent = GetNPCSkeletalMeshComponent(npc, "Clothing0")
-    SkeletalMeshComponent:SetSkeletalMesh(nil)
-
-    local SkeletalMeshComponent = GetNPCSkeletalMeshComponent(npc, "Clothing1")
-    SkeletalMeshComponent:SetSkeletalMesh(nil)
-
-    local SkeletalMeshComponent = GetNPCSkeletalMeshComponent(npc, "Clothing4")
-    SkeletalMeshComponent:SetSkeletalMesh(nil)
-
-    local SkeletalMeshComponent = GetNPCSkeletalMeshComponent(npc, "Clothing5")
-    SkeletalMeshComponent:SetSkeletalMesh(nil)
-
-    local SkeletalMeshComponent = GetNPCSkeletalMeshComponent(npc, "Clothing3")
-    SkeletalMeshComponent:SetSkeletalMesh(nil)
-
-    local SkeletalMeshComponent = GetNPCSkeletalMeshComponent(npc, "Clothing2")
-    SkeletalMeshComponent:SetSkeletalMesh(nil)
+    SetNPCClothingPreset(npc, Random(23, 24))
+    SetNPCOutline(npc, true)
 end
 
 AddRemoteEvent("AlienAttacking", function(npc)
-    if AmbientSound == nil then
-        AmbientSound = CreateSound("client/sounds/ambience.mp3")
-        SetSoundVolume(AmbientSound, 2.5)
-    end
-
-    AddPlayerChat('You are being attacked by an alien... RUN!')
+    SetSoundVolume(AmbientSound, 0.5)
+    ShowMessage("You have been spotted!")
 
     -- alien attack sound
     if AttackSound == nil then
@@ -63,18 +56,25 @@ AddRemoteEvent("AlienAttacking", function(npc)
     end
 end)
 
-AddRemoteEvent('AlienNoLongerAttacking', function()
-    AddPlayerChat('You are safe for now.')
+function SetSafeAmbience()
+    --SetSoundFadeOut(AmbientSound, 1000, 0.0)
+    SetSoundVolume(AmbientSound, 0.0)
 
-    if AmbientSound ~= nil then
-        DestroySound(AmbientSound)
-    end
     if AttackSound ~= nil then
         DestroySound(AttackSound)
     end
+end
+
+AddRemoteEvent('AlienNoLongerAttacking', function()
+    ShowMessage("You are safe for now.")
+    SetSafeAmbience()
 end)
 
 AddRemoteEvent("OnAlienHit", function()
     SetSoundVolume(CreateSound("client/sounds/pain.mp3"), 1)
     InvokeDamageFX(1000)
+end)
+
+AddEvent("OnPlayerSpawn", function()
+    SetSoundVolume(AmbientSound, 0.0)
 end)

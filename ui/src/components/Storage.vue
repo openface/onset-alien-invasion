@@ -34,38 +34,23 @@
         <div id="inner">
             <div id="title">INVENTORY</div>
 
-            <draggable
-                ghost-class="ghost"
-                v-model="inventory_items"
-                class="draggable"
-                v-bind="inventoryDraggableOptions"
-                @sort="UpdateInventory"
-                @start="dragging = true"
-                @end="dragging = false"
-                draggable=".slot"
-                forceFallback="true"
+            <drop-list
+              :items="inventory_items"
+              class="list"
+              @insert="onInsert"
+              @reorder="$event.apply(items)"
             >
-                <transition-group tag="div" class="grid" name="grid">
-                    <InventoryItem
-                        v-for="item in inventory_items"
-                        :key="item.name"
-                        :item="item"
-                        :dragging="dragging"
-                        :show_options="false"
-                    />
-                    <div
-                        class="freeslot"
-                        v-for="n in FreeInventorySlots"
-                        :key="'hw' + n"
-                    ></div>
-                </transition-group>
-            </draggable>
+                <template v-slot:item="{item}">
+                    <drag class="item" :key="item">{{item}}</drag>
+                </template>
+
+            </drop-list>
         </div>
     </div>
 </template>
 
 <script>
-import draggable from "vuedraggable";
+import { Drag, DropList } from "vue-easy-dnd";
 import InventoryItem from "./InventoryItem.vue";
 
 const MAX_STORAGE_SLOTS = 7;
@@ -74,7 +59,8 @@ const MAX_INVENTORY_SLOTS = 14;
 export default {
     name: "Storage",
     components: {
-        draggable,
+        Drag,
+        DropList,
         InventoryItem,
     },
     data() {

@@ -3,132 +3,159 @@
         <div id="inner" v-if="inventory_visible">
             <div v-if="HasInventory">
                 <div id="title">INVENTORY</div>
-                <draggable
-                    ghost-class="ghost"
-                    v-model="inventory_items"
-                    @sort="UpdateInventory"
-                    @start="dragging = true"
-                    @end="dragging = false"
-                    draggable=".slot"
-                    forceFallback="true"
+                <drop-list
+                    :items="inventory_items"
+                    class="grid"
+                    @reorder="onReorderInventory"
                 >
-                    <transition-group tag="div" class="grid" name="grid">
-                        <InventoryItem
-                            v-for="item in inventory_items"
-                            :index="item.index"
+                    <template v-slot:item="{ item }">
+                        <drag
+                            class="slot"
+                            :data="item"
+                            type="inventory_item"
                             :key="item.index"
-                            :item="item"
-                            :dragging="dragging"
-                            :show_options="true"
-                        />
-                        <div
-                            class="freeslot"
-                            v-for="n in FreeInventorySlots"
-                            :key="'hw' + n"
-                        ></div>
-                    </transition-group>
-                </draggable>
+                        >
+                            <img :src="getImageUrl(item)" />
+                        </drag>
+                    </template>
 
-                <div id="weapons" v-if="HasWeapons">
-                    <div class="subtitle">WEAPONS</div>
-                    <div class="grid">
-                        <InventoryItem
-                            v-for="weapon in weapons"
-                            :index="weapon.slot"
-                            :key="weapon.slot"
-                            :item="weapon"
-                            :show_options="true"
-                        />
-                    </div>
+                    <template v-slot:feedback="{ data }">
+                        <div class="item feedback" :key="data.index">
+                            {{ data }}
+                        </div>
+                    </template>
+                </drop-list>
+
+                <div class="equipment">
+                    Hands
+                    <drop
+                        class="equipment-dropzone"
+                        @drop="onEquipHands"
+                        accepts-type="inventory_item"
+                    >
+                        <img v-if="equipped_hands" :src="getImageUrl(equipped_hands)" />
+                    </drop>
+
+                    Head
+                    <drop
+                        class="equipment-dropzone"
+                        @drop="onEquipHead"
+                        accepts-type="inventory_item"
+                    >
+                        <img v-if="equipped_head" :src="getImageUrl(equipped_head)" />
+                    </drop>
+
+                    Body
+                    <drop
+                        class="equipment-dropzone"
+                        @drop="onEquipBody"
+                        accepts-type="inventory_item"
+                    >
+                        <img v-if="equipped_body" :src="getImageUrl(equipped_body)" />
+                    </drop>
                 </div>
             </div>
             <div v-else id="title">YOUR INVENTORY IS EMPTY</div>
         </div>
-        <div id="hotbar" v-if="!inventory_visible || !InGame">
-            <div class="grid">
-                <!-- weapons 2,3 -->
-                <InventoryItem
-                    v-for="weapon in weapons"
-                    :index="weapon.slot"
-                    :key="weapon.slot"
-                    :item="weapon"
-                    :keybind="weapon.slot"
-                    :show_options="false"
-                />
-                <div
-                    class="freeslot"
-                    v-for="n in FreeWeaponSlots"
-                    :key="'hw' + n"
-                ></div>
+        <div id="hotbar">
+            <drop-list
+                :items="hotbar_items"
+                class="grid"
+                @insert="onInsertHotbar"
+                @reorder="onReorderHotbar"
+                accepts-type="inventory_item"
+            >
+                <template v-slot:item="{ item }">
+                    <drag class="slot" :data="item" :key="item.index">
+                        {{ item.slot }} <img :src="getImageUrl(item)" />
+                    </drag>
+                </template>
 
-                <!-- usable_items 4,5,6,7,8,9 -->
-                <InventoryItem
-                    v-for="(item, i) in usable_items"
-                    :index="item.index"
-                    :key="item.index"
-                    :item="item"
-                    :keybind="i + 4"
-                    :show_options="false"
-                />
-                <div
-                    class="freeslot"
-                    v-for="n in FreeUsableSlots"
-                    :key="'hi' + n"
-                ></div>
-            </div>
+                <template v-slot:feedback="{ data }">
+                    <div class="item feedback" :key="data.index">
+                        {{ data }}
+                    </div>
+                </template>
+            </drop-list>
         </div>
+        <drop
+            class="drop-area"
+            @drop="onDropItem"
+            accepts-type="inventory_item"
+        >
+        </drop>
     </div>
 </template>
 
 <script>
-import draggable from "vuedraggable";
-import InventoryItem from "./InventoryItem.vue";
+import { Drag, Drop, DropList } from "vue-easy-dnd";
 
 export default {
     name: "Inventory",
     components: {
-        draggable,
-        InventoryItem,
+        Drag,
+        Drop,
+        DropList,
     },
     data() {
         return {
             weapons: [],
             inventory_items: [],
-            usable_items: [],
+            hotbar_items: [],
+            equipped_hands: null,
+            equipped_head: null,
+            equipped_body: null,
             inventory_visible: false,
-            dragging: false,
         };
     },
     computed: {
         HasInventory: function() {
-            return this.inventory_items.length > 0 || this.weapons.length > 0;
-        },
-        HasWeapons: function() {
-            return this.weapons.length > 0;
-        },
-        FreeInventorySlots: function() {
-            return 14 - this.inventory_items.length;
-        },
-        FreeWeaponSlots: function() {
-            return 2 - this.weapons.length;
-        },
-        FreeUsableSlots: function() {
-            return 6 - this.usable_items.length;
+            return this.inventory_items.length > 0;
         },
     },
     methods: {
         SetInventory: function(data) {
-            this.weapons = data.weapons;
-            this.inventory_items = data.items;
-            this.usable_items = data.items.filter(
-                (item) => item.type == "usable" || item.type == "equipable"
+            this.inventory_items = data.inventory_items;
+            this.hotbar_items = data.inventory_items.filter(
+                (item) => item.slot
             );
+            this.equipped_hands = data.equipped_hands;
+            this.equipped_head = data.equipped_head;
+            this.equipped_body = data.equipped_body;
         },
         ShowInventory: function() {
             this.inventory_visible = true;
         },
         HideInventory: function() {
             this.inventory_visible = false;
+        },
+        onInsertHotbar(e) {
+            window.console.log("adding to hotbar");
+            window.console.log(e.index, e.type, e.data);
+            //this.inventory_items.splice(event.index, 0, event.data);
+        },
+        onReorderInventory: function(e) {
+            window.console.log("Reorder inventory");
+            e.apply(this.inventory_items);
+        },
+        onReorderHotbar: function(e) {
+            window.console.log("Reorder hotbar");
+            e.apply(this.hotbar_items);
+        },
+        onDropItem: function() {
+            window.console.log("Drop item");
+        },
+        onEquipHands: function(e) {
+            window.console.log("Equip item to hands");
+            this.equipped_hands = e.data;
+        },
+        onEquipHead: function(e) {
+            window.console.log("Equip item to head");
+            this.equipped_head = e.data;
+        },
+        onEquipBody: function(e) {
+            window.console.log("Equip item to body");
+            this.equipped_body = e.data;
         },
         UpdateInventory: function(e) {
             window.console.log(e);
@@ -143,9 +170,6 @@ export default {
 
             this.CallEvent("UpdateInventory", JSON.stringify(data));
         },
-        log: function(evt) {
-            window.console.log(evt);
-        },
     },
     mounted() {
         this.EventBus.$on("SetInventory", this.SetInventory);
@@ -154,8 +178,20 @@ export default {
 
         if (!this.InGame) {
             this.EventBus.$emit("SetInventory", {
-                weapons: [
+                equipped_head: null,
+                equipped_hands: null,
+                equipped_body: {
+                        index: 7,
+                        item: "vest",
+                        name: "Kevlar Vest",
+                        modelid: 14,
+                        quantity: 1,
+                        type: "equipable",
+                        equipped: true,
+                },
+                inventory_items: [
                     {
+                        index: 2,
                         item: "glock",
                         name: "Glock",
                         modelid: 2,
@@ -164,6 +200,7 @@ export default {
                         slot: 2,
                     },
                     {
+                        index: 3,
                         item: "rifle",
                         name: "Rifle",
                         modelid: 2,
@@ -171,8 +208,6 @@ export default {
                         type: "weapon",
                         slot: 3,
                     },
-                ],
-                items: [
                     {
                         index: 5,
                         item: "metal",
@@ -217,7 +252,7 @@ export default {
                         quantity: 4,
                         type: "usable",
                         equipped: false,
-                        use_label: "Drink"
+                        use_label: "Drink",
                     },
                     {
                         index: 10,
@@ -266,16 +301,6 @@ export default {
     font-family: impact;
     text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
 }
-.subtitle {
-    color: #fff;
-    font-size: 20px;
-    text-align: center;
-    margin: 0;
-    font-weight: bold;
-    font-family: impact;
-    text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
-    background: rgba(255, 255, 255, 0.1);
-}
 .grid {
     display: grid;
     grid-template-columns: repeat(7, 77px);
@@ -287,31 +312,8 @@ export default {
     grid-template-columns: repeat(8, 77px);
     grid-template-rows: repeat(1, 77px);
 }
-#weapons .grid {
-    grid-template-columns: repeat(3, 77px);
-    grid-template-rows: repeat(1, 77px);
-    margin-top: 5px;
-}
-#weapons {
-    margin: 10px 0;
-}
 .grid-move {
     transition: transform 0.2s;
-}
-.ghost {
-    opacity: 1;
-}
-.draggable {
-    padding: 5px;
-    width: 97%;
-    border: 3px dotted rgba(0, 0, 0, 0.2);
-}
-.draggable:empty {
-    text-align: center;
-    height: 85px;
-    width: 100%;
-    border: 3px dotted rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.1);
 }
 #hotbar {
     display: flex;
@@ -322,5 +324,27 @@ export default {
     width: 100%;
     position: fixed;
     bottom: 1vh;
+}
+.equipment {
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    text-transform: uppercase;
+    margin: 0;
+    font-family: impact;
+    text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
+    background: rgba(255, 255, 255, 0.1);
+}
+.equipment-dropzone {
+    width: 100px;
+    height: 100px;
+    float: left;
+    border: 1px solid #000;
+    padding: 5px;
+}
+.drop-area {
+    width: 100%;
+    height: 100%;
+    position: fixed;
 }
 </style>

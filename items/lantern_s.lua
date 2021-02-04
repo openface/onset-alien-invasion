@@ -10,7 +10,7 @@ RegisterObject("lantern", {
         computer_part = 1
     },
     price = 50,
-    component = {
+    light_component = {
         type = "pointlight",
         position = {
             x = 3,

@@ -84,8 +84,8 @@ function AttachItemToPlayer(player, item)
         item_cfg['attachment']['rz'], item_cfg['attachment']['bone'])
 
     -- set lighting component config to object
-    if item_cfg['component'] ~= nil then
-        SetObjectPropertyValue(attached_object, "component", item_cfg['component'])
+    if item_cfg['light_component'] ~= nil then
+        SetObjectPropertyValue(attached_object, "light_component", item_cfg['light_component'])
     end
 
     -- set particle config to object

@@ -38,7 +38,7 @@ RegisterObject("wooden_chair", {        -- [required] unique id / item name
         rz = 10, 
         bone = "hand_r" 
     },
-    component = {                       -- light component to attach to object
+    light_component = {                       -- light component to attach to object
         type = "pointlight",            -- pointlight, spotlight, or rectlight
         position = {
             x = 3,

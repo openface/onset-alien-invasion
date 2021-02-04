@@ -207,6 +207,6 @@ function SpawnStorageLoot(object)
             quantity = 1
         })
     end
-    log.trace(dump(random_content))
+    --log.trace(dump(random_content))
     ReplaceStorageContents(object, 'object', random_content)
 end

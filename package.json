@@ -37,15 +37,14 @@
         "doors/doors_s.lua",
         "world/world_s.lua",
         "world/garbage_s.lua",
-
-        "items/*.lua"
+        "items/*_s.lua"
     ],
     "client_scripts": [
         "client/client.lua",
         "client/effects.lua",
         "client/hud.lua",
         "client/undermap.lua",
-
+        "items/*_c.lua",
         "character/character_c.lua",
         "aliens/aliens_c.lua",
         "lootbox/lootbox_c.lua",

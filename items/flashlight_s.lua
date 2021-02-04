@@ -16,7 +16,7 @@ RegisterObject("flashlight", {
       }
     },
     price = 50,
-    component = {
+    light_component = {
         type = "spotlight",
         position = {
             x = 0,

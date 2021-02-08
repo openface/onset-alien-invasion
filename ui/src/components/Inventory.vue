@@ -73,7 +73,7 @@
 
             <drop
                 class="drop-area"
-                @drop="onEquipWeapon1"
+                @drop="onEquipWeapon(1, $event)"
                 accepts-type="weapon"
             >
                 <drag
@@ -88,7 +88,7 @@
             </drop>
             <drop
                 class="drop-area"
-                @drop="onEquipWeapon2"
+                @drop="onEquipWeapon(2, $event)"
                 accepts-type="weapon"
             >
                 <drag
@@ -103,7 +103,7 @@
             </drop>
             <drop
                 class="drop-area"
-                @drop="onEquipWeapon3"
+                @drop="onEquipWeapon(3, $event)"
                 accepts-type="weapon"
             >
                 <drag
@@ -121,7 +121,7 @@
 
             <drop
                 class="drop-area"
-                @drop="onEquipHotbar4"
+                @drop="onEquipHotbar(4, $event)"
                 mode="cut"
                 :accepts-type="['equipable', 'usable']"
             >
@@ -131,14 +131,14 @@
                     :data="hotbar_4"
                     :type="hotbar_4.type"
                     :key="hotbar_4.index"
-                    @cut="removeHotbar4"
+                    @cut="removeHotbar(4, $event)"
                 >
                     <img v-if="hotbar_4" :src="getImageUrl(hotbar_4)" />
                 </drag>
             </drop>
             <drop
                 class="drop-area"
-                @drop="onEquipHotbar5"
+                @drop="onEquipHotbar(5, $event)"
                 mode="cut"
                 :accepts-type="['equipable', 'usable']"
             >
@@ -148,39 +148,76 @@
                     :data="hotbar_5"
                     :type="hotbar_5.type"
                     :key="hotbar_5.index"
-                    @cut="removeHotbar5"
+                    @cut="removeHotbar(5, $event)"
                 >
                     <img v-if="hotbar_5" :src="getImageUrl(hotbar_5)" />
                 </drag>
             </drop>
             <drop
                 class="drop-area"
-                @drop="onEquipHotbar6"
+                @drop="onEquipHotbar(6, $event)"
                 :accepts-type="['equipable', 'usable']"
             >
-                <img v-if="hotbar_6" :src="getImageUrl(hotbar_6)" />
+                <drag
+                    v-if="hotbar_6"
+                    class="slot"
+                    :data="hotbar_6"
+                    :type="hotbar_6.type"
+                    :key="hotbar_6.index"
+                    @cut="removeHotbar(6, $event)"
+                >
+                    <img v-if="hotbar_6" :src="getImageUrl(hotbar_6)" />
+                </drag>
             </drop>
             <drop
                 class="drop-area"
-                @drop="onEquipHotbar7"
+                @drop="onEquipHotbar(7, $event)"
                 :accepts-type="['equipable', 'usable']"
             >
-                <img v-if="hotbar_7" :src="getImageUrl(hotbar_7)" />
+                <drag
+                    v-if="hotbar_7"
+                    class="slot"
+                    :data="hotbar_7"
+                    :type="hotbar_7.type"
+                    :key="hotbar_7.index"
+                    @cut="removeHotbar(7, $event)"
+                >
+                    <img v-if="hotbar_7" :src="getImageUrl(hotbar_7)" />
+                </drag>
             </drop>
             <drop
                 class="drop-area"
-                @drop="onEquipHotbar8"
+                @drop="onEquipHotbar(8, $event)"
                 :accepts-type="['equipable', 'usable']"
             >
-                <img v-if="hotbar_8" :src="getImageUrl(hotbar_8)" />
+                <drag
+                    v-if="hotbar_8"
+                    class="slot"
+                    :data="hotbar_8"
+                    :type="hotbar_8.type"
+                    :key="hotbar_8.index"
+                    @cut="removeHotbar(8, $event)"
+                >
+                    <img v-if="hotbar_8" :src="getImageUrl(hotbar_8)" />
+                </drag>
             </drop>
             <drop
                 class="drop-area"
-                @drop="onEquipHotbar9"
+                @drop="onEquipHotbar(9, $event)"
                 :accepts-type="['equipable', 'usable']"
             >
-                <img v-if="hotbar_9" :src="getImageUrl(hotbar_9)" />
+                <drag
+                    v-if="hotbar_9"
+                    class="slot"
+                    :data="hotbar_9"
+                    :type="hotbar_9.type"
+                    :key="hotbar_9.index"
+                    @cut="removeHotbar(9, $event)"
+                >
+                    <img v-if="hotbar_9" :src="getImageUrl(hotbar_9)" />
+                </drag>
             </drop>
+
         </div>
     </div>
 </template>
@@ -265,99 +302,40 @@ export default {
         HideInventory: function() {
             this.inventory_visible = false;
         },
-        onInsertHotbar(e) {
-            window.console.log("adding to hotbar");
-            window.console.log(e.index, e.type, e.data);
-            //this.inventory_items.splice(event.index, 0, event.data);
-        },
         onReorderInventory: function(e) {
             window.console.log("Reorder inventory");
             e.apply(this.inventory_items);
+        },
+        removeFromInventory: function(e) {
+            window.console.log("Remove from inventory");
+            window.console.log(e);
         },
         onDropItem: function() {
             window.console.log("Drop item");
         },
         onEquipHands: function(e) {
             window.console.log("Equip item to hands");
-            this.equipped_hands = e.data;
+            window.console.log(e.index, e.type, e.data);
         },
         onEquipHead: function(e) {
             window.console.log("Equip item to head");
-            this.equipped_head = e.data;
+            window.console.log(e.index, e.type, e.data);
         },
         onEquipBody: function(e) {
             window.console.log("Equip item to body");
-            this.equipped_body = e.data;
-        },
-        onEquipWeapon1: function(e) {
-            window.console.log("Equip weapon1");
-            this.weapon_1 = e.data;
             window.console.log(e.index, e.type, e.data);
         },
-        onEquipWeapon2: function(e) {
-            window.console.log("Equip weapon2");
-            this.weapon_2 = e.data;
-            window.console.log(e.index, e.type, e.data);
-        },
-        onEquipWeapon3: function(e) {
-            window.console.log("Equip weapon3");
-            this.weapon_3 = e.data;
-            window.console.log(e.index, e.type, e.data);
-        },
-        onEquipHotbar4: function(e) {
-            window.console.log("Equip item to hotbar4");
-            window.console.log(e.index, e.type, e.data);
-            this.hotbar_4 = e.data;
-        },
-        onEquipHotbar5: function(e) {
-            window.console.log("Equip item to hotbar5");
-            window.console.log(e.index, e.type, e.data);
-            this.hotbar_5 = e.data;
-        },
-        onEquipHotbar6: function(e) {
-            window.console.log("Equip item to hotbar6");
-            window.console.log(e.index, e.type, e.data);
-            this.hotbar_6 = e.data;
-        },
-        onEquipHotbar7: function(e) {
-            window.console.log("Equip item to hotbar7");
-            window.console.log(e.index, e.type, e.data);
-            this.hotbar_7 = e.data;
-        },
-        onEquipHotbar8: function(e) {
-            window.console.log("Equip item to hotbar8");
-            window.console.log(e.index, e.type, e.data);
-            this.hotbar_8 = e.data;
-        },
-        onEquipHotbar9: function(e) {
-            window.console.log("Equip item to hotbar9");
-            window.console.log(e.index, e.type, e.data);
-            this.hotbar_9 = e.data;
-        },
-        UpdateInventory: function(e) {
+        onEquipWeapon: function(slot, e) {
+            window.console.log("Equip weapon slot " + slot);
             window.console.log(e);
-
-            var data = this.inventory_items.map(function(item, index) {
-                return {
-                    item: item.item,
-                    quantity: item.quantity,
-                    index: index + 1,
-                };
-            });
-
-            this.CallEvent("UpdateInventory", JSON.stringify(data));
         },
-        removeFromInventory: function(e) {
-            window.console.log("removeFromInventory");
-            window.console.log(e.index, e.type, e.data);
+        onEquipHotbar: function(slot, e) {
+            window.console.log("Equip item to hotbar slot" + slot);
+            window.console.log(e);
         },
-        removeHotbar4: function(e) {
-            window.console.log("remove hotbar4");
-            window.console.log(e.index, e.type, e.data);
-        },
-        removeHotbar5: function(e) {
-            window.console.log("remove hotbar5");
-            window.console.log(e.index, e.type, e.data);
+        removeHotbar: function(slot, e) {
+            window.console.log("Remove from hotbar slot" + slot);
+            window.console.log(e);
         },
     },
     mounted() {

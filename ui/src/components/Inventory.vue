@@ -12,16 +12,17 @@
                         <drag
                             class="slot"
                             :data="item"
-                            type="inventory_item"
+                            :type="item.type"
                             :key="item.index"
+                            @cut="removeFromInventory"
                         >
-                            <img :src="getImageUrl(item)" />
+                            {{ item.name }} <img :src="getImageUrl(item)" />
                         </drag>
                     </template>
 
                     <template v-slot:feedback="{ data }">
                         <div class="item feedback" :key="data.index">
-                            {{ data }}
+                            <img :src="getImageUrl(data.item)" />
                         </div>
                     </template>
                 </drop-list>
@@ -29,61 +30,158 @@
                 <div class="equipment">
                     Hands
                     <drop
-                        class="equipment-dropzone"
+                        class="drop-area"
                         @drop="onEquipHands"
                         accepts-type="inventory_item"
                     >
-                        <img v-if="equipped_hands" :src="getImageUrl(equipped_hands)" />
+                        <img
+                            v-if="equipped_hands"
+                            :src="getImageUrl(equipped_hands)"
+                        />
                     </drop>
 
                     Head
                     <drop
-                        class="equipment-dropzone"
+                        class="drop-area"
                         @drop="onEquipHead"
                         accepts-type="inventory_item"
                     >
-                        <img v-if="equipped_head" :src="getImageUrl(equipped_head)" />
+                        <img
+                            v-if="equipped_head"
+                            :src="getImageUrl(equipped_head)"
+                        />
                     </drop>
 
                     Body
                     <drop
-                        class="equipment-dropzone"
+                        class="drop-area"
                         @drop="onEquipBody"
                         accepts-type="inventory_item"
                     >
-                        <img v-if="equipped_body" :src="getImageUrl(equipped_body)" />
+                        <img
+                            v-if="equipped_body"
+                            :src="getImageUrl(equipped_body)"
+                        />
                     </drop>
                 </div>
             </div>
             <div v-else id="title">YOUR INVENTORY IS EMPTY</div>
         </div>
         <div id="hotbar">
-            <drop-list
-                :items="hotbar_items"
-                class="grid"
-                @insert="onInsertHotbar"
-                @reorder="onReorderHotbar"
-                accepts-type="inventory_item"
-            >
-                <template v-slot:item="{ item }">
-                    <drag class="slot" :data="item" :key="item.index">
-                        {{ item.slot }} <img :src="getImageUrl(item)" />
-                    </drag>
-                </template>
 
-                <template v-slot:feedback="{ data }">
-                    <div class="item feedback" :key="data.index">
-                        {{ data }}
-                    </div>
-                </template>
-            </drop-list>
+            <!-- weapon slots -->
+
+            <drop
+                class="drop-area"
+                @drop="onEquipWeapon1"
+                accepts-type="weapon"
+            >
+                <drag
+                    v-if="weapon_1"
+                    class="slot"
+                    :data="weapon_1"
+                    type="weapon"
+                    :key="weapon_1.index"
+                >
+                    {{ weapon_1.name }} <img :src="getImageUrl(weapon_1)" />
+                </drag>
+            </drop>
+            <drop
+                class="drop-area"
+                @drop="onEquipWeapon2"
+                accepts-type="weapon"
+            >
+                <drag
+                    v-if="weapon_2"
+                    class="slot"
+                    :data="weapon_2"
+                    type="weapon"
+                    :key="weapon_2.index"
+                >
+                    {{ weapon_2.name }} <img :src="getImageUrl(weapon_2)" />
+                </drag>
+            </drop>
+            <drop
+                class="drop-area"
+                @drop="onEquipWeapon3"
+                accepts-type="weapon"
+            >
+                <drag
+                    v-if="weapon_3"
+                    class="slot"
+                    :data="weapon_3"
+                    type="weapon"
+                    :key="weapon_3.index"
+                >
+                    {{ weapon_3.name }} <img :src="getImageUrl(weapon_3)" />
+                </drag>
+            </drop>
+
+            <!-- hotbar slots -->
+
+            <drop
+                class="drop-area"
+                @drop="onEquipHotbar4"
+                mode="cut"
+                :accepts-type="['equipable', 'usable']"
+            >
+                <drag
+                    v-if="hotbar_4"
+                    class="slot"
+                    :data="hotbar_4"
+                    :type="hotbar_4.type"
+                    :key="hotbar_4.index"
+                    @cut="removeHotbar4"
+                >
+                    <img v-if="hotbar_4" :src="getImageUrl(hotbar_4)" />
+                </drag>
+            </drop>
+            <drop
+                class="drop-area"
+                @drop="onEquipHotbar5"
+                mode="cut"
+                :accepts-type="['equipable', 'usable']"
+            >
+                <drag
+                    v-if="hotbar_5"
+                    class="slot"
+                    :data="hotbar_5"
+                    :type="hotbar_5.type"
+                    :key="hotbar_5.index"
+                    @cut="removeHotbar5"
+                >
+                    <img v-if="hotbar_5" :src="getImageUrl(hotbar_5)" />
+                </drag>
+            </drop>
+            <drop
+                class="drop-area"
+                @drop="onEquipHotbar6"
+                :accepts-type="['equipable', 'usable']"
+            >
+                <img v-if="hotbar_6" :src="getImageUrl(hotbar_6)" />
+            </drop>
+            <drop
+                class="drop-area"
+                @drop="onEquipHotbar7"
+                :accepts-type="['equipable', 'usable']"
+            >
+                <img v-if="hotbar_7" :src="getImageUrl(hotbar_7)" />
+            </drop>
+            <drop
+                class="drop-area"
+                @drop="onEquipHotbar8"
+                :accepts-type="['equipable', 'usable']"
+            >
+                <img v-if="hotbar_8" :src="getImageUrl(hotbar_8)" />
+            </drop>
+            <drop
+                class="drop-area"
+                @drop="onEquipHotbar9"
+                :accepts-type="['equipable', 'usable']"
+            >
+                <img v-if="hotbar_9" :src="getImageUrl(hotbar_9)" />
+            </drop>
         </div>
-        <drop
-            class="drop-area"
-            @drop="onDropItem"
-            accepts-type="inventory_item"
-        >
-        </drop>
     </div>
 </template>
 
@@ -101,11 +199,19 @@ export default {
         return {
             weapons: [],
             inventory_items: [],
-            hotbar_items: [],
             equipped_hands: null,
             equipped_head: null,
             equipped_body: null,
             inventory_visible: false,
+            weapon_1: null,
+            weapon_2: null,
+            weapon_3: null,
+            hotbar_4: null,
+            hotbar_5: null,
+            hotbar_6: null,
+            hotbar_7: null,
+            hotbar_8: null,
+            hotbar_9: null,
         };
     },
     computed: {
@@ -116,12 +222,42 @@ export default {
     methods: {
         SetInventory: function(data) {
             this.inventory_items = data.inventory_items;
-            this.hotbar_items = data.inventory_items.filter(
-                (item) => item.slot
+            this.equipped_hands = data.inventory_items.find(
+                (item) => item.bone == "hand_r" || item.bone == "hand_l"
             );
-            this.equipped_hands = data.equipped_hands;
-            this.equipped_head = data.equipped_head;
-            this.equipped_body = data.equipped_body;
+            this.equipped_head = data.inventory_items.find(
+                (item) => item.bone == "head"
+            );
+            this.equipped_body = data.inventory_items.find(
+                (item) => item.bone == "spine_02"
+            );
+            this.weapon_1 = data.inventory_items.find(
+                (item) => item.type == 'weapon' && item.slot == 1
+            );
+            this.weapon_2 = data.inventory_items.find(
+                (item) => item.type == 'weapon' && item.slot == 2
+            );
+            this.weapon_3 = data.inventory_items.find(
+                (item) => item.type == 'weapon' && item.slot == 3
+            );
+            this.hotbar_4 = data.inventory_items.find(
+                (item) => item.slot == 4
+            );
+            this.hotbar_5 = data.inventory_items.find(
+                (item) => item.slot == 5
+            );
+            this.hotbar_6 = data.inventory_items.find(
+                (item) => item.slot == 6
+            );
+            this.hotbar_7 = data.inventory_items.find(
+                (item) => item.slot == 7
+            );
+            this.hotbar_8 = data.inventory_items.find(
+                (item) => item.slot == 8
+            );
+            this.hotbar_9 = data.inventory_items.find(
+                (item) => item.slot == 9
+            );
         },
         ShowInventory: function() {
             this.inventory_visible = true;
@@ -138,10 +274,6 @@ export default {
             window.console.log("Reorder inventory");
             e.apply(this.inventory_items);
         },
-        onReorderHotbar: function(e) {
-            window.console.log("Reorder hotbar");
-            e.apply(this.hotbar_items);
-        },
         onDropItem: function() {
             window.console.log("Drop item");
         },
@@ -157,6 +289,51 @@ export default {
             window.console.log("Equip item to body");
             this.equipped_body = e.data;
         },
+        onEquipWeapon1: function(e) {
+            window.console.log("Equip weapon1");
+            this.weapon_1 = e.data;
+            window.console.log(e.index, e.type, e.data);
+        },
+        onEquipWeapon2: function(e) {
+            window.console.log("Equip weapon2");
+            this.weapon_2 = e.data;
+            window.console.log(e.index, e.type, e.data);
+        },
+        onEquipWeapon3: function(e) {
+            window.console.log("Equip weapon3");
+            this.weapon_3 = e.data;
+            window.console.log(e.index, e.type, e.data);
+        },
+        onEquipHotbar4: function(e) {
+            window.console.log("Equip item to hotbar4");
+            window.console.log(e.index, e.type, e.data);
+            this.hotbar_4 = e.data;
+        },
+        onEquipHotbar5: function(e) {
+            window.console.log("Equip item to hotbar5");
+            window.console.log(e.index, e.type, e.data);
+            this.hotbar_5 = e.data;
+        },
+        onEquipHotbar6: function(e) {
+            window.console.log("Equip item to hotbar6");
+            window.console.log(e.index, e.type, e.data);
+            this.hotbar_6 = e.data;
+        },
+        onEquipHotbar7: function(e) {
+            window.console.log("Equip item to hotbar7");
+            window.console.log(e.index, e.type, e.data);
+            this.hotbar_7 = e.data;
+        },
+        onEquipHotbar8: function(e) {
+            window.console.log("Equip item to hotbar8");
+            window.console.log(e.index, e.type, e.data);
+            this.hotbar_8 = e.data;
+        },
+        onEquipHotbar9: function(e) {
+            window.console.log("Equip item to hotbar9");
+            window.console.log(e.index, e.type, e.data);
+            this.hotbar_9 = e.data;
+        },
         UpdateInventory: function(e) {
             window.console.log(e);
 
@@ -170,6 +347,18 @@ export default {
 
             this.CallEvent("UpdateInventory", JSON.stringify(data));
         },
+        removeFromInventory: function(e) {
+            window.console.log("removeFromInventory");
+            window.console.log(e.index, e.type, e.data);
+        },
+        removeHotbar4: function(e) {
+            window.console.log("remove hotbar4");
+            window.console.log(e.index, e.type, e.data);
+        },
+        removeHotbar5: function(e) {
+            window.console.log("remove hotbar5");
+            window.console.log(e.index, e.type, e.data);
+        },
     },
     mounted() {
         this.EventBus.$on("SetInventory", this.SetInventory);
@@ -178,17 +367,6 @@ export default {
 
         if (!this.InGame) {
             this.EventBus.$emit("SetInventory", {
-                equipped_head: null,
-                equipped_hands: null,
-                equipped_body: {
-                        index: 7,
-                        item: "vest",
-                        name: "Kevlar Vest",
-                        modelid: 14,
-                        quantity: 1,
-                        type: "equipable",
-                        equipped: true,
-                },
                 inventory_items: [
                     {
                         index: 2,
@@ -197,7 +375,7 @@ export default {
                         modelid: 2,
                         quantity: 1,
                         type: "weapon",
-                        slot: 2,
+                        slot: 1,
                     },
                     {
                         index: 3,
@@ -206,7 +384,7 @@ export default {
                         modelid: 2,
                         quantity: 1,
                         type: "weapon",
-                        slot: 3,
+                        slot: 2,
                     },
                     {
                         index: 5,
@@ -215,7 +393,6 @@ export default {
                         modelid: 694,
                         quantity: 2,
                         type: "resource",
-                        equipped: false,
                     },
                     {
                         index: 6,
@@ -224,7 +401,6 @@ export default {
                         modelid: 627,
                         quantity: 1,
                         type: "resource",
-                        equipped: false,
                     },
                     {
                         index: 7,
@@ -233,7 +409,7 @@ export default {
                         modelid: 14,
                         quantity: 1,
                         type: "equipable",
-                        equipped: true,
+                        bone: "spine_02",
                     },
                     {
                         index: 9,
@@ -242,7 +418,7 @@ export default {
                         modelid: 14,
                         quantity: 2,
                         type: "equipable",
-                        equipped: true,
+                        slot: 6,
                     },
                     {
                         index: 8,
@@ -251,7 +427,6 @@ export default {
                         modelid: 15,
                         quantity: 4,
                         type: "usable",
-                        equipped: false,
                         use_label: "Drink",
                     },
                     {
@@ -261,7 +436,6 @@ export default {
                         modelid: 15,
                         quantity: 4,
                         type: "prop",
-                        equipped: false,
                     },
                 ],
             });
@@ -335,16 +509,22 @@ export default {
     text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
     background: rgba(255, 255, 255, 0.1);
 }
-.equipment-dropzone {
+.drop-area {
     width: 100px;
     height: 100px;
     float: left;
     border: 1px solid #000;
     padding: 5px;
 }
-.drop-area {
-    width: 100%;
-    height: 100%;
-    position: fixed;
+.drop-allowed {
+    background-color: rgba(0, 255, 0, 0.2);
+}
+
+.drop-forbidden {
+    background-color: rgba(255, 0, 0, 0.2);
+}
+
+.drop-in {
+    box-shadow: 0 0 5px rgba(0, 0, 255, 0.4);
 }
 </style>

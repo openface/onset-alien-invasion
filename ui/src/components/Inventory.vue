@@ -53,6 +53,8 @@
                 </drag>
             </drop>
 
+            <div class="spacer" />
+
             <!-- hotbar slots -->
 
             <drop class="drop-area" @drop="onEquipHotbar(4, $event)" :accepts-data="UsableOnHotbar">
@@ -101,7 +103,7 @@ export default {
         Drop,
         DropList,
     },
-    data() {
+    data: function() {
         return {
             weapons: [],
             inventory_items: [],
@@ -113,37 +115,37 @@ export default {
             return this.inventory_items.length > 0;
         },
         equipped_head: function() {
-            return this.inventory_items.find((item) => item.equipped && item.bone == "head");
+            return this.inventory_items.find(item => item.equipped && item.bone == "head");
         },
         equipped_body: function() {
-            return this.inventory_items.find((item) => item.equipped && item.bone == "spine_02");
+            return this.inventory_items.find(item => item.equipped && item.bone == "spine_02");
         },
         weapon_1: function() {
-            return this.inventory_items.find((item) => item.type == "weapon" && item.slot == 1);
+            return this.inventory_items.find(item => item.type == "weapon" && item.slot == 1);
         },
         weapon_2: function() {
-            return this.inventory_items.find((item) => item.type == "weapon" && item.slot == 2);
+            return this.inventory_items.find(item => item.type == "weapon" && item.slot == 2);
         },
         weapon_3: function() {
-            return this.inventory_items.find((item) => item.type == "weapon" && item.slot == 3);
+            return this.inventory_items.find(item => item.type == "weapon" && item.slot == 3);
         },
         hotbar_4: function() {
-            return this.inventory_items.find((item) => item.slot == 4);
+            return this.inventory_items.find(item => item.slot == 4);
         },
         hotbar_5: function() {
-            return this.inventory_items.find((item) => item.slot == 5);
+            return this.inventory_items.find(item => item.slot == 5);
         },
         hotbar_6: function() {
-            return this.inventory_items.find((item) => item.slot == 6);
+            return this.inventory_items.find(item => item.slot == 6);
         },
         hotbar_7: function() {
-            return this.inventory_items.find((item) => item.slot == 7);
+            return this.inventory_items.find(item => item.slot == 7);
         },
         hotbar_8: function() {
-            return this.inventory_items.find((item) => item.slot == 8);
+            return this.inventory_items.find(item => item.slot == 8);
         },
         hotbar_9: function() {
-            return this.inventory_items.find((item) => item.slot == 9);
+            return this.inventory_items.find(item => item.slot == 9);
         },
     },
     methods: {
@@ -163,7 +165,7 @@ export default {
             return item.bone == "spine_02";
         },
         UsableOnHotbar: function(item) {
-            return !this.EquipsToBody(item) && !this.EquipsToHead(item) && (item.type == 'equipable' || item.type == 'usable');
+            return (!this.EquipsToBody(item) && !this.EquipsToHead(item)) && (item.type == 'equipable' || item.type == 'usable');
         },
         onReorderInventory: function(e) {
             window.console.log("Reorder inventory");
@@ -185,20 +187,29 @@ export default {
             window.console.log(e);
         },
         onEquipWeapon: function(slot, e) {
-            window.console.log("Equip weapon slot " + slot);
+            window.console.log("Equip item to weapon slot " + slot);
             window.console.log(e);
 
-            let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
-            this.inventory_items[idx].slot = slot;
+            this.clearInventorySlot(slot);
 
+            let idx = this.inventory_items.findIndex(item => item.index == e.data.index);
+            this.inventory_items[idx].slot = slot;
         },
         onEquipHotbar: function(slot, e) {
-            window.console.log("Equip item to hotbar slot" + slot);
+            window.console.log("Equip item to hotbar slot " + slot);
             window.console.log(e);
 
-            let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
+            this.clearInventorySlot(slot);
+
+            let idx = this.inventory_items.findIndex(item => item.index == e.data.index);
             this.inventory_items[idx].slot = slot;
         },
+        clearInventorySlot: function(slot) {
+            let idx = this.inventory_items.findIndex(item => item.slot == slot);
+            if (idx != -1) {
+                this.inventory_items[idx].slot = null;
+            }
+        }
     },
     mounted() {
         this.EventBus.$on("SetInventory", this.SetInventory);
@@ -224,7 +235,7 @@ export default {
                         modelid: 2,
                         quantity: 1,
                         type: "weapon",
-                        slot: 2,
+                        slot: null,
                     },
                     {
                         index: 5,
@@ -233,6 +244,7 @@ export default {
                         modelid: 694,
                         quantity: 2,
                         type: "resource",
+                        slot: null,
                     },
                     {
                         index: 6,
@@ -241,6 +253,7 @@ export default {
                         modelid: 627,
                         quantity: 1,
                         type: "resource",
+                        slot: null,
                     },
                     {
                         index: 7,
@@ -251,6 +264,7 @@ export default {
                         type: "equipable",
                         bone: "spine_02",
                         equipped: false,
+                        slot: null,
                     },
                     {
                         index: 18,
@@ -261,6 +275,7 @@ export default {
                         type: "equipable",
                         bone: "head",
                         equipped: true,
+                        slot: null,
                     },
                     {
                         index: 9,
@@ -269,8 +284,8 @@ export default {
                         modelid: 14,
                         quantity: 2,
                         type: "equipable",
-                        slot: 6,
                         equipped: false,
+                        slot: 6,
                     },
                     {
                         index: 8,
@@ -280,6 +295,7 @@ export default {
                         quantity: 4,
                         type: "usable",
                         use_label: "Drink",
+                        slot: null,
                     },
                     {
                         index: 10,
@@ -288,6 +304,7 @@ export default {
                         modelid: 15,
                         quantity: 4,
                         type: "prop",
+                        slot: null,
                     },
                 ],
             });
@@ -350,6 +367,9 @@ export default {
     width: 100%;
     position: fixed;
     bottom: 1vh;
+}
+.spacer {
+    width:20px;
 }
 .equipment {
     margin-top: 10px;

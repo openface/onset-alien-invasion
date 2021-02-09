@@ -16,15 +16,8 @@
                         </div>
                     </template>-->
                 </drop-list>
-                <br />
                 <div class="equipment">
                     <div id="title">EQUIPMENT</div>
-                    <div style="float:left;">
-                        HANDS<br />
-                        <drop class="drop-area" @drop="onEquipHands" accepts-type="inventory_item()">
-                            <inventory-item :item="equipped_hands" />
-                        </drop>
-                    </div>
                     <div style="float:left;">
                         HEAD<br />
                         <drop class="drop-area" @drop="onEquipHead" :accepts-data="EquipsToHead">
@@ -44,51 +37,51 @@
         <div id="hotbar">
             <!-- weapon slots -->
 
-            <drop class="drop-area" @drop="onEquipWeapon(1, $event)" mode="cut" accepts-type="weapon">
-                <drag v-if="weapon_1" class="slot" :data="weapon_1" type="weapon" :key="weapon_1.index" @cut="removeWeapon(1, $event)">
+            <drop class="drop-area" @drop="onEquipWeapon(1, $event)" accepts-type="weapon">
+                <drag v-if="weapon_1" class="slot" :data="weapon_1" type="weapon" :key="weapon_1.index">
                     <inventory-item :item="weapon_1" :keybind="weapon_1.slot" />
                 </drag>
             </drop>
-            <drop class="drop-area" @drop="onEquipWeapon(2, $event)" mode="cut" accepts-type="weapon">
-                <drag v-if="weapon_2" class="slot" :data="weapon_2" type="weapon" :key="weapon_2.index" @cut="removeWeapon(2, $event)">
+            <drop class="drop-area" @drop="onEquipWeapon(2, $event)" accepts-type="weapon">
+                <drag v-if="weapon_2" class="slot" :data="weapon_2" type="weapon" :key="weapon_2.index">
                     <inventory-item :item="weapon_2" :keybind="weapon_2.slot" />
                 </drag>
             </drop>
-            <drop class="drop-area" @drop="onEquipWeapon(3, $event)" mode="cut" accepts-type="weapon">
-                <drag v-if="weapon_3" class="slot" :data="weapon_3" type="weapon" :key="weapon_3.index" @cut="removeWeapon(3, $event)">
+            <drop class="drop-area" @drop="onEquipWeapon(3, $event)" accepts-type="weapon">
+                <drag v-if="weapon_3" class="slot" :data="weapon_3" type="weapon" :key="weapon_3.index">
                     <inventory-item :item="weapon_3" :keybind="weapon_3.slot" />
                 </drag>
             </drop>
 
             <!-- hotbar slots -->
 
-            <drop class="drop-area" @drop="onEquipHotbar(4, $event)" mode="cut" :accepts-type="['equipable', 'usable']">
-                <drag v-if="hotbar_4" class="slot" :data="hotbar_4" :type="hotbar_4.type" :key="hotbar_4.index" @cut="removeHotbar(4, $event)">
+            <drop class="drop-area" @drop="onEquipHotbar(4, $event)" :accepts-data="UsableOnHotbar">
+                <drag v-if="hotbar_4" class="slot" :data="hotbar_4" :type="hotbar_4.type" :key="hotbar_4.index">
                     <inventory-item :item="hotbar_4" :keybind="hotbar_4.slot" />
                 </drag>
             </drop>
-            <drop class="drop-area" @drop="onEquipHotbar(5, $event)" mode="cut" :accepts-type="['equipable', 'usable']">
-                <drag v-if="hotbar_5" class="slot" :data="hotbar_5" :type="hotbar_5.type" :key="hotbar_5.index" @cut="removeHotbar(5, $event)">
+            <drop class="drop-area" @drop="onEquipHotbar(5, $event)" :accepts-data="UsableOnHotbar">
+                <drag v-if="hotbar_5" class="slot" :data="hotbar_5" :type="hotbar_5.type" :key="hotbar_5.index">
                     <inventory-item :item="hotbar_5" :keybind="hotbar_5.slot" />
                 </drag>
             </drop>
-            <drop class="drop-area" @drop="onEquipHotbar(6, $event)" :accepts-type="['equipable', 'usable']">
-                <drag v-if="hotbar_6" class="slot" :data="hotbar_6" :type="hotbar_6.type" :key="hotbar_6.index" @cut="removeHotbar(6, $event)">
+            <drop class="drop-area" @drop="onEquipHotbar(6, $event)" :accepts-data="UsableOnHotbar">
+                <drag v-if="hotbar_6" class="slot" :data="hotbar_6" :type="hotbar_6.type" :key="hotbar_6.index">
                     <inventory-item :item="hotbar_6" :keybind="hotbar_6.slot" />
                 </drag>
             </drop>
-            <drop class="drop-area" @drop="onEquipHotbar(7, $event)" :accepts-type="['equipable', 'usable']">
-                <drag v-if="hotbar_7" class="slot" :data="hotbar_7" :type="hotbar_7.type" :key="hotbar_7.index" @cut="removeHotbar(7, $event)">
+            <drop class="drop-area" @drop="onEquipHotbar(7, $event)" :accepts-data="UsableOnHotbar">
+                <drag v-if="hotbar_7" class="slot" :data="hotbar_7" :type="hotbar_7.type" :key="hotbar_7.index">
                     <inventory-item :item="hotbar_7" :keybind="hotbar_7.slot" />
                 </drag>
             </drop>
-            <drop class="drop-area" @drop="onEquipHotbar(8, $event)" :accepts-type="['equipable', 'usable']">
-                <drag v-if="hotbar_8" class="slot" :data="hotbar_8" :type="hotbar_8.type" :key="hotbar_8.index" @cut="removeHotbar(8, $event)">
+            <drop class="drop-area" @drop="onEquipHotbar(8, $event)" :accepts-data="UsableOnHotbar">
+                <drag v-if="hotbar_8" class="slot" :data="hotbar_8" :type="hotbar_8.type" :key="hotbar_8.index">
                     <inventory-item :item="hotbar_8" :keybind="hotbar_8.slot" />
                 </drag>
             </drop>
-            <drop class="drop-area" @drop="onEquipHotbar(9, $event)" :accepts-type="['equipable', 'usable']">
-                <drag v-if="hotbar_9" class="slot" :data="hotbar_9" :type="hotbar_9.type" :key="hotbar_9.index" @cut="removeHotbar(9, $event)">
+            <drop class="drop-area" @drop="onEquipHotbar(9, $event)" :accepts-data="UsableOnHotbar">
+                <drag v-if="hotbar_9" class="slot" :data="hotbar_9" :type="hotbar_9.type" :key="hotbar_9.index">
                     <inventory-item :item="hotbar_9" :keybind="hotbar_9.slot" />
                 </drag>
             </drop>
@@ -118,9 +111,6 @@ export default {
     computed: {
         HasInventory: function() {
             return this.inventory_items.length > 0;
-        },
-        equipped_hands: function() {
-            return this.inventory_items.find((item) => item.equipped && (item.bone == "hand_r" || item.bone == "hand_l"));
         },
         equipped_head: function() {
             return this.inventory_items.find((item) => item.equipped && item.bone == "head");
@@ -167,10 +157,13 @@ export default {
             this.inventory_visible = false;
         },
         EquipsToHead: function(item) {
-            return item.bone == 'head'
+            return item.bone == "head";
         },
         EquipsToBody: function(item) {
-            return item.bone == 'spine_02'
+            return item.bone == "spine_02";
+        },
+        UsableOnHotbar: function(item) {
+            return !this.EquipsToBody(item) && !this.EquipsToHead(item) && (item.type == 'equipable' || item.type == 'usable');
         },
         onReorderInventory: function(e) {
             window.console.log("Reorder inventory");
@@ -183,10 +176,6 @@ export default {
         onDropItem: function() {
             window.console.log("Drop item");
         },
-        onEquipHands: function(e) {
-            window.console.log("Equip item to hands");
-            window.console.log(e);
-        },
         onEquipHead: function(e) {
             window.console.log("Equip item to head");
             window.console.log(e);
@@ -198,18 +187,17 @@ export default {
         onEquipWeapon: function(slot, e) {
             window.console.log("Equip weapon slot " + slot);
             window.console.log(e);
+
+            let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
+            this.inventory_items[idx].slot = slot;
+
         },
         onEquipHotbar: function(slot, e) {
             window.console.log("Equip item to hotbar slot" + slot);
             window.console.log(e);
-        },
-        removeHotbar: function(slot, e) {
-            window.console.log("Remove from hotbar slot" + slot);
-            window.console.log(e);
-        },
-        removeWeapon: function(slot, e) {
-            window.console.log("Remove from weapon slot" + slot);
-            window.console.log(e);
+
+            let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
+            this.inventory_items[idx].slot = slot;
         },
     },
     mounted() {
@@ -364,6 +352,7 @@ export default {
     bottom: 1vh;
 }
 .equipment {
+    margin-top: 10px;
 }
 .drop-area {
     width: 75px;

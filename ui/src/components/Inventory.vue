@@ -1,10 +1,10 @@
 <template>
-    <drop class="item-drop-zone" @drop="onDropItem" :accepts-data="CanBeDropped">
+    <drop class="item-drop-zone" @drop="onDropItem" :accepts-data="CanDropFromInventory">
         <drop-mask class="container">
             <div id="inner" v-if="inventory_visible">
                 <div v-if="HasInventory">
                     <div id="title">INVENTORY</div>
-                    <drop-list :items="inventory_items" class="grid" :accepts-data="DropsOnInventory" @drop="onDropInventory" @reorder="onReorderInventory">
+                    <drop-list :items="inventory_items" class="grid" :accepts-data="CanDropToInventory" @drop="onDropInventory" @reorder="onReorderInventory">
                         <template v-slot:item="{ item }">
                             <drag class="slot" :data="item" :type="item.type" :key="item.index">
                                 <inventory-item :item="item" />
@@ -19,7 +19,7 @@
                         <div id="title">EQUIPMENT</div>
                         <div style="float:left;">
                             HEAD<br />
-                            <drop class="drop-area" @drop="onEquipHead" :accepts-data="EquipsToHead">
+                            <drop class="drop-area" @drop="onEquipHead" :accepts-data="CanEquipToHead">
                                 <drag v-if="equipped_head" class="slot" :data="equipped_head" :key="equipped_head.index">
                                     <inventory-item :item="equipped_head" />
                                 </drag>
@@ -27,7 +27,7 @@
                         </div>
                         <div style="float:left;">
                             BODY<br />
-                            <drop class="drop-area" @drop="onEquipBody" :accepts-data="EquipsToBody">
+                            <drop class="drop-area" @drop="onEquipBody" :accepts-data="CanEquipToBody">
                                 <drag v-if="equipped_body" class="slot" :data="equipped_body" :key="equipped_body.index">
                                     <inventory-item :item="equipped_body" />
                                 </drag>
@@ -40,17 +40,17 @@
             <div id="hotbar">
                 <!-- weapon slots -->
 
-                <drop class="drop-area" @drop="onEquipWeapon(1, $event)" :accepts-data="EquippableWeapon">
+                <drop class="drop-area" @drop="onEquipWeapon(1, $event)" :accepts-data="CanEquipToWeaponSlot">
                     <drag v-if="weapon_1" class="slot" :data="weapon_1" type="weapon" :key="weapon_1.index">
                         <inventory-item :item="weapon_1" :keybind="weapon_1.slot" />
                     </drag>
                 </drop>
-                <drop class="drop-area" @drop="onEquipWeapon(2, $event)" :accepts-data="EquippableWeapon">
+                <drop class="drop-area" @drop="onEquipWeapon(2, $event)" :accepts-data="CanEquipToWeaponSlot">
                     <drag v-if="weapon_2" class="slot" :data="weapon_2" type="weapon" :key="weapon_2.index">
                         <inventory-item :item="weapon_2" :keybind="weapon_2.slot" />
                     </drag>
                 </drop>
-                <drop class="drop-area" @drop="onEquipWeapon(3, $event)" :accepts-data="EquippableWeapon">
+                <drop class="drop-area" @drop="onEquipWeapon(3, $event)" :accepts-data="CanEquipToWeaponSlot">
                     <drag v-if="weapon_3" class="slot" :data="weapon_3" type="weapon" :key="weapon_3.index">
                         <inventory-item :item="weapon_3" :keybind="weapon_3.slot" />
                     </drag>
@@ -60,32 +60,32 @@
 
                 <!-- hotbar slots -->
 
-                <drop class="drop-area" @drop="onEquipHotbar(4, $event)" :accepts-data="UsableOnHotbar">
+                <drop class="drop-area" @drop="onEquipHotbar(4, $event)" :accepts-data="CanEquipToHotbarSlot">
                     <drag v-if="hotbar_4" class="slot" :data="hotbar_4" :type="hotbar_4.type" :key="hotbar_4.index">
                         <inventory-item :item="hotbar_4" :keybind="hotbar_4.slot" />
                     </drag>
                 </drop>
-                <drop class="drop-area" @drop="onEquipHotbar(5, $event)" :accepts-data="UsableOnHotbar">
+                <drop class="drop-area" @drop="onEquipHotbar(5, $event)" :accepts-data="CanEquipToHotbarSlot">
                     <drag v-if="hotbar_5" class="slot" :data="hotbar_5" :type="hotbar_5.type" :key="hotbar_5.index">
                         <inventory-item :item="hotbar_5" :keybind="hotbar_5.slot" />
                     </drag>
                 </drop>
-                <drop class="drop-area" @drop="onEquipHotbar(6, $event)" :accepts-data="UsableOnHotbar">
+                <drop class="drop-area" @drop="onEquipHotbar(6, $event)" :accepts-data="CanEquipToHotbarSlot">
                     <drag v-if="hotbar_6" class="slot" :data="hotbar_6" :type="hotbar_6.type" :key="hotbar_6.index">
                         <inventory-item :item="hotbar_6" :keybind="hotbar_6.slot" />
                     </drag>
                 </drop>
-                <drop class="drop-area" @drop="onEquipHotbar(7, $event)" :accepts-data="UsableOnHotbar">
+                <drop class="drop-area" @drop="onEquipHotbar(7, $event)" :accepts-data="CanEquipToHotbarSlot">
                     <drag v-if="hotbar_7" class="slot" :data="hotbar_7" :type="hotbar_7.type" :key="hotbar_7.index">
                         <inventory-item :item="hotbar_7" :keybind="hotbar_7.slot" />
                     </drag>
                 </drop>
-                <drop class="drop-area" @drop="onEquipHotbar(8, $event)" :accepts-data="UsableOnHotbar">
+                <drop class="drop-area" @drop="onEquipHotbar(8, $event)" :accepts-data="CanEquipToHotbarSlot">
                     <drag v-if="hotbar_8" class="slot" :data="hotbar_8" :type="hotbar_8.type" :key="hotbar_8.index">
                         <inventory-item :item="hotbar_8" :keybind="hotbar_8.slot" />
                     </drag>
                 </drop>
-                <drop class="drop-area" @drop="onEquipHotbar(9, $event)" :accepts-data="UsableOnHotbar">
+                <drop class="drop-area" @drop="onEquipHotbar(9, $event)" :accepts-data="CanEquipToHotbarSlot">
                     <drag v-if="hotbar_9" class="slot" :data="hotbar_9" :type="hotbar_9.type" :key="hotbar_9.index">
                         <inventory-item :item="hotbar_9" :keybind="hotbar_9.slot" />
                     </drag>
@@ -162,22 +162,22 @@ export default {
         HideInventory: function() {
             this.inventory_visible = false;
         },
-        EquipsToHead: function(item) {
+        CanEquipToHead: function(item) {
             return item.bone == "head";
         },
-        EquipsToBody: function(item) {
+        CanEquipToBody: function(item) {
             return item.bone == "spine_02";
         },
-        DropsOnInventory: function() {
+        CanDropToInventory: function() {
             return true;
         },
-        UsableOnHotbar: function(item) {
-            return !this.EquipsToBody(item) && !this.EquipsToHead(item) && (item.type == "equipable" || item.type == "usable");
+        CanEquipToHotbarSlot: function(item) {
+            return !this.CanEquipToBody(item) && !this.CanEquipToHead(item) && (item.type == "equipable" || item.type == "usable");
         },
-        EquippableWeapon: function(item) {
+        CanEquipToWeaponSlot: function(item) {
             return item.type == 'weapon';
         },
-        CanBeDropped: function() {
+        CanDropFromInventory: function() {
             return true;
         },
         onReorderInventory: function(e) {

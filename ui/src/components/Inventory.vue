@@ -29,6 +29,14 @@
 
                         <div class="equipped-slots">
                             <div>
+                                HANDS<br />
+                                <drop class="drop-area" @drop="onEquipHands" :accepts-data="CanEquipToHands">
+                                    <drag v-if="equipped_hands" :data="equipped_hands" :key="equipped_hands.index">
+                                        <inventory-item :item="equipped_hands" />
+                                    </drag>
+                                </drop>
+                            </div>
+                            <div>
                                 HEAD<br />
                                 <drop class="drop-area" @drop="onEquipHead" :accepts-data="CanEquipToHead">
                                     <drag v-if="equipped_head" :data="equipped_head" :key="equipped_head.index">
@@ -130,6 +138,9 @@ export default {
         HasInventory: function() {
             return this.inventory_items.length > 0;
         },
+        equipped_hands: function() {
+            return this.inventory_items.find((item) => item.equipped && (item.bone == "hand_l" || item.bone == "hand_r"));
+        },
         equipped_head: function() {
             return this.inventory_items.find((item) => item.equipped && item.bone == "head");
         },
@@ -174,6 +185,9 @@ export default {
         HideInventory: function() {
             this.inventory_visible = false;
         },
+        CanEquipToHands: function(item) {
+            return item.bone == "hand_l" || item.bone == "hand_r";
+        },
         CanEquipToHead: function(item) {
             return item.bone == "head";
         },
@@ -203,6 +217,15 @@ export default {
             let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
             if (idx > -1) {
                 this.inventory_items.splice(idx, 1);
+            }
+        },
+        onEquipHands: function(e) {
+            window.console.log("Equip item to hands");
+            window.console.log(e);
+
+            let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
+            if (idx > -1) {
+                this.inventory_items[idx].equipped = true;
             }
         },
         onEquipHead: function(e) {
@@ -271,6 +294,7 @@ export default {
                         modelid: 2,
                         quantity: 1,
                         type: "weapon",
+                        equipped: false,
                         slot: 1,
                     },
                     {
@@ -280,6 +304,7 @@ export default {
                         modelid: 2,
                         quantity: 1,
                         type: "weapon",
+                        equipped: false,
                         slot: null,
                     },
                     {
@@ -289,6 +314,7 @@ export default {
                         modelid: 694,
                         quantity: 2,
                         type: "resource",
+                        equipped: false,
                         slot: null,
                     },
                     {
@@ -298,6 +324,7 @@ export default {
                         modelid: 627,
                         quantity: 1,
                         type: "resource",
+                        equipped: false,
                         slot: null,
                     },
                     {
@@ -340,6 +367,7 @@ export default {
                         quantity: 4,
                         type: "usable",
                         use_label: "Drink",
+                        equipped: false,
                         slot: null,
                     },
                     {
@@ -349,8 +377,20 @@ export default {
                         modelid: 15,
                         quantity: 4,
                         type: "prop",
+                        equipped: false,
                         slot: null,
                     },
+                    {
+                        index: 11,
+                        item: "chainsaw",
+                        name: "Chainsaw",
+                        modelid: 15,
+                        quantity: 1,
+                        type: "usable",
+                        bone: "hand_r",
+                        equipped: false,
+                        slot: null,
+                    }
                 ],
             });
 

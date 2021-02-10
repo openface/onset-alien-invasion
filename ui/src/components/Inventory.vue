@@ -22,13 +22,17 @@
                         <div style="float:left;">
                             HEAD<br />
                             <drop class="drop-area" @drop="onEquipHead" :accepts-data="EquipsToHead">
-                                <inventory-item :item="equipped_head" />
+                                <drag v-if="equipped_head" class="slot" :data="equipped_head" :key="equipped_head.index">
+                                    <inventory-item :item="equipped_head" />
+                                </drag>
                             </drop>
                         </div>
                         <div style="float:left;">
                             BODY<br />
                             <drop class="drop-area" @drop="onEquipBody" :accepts-data="EquipsToBody">
-                                <inventory-item :item="equipped_body" />
+                                <drag v-if="equipped_body" class="slot" :data="equipped_body" :key="equipped_body.index">
+                                    <inventory-item :item="equipped_body" />
+                                </drag>
                             </drop>
                         </div>
                     </div>
@@ -191,10 +195,20 @@ export default {
         onEquipHead: function(e) {
             window.console.log("Equip item to head");
             window.console.log(e);
+
+            let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
+            if (idx > -1) {
+                this.inventory_items[idx].equipped = true;
+            }
         },
         onEquipBody: function(e) {
             window.console.log("Equip item to body");
             window.console.log(e);
+
+            let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
+            if (idx > -1) {
+                this.inventory_items[idx].equipped = true;
+            }
         },
         onEquipWeapon: function(slot, e) {
             window.console.log("Equip item to weapon slot " + slot);
@@ -284,7 +298,7 @@ export default {
                         quantity: 1,
                         type: "equipable",
                         bone: "head",
-                        equipped: true,
+                        equipped: false,
                         slot: null,
                     },
                     {

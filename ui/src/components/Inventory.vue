@@ -112,7 +112,36 @@
                 </drop>
             </div>
             <div v-else id="hotbar">
-                NORMAL HOTBAR
+                <div class="drop-area">
+                    <inventory-item :item="weapon_1" :keybind="weapon_1.slot" v-if="weapon_1" />
+                </div>
+                <div class="drop-area">
+                    <inventory-item :item="weapon_2" :keybind="weapon_2.slot" v-if="weapon_2" />
+                </div>                
+                <div class="drop-area">
+                    <inventory-item :item="weapon_3" :keybind="weapon_3.slot" v-if="weapon_3" />
+                </div>
+
+                <div class="spacer" />
+
+                <div class="drop-area">
+                    <inventory-item :item="hotbar_4" :keybind="hotbar_4.slot" v-if="hotbar_4" />
+                </div>
+                <div class="drop-area">
+                    <inventory-item :item="hotbar_5" :keybind="hotbar_5.slot" v-if="hotbar_5" />
+                </div>
+                <div class="drop-area">
+                    <inventory-item :item="hotbar_6" :keybind="hotbar_6.slot" v-if="hotbar_6" />
+                </div>
+                <div class="drop-area">
+                    <inventory-item :item="hotbar_7" :keybind="hotbar_7.slot" v-if="hotbar_7" />
+                </div>
+                <div class="drop-area">
+                    <inventory-item :item="hotbar_8" :keybind="hotbar_8.slot" v-if="hotbar_8" />
+                </div>
+                <div class="drop-area">
+                    <inventory-item :item="hotbar_9" :keybind="hotbar_9.slot" v-if="hotbar_9" />
+                </div>
             </div>
         </drop-mask>
     </drop>

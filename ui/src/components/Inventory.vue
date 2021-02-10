@@ -139,7 +139,7 @@ export default {
             return this.inventory_items.length > 0;
         },
         equipped_hands: function() {
-            return this.inventory_items.find((item) => item.equipped && (item.bone == "hand_l" || item.bone == "hand_r"));
+            return this.inventory_items.find((item) => item.equipped && (item.type == "weapon" || (item.bone == "hand_l" || item.bone == "hand_r")));
         },
         equipped_head: function() {
             return this.inventory_items.find((item) => item.equipped && item.bone == "head");
@@ -186,7 +186,7 @@ export default {
             this.inventory_visible = false;
         },
         CanEquipToHands: function(item) {
-            return item.bone == "hand_l" || item.bone == "hand_r";
+            return item.type == 'weapon' || (item.bone == "hand_l" || item.bone == "hand_r");
         },
         CanEquipToHead: function(item) {
             return item.bone == "head";
@@ -223,7 +223,12 @@ export default {
             window.console.log("Equip item to hands");
             window.console.log(e);
 
-            let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
+            let idx = this.inventory_items.indexOf(this.equipped_hands);
+            if (idx > -1) {
+                this.inventory_items[idx].equipped = false;
+            }
+
+            idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
             if (idx > -1) {
                 this.inventory_items[idx].equipped = true;
             }
@@ -232,7 +237,12 @@ export default {
             window.console.log("Equip item to head");
             window.console.log(e);
 
-            let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
+            let idx = this.inventory_items.indexOf(this.equipped_head);
+            if (idx > -1) {
+                this.inventory_items[idx].equipped = false;
+            }
+
+            idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
             if (idx > -1) {
                 this.inventory_items[idx].equipped = true;
             }
@@ -241,7 +251,12 @@ export default {
             window.console.log("Equip item to body");
             window.console.log(e);
 
-            let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
+            let idx = this.inventory_items.indexOf(this.equipped_body);
+            if (idx > -1) {
+                this.inventory_items[idx].equipped = false;
+            }
+
+            idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
             if (idx > -1) {
                 this.inventory_items[idx].equipped = true;
             }
@@ -276,7 +291,6 @@ export default {
 
             let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
             this.inventory_items[idx].equipped = false;
-            this.inventory_items[idx].slot = null;
         },
     },
     mounted() {
@@ -294,7 +308,7 @@ export default {
                         modelid: 2,
                         quantity: 1,
                         type: "weapon",
-                        equipped: false,
+                        equipped: true,
                         slot: 1,
                     },
                     {
@@ -367,6 +381,7 @@ export default {
                         quantity: 4,
                         type: "usable",
                         use_label: "Drink",
+                        bone: "hand_r",
                         equipped: false,
                         slot: null,
                     },
@@ -377,6 +392,7 @@ export default {
                         modelid: 15,
                         quantity: 4,
                         type: "prop",
+                        bone: null,
                         equipped: false,
                         slot: null,
                     },
@@ -390,6 +406,17 @@ export default {
                         bone: "hand_r",
                         equipped: false,
                         slot: null,
+                    },
+                    {
+                        index: 12,
+                        item: "headphones",
+                        name: "Headphones",
+                        modelid:15,
+                        quantity: 1,
+                        type: "equipable",
+                        bone: "head",
+                        equipped: false,
+                        slot: null
                     }
                 ],
             });

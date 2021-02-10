@@ -241,6 +241,8 @@ export default {
         onReorderInventory: function(e) {
             window.console.log("Reorder inventory");
             e.apply(this.inventory_items);
+
+            this.CallEvent("UpdateInventory", JSON.stringify(this.inventory_items));
         },
         onDropItem: function(e) {
             window.console.log("Drop item");

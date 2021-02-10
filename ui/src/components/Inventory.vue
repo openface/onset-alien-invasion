@@ -4,18 +4,16 @@
             <div id="inner" v-if="inventory_visible">
                 <div v-if="HasInventory">
                     <div id="title">INVENTORY</div>
-                    <drop-list :items="inventory_items" class="grid" @reorder="onReorderInventory" accepts-type="weapon">
+                    <drop-list :items="inventory_items" class="grid" :accepts-data="DropsOnInventory" @drop="onDropInventory" @reorder="onReorderInventory">
                         <template v-slot:item="{ item }">
                             <drag class="slot" :data="item" :type="item.type" :key="item.index">
                                 <inventory-item :item="item" />
                             </drag>
                         </template>
 
-                        <!--<template v-slot:feedback="{ data }">
-                        <div class="item feedback" :key="data.index">
-                            <img :src="getImageUrl(data.item)" />
-                        </div>
-                    </template>-->
+                        <template v-slot:feedback="{ data }">
+                            <div class="feedback" :key="'feedback_' + data.index"></div>
+                        </template>
                     </drop-list>
                     <div class="equipment">
                         <div id="title">EQUIPMENT</div>
@@ -170,6 +168,9 @@ export default {
         EquipsToBody: function(item) {
             return item.bone == "spine_02";
         },
+        DropsOnInventory: function() {
+            return true;
+        },
         UsableOnHotbar: function(item) {
             return !this.EquipsToBody(item) && !this.EquipsToHead(item) && (item.type == "equipable" || item.type == "usable");
         },
@@ -234,6 +235,14 @@ export default {
                 this.inventory_items[idx].slot = null;
             }
         },
+        onDropInventory: function(e) {
+            window.console.log("Drop item back to inventory")
+            window.console.log(e)
+
+            let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
+            this.inventory_items[idx].equipped = false;
+            this.inventory_items[idx].slot = null;
+        }
     },
     mounted() {
         this.EventBus.$on("SetInventory", this.SetInventory);

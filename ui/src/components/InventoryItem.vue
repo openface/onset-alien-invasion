@@ -24,7 +24,7 @@ export default {
 <style>
 .item {
     background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.3);
     position: relative;
     font-family: Helvetica;
     width: 75px;

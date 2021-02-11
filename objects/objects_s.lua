@@ -30,6 +30,13 @@ function GetItemType(item)
     end
 end
 
+function GetItemAttachmentBone(item)
+    local item_cfg = GetItemConfig(item)
+    if item_cfg and item_cfg['attachment'] then
+        return item_cfg['attachment']['bone']
+    end
+end
+
 -- 
 function PlayInteraction(player, item, after_use_callback)
     log.debug("Playing interaction for item "..item)

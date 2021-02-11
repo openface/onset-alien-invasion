@@ -1,14 +1,12 @@
 -- get inventory data and send to UI
 function SyncInventory(player)
-    local inventory = PlayerData[player].inventory
-    local weapons = PlayerData[player].weapons
+    local inventory_items = PlayerData[player].inventory
 
     local _send = {
-        weapons = {},
-        items = {}
+        inventory_items = {}
     }
     -- weapons
-    for index, weapon in ipairs(weapons) do
+--[[     for index, weapon in ipairs(weapons) do
         table.insert(_send.weapons, {
             ['index'] = index,
             ['item'] = weapon['item'],
@@ -18,11 +16,10 @@ function SyncInventory(player)
             ['slot'] = weapon['slot']
         })
     end
-
+ ]]
     -- inventory
-    for index, item in ipairs(inventory) do
-        -- usable, equipable, resource
-        table.insert(_send.items, {
+    for index, item in ipairs(inventory_items) do
+        table.insert(_send.inventory_items, {
             ['index'] = index,
             ['item'] = item['item'],
             ['name'] = item['name'],
@@ -30,9 +27,11 @@ function SyncInventory(player)
             ['image'] = item['image'],
             ['quantity'] = item['quantity'],
             ['type'] = item['type'],
+            ['bone'] = GetItemAttachmentBone(item['item']),
             ['equipped'] = IsItemEquipped(player, item['item']),
             ['use_label'] = item['use_label'],
-            ['used'] = item['used']
+            ['used'] = item['used'],
+            ['slot'] = item['slot'],
         })
     end
     CallRemoteEvent(player, "SetInventory", json_encode(_send))
@@ -65,7 +64,8 @@ function AddToInventory(player, item)
             image = item_cfg['image'],
             use_label = item_cfg['use_label'],
             quantity = 1,
-            used = 0
+            used = 0,
+            slot = nil,
         })
         PlayerData[player].inventory = inventory
     end
@@ -261,6 +261,7 @@ AddRemoteEvent("EquipItemFromInventory", function(player, item)
 end)
 
 -- updates inventory from inventory UI sorting
+-- recreates the inventory with new indexes
 AddRemoteEvent("UpdateInventory", function(player, data)
     local items = json_decode(data)
     log.debug(GetPlayerName(player) .. " updating inventory:", dump(items))
@@ -270,21 +271,24 @@ AddRemoteEvent("UpdateInventory", function(player, data)
 
     for _, item in pairs(items) do
         local item_cfg = GetItemConfig(item.item)
-        new_inventory[item.index] = {
-            item = item.item,
-            quantity = item.quantity,
-            type = item_cfg['type'],
-            name = item_cfg['name'],
-            modelid = item_cfg['modelid'],
-            image = item_cfg['image'],
-            used = 0
-        }
+        if item_cfg then
+            table.insert(new_inventory, {
+                item = item.item,
+                quantity = item.quantity,
+                type = item_cfg['type'],
+                name = item_cfg['name'],
+                modelid = item_cfg['modelid'],
+                image = item_cfg['image'],
+                slot = item.slot,
+                used = 0
+            })
+        end
     end
     log.trace("NEW INVENTORY", dump(new_inventory))
     PlayerData[player].inventory = new_inventory
 
     CheckEquippedFromInventory(player)
-    CallEvent("SyncInventory", player)
+    --CallEvent("SyncInventory", player)
 end)
 
 -- unequip from inventory
@@ -297,6 +301,7 @@ end)
 AddEvent("OnPlayerDeath", function(player, killer)
     PlayerData[player].inventory = {}
     PlayerData[player].weapons = {}
+    PlayerData[player].equipped = {}
 
     CallEvent("SyncInventory", player)
 end)
@@ -309,20 +314,14 @@ end)
 -- item hotkeys
 AddRemoteEvent("UseItemHotkey", function(player, key)
     local inventory = PlayerData[player].inventory
-
-    -- find valid hotbar items
-    local usable_items = {}
     for i, item in ipairs(inventory) do
-        if item['type'] == 'usable' or item['type'] == 'equipable' then
-            table.insert(usable_items, item['item'])
+        log.debug(item)
+        log.debug(key)
+        if tostring(item['slot']) == key then
+            log.debug("hit",item['item'])
+            UseItemFromInventory(player, item['item'])
+            return
         end
-    end
-
-    -- use it by index (1-3 are reserved for weapons)
-    local item = usable_items[key - 3]
-    if item ~= nil then
-        log.debug("Hotkey", item)
-        UseItemFromInventory(player, item)
     end
 end)
 

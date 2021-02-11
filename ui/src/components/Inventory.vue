@@ -1,5 +1,5 @@
 <template>
-    <drop class="item-drop-zone" @drop="onDropItem" :accepts-data="CanDropFromInventory">
+    <drop class="item-drop-zone" @drop="onDropFromInventory" :accepts-data="CanDropFromInventory">
         <drop-mask class="container">
             <div id="inner" v-if="inventory_visible">
                 <div v-if="HasInventory">
@@ -10,7 +10,7 @@
                             :items="inventory_items"
                             class="inventory_items"
                             :accepts-data="CanDropToInventory"
-                            @drop="onDropInventory"
+                            @drop="onDropToInventory"
                             @reorder="onReorderInventory"
                         >
                             <template v-slot:item="{ item }">
@@ -244,18 +244,17 @@ export default {
 
             this.CallEvent("UpdateInventory", JSON.stringify(this.inventory_items));
         },
-        onDropItem: function(e) {
-            window.console.log("Drop item");
-            window.console.log(e);
+        onDropFromInventory: function(e) {
+            window.console.log("Drop item from inventory", e.data);
 
             let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
             if (idx > -1) {
+                this.CallEvent("DropItem", this.inventory_items[idx].item);
                 this.inventory_items.splice(idx, 1);
             }
         },
         onEquipHands: function(e) {
-            window.console.log("Equip item to hands");
-            window.console.log(e);
+            window.console.log("Equip item to hands", e.data);
 
             let idx = this.inventory_items.indexOf(this.equipped_hands);
             if (idx > -1) {
@@ -265,11 +264,11 @@ export default {
             idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
             if (idx > -1) {
                 this.inventory_items[idx].equipped = true;
+                this.CallEvent("EquipItem", this.inventory_items[idx].item);
             }
         },
         onEquipHead: function(e) {
-            window.console.log("Equip item to head");
-            window.console.log(e);
+            window.console.log("Equip item to head", e.data);
 
             let idx = this.inventory_items.indexOf(this.equipped_head);
             if (idx > -1) {
@@ -279,11 +278,11 @@ export default {
             idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
             if (idx > -1) {
                 this.inventory_items[idx].equipped = true;
+                this.CallEvent("EquipItem", this.inventory_items[idx].item);
             }
         },
         onEquipBody: function(e) {
-            window.console.log("Equip item to body");
-            window.console.log(e);
+            window.console.log("Equip item to body", e.data);
 
             let idx = this.inventory_items.indexOf(this.equipped_body);
             if (idx > -1) {
@@ -293,25 +292,29 @@ export default {
             idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
             if (idx > -1) {
                 this.inventory_items[idx].equipped = true;
+                this.CallEvent("EquipItem", this.inventory_items[idx].item);
             }
         },
         onEquipWeapon: function(slot, e) {
-            window.console.log("Equip item to weapon slot " + slot);
-            window.console.log(e);
+            window.console.log("Equip item to weapon slot " + slot, e.data);
 
             this.clearInventorySlot(slot);
 
             let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
-            this.inventory_items[idx].slot = slot;
+            if (idx > -1) {
+                this.inventory_items[idx].slot = slot;
+                this.CallEvent("EquipWeaponSlot", slot);
+            }
         },
         onEquipHotbar: function(slot, e) {
-            window.console.log("Equip item to hotbar slot " + slot);
-            window.console.log(e);
+            window.console.log("Equip item to hotbar slot " + slot, e.data);
 
             this.clearInventorySlot(slot);
 
             let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
             this.inventory_items[idx].slot = slot;
+
+            this.CallEvent("UpdateInventory", JSON.stringify(this.inventory_items));
         },
         clearInventorySlot: function(slot) {
             let idx = this.inventory_items.findIndex((item) => item.slot == slot);
@@ -319,12 +322,14 @@ export default {
                 this.inventory_items[idx].slot = null;
             }
         },
-        onDropInventory: function(e) {
-            window.console.log("Drop item back to inventory");
-            window.console.log(e);
+        onDropToInventory: function(e) {
+            window.console.log("Drop item back to inventory", e.data);
 
             let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
-            this.inventory_items[idx].equipped = false;
+            if (idx > -1) {
+                this.inventory_items[idx].equipped = false;
+                this.CallEvent("UnequipItem", this.inventory_items[idx].item);
+            }
         },
     },
     mounted() {
@@ -404,6 +409,7 @@ export default {
                         modelid: 14,
                         quantity: 2,
                         type: "equipable",
+                        bone: "hand_r",
                         equipped: false,
                         slot: 6,
                     },

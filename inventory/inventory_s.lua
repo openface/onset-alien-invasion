@@ -288,7 +288,7 @@ AddRemoteEvent("UpdateInventory", function(player, data)
     PlayerData[player].inventory = new_inventory
 
     CheckEquippedFromInventory(player)
-    --CallEvent("SyncInventory", player)
+    CallEvent("SyncInventory", player)
 end)
 
 -- unequip from inventory

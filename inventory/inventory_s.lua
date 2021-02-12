@@ -132,7 +132,7 @@ function RemoveFromInventory(player, item, amount)
         log.debug("items:" .. item .. ":drop")
 
         if item_cfg['type'] == 'equipable' or item_cfg['type'] == 'weapon' then
-            UnequipObject(player, item)
+            UnequipItem(player, item)
         end
     end
 
@@ -216,7 +216,7 @@ function UseItemFromInventory(player, item, options)
         -- auto-unequip after use unless item is equipable
         if item_cfg['type'] ~= 'equipable' then
             log.debug("item not equipable, unequipping after use")
-            UnequipObject(player, item)
+            UnequipItem(player, item)
         end
 
         -- call USE event on object
@@ -287,7 +287,7 @@ end)
 
 -- unequip from inventory
 AddRemoteEvent("UnequipItemFromInventory", function(player, item)
-    UnequipObject(player, item)
+    UnequipItem(player, item)
     CallEvent("SyncInventory", player)
 end)
 

@@ -33,7 +33,7 @@ function EquipObject(player, item)
     -- equipable items can be toggled via hotkey
     if item_cfg['type'] == 'equipable' and GetEquippedObject(player, item) ~= nil then
         log.debug "already equipped; unequipping..."
-        UnequipObject(player, item)
+        UnequipItem(player, item)
         return
     end
 
@@ -117,15 +117,26 @@ end
 -- returns unequipped item or nil
 function UnequipFromBone(player, bone)
     -- unequip whatever is in the player's bone
-    local equipped_item = GetEquippedObjectNameFromBone(player, bone)
+    local equipped_item = GetEquippedItemNameFromBone(player, bone)
     if equipped_item ~= nil then
         log.debug("Bone " .. bone .. " is already equipped, unequipping...")
-        UnequipObject(player, equipped_item)
+        UnequipItem(player, equipped_item)
     end
 end
 
 -- Unequips objects or weapons from player
-function UnequipObject(player, item)
+function UnequipItem(player, item)
+    local item_cfg = GetItemConfig(item)
+    if not item_cfg then
+        return
+    end
+
+    if item_cfg['type'] == 'weapon' then
+        UnequipWeapon(player, item)
+        return
+    end
+
+    -- item is attached object to player
     local object = GetEquippedObject(player, item)
     if not object then
         log.warn "item not equipped"
@@ -145,11 +156,7 @@ function UnequipObject(player, item)
 
     log.trace("EQUIPPED: ", dump(equipped))
 
-    if item_cfg['type'] == 'weapon' then
-        UnequipWeapon(player, item)
-    else
-        DestroyObject(object)
-    end
+    DestroyObject(object)
 
     log.debug(GetPlayerName(player).. " unequipped item "..item)
 
@@ -174,7 +181,7 @@ function IsItemEquipped(player, item)
     end
 end
 
-function GetEquippedObjectNameFromBone(player, bone)
+function GetEquippedItemNameFromBone(player, bone)
     local equipped = PlayerData[player].equipped
     for item, object in pairs(equipped) do
         if object == true then
@@ -196,7 +203,7 @@ function CheckEquippedFromInventory(player)
   for item,_ in pairs(equipped) do
     if GetInventoryCount(player,item) == 0 then
       log.debug("Unequipping item "..item.." no longer in inventory")
-      UnequipObject(player, item)
+      UnequipItem(player, item)
     end
   end
 end

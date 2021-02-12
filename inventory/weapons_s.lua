@@ -93,7 +93,7 @@ function ClearAllWeaponSlots(player)
 end
 
 -- equips weapon by item and adds to weapon slot
-function EquipWeaponFromInventory(player, item, equip)
+function AddWeaponFromInventory(player, item, equip)
     local inventory = PlayerData[player].inventory
     local slot
     for i, _item in ipairs(inventory) do
@@ -122,14 +122,19 @@ function GetNextAvailableWeaponSlot(player)
     end
 end
 
-function GetCurrentWeaponItem(player)
+--[[ function GetCurrentWeaponItem(player)
     local slot = GetPlayerEquippedWeaponSlot(player)
+    log.debug("CURRENT WEAPON SLOT",slot)
     local inventory = PlayerData[player].inventory
     for i,item in ipairs(inventory) do
         if item['slot'] == slot then
             return item['item']
         end
     end
+end ]]
+
+function IsWeaponEquipped(player, item)
+    return PlayerData[player].equipped[item] or nil
 end
 
 -- switch to fists if weapon is equipped for given weapon/item

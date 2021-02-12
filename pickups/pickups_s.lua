@@ -94,13 +94,5 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
     AddToInventory(player, item)
     DestroyText3D(GetPickupPropertyValue(pickup, '_text'))
     DestroyPickup(pickup)
-
-    -- auto-equip weapon if slot is available
-    if WeaponsConfig[item] then
-        local next_weapon_slot = GetNextAvailableWeaponSlot(player)
-        if next_weapon_slot then
-            EquipWeaponFromInventory(player, item, true)
-        end
-    end
 end)
 

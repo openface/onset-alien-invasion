@@ -1,7 +1,7 @@
 -- get inventory data and send to UI
 function SyncInventory(player)
     local inventory_items = PlayerData[player].inventory
-    log.trace("INVENTORY SYNC ("..GetPlayerName(player).."): " .. dump(inventory_items))
+    log.trace("INVENTORY ITEMS ("..GetPlayerName(player).."): " .. dump(inventory_items))
 
     local _send = {
         inventory_items = {}
@@ -24,6 +24,7 @@ function SyncInventory(player)
             ['slot'] = item['slot'],
         })
     end
+    log.trace("INVENTORY SYNC ("..GetPlayerName(player).."): " .. json_encode(_send))
     CallRemoteEvent(player, "SetInventory", json_encode(_send))
 end
 AddRemoteEvent("SyncInventory", SyncInventory)
@@ -60,8 +61,9 @@ function AddToInventory(player, item)
     end
 
     -- auto-equip when added
-    if item_cfg['type'] == 'equipable' and item_cfg['auto_equip'] == true then
-        EquipObject(player, item)
+    if item_cfg['auto_equip'] == true and (item_cfg['type'] == 'equipable' or item_cfg['type'] == 'weapon') then
+        log.debug("Auto-equipping item",item)
+        EquipItem(player, item)
     end
 
     CallEvent("SyncInventory", player)
@@ -196,7 +198,7 @@ function UseItemFromInventory(player, item, options)
 
     -- equipable items get equipped and that's it
     if item_cfg['type'] == 'equipable' then
-        EquipObject(player, item)
+        EquipItem(player, item)
         return
     end
 
@@ -205,7 +207,7 @@ function UseItemFromInventory(player, item, options)
         return
     end
 
-    EquipObject(player, item)
+    EquipItem(player, item)
 
     PlayInteraction(player, item, function()
         -- increment used
@@ -236,7 +238,7 @@ end
 
 -- equip from inventory
 AddRemoteEvent("EquipItemFromInventory", function(player, item)
-    EquipObject(player, item)
+    EquipItem(player, item)
     CallEvent("SyncInventory", player)
 end)
 
@@ -248,7 +250,7 @@ function SetWeaponSlotsFromInventory(player)
     local inventory = PlayerData[player].inventory
     for i, _item in ipairs(inventory) do
         if _item['slot'] == 1 or _item['slot'] == 2 or _item['slot'] == 3 then
-            EquipWeaponFromInventory(player, _item['item'], false)            
+            AddWeaponFromInventory(player, _item['item'], false)
         end
     end
 end

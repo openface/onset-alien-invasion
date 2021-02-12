@@ -22,7 +22,7 @@ function SyncEquipped(player)
     end
 end
 
-function EquipObject(player, item)
+function EquipItem(player, item)
     local item_cfg = GetItemConfig(item)
 
     if item_cfg['attachment'] == nil and item_cfg['type'] ~= 'weapon' then
@@ -81,13 +81,12 @@ function EquipObject(player, item)
 end
 
 -- attaches object or weapon to player
--- TODO: refactor out this so that it only works with items not weapons
+-- TODO: refactor into EquipItem function
 function AttachItemToPlayer(player, item)
     local item_cfg = GetItemConfig(item)
 
     if item_cfg['type'] == 'weapon' then
-        log.debug('here')
-        EquipWeaponFromInventory(player, item, true)
+        AddWeaponFromInventory(player, item, false)
         return true
     end
 
@@ -131,11 +130,6 @@ function UnequipItem(player, item)
         return
     end
 
-    if item_cfg['type'] == 'weapon' then
-        UnequipWeapon(player, item)
-        return
-    end
-
     -- item is attached object to player
     local object = GetEquippedObject(player, item)
     if not object then
@@ -147,8 +141,6 @@ function UnequipItem(player, item)
     -- cancel any currently running animations
     SetPlayerAnimation(player, "STOP")
 
-    local item_cfg = GetItemConfig(item)
-
     -- remove from equipped list
     local equipped = PlayerData[player].equipped
     equipped[item] = nil
@@ -156,9 +148,13 @@ function UnequipItem(player, item)
 
     log.trace("EQUIPPED: ", dump(equipped))
 
-    DestroyObject(object)
+    if item_cfg['type'] == 'weapon' then
+        UnequipWeapon(player, item)
+    else
+        DestroyObject(object)
+    end
 
-    log.debug(GetPlayerName(player).. " unequipped item "..item)
+    log.debug(GetPlayerName(player) .. " unequipped item " .. item)
 
     -- call UNEQUIP event on object
     CallEvent("items:" .. item .. ":unequip", player, object)
@@ -173,7 +169,7 @@ end
 
 function IsItemEquipped(player, item)
     if WeaponsConfig[item] then
-        return GetCurrentWeaponItem(player) == item
+        return IsWeaponEquipped(player, item)
     elseif GetEquippedObject(player, item) ~= nil then
         return true
     else
@@ -197,13 +193,13 @@ end
 
 -- unequip items no longer in player inventory
 function CheckEquippedFromInventory(player)
-  local equipped = PlayerData[player].equipped
-  local inventory = PlayerData[player].inventory
+    local equipped = PlayerData[player].equipped
+    local inventory = PlayerData[player].inventory
 
-  for item,_ in pairs(equipped) do
-    if GetInventoryCount(player,item) == 0 then
-      log.debug("Unequipping item "..item.." no longer in inventory")
-      UnequipItem(player, item)
+    for item, _ in pairs(equipped) do
+        if GetInventoryCount(player, item) == 0 then
+            log.debug("Unequipping item " .. item .. " no longer in inventory")
+            UnequipItem(player, item)
+        end
     end
-  end
 end

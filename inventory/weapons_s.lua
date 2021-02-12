@@ -55,6 +55,9 @@ function GetNextAvailableWeaponSlot(player)
 end
 
 -- switch to fists if weapon is equipped for given weapon/item
+-- Onset treats fists as weapons, so there is no way to unequip a slotted weapon
+-- without switching the slot to fists for now.
+-- Storing PlayerData[player].weapons would be a way around this
 function UnequipWeapon(player, item)
     for slot = 1, 3 do
         local weapon_id, ammo = GetPlayerWeapon(player, slot)

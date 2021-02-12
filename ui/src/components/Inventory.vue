@@ -303,7 +303,7 @@ export default {
             let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
             if (idx > -1) {
                 this.inventory_items[idx].slot = slot;
-                this.CallEvent("EquipWeaponSlot", slot);
+                this.CallEvent("UpdateInventory", JSON.stringify(this.inventory_items));
             }
         },
         onEquipHotbar: function(slot, e) {
@@ -312,9 +312,10 @@ export default {
             this.clearInventorySlot(slot);
 
             let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
-            this.inventory_items[idx].slot = slot;
-
-            this.CallEvent("UpdateInventory", JSON.stringify(this.inventory_items));
+            if (idx > -1) {
+                this.inventory_items[idx].slot = slot;
+                this.CallEvent("UpdateInventory", JSON.stringify(this.inventory_items));
+            }
         },
         clearInventorySlot: function(slot) {
             let idx = this.inventory_items.findIndex((item) => item.slot == slot);

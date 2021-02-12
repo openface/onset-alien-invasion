@@ -20,13 +20,9 @@ AddEvent("OnPackageStop", function()
 end)
 
 function GetItemType(item)
-    if WeaponsConfig[item] then
-        return 'weapon'
-    else
-        local item_cfg = GetItemConfig(item)
-        if item_cfg then
-            return item_cfg['type']
-        end
+    local item_cfg = GetItemConfig(item)
+    if item_cfg then
+        return item_cfg['type']
     end
 end
 
@@ -39,7 +35,7 @@ end
 
 -- 
 function PlayInteraction(player, item, after_use_callback)
-    log.debug("Playing interaction for item "..item)
+    log.debug("Playing interaction for item " .. item)
     local item_cfg = GetItemConfig(item)
     if not item_cfg['interaction'] then
         if after_use_callback then

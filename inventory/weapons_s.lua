@@ -23,73 +23,31 @@ WeaponsConfig = {
 -- replace all weapon slots for all players to fists
 AddEvent("OnPackageStop", function()
     for _, player in pairs(GetAllPlayers()) do
-        for i = 1, 3 do
-            WeaponPatch.SetWeapon(player, 1, 0, true, i, true)
-        end
+        ClearAllWeaponSlots(player)
     end
 end)
 
-function SyncWeapons(player)
-    local weapons = PlayerData[player].weapons
-    for _,w in pairs(weapons) do
-        WeaponPatch.SetWeapon(player, WeaponsConfig[w['item']].weapon_id, 100, false, w['slot'], true)
+function ClearAllWeaponSlots(player)
+    for i = 1, 3 do
+        WeaponPatch.SetWeapon(player, 1, 0, true, i, true)
     end
 end
 
--- add weapon to player
-function AddWeapon(player, item)
-    item_cfg = WeaponsConfig[item]
-    if not item_cfg then
-        log.error("Invalid weapon " .. item)
+-- equips weapon by item
+function EquipWeaponFromInventory(player, item, equip)
+    log.debug("Equipping weapon from inventory", player, item, equip)
+    local weapon_item = GetItemFromInventory(player, item)
+    if weapon_item == nil or WeaponsConfig[item] == nil then
         return
     end
 
-    local slot = EquipWeapon(player, item)
-    if slot == nil then
-        log.error("No available slot")
-        return
-    end
-
-    local weapons = PlayerData[player].weapons
-    -- add new item to store
-    table.insert(weapons, {
-        item = item,
-        type = item_cfg['type'],
-        name = item_cfg['name'],
-        modelid = item_cfg['modelid'],
-        slot = slot
-    })
-    PlayerData[player].weapons = weapons
-    CallEvent("SyncInventory", player)
-end
-
-function RemoveWeapon(player, item)
-    UnequipWeapon(player, item)
-    local weapons = PlayerData[player].weapons
-    for i, _weapon in ipairs(weapons) do
-        if _weapon['item'] == item then
-            table.remove(weapons, i)
-            break
-        end
-    end
-    PlayerData[player].weapons = weapons
-    CallEvent("SyncInventory", player)
-end
-
--- equips weapon
--- returns slot or nil
-function EquipWeapon(player, item)
-    local slot = GetNextAvailableWeaponSlot(player)
-    if slot ~= nil then
-        WeaponPatch.SetWeapon(player, WeaponsConfig[item].weapon_id, 100, true, slot, true)
-        return slot
-    end
+    WeaponPatch.SetWeapon(player, WeaponsConfig[item].weapon_id, 100, equip, weapon_item.slot, true)
 end
 
 -- returns the next available weapon slot
 -- only checks slots 2-3 to leave 1 always for fists
 function GetNextAvailableWeaponSlot(player)
-    for i = 2, 3 do
+    for i = 1, 3 do
         if (GetPlayerWeapon(player, i) == 1) then
             return i
         end
@@ -98,7 +56,7 @@ end
 
 -- switch to fists if weapon is equipped for given weapon/item
 function UnequipWeapon(player, item)
-    for slot = 2, 3 do
+    for slot = 1, 3 do
         local weapon_id, ammo = GetPlayerWeapon(player, slot)
         if WeaponsConfig[item].weapon_id == weapon_id then
             WeaponPatch.SetWeapon(player, 1, 0, true, slot, true)
@@ -113,4 +71,3 @@ function SwitchToFists(player)
     WeaponPatch.SetWeapon(player, 1, 0, true, 1, true)
   end
 end
-

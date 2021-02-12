@@ -1,22 +1,12 @@
 -- get inventory data and send to UI
 function SyncInventory(player)
     local inventory_items = PlayerData[player].inventory
+    log.trace("INVENTORY SYNC ("..GetPlayerName(player).."): " .. dump(inventory_items))
 
     local _send = {
         inventory_items = {}
     }
-    -- weapons
---[[     for index, weapon in ipairs(weapons) do
-        table.insert(_send.weapons, {
-            ['index'] = index,
-            ['item'] = weapon['item'],
-            ['name'] = weapon['name'],
-            ['modelid'] = weapon['modelid'],
-            ['type'] = weapon['type'],
-            ['slot'] = weapon['slot']
-        })
-    end
- ]]
+
     -- inventory
     for index, item in ipairs(inventory_items) do
         table.insert(_send.inventory_items, {
@@ -35,7 +25,6 @@ function SyncInventory(player)
         })
     end
     CallRemoteEvent(player, "SetInventory", json_encode(_send))
-    log.trace("INVENTORY SYNC ("..GetPlayerName(player).."): " .. json_encode(_send))
 end
 AddRemoteEvent("SyncInventory", SyncInventory)
 AddEvent("SyncInventory", SyncInventory)
@@ -44,7 +33,7 @@ AddEvent("SyncInventory", SyncInventory)
 function AddToInventory(player, item)
     item_cfg = GetItemConfig(item)
     if not item_cfg then
-        log.error("Invalid object " .. item)
+        log.error("Invalid item " .. item)
         return
     end
 
@@ -131,11 +120,6 @@ function RemoveFromInventory(player, item, amount)
         return
     end
 
-    if item_cfg['type'] == 'weapon' then
-        RemoveWeapon(player, item)
-        return
-    end
-
     local inventory = PlayerData[player].inventory
 
     local amount = amount or 1
@@ -147,7 +131,7 @@ function RemoveFromInventory(player, item, amount)
     if new_qty == 0 then
         log.debug("items:" .. item .. ":drop")
 
-        if item_cfg['type'] == 'equipable' then
+        if item_cfg['type'] == 'equipable' or item_cfg['type'] == 'weapon' then
             UnequipObject(player, item)
         end
     end
@@ -163,11 +147,7 @@ AddRemoteEvent("DropItemFromInventory", function(player, item, x, y, z)
     --SetPlayerAnimation(player, "CARRY_SETDOWN")
 
     Delay(1000, function()
-        if GetItemType(item) == 'weapon' then
-            RemoveWeapon(player, item)
-        else
-            RemoveFromInventory(player, item)
-        end
+        RemoveFromInventory(player, item)
 
         -- spawn object near player
         CreatePickupNearPlayer(player, item)
@@ -260,6 +240,19 @@ AddRemoteEvent("EquipItemFromInventory", function(player, item)
     CallEvent("SyncInventory", player)
 end)
 
+-- sets weapon to weapon slot from inventory
+function SetWeaponSlotsFromInventory(player)
+    log.debug("Updating weapon slots from inventory", player)
+    ClearAllWeaponSlots(player)
+
+    local inventory = PlayerData[player].inventory
+    for i, _item in ipairs(inventory) do
+        if _item['slot'] == 1 or _item['slot'] == 2 or _item['slot'] == 3 then
+            EquipWeaponFromInventory(player, _item['item'], false)            
+        end
+    end
+end
+
 -- updates inventory from inventory UI sorting
 -- recreates the inventory with new indexes
 AddRemoteEvent("UpdateInventory", function(player, data)
@@ -288,6 +281,7 @@ AddRemoteEvent("UpdateInventory", function(player, data)
     PlayerData[player].inventory = new_inventory
 
     CheckEquippedFromInventory(player)
+    SetWeaponSlotsFromInventory(player)
     CallEvent("SyncInventory", player)
 end)
 
@@ -300,7 +294,6 @@ end)
 -- clear inventory on player death
 AddEvent("OnPlayerDeath", function(player, killer)
     PlayerData[player].inventory = {}
-    PlayerData[player].weapons = {}
     PlayerData[player].equipped = {}
 
     CallEvent("SyncInventory", player)
@@ -308,6 +301,7 @@ end)
 
 -- when weapon switching occurs, unequip whatever is in hand_r bone
 AddRemoteEvent("UnequipForWeapon", function(player)
+    log.debug("weapon swap!")
     UnequipFromBone(player, 'hand_r')
 end)
 
@@ -319,7 +313,7 @@ AddRemoteEvent("UseItemHotkey", function(player, key)
         log.debug(key)
         if tostring(item['slot']) == key then
             log.debug("hit",item['item'])
-            UseItemFromInventory(player, item['item'])
+            EquipItemFromInventory(player, item['item'])
             return
         end
     end

@@ -12,6 +12,7 @@ InitTable("accounts", {
     is_admin = { type = 'bool', default = false },
     clothing = { type = 'number', length = 11 },
     location = { type = 'json' },
+    weapons = { type = 'json' },
     equipped = { type = 'json' },
     inventory = { type = 'json' }
 }) 
@@ -58,6 +59,7 @@ AddEvent("OnPlayerJoin", function(player)
     -- initialize PlayerData
     PlayerData[player] = {
         inventory = {},
+        weapons = {},
         equipped = {}
     }
 
@@ -86,6 +88,7 @@ AddEvent("OnPlayerSpawn", function(player)
     -- initialize PlayerData
     PlayerData[player] = {
         inventory = {},
+        weapons = {},
         equipped = {}
     }
 
@@ -110,6 +113,7 @@ AddEvent("OnPlayerDeath", function(player, killer)
     -- clear player data on death
     UpdateRows("accounts", {
         inventory = {},
+        weapons = {},
         equipped = {}
     }, { steamid = GetPlayerSteamId(player) })
 
@@ -193,6 +197,7 @@ function InitializePlayer(player)
 
     -- setup inventory
     PlayerData[player].inventory = json_decode(account['inventory'])
+    PlayerData[player].weapons = json_decode(account['weapons'])
     PlayerData[player].equipped = json_decode(account['equipped'])
 
     -- setup properties
@@ -201,6 +206,7 @@ function InitializePlayer(player)
     Delay(2500, function(player)
         SyncInventory(player)
         SyncEquipped(player)
+        SyncWeaponSlotsFromInventory(player)
     end, player)
 end
 
@@ -222,6 +228,7 @@ function SavePlayer(player)
     UpdateRows("accounts", {
         location = { x = x, y = y, z =z },
         inventory = PlayerData[player].inventory,
+        weapons = PlayerData[player].weapons,
         equipped = PlayerData[player].equipped
     }, { steamid = GetPlayerSteamId(player) })
 end

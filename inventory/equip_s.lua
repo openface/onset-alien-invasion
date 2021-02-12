@@ -165,7 +165,9 @@ function GetEquippedObject(player, item)
 end
 
 function IsItemEquipped(player, item)
-    if GetEquippedObject(player, item) ~= nil then
+    if WeaponsConfig[item] then
+        return GetCurrentWeaponItem(player) == item
+    elseif GetEquippedObject(player, item) ~= nil then
         return true
     else
         return false

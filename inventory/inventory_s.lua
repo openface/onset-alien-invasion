@@ -303,6 +303,7 @@ end)
 AddRemoteEvent("UnequipForWeapon", function(player)
     log.debug("weapon swap!")
     UnequipFromBone(player, 'hand_r')
+    CallEvent("SyncInventory", player)
 end)
 
 -- item hotkeys

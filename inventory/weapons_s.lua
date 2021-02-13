@@ -126,17 +126,6 @@ function GetNextAvailableWeaponSlot(player)
     end
 end
 
---[[ function GetCurrentWeaponItem(player)
-    local slot = GetPlayerEquippedWeaponSlot(player)
-    log.debug("CURRENT WEAPON SLOT",slot)
-    local inventory = PlayerData[player].inventory
-    for i,item in ipairs(inventory) do
-        if item['slot'] == slot then
-            return item['item']
-        end
-    end
-end ]]
-
 function IsWeaponEquipped(player, item)
     return PlayerData[player].equipped[item] or nil
 end

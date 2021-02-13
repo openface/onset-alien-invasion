@@ -18,7 +18,7 @@ end
 function SyncEquipped(player)
     local equipped = PlayerData[player].equipped
     for item, object in pairs(equipped) do
-        AttachItemToPlayer(player, item)
+        EquipItem(player, item)
     end
 end
 
@@ -31,7 +31,7 @@ function EquipItem(player, item)
     end
 
     -- equipable items can be toggled via hotkey
-    if item_cfg['type'] == 'equipable' and GetEquippedObject(player, item) ~= nil then
+    if GetEquippedObject(player, item) ~= nil then
         log.debug "already equipped; unequipping..."
         UnequipItem(player, item)
         return

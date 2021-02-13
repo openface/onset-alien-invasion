@@ -304,7 +304,8 @@ end)
 -- when weapon switching occurs, unequip hands, update PlayerData
 -- and force equip weapon to designated slot
 AddRemoteEvent("UseWeaponSlot", function(player, key)
-    log.debug("weapon swap!", key)
+    log.trace("UseWeaponSlot", key)
+    
     UnequipFromBone(player, 'hand_l')
     UnequipFromBone(player, 'hand_r')
 
@@ -326,13 +327,12 @@ end)
 
 -- item hotkeys
 AddRemoteEvent("UseItemHotkey", function(player, key)
+    log.trace("UseItemHotkey", key)
+
     local inventory = PlayerData[player].inventory
     for i, item in ipairs(inventory) do
-        log.debug(item)
-        log.debug(key)
         if tostring(item['slot']) == key then
-            log.debug("hit",item['item'])
-            EquipItemFromInventory(player, item['item'])
+            EquipItem(player, item['item'])
             return
         end
     end

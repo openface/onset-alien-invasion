@@ -81,7 +81,6 @@ function EquipItem(player, item)
 end
 
 -- attaches object or weapon to player
--- TODO: refactor into EquipItem function
 function AttachItemToPlayer(player, item)
     local item_cfg = GetItemConfig(item)
 

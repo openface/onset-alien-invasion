@@ -301,10 +301,26 @@ AddEvent("OnPlayerDeath", function(player, killer)
     CallEvent("SyncInventory", player)
 end)
 
--- when weapon switching occurs, unequip whatever is in hand_r bone
-AddRemoteEvent("UnequipForWeapon", function(player)
-    log.debug("weapon swap!")
+-- when weapon switching occurs, unequip hands, update PlayerData
+-- and force equip weapon to designated slot
+AddRemoteEvent("UseWeaponSlot", function(player, key)
+    log.debug("weapon swap!", key)
+    UnequipFromBone(player, 'hand_l')
     UnequipFromBone(player, 'hand_r')
+
+    local inventory = PlayerData[player].inventory
+    for i,item in ipairs(inventory) do
+        if tostring(item['slot']) == "1" or tostring(item['slot']) == "2" or tostring(item['slot']) == "3" then
+            if tostring(item['slot']) == tostring(key) then
+                PlayerData[player].equipped[item.item] = true
+                EquipWeaponToSlot(player, item.item, item['slot'], true)
+            else
+                PlayerData[player].equipped[item.item] = nil
+            end
+        end
+    end
+
+    log.debug("equipped:",dump(PlayerData[player].equipped))
     CallEvent("SyncInventory", player)
 end)
 

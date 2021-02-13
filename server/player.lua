@@ -204,9 +204,9 @@ function InitializePlayer(player)
     SetPlayerPropertyValue(player, 'clothing', account['clothing'], true)
 
     Delay(2500, function(player)
-        SyncInventory(player)
         SyncEquipped(player)
         SyncWeaponSlotsFromInventory(player)
+        CallEvent("SyncInventory", player)
     end, player)
 end
 

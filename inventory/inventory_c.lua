@@ -26,7 +26,7 @@ AddEvent('OnKeyPress', function(key)
             ExecuteWebJS(InventoryUI, "EmitEvent('ShowInventory')")
         elseif key == '1' or key == '2' or key == '3' then
             -- weapon switching
-            CallRemoteEvent("UnequipForWeapon")
+            CallRemoteEvent("UseWeaponSlot", key)
         elseif key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' then
             -- item hotkeys
             CallRemoteEvent("UseItemHotkey", key)

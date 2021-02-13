@@ -107,10 +107,14 @@ function AddWeaponFromInventory(player, item, equip)
             end
 
             log.debug("Equipping weapon from inventory to slot", player, item, slot)
-            WeaponPatch.SetWeapon(player, WeaponsConfig[item].weapon_id, 100, equip, slot, true)
+            EquipWeaponToSlot(player, item, slot, equip)
             return
         end
     end
+end
+
+function EquipWeaponToSlot(player, item, slot, equip)
+    WeaponPatch.SetWeapon(player, WeaponsConfig[item].weapon_id, 100, equip, slot, true)
 end
 
 -- returns the next available weapon slot (checks for fists)

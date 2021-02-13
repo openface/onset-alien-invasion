@@ -93,7 +93,6 @@ function AttachItemToPlayer(player, item)
     local attached_object = CreateObject(item_cfg['modelid'], x, y, z)
 
     SetObjectPropertyValue(attached_object, "_name", item)
-    SetObjectPropertyValue(attached_object, "_bone", item_cfg['attachment']['bone'])
     SetObjectAttached(attached_object, ATTACH_PLAYER, player, item_cfg['attachment']['x'], item_cfg['attachment']['y'],
         item_cfg['attachment']['z'], item_cfg['attachment']['rx'], item_cfg['attachment']['ry'],
         item_cfg['attachment']['rz'], item_cfg['attachment']['bone'])
@@ -114,6 +113,7 @@ end
 -- unequip whatever is equipped on given bone
 -- returns unequipped item or nil
 function UnequipFromBone(player, bone)
+    log.debug("UnequipFromBone", bone)
     -- unequip whatever is in the player's bone
     local equipped_item = GetEquippedItemNameFromBone(player, bone)
     if equipped_item ~= nil then
@@ -179,13 +179,11 @@ end
 function GetEquippedItemNameFromBone(player, bone)
     local equipped = PlayerData[player].equipped
     for item, object in pairs(equipped) do
-        if object == true then
-            -- object is a weapon
-            log.debug("found weapon on bone")
+        local item_cfg = GetItemConfig(item)
+        if item_cfg['type'] == 'weapon' and (bone == 'hand_l' or bone == 'hand_r') then
             return item
-        elseif GetObjectPropertyValue(object, "_bone") == bone then
-            -- log.debug "found bone"
-            return GetObjectPropertyValue(object, "_name")
+        elseif item_cfg['attachment'] and item_cfg['attachment']['bone'] == bone then
+            return item
         end
     end
 end

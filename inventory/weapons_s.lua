@@ -153,6 +153,7 @@ end
 
 -- if weapon is not 1, set weapon 1 to slot 1
 function SwitchToFists(player)
+    log.debug("SwitchToFist")
     local wep = GetPlayerEquippedWeapon(player)
     if wep ~= 1 then
         WeaponPatch.SetWeapon(player, 1, 0, true, 1, true)

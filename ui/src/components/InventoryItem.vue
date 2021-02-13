@@ -13,9 +13,7 @@ export default {
     props: ["item", "keybind"],
     methods: {
         PlayClick() {
-            if (!this.dragging) {
-                this.CallEvent("PlayClick");
-            }
+            this.CallEvent("PlayClick");
         },
     },
 };

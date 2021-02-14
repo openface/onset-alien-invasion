@@ -14,7 +14,7 @@ InitTable("accounts", {
     location = { type = 'json' },
     equipped = { type = 'json' },
     inventory = { type = 'json' }
-}, true) 
+}, false) -- true to recreate table
 
 PlayerData = {}
 

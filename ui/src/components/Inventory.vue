@@ -144,6 +144,14 @@
                 </div>
             </div>
         </drop-mask>
+
+        <div id="inhand" v-if="!inventory_visible && equipped_hands">
+            <div class="name">{{equipped_hands.name}}</div>
+            <div class="use" v-if="equipped_hands.use_label">
+                <img width="25" height="25" :src="require('@/assets/images/icons/lmb.jpg')" />
+                {{equipped_hands.use_label}}
+            </div>
+        </div>
     </drop>
 </template>
 
@@ -348,7 +356,7 @@ export default {
                         modelid: 2,
                         quantity: 1,
                         type: "weapon",
-                        equipped: true,
+                        equipped: false,
                         slot: 1,
                     },
                     {
@@ -423,7 +431,7 @@ export default {
                         type: "usable",
                         use_label: "Drink",
                         bone: "hand_r",
-                        equipped: false,
+                        equipped: true,
                         slot: null,
                     },
                     {
@@ -462,8 +470,8 @@ export default {
                 ],
             });
 
-            this.EventBus.$emit("ShowInventory");
-            //this.EventBus.$emit("HideInventory");
+            //this.EventBus.$emit("ShowInventory");
+            this.EventBus.$emit("HideInventory");
         }
     },
 };
@@ -477,14 +485,12 @@ export default {
 }
 .container {
     margin: 0 auto;
-    border: 1px solid red;
     width: 1000px;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100vh;
 }
-
 #inner {
     z-index: 1000;
     background: rgba(0, 0, 0, 0.6);
@@ -541,5 +547,29 @@ export default {
 }
 .container .drop-allowed {
     background-color: rgba(0, 255, 0, 0.2);
+}
+
+#inhand {
+    position:fixed;
+    bottom:1vh;
+    right:1vh;
+    width:250px;
+    background: rgba(255,255,255, 0.4);
+    font-family:helvetica;
+    font-weight:bold;
+    padding:5px 10px;
+    border:1px solid red;
+}
+#inhand .name {
+    font-size:22px;
+    float:left;
+}
+#inhand .use {
+    float:right;
+    text-transform:uppercase;
+    font-size:18px;
+}
+#inhand .use img {
+    vertical-align:middle;
 }
 </style>

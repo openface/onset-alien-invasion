@@ -1,5 +1,6 @@
 -- global
 HudUI = nil
+CurrentlyInteracting = false
 
 AddEvent("OnPackageStart", function()
     HudUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
@@ -44,13 +45,16 @@ end
 AddRemoteEvent("SetBossHealth", SetBossHealth)
 AddEvent("SetBossHealth", SetBossHealth)
 
--- spinner
-AddRemoteEvent("ShowSpinner", function(ms)
-    ExecuteWebJS(HudUI, "EmitEvent('ShowSpinner'," .. ms .. ")")
+-- interactions
+AddRemoteEvent("StartInteraction", function(data)
+    if data['show_spinner'] then
+        ExecuteWebJS(HudUI, "EmitEvent('ShowSpinner'," .. data['duration'] .. ")")
+    end
+    CurrentlyInteracting = true
+
+    Delay(data['duration'], function()
+        CurrentlyInteracting = false
+    end)
 end)
 
--- inventory
-AddRemoteEvent("SetInventory", function(data)
-    ExecuteWebJS(HudUI, "EmitEvent('SetInventory'," .. data .. ")")
-end)
 

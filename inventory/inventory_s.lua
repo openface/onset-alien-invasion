@@ -3,12 +3,15 @@ function SyncInventory(player)
     local inventory_items = PlayerData[player].inventory
     log.trace("INVENTORY ITEMS ("..GetPlayerName(player).."): " .. dump(inventory_items))
 
+    local current_inhand
     local _send = {
-        inventory_items = {}
+        inventory_items = {},
     }
 
     -- inventory
     for index, item in ipairs(inventory_items) do
+        local equipped = IsItemEquipped(player, item['item'])
+        local bone = GetItemAttachmentBone(item['item'])
         table.insert(_send.inventory_items, {
             ['index'] = index,
             ['item'] = item['item'],
@@ -17,15 +20,24 @@ function SyncInventory(player)
             ['image'] = item['image'],
             ['quantity'] = item['quantity'],
             ['type'] = item['type'],
-            ['bone'] = GetItemAttachmentBone(item['item']),
-            ['equipped'] = IsItemEquipped(player, item['item']),
+            ['bone'] = bone,
+            ['equipped'] = equipped,
             ['use_label'] = item['use_label'],
             ['used'] = item['used'],
             ['slot'] = item['slot'],
         })
+        if equipped and (bone == 'hand_r' or bone == 'hand_r') then
+            current_inhand = item['item']
+        end
     end
     log.trace("INVENTORY SYNC ("..GetPlayerName(player).."): " .. json_encode(_send))
     CallRemoteEvent(player, "SetInventory", json_encode(_send))
+
+    if current_inhand then
+        CallRemoteEvent(player, "SetInHand", current_inhand)
+    else
+        CallRemoteEvent(player, "SetInHand", nil)
+    end
 end
 AddRemoteEvent("SyncInventory", SyncInventory)
 AddEvent("SyncInventory", SyncInventory)
@@ -100,6 +112,7 @@ function IncrementItemUsed(player, item)
 
             if (item_cfg['max_use'] - _item['used'] == 1) then
                 log.debug "all used up!"
+                UnequipItem(player, item)
                 RemoveFromInventory(player, item)
             else
                 log.debug('increment used by 1')
@@ -196,9 +209,8 @@ function UseItemFromInventory(player, item, options)
     local _item = GetItemFromInventory(player, item)
     log.debug(GetPlayerName(player) .. " uses item " .. item .. " from inventory")
 
-    -- equipable items get equipped and that's it
-    if item_cfg['type'] == 'equipable' then
-        EquipItem(player, item)
+    if GetEquippedObject(player, item) == nil then
+        log.error "Cannot use unequipped item!"
         return
     end
 
@@ -207,18 +219,10 @@ function UseItemFromInventory(player, item, options)
         return
     end
 
-    EquipItem(player, item)
-
     PlayInteraction(player, item, function()
         -- increment used
         if item_cfg['max_use'] then
             IncrementItemUsed(player, item)
-        end
-
-        -- auto-unequip after use unless item is equipable
-        if item_cfg['type'] ~= 'equipable' then
-            log.debug("item not equipable, unequipping after use")
-            UnequipItem(player, item)
         end
 
         -- call USE event on object
@@ -274,6 +278,7 @@ AddRemoteEvent("UpdateInventory", function(player, data)
                 name = item_cfg['name'],
                 modelid = item_cfg['modelid'],
                 image = item_cfg['image'],
+                use_label = item_cfg['use_label'],
                 slot = item.slot,
                 used = 0
             })
@@ -305,7 +310,7 @@ end)
 -- and force equip weapon to designated slot
 AddRemoteEvent("UseWeaponSlot", function(player, key)
     log.trace("UseWeaponSlot", key)
-    
+
     UnequipFromBone(player, 'hand_l')
     UnequipFromBone(player, 'hand_r')
 

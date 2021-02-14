@@ -75,9 +75,7 @@ function EquipItem(player, item)
     CallEvent("items:" .. item .. ":equip", player, object)
 
     -- sync inventory
-    if item_cfg['type'] == 'equipable' then
-        CallEvent("SyncInventory", player)
-    end
+    CallEvent("SyncInventory", player)
 end
 
 -- attaches object or weapon to player

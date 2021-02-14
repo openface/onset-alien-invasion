@@ -47,10 +47,11 @@ function PlayInteraction(player, item, after_use_callback)
         SetPlayerAnimation(player, item_cfg['interaction']['animation']['name'])
 
         local duration = item_cfg['interaction']['animation']['duration'] or 2000 -- default animation delay
-        if item_cfg['interaction']['animation']['spinner'] then
-            CallRemoteEvent(player, "ShowSpinner", duration)
-            AddPlayerChat(player, "spinner")
-        end
+
+        CallRemoteEvent(player, "StartInteraction", {
+            ['duration'] = duration,
+            ['show_spinner'] = item_cfg['interaction']['animation']['spinner']
+        })
 
         Delay(duration, function()
             SetPlayerAnimation(player, "STOP")

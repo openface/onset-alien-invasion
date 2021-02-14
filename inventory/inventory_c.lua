@@ -1,6 +1,9 @@
 -- global
 InventoryUI = nil
 
+-- item currently in hands or nil
+local HoldingUsableItem
+
 AddEvent("OnPackageStart", function()
     InventoryUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
     SetWebURL(InventoryUI, "http://asset/" .. GetPackageName() .. "/ui/dist/index.html#/inventory/")
@@ -11,6 +14,10 @@ end)
 
 AddEvent("OnPackageStop", function()
     DestroyWebUI(InventoryUI)
+end)
+
+AddRemoteEvent("Play3DSound", function(sound, x, y, z)
+    SetSoundVolume(CreateSound3D("client/"..sound, x, y, z, 1000), 1.0)
 end)
 
 AddEvent('OnKeyPress', function(key)
@@ -30,6 +37,9 @@ AddEvent('OnKeyPress', function(key)
         elseif key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' then
             -- item hotkeys
             CallRemoteEvent("UseItemHotkey", key)
+        elseif key == 'Left Mouse Button' and HoldingUsableItem and not CurrentlyInteracting then
+            -- use item currently in hands
+            CallRemoteEvent("UseItemFromInventory", HoldingUsableItem)
         end
     end
 end)
@@ -48,9 +58,20 @@ AddEvent('OnKeyRelease', function(key)
     end
 end)
 
+AddEvent("OnPlayerToggleAim", function(toggle)
+    if toggle == true and HoldingUsableItem then
+        return false -- do not allow the player to aim
+    end
+end)
+
 -- sync inventory
 AddRemoteEvent("SetInventory", function(data)
     ExecuteWebJS(InventoryUI, "EmitEvent('SetInventory'," .. data .. ")")
+end)
+
+-- controls whether or not player can aim
+AddRemoteEvent("SetInHand", function(item_or_nil)
+    HoldingUsableItem = item_or_nil
 end)
 
 -- drop item

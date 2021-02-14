@@ -1,5 +1,5 @@
 <template>
-    <div v-if="item" class="item" @mouseenter="PlayClick()">
+    <div v-if="item" :class="{ item: true, equipped: item.equipped && keybind }" @mouseenter="PlayClick()">
         <img :src="getImageUrl(item)" />
         <span class="keybind" v-if="keybind">{{ keybind }}</span>
         <span class="name">{{ item.name }}</span>
@@ -63,7 +63,7 @@ export default {
     background: rgba(255, 255, 255, 0.2);
     text-shadow: 1px 1px #000;
     padding: 0px 3px;
-    font-weight:bold;
+    font-weight: bold;
 }
 .item .name {
     position: absolute;
@@ -73,5 +73,4 @@ export default {
     color: #fff;
     text-shadow: 1px 1px #000;
 }
-
 </style>

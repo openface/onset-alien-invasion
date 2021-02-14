@@ -70,7 +70,6 @@ var VueOnset = {
         Vue.prototype.InGame = InGame;
 
         // object image handler
-        // TODO: move this into InventoryItem component
         Vue.prototype.getImageUrl = function(item) {
             if (this.InGame) {
                 if (item.image !== undefined) {

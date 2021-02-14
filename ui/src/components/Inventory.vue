@@ -558,7 +558,6 @@ export default {
     font-family:helvetica;
     font-weight:bold;
     padding:5px 10px;
-    border:1px solid red;
 }
 #inhand .name {
     font-size:22px;

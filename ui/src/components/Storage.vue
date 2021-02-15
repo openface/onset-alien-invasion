@@ -3,47 +3,43 @@
         <div id="inner">
             <div id="title">{{ storage_name }}</div>
 
-            <draggable
-                ghost-class="ghost"
-                v-model="storage_items"
-                class="draggable storage"
-                v-bind="storageDraggableOptions"
-                @sort="UpdateStorage(object, type, $event)"
-                @start="dragging = true"
-                @end="dragging = false"
-                draggable=".slot"
-                forceFallback="true"
+            <drop-list
+                :items="storage_items"
+                class="storage_items"
+                :accepts-data="CanDropToStorage"
+                @drop="onDropToStorage"
+                @reorder="onReorderStorage"
             >
-                <transition-group tag="div" class="grid" name="grid">
-                    <InventoryItem
-                        v-for="item in storage_items"
-                        :key="item.name"
-                        :item="item"
-                        :dragging="dragging"
-                        :show_options="false"
-                    />
-                    <div
-                        class="freeslot"
-                        v-for="n in FreeStorageSlots"
-                        :key="'hw' + n"
-                    ></div>
-                </transition-group>
-            </draggable>
+                <template v-slot:item="{ item }">
+                    <drag class="square" :data="item" :key="item.index">
+                        <inventory-item :item="item" />
+                    </drag>
+                </template>
+
+                <template v-slot:feedback="{ data }">
+                    <div class="feedback" :key="'feedback_' + data.index"></div>
+                </template>
+            </drop-list>
         </div>
 
         <div id="inner">
             <div id="title">INVENTORY</div>
 
             <drop-list
-              :items="inventory_items"
-              class="list"
-              @insert="onInsert"
-              @reorder="$event.apply(items)"
+                :items="inventory_items"
+                class="inventory_items"
+                :accepts-data="CanDropToInventory"
+                @drop="onDropToInventory"
             >
-                <template v-slot:item="{item}">
-                    <drag class="item" :key="item">{{item}}</drag>
+                <template v-slot:item="{ item }">
+                    <drag class="square" :data="item" :key="item.index">
+                        <inventory-item :item="item" />
+                    </drag>
                 </template>
 
+                <template v-slot:feedback="{ data }">
+                    <div class="feedback" :key="'feedback_' + data.index"></div>
+                </template>
             </drop-list>
         </div>
     </div>
@@ -53,57 +49,33 @@
 import { Drag, DropList } from "vue-easy-dnd";
 import InventoryItem from "./InventoryItem.vue";
 
-const MAX_STORAGE_SLOTS = 7;
-const MAX_INVENTORY_SLOTS = 14;
+// TODO
+//const MAX_STORAGE_SLOTS = 7;
+//const MAX_INVENTORY_SLOTS = 14;
 
 export default {
     name: "Storage",
     components: {
+        InventoryItem,
         Drag,
         DropList,
-        InventoryItem,
     },
     data() {
         return {
             storage_name: null,
             storage_items: [],
             inventory_items: [],
-            dragging: false,
-            storageDraggableOptions: {
-                group: {
-                    name: "storage_inventory",
-                    put: function(to) {
-                        // allow drops if storage has less than 7
-                        return (
-                            to.el.getElementsByClassName("slot").length <
-                            MAX_STORAGE_SLOTS
-                        );
-                    },
-                },
-            },
-            inventoryDraggableOptions: {
-                group: {
-                    name: "storage_inventory",
-                    put: function(to) {
-                        // allow drops if inventory has less than 14
-                        return (
-                            to.el.getElementsByClassName("slot").length <
-                            MAX_INVENTORY_SLOTS
-                        );
-                    },
-                },
-            },
         };
     },
     computed: {
-        FreeStorageSlots: function() {
-            return MAX_STORAGE_SLOTS - this.storage_items.length;
-        },
-        FreeInventorySlots: function() {
-            return MAX_INVENTORY_SLOTS - this.inventory_items.length;
-        },
     },
     methods: {
+        CanDropToStorage: function() {
+            return true;
+        },
+        CanDropToInventory: function() {
+            return true;
+        },
         SetStorageData: function(data) {
             this.storage_name = data.storage_name;
             this.object = data.object;
@@ -111,15 +83,28 @@ export default {
             this.storage_items = data.storage_items;
             this.inventory_items = data.inventory_items;
         },
-        range: function(start, end) {
-            return Array(end - start + 1)
-                .fill()
-                .map((_, idx) => start + idx);
-        },
-        UpdateStorage: function(object, type) {
-            //window.console.log("object:" + object);
+        onDropToStorage: function(e) {
+            window.console.log("Drop item to storage", e.data);
 
-            var data = this.storage_items.map(function(item, index) {
+            let idx = this.storage_items.findIndex((item) => item.index == e.data.index);
+            if (idx > -1) {
+                this.storage_items[idx].equipped = false;
+//                this.CallEvent("UnequipItem", this.storage_items[idx].item);
+            }
+        },
+        onDropToInventory: function(e) {
+            window.console.log("Drop item to inventory", e.data);
+
+            let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
+            if (idx > -1) {
+                this.inventory_items[idx].equipped = false;
+//                this.CallEvent("UnequipItem", this.inventory_items[idx].item);
+            }
+        },
+        onReorderStorage: function(e) {
+            window.console.log("onReorderStorage:", e);
+            e.apply(this.storage_items);
+/*             var data = this.storage_items.map(function(item, index) {
                 return {
                     item: item.item,
                     quantity: item.quantity,
@@ -127,18 +112,7 @@ export default {
                 };
             });
 
-            this.CallEvent("UpdateStorage", object, type, JSON.stringify(data));
-        },
-        UpdateInventory: function() {
-            var data = this.inventory_items.map(function(item, index) {
-                return {
-                    item: item.item,
-                    quantity: item.quantity,
-                    index: index + 1,
-                };
-            });
-
-            this.CallEvent("UpdateInventory", JSON.stringify(data));
+            this.CallEvent("UpdateStorage", object, type, JSON.stringify(data)); */
         },
     },
     mounted() {
@@ -151,6 +125,15 @@ export default {
                 storage_name: "Crate",
                 storage_items: [
                     {
+                        index: 1,
+                        item: "lighter",
+                        name: "Lighter",
+                        modelid: 2,
+                        quantity: 1,
+                        type: "usable",
+                    },
+                    {
+                        index: 2,
                         item: "boxhead",
                         name: "Boxhead",
                         modelid: 2,
@@ -160,6 +143,7 @@ export default {
                 ],
                 inventory_items: [
                     {
+                        index: 1,
                         item: "metal",
                         name: "Metal",
                         modelid: 694,
@@ -168,6 +152,7 @@ export default {
                         equipped: false,
                     },
                     {
+                        index: 2,
                         item: "plastic",
                         name: "Plastic",
                         modelid: 627,
@@ -176,6 +161,7 @@ export default {
                         equipped: false,
                     },
                     {
+                        index: 3,
                         item: "flashlight",
                         name: "Flashlight",
                         modelid: 627,
@@ -220,53 +206,24 @@ export default {
     font-size: 36px;
     text-align: center;
     margin: 0;
-    margin-bottom: 5px;
     font-weight: bold;
     font-family: impact;
+    background: rgba(0, 0, 0, 0.1);
     text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
-    text-transform: uppercase;
+    margin-bottom:10px;
 }
-.subtitle {
-    color: #fff;
-    font-size: 20px;
-    text-align: center;
-    margin: 0;
-    font-weight: bold;
-    font-family: impact;
-    text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
-    background: rgba(255, 255, 255, 0.1);
-}
-.grid {
+.inventory_items, .storage_items {
     display: grid;
-    grid-template-columns: repeat(7, 77px);
-    grid-template-rows: repeat(2, 77px);
-    grid-gap: 0.7em;
+    grid-auto-flow: dense;
+    grid-column-gap: 1px;
+    grid-row-gap: 1px;
+    grid-template-columns: repeat(7, 90px);
 }
-.grid-move {
-    transition: transform 0.2s;
-}
-.no-move {
-    transition: transform 0s;
-}
-.ghost {
-    opacity: 1;
-}
-.draggable {
-    padding: 5px;
-    min-height: 80px;
-    max-height: 165px;
-    overflow: hidden;
-    width: 97%;
-    border: 3px dotted rgba(0, 0, 0, 0.2);
-}
-.draggable.storage {
-    max-height: 75px;
-}
-.draggable:empty {
-    text-align: center;
-    height: 85px;
-    width: 100%;
-    border: 3px dotted rgba(255, 255, 255, 0.1);
+.square {
     background: rgba(255, 255, 255, 0.1);
+    width: 80px;
+    height: 80px;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    padding: 5px;
 }
 </style>

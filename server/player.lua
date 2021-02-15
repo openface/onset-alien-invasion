@@ -136,7 +136,10 @@ AddEvent("OnPlayerSteamAuth", function(player)
         log.info("Loading existing character for player " .. GetPlayerName(player))
 
         -- setup inventory
-        InitializePlayer(player)
+        -- give time to fully spawn player
+        Delay(2500, function()
+            InitializePlayer(player)
+        end)
 
         -- player is already spawned, relocate them
         local loc = json_decode(account['location'])
@@ -198,11 +201,9 @@ function InitializePlayer(player)
     -- setup properties
     SetPlayerPropertyValue(player, 'clothing', account['clothing'], true)
 
-    Delay(2500, function(player)
-        SyncEquipped(player)
-        SyncWeaponSlotsFromInventory(player)
-        CallEvent("SyncInventory", player)
-    end, player)
+    SyncEquipped(player)
+    SyncWeaponSlotsFromInventory(player)
+    CallEvent("SyncInventory", player)
 end
 
 -- Chat

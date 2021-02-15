@@ -148,7 +148,7 @@
         <div id="inhand" v-if="!inventory_visible && equipped_hands">
             <div class="name">{{equipped_hands.name}}</div>
             <div class="use" v-if="equipped_hands.use_label">
-                <img width="25" height="25" :src="require('@/assets/images/icons/lmb.jpg')" />
+                <img width="25" height="25" :src="require('@/assets/images/icons/lmb.png')" />
                 {{equipped_hands.use_label}}
             </div>
         </div>

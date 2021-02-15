@@ -45,6 +45,14 @@ AddRemoteEvent("UpdateStorage", function(player, object, type, data)
     ReplaceStorageContents(object, type, storage_items)
 end)
 
+AddRemoteEvent("MoveStorageItemToInventory", function(player, object, type, data)
+    log.debug("MoveStorageItemToInventory", object, type, dump(data))
+end)
+
+AddRemoteEvent("MoveInventoryItemToStorage", function(player, object, type, data)
+    log.debug("MoveInventoryItemToStorage", object, type, dump(data))
+end)
+
 -- type is either 'object' or 'vehicle'
 function ReplaceStorageContents(object, type, data)
     local new_storage = {}
@@ -53,6 +61,7 @@ function ReplaceStorageContents(object, type, data)
         local item_cfg = GetItemConfig(item.item)
         if item_cfg then
             new_storage[i] = {
+                index = i,
                 item = item.item,
                 quantity = item.quantity,
                 name = item_cfg['name'],

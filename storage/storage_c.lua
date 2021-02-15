@@ -73,3 +73,10 @@ AddEvent("UpdateStorage", function(object, type, data)
     CallRemoteEvent("UpdateStorage", object, type, data)
 end)
 
+AddEvent("MoveStorageItemToInventory", function(object, type, data)
+    CallRemoteEvent("MoveStorageItemToInventory", object, type, data)
+end)
+
+AddEvent("MoveInventoryItemToStorage", function(object, type, data)
+    CallRemoteEvent("MoveInventoryItemToStorage", object, type, data)
+end)

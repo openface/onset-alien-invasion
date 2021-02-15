@@ -1,13 +1,13 @@
 <template>
     <div id="container">
-        <div id="inner">
+        <div class="section">
             <div id="title">{{ storage_name }}</div>
 
             <drop-list
                 :items="storage_items"
                 class="storage_items"
                 :accepts-data="CanDropToStorage"
-                @drop="onDropToStorage"
+                @insert="onInsertToStorage"
                 @reorder="onReorderStorage"
             >
                 <template v-slot:item="{ item }">
@@ -17,19 +17,22 @@
                 </template>
 
                 <template v-slot:feedback="{ data }">
-                    <div class="feedback" :key="'feedback_' + data.index"></div>
+                    <div class="square" :key="'s_' + data.index">
+                        <inventory-item :item="data" />
+                    </div>
                 </template>
             </drop-list>
         </div>
 
-        <div id="inner">
+        <div class="section">
             <div id="title">INVENTORY</div>
 
             <drop-list
                 :items="inventory_items"
                 class="inventory_items"
                 :accepts-data="CanDropToInventory"
-                @drop="onDropToInventory"
+                @reorder="onReorderInventory"
+                @insert="onInsertToInventory"
             >
                 <template v-slot:item="{ item }">
                     <drag class="square" :data="item" :key="item.index">
@@ -38,8 +41,11 @@
                 </template>
 
                 <template v-slot:feedback="{ data }">
-                    <div class="feedback" :key="'feedback_' + data.index"></div>
+                    <div class="square" :key="'i_' + data.index">
+                        <inventory-item :item="data" />
+                    </div>
                 </template>
+
             </drop-list>
         </div>
     </div>
@@ -63,18 +69,26 @@ export default {
     data() {
         return {
             storage_name: null,
+            object: null,
+            type: null,
             storage_items: [],
             inventory_items: [],
         };
     },
-    computed: {
-    },
     methods: {
-        CanDropToStorage: function() {
-            return true;
+        CanDropToStorage: function(data) {
+            if (this.inventory_items.findIndex((item) => item.index == data.index) > -1) {
+                return true;
+            } else {
+                return false;
+            }
         },
-        CanDropToInventory: function() {
-            return true;
+        CanDropToInventory: function(data) {
+            if (this.storage_items.findIndex((item) => item.index == data.index) > -1) {
+                return true;
+            } else {
+                return false;
+            }
         },
         SetStorageData: function(data) {
             this.storage_name = data.storage_name;
@@ -83,37 +97,26 @@ export default {
             this.storage_items = data.storage_items;
             this.inventory_items = data.inventory_items;
         },
-        onDropToStorage: function(e) {
-            window.console.log("Drop item to storage", e.data);
-
-            let idx = this.storage_items.findIndex((item) => item.index == e.data.index);
-            if (idx > -1) {
-                this.storage_items[idx].equipped = false;
-//                this.CallEvent("UnequipItem", this.storage_items[idx].item);
-            }
+        onInsertToStorage: function(e) {
+            window.console.log("Move inventory item to storage", e.data);
+            this.CallEvent("MoveInventoryItemToStorage", this.object, this.type, e.data.item);
         },
-        onDropToInventory: function(e) {
-            window.console.log("Drop item to inventory", e.data);
-
-            let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
-            if (idx > -1) {
-                this.inventory_items[idx].equipped = false;
-//                this.CallEvent("UnequipItem", this.inventory_items[idx].item);
-            }
+        onInsertToInventory: function(e) {
+            window.console.log("Move storage item to inventory", e.data);
+            this.CallEvent("MoveStorageItemToInventory", this.object, this.type, e.data.item);
         },
         onReorderStorage: function(e) {
             window.console.log("onReorderStorage:", e);
             e.apply(this.storage_items);
-/*             var data = this.storage_items.map(function(item, index) {
-                return {
-                    item: item.item,
-                    quantity: item.quantity,
-                    index: index + 1,
-                };
-            });
 
-            this.CallEvent("UpdateStorage", object, type, JSON.stringify(data)); */
+            this.CallEvent("UpdateStorage", this.object, this.type, JSON.stringify(this.storage_items));
         },
+        onReorderInventory: function(e) {
+            window.console.log("Reorder inventory");
+            e.apply(this.inventory_items);
+
+            this.CallEvent("UpdateInventory", JSON.stringify(this.inventory_items));
+        }
     },
     mounted() {
         this.EventBus.$on("SetStorageData", this.SetStorageData);
@@ -124,7 +127,7 @@ export default {
                 type: "object",
                 storage_name: "Crate",
                 storage_items: [
-                    {
+                     {
                         index: 1,
                         item: "lighter",
                         name: "Lighter",
@@ -142,7 +145,7 @@ export default {
                     },
                 ],
                 inventory_items: [
-                    {
+                     {
                         index: 1,
                         item: "metal",
                         name: "Metal",
@@ -168,7 +171,7 @@ export default {
                         quantity: 1,
                         type: "equipable",
                         equipped: true,
-                    },
+                    }, 
                 ],
             });
         }
@@ -186,7 +189,7 @@ export default {
     justify-content: center;
     height: 100vh;
 }
-#inner {
+.section {
     order: 0;
     flex: 0 1 auto;
     align-self: auto;
@@ -199,6 +202,7 @@ export default {
     text-shadow: 3px black;
     padding: 10px;
     margin-bottom: 25px;
+    min-height:146px;
 }
 
 #title {
@@ -211,6 +215,7 @@ export default {
     background: rgba(0, 0, 0, 0.1);
     text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
     margin-bottom:10px;
+    text-transform:uppercase;
 }
 .inventory_items, .storage_items {
     display: grid;
@@ -218,6 +223,7 @@ export default {
     grid-column-gap: 1px;
     grid-row-gap: 1px;
     grid-template-columns: repeat(7, 90px);
+    height: 100%;
 }
 .square {
     background: rgba(255, 255, 255, 0.1);

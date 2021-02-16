@@ -16,6 +16,7 @@ function RegisterItemConfig(item, meta)
 end
 
 -- item world instances
+-- for now, we store just the item key
 ItemInstances = {}
 
 function RegisterNewItem(item)

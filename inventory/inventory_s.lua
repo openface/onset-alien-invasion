@@ -160,7 +160,9 @@ function RemoveFromInventory(player, item, amount)
 end
 
 -- unequips item, removes from inventory, and places on ground
-AddRemoteEvent("DropItemFromInventory", function(player, item, x, y, z)
+AddRemoteEvent("DropItemFromInventory", function(player, uuid)
+    local item = GetItemInstance(uuid)
+
     log.info("Player " .. GetPlayerName(player) .. " drops item " .. item)
 
     --SetPlayerAnimation(player, "CARRY_SETDOWN")
@@ -245,7 +247,8 @@ function GetItemFromInventory(player, item)
 end
 
 -- equip from inventory
-AddRemoteEvent("EquipItemFromInventory", function(player, item)
+AddRemoteEvent("EquipItemFromInventory", function(player, uuid)
+    local item = GetItemInstance(uuid)
     EquipItem(player, item)
     CallEvent("SyncInventory", player)
 end)

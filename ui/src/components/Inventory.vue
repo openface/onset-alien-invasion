@@ -255,9 +255,9 @@ export default {
         onDropFromInventory: function(e) {
             window.console.log("Drop item from inventory", e.data);
 
-            let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
+            let idx = this.inventory_items.findIndex((item) => item.uuid == e.data.uuid);
             if (idx > -1) {
-                this.CallEvent("DropItem", this.inventory_items[idx].item);
+                this.CallEvent("DropItem", this.inventory_items[idx].uuid);
                 this.inventory_items.splice(idx, 1);
             }
         },
@@ -269,10 +269,10 @@ export default {
                 this.inventory_items[idx].equipped = false;
             }
 
-            idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
+            idx = this.inventory_items.findIndex((item) => item.uuid == e.data.uuid);
             if (idx > -1) {
                 this.inventory_items[idx].equipped = true;
-                this.CallEvent("EquipItem", this.inventory_items[idx].item);
+                this.CallEvent("EquipItem", this.inventory_items[idx].uuid);
             }
         },
         onEquipHead: function(e) {
@@ -283,10 +283,10 @@ export default {
                 this.inventory_items[idx].equipped = false;
             }
 
-            idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
+            idx = this.inventory_items.findIndex((item) => item.uuid == e.data.uuid);
             if (idx > -1) {
                 this.inventory_items[idx].equipped = true;
-                this.CallEvent("EquipItem", this.inventory_items[idx].item);
+                this.CallEvent("EquipItem", this.inventory_items[idx].uuid);
             }
         },
         onEquipBody: function(e) {
@@ -297,10 +297,10 @@ export default {
                 this.inventory_items[idx].equipped = false;
             }
 
-            idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
+            idx = this.inventory_items.findIndex((item) => item.uuid == e.data.uuid);
             if (idx > -1) {
                 this.inventory_items[idx].equipped = true;
-                this.CallEvent("EquipItem", this.inventory_items[idx].item);
+                this.CallEvent("EquipItem", this.inventory_items[idx].uuid);
             }
         },
         onEquipWeapon: function(slot, e) {
@@ -308,7 +308,7 @@ export default {
 
             this.clearInventorySlot(slot);
 
-            let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
+            let idx = this.inventory_items.findIndex((item) => item.uuid == e.data.uuid);
             if (idx > -1) {
                 this.inventory_items[idx].slot = slot;
                 this.CallEvent("UpdateInventory", JSON.stringify(this.inventory_items));
@@ -319,7 +319,7 @@ export default {
 
             this.clearInventorySlot(slot);
 
-            let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
+            let idx = this.inventory_items.findIndex((item) => item.uuid == e.data.uuid);
             if (idx > -1) {
                 this.inventory_items[idx].slot = slot;
                 this.CallEvent("UpdateInventory", JSON.stringify(this.inventory_items));
@@ -334,10 +334,10 @@ export default {
         onDropToInventory: function(e) {
             window.console.log("Drop item back to inventory", e.data);
 
-            let idx = this.inventory_items.findIndex((item) => item.index == e.data.index);
+            let idx = this.inventory_items.findIndex((item) => item.uuid == e.data.uuid);
             if (idx > -1) {
                 this.inventory_items[idx].equipped = false;
-                this.CallEvent("UnequipItem", this.inventory_items[idx].item);
+                this.CallEvent("UnequipItem", this.inventory_items[idx].uuid);
             }
         },
     },

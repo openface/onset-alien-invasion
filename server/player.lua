@@ -201,6 +201,11 @@ function InitializePlayer(player)
     -- setup properties
     SetPlayerPropertyValue(player, 'clothing', account['clothing'], true)
 
+    -- initialize inventory
+    for i,item in ipairs(PlayerData[player].inventory) do
+        ItemInstances[item.uuid] = item.item
+    end
+
     SyncEquipped(player)
     SyncWeaponSlotsFromInventory(player)
     CallEvent("SyncInventory", player)

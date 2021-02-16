@@ -75,24 +75,24 @@ AddRemoteEvent("SetInHand", function(item_or_nil)
 end)
 
 -- drop item
-AddEvent("DropItem", function(item)
-    CallRemoteEvent("DropItemFromInventory", item)
+AddEvent("DropItem", function(uuid)
+    CallRemoteEvent("DropItemFromInventory", uuid)
 end)
 
 -- equip item
-AddEvent("EquipItem", function(item)
-    CallRemoteEvent("EquipItemFromInventory", item)
+AddEvent("EquipItem", function(uuid)
+    CallRemoteEvent("EquipItemFromInventory", uuid)
 end)
 
 -- unequip item
-AddEvent("UnequipItem", function(item)
-    CallRemoteEvent("UnequipItemFromInventory", item)
+AddEvent("UnequipItem", function(uuid)
+    CallRemoteEvent("UnequipItemFromInventory", uuid)
 end)
 
--- use item
-AddEvent("UseItem", function(item)
-    CallRemoteEvent("UseItemFromInventory", item)
-end)
+--[[ -- use item
+AddEvent("UseItem", function(uuid)
+    CallRemoteEvent("UseItemFromInventory", uuid)
+end) ]]
 
 -- sort inventory
 AddEvent("UpdateInventory", function(data)

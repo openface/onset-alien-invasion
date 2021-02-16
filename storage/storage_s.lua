@@ -25,6 +25,7 @@ AddRemoteEvent("prop:OpenStorage", function(player, object, options)
         table.insert(_send.inventory_items, {
             ['index'] = index,
             ['item'] = item['item'],
+            ['uuid'] = item['uuid'],
             ['name'] = item['name'],
             ['modelid'] = item['modelid'],
             ['image'] = item['image'],
@@ -56,6 +57,7 @@ function ReplaceStorageContents(object, type, data)
         if item_cfg then
             new_storage[i] = {
                 item = item.item,
+                uuid = item.uuid,
                 quantity = item.quantity,
                 name = item_cfg['name'],
                 modelid = item_cfg['modelid'],

@@ -12,7 +12,7 @@
                 mode="cut"
             >
                 <template v-slot:item="{ item }">
-                    <drag class="square" :data="item" @cut="onCutStorage" :key="item.key">
+                    <drag class="square" :data="item" @cut="onCutStorage" :key="item.uuid">
                         <inventory-item :item="item" />
                     </drag>
                 </template>
@@ -37,7 +37,7 @@
                 mode="cut"
             >
                 <template v-slot:item="{ item }">
-                    <drag class="square" :data="item" @cut="onCutInventory" :key="item.key">
+                    <drag class="square" :data="item" @cut="onCutInventory" :key="item.uuid">
                         <inventory-item :item="item" />
                     </drag>
                 </template>
@@ -60,8 +60,6 @@ import InventoryItem from "./InventoryItem.vue";
 // TODO
 //const MAX_STORAGE_SLOTS = 7;
 //const MAX_INVENTORY_SLOTS = 14;
-import _ from "lodash";
-
 export default {
     name: "Storage",
     components: {
@@ -80,7 +78,7 @@ export default {
     },
     methods: {
         CanDropToStorage: function(data) {
-            if (this.inventory_items.findIndex((item) => item.index == data.index) > -1) {
+            if (this.inventory_items.findIndex((item) => item.uuid == data.uuid) > -1) {
                 return true;
             } else {
                 return false;
@@ -88,7 +86,7 @@ export default {
             // todo: check storage limits
         },
         CanDropToInventory: function(data) {
-            if (this.storage_items.findIndex((item) => item.index == data.index) > -1) {
+            if (this.storage_items.findIndex((item) => item.uuid == data.uuid) > -1) {
                 return true;
             } else {
                 return false;
@@ -100,22 +98,14 @@ export default {
             this.storage_name = data.storage_name;
             this.object = data.object;
             this.type = data.type;
-            //this.storage_items = data.storage_items;
-            this.storage_items = data.storage_items.map(item => {
-                return _.merge(item, { key: _.uniqueId(item.item) })
-            });
-            window.console.log(this.storage_items)
-            //this.inventory_items = data.inventory_items;
-            this.inventory_items = data.inventory_items.map(item => {
-                return _.merge(item, { key: _.uniqueId(item.item) })
-            });
-            window.console.log(this.inventory_items)
-
+            this.storage_items = data.storage_items;
+            this.inventory_items = data.inventory_items;
         },
         SaveStorageData: function() {
             const data = this.storage_items.map(function(item, index) {
                 return {
                     item: item.item,
+                    uuid: item.uuid,
                     quantity: item.quantity,
                     index: index + 1,
                 };
@@ -128,8 +118,9 @@ export default {
             this.SaveStorageData();
         },
         onCutStorage: function(e) {
-            window.console.log("onCutStorage:", e);
-            this.storage_items.splice(e.index, 1);
+            window.console.log("onCutStorage:", e.data);
+
+            this.storage_items.splice(this.storage_items.indexOf(e.data), 1);
             this.SaveStorageData();
         },
         onReorderStorage: function(e) {
@@ -141,6 +132,7 @@ export default {
             const data = this.inventory_items.map(function(item, index) {
                 return {
                     item: item.item,
+                    uuid: item.uuid,
                     quantity: item.quantity,
                     index: index + 1,
                 };
@@ -154,8 +146,9 @@ export default {
             this.SaveInventoryData();
         },
         onCutInventory: function(e) {
-            window.console.log("onCutInventory:", e);
-            this.inventory_items.splice(e.index, 1);
+            window.console.log("onCutInventory:", e.data);
+
+            this.inventory_items.splice(this.inventory_items.indexOf(e.data), 1);
             this.SaveInventoryData();
         },
         onReorderInventory: function(e) {
@@ -176,6 +169,7 @@ export default {
                      {
                         index: 1,
                         item: "lighter",
+                        uuid: "68c6486c-10b0-4a64-8b94-08befa079323",
                         name: "Lighter",
                         modelid: 2,
                         quantity: 1,
@@ -184,6 +178,7 @@ export default {
                     {
                         index: 2,
                         item: "boxhead",
+                        uuid: "72491e7d-8e4f-46cc-9df6-e46c5df64c1c",
                         name: "Boxhead",
                         modelid: 2,
                         quantity: 1,
@@ -194,6 +189,7 @@ export default {
                      {
                         index: 1,
                         item: "metal",
+                        uuid: "bdf427f4-76a7-431c-916b-7e96252d0c6f",
                         name: "Metal",
                         modelid: 694,
                         quantity: 2,
@@ -203,6 +199,7 @@ export default {
                     {
                         index: 2,
                         item: "plastic",
+                        uuid: "a538d5da-3444-4b97-b1ff-eb9594cdd706",
                         name: "Plastic",
                         modelid: 627,
                         quantity: 1,
@@ -212,6 +209,7 @@ export default {
                     {
                         index: 3,
                         item: "flashlight",
+                        uuid: "9c055cdf-ef2e-4b55-b4ca-036b13cafe36",
                         name: "Flashlight",
                         modelid: 627,
                         quantity: 1,

@@ -204,6 +204,7 @@ function SpawnStorageLoot(object)
     for _, item in pairs(random_items) do
         table.insert(random_content, {
             item = item,
+            uuid = RegisterItem(item),
             quantity = 1
         })
     end

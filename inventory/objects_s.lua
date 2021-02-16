@@ -15,8 +15,21 @@ function RegisterObject(item, meta)
     log.debug("Registering object: " .. item)
 end
 
+Items = {}
+
+function RegisterItem(item)
+    local uuid = uuid()
+    Items[uuid] = item
+    return uuid
+end
+
+function GetRegisteredItem(uuid)
+    return Items[uuid]
+end
+
 AddEvent("OnPackageStop", function()
     Objects = {}
+    ItemInstances = {}
 end)
 
 function GetItemType(item)

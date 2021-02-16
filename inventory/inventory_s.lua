@@ -15,6 +15,7 @@ function SyncInventory(player)
         table.insert(_send.inventory_items, {
             ['index'] = index,
             ['item'] = item['item'],
+            ['uuid'] = item['uuid'],
             ['name'] = item['name'],
             ['modelid'] = item['modelid'],
             ['image'] = item['image'],
@@ -43,7 +44,9 @@ AddRemoteEvent("SyncInventory", SyncInventory)
 AddEvent("SyncInventory", SyncInventory)
 
 -- add object to inventory
-function AddToInventory(player, item)
+function AddToInventory(player, uuid)
+    local item = GetRegisteredItem(uuid)
+
     item_cfg = GetItemConfig(item)
     if not item_cfg then
         log.error("Invalid item " .. item)
@@ -60,6 +63,7 @@ function AddToInventory(player, item)
         -- add new item to store
         table.insert(inventory, {
             item = item,
+            uuid = uuid,
             type = item_cfg['type'],
             name = item_cfg['name'],
             modelid = item_cfg['modelid'],
@@ -273,6 +277,7 @@ AddRemoteEvent("UpdateInventory", function(player, data)
         if item_cfg then
             table.insert(new_inventory, {
                 item = item.item,
+                uuid = item.uuid,
                 quantity = item.quantity,
                 type = item_cfg['type'],
                 name = item_cfg['name'],

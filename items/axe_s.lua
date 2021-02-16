@@ -1,4 +1,4 @@
-RegisterObject("axe", {
+RegisterItemConfig("axe", {
     name = "Axe",
     type = 'usable',
     category = "Supplies",

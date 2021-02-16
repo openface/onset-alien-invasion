@@ -1,4 +1,4 @@
-RegisterObject("headphones", {
+RegisterItemConfig("headphones", {
     name = "Headphones",
     type = 'equipable',
     category = "Miscellaneous",

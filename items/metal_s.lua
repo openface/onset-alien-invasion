@@ -1,4 +1,4 @@
-RegisterObject("metal", {
+RegisterItemConfig("metal", {
     name = "Metal",
     type = 'resource',
     modelid = 597,

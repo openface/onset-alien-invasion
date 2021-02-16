@@ -1,4 +1,4 @@
-RegisterObject("vest", {
+RegisterItemConfig("vest", {
     name = "Kevlar Vest",
     type = 'equipable',
     category = "Military Surplus",

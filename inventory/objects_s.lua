@@ -1,30 +1,32 @@
 -- item configuration
-Objects = {}
+ItemConfigs = {}
 
 -- object factory
 function GetItemConfig(item)
-    return Objects[item]
+    return ItemConfigs[item]
 end
 
 function GetItemConfigs()
-    return Objects
+    return ItemConfigs
 end
 
-function RegisterObject(item, meta)
-    Objects[item] = meta
-    log.debug("Registering object: " .. item)
+function RegisterItemConfig(item, meta)
+    ItemConfigs[item] = meta
+    log.debug("Registering item config: " .. item)
 end
 
-Items = {}
+-- item world instances
+ItemInstances = {}
 
-function RegisterItem(item)
+function RegisterNewItem(item)
     local uuid = uuid()
-    Items[uuid] = item
+    ItemInstances[uuid] = item
+    log.debug("Registering item instance ("..item..") uuid: "..uuid)
     return uuid
 end
 
 function GetRegisteredItem(uuid)
-    return Items[uuid]
+    return ItemInstances[uuid]
 end
 
 AddEvent("OnPackageStop", function()

@@ -20,9 +20,12 @@ end)
 
 function RegisterMerchant(name, config)
     log.debug("Registering merchant: " .. name)
-    local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'],
-                           config['ry'], config['rz'], config['sx'], config['sy'], config['sz'])
-    SetObjectPropertyValue(object, "prop", { message = "Interact", remote_event = "GetMerchantData" })
+    local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'], config['ry'],
+                       config['rz'], config['sx'], config['sy'], config['sz'])
+    SetObjectPropertyValue(object, "prop", {
+        message = "Interact",
+        remote_event = "GetMerchantData"
+    })
     Merchants[object] = true
 end
 
@@ -33,6 +36,7 @@ AddRemoteEvent("prop:GetMerchantData", function(player)
             table.insert(item_data, {
                 item = key,
                 name = item['name'],
+                uuid = item['uuid'],
                 category = item['category'],
                 modelid = item['modelid'],
                 image = item['image'],
@@ -84,7 +88,7 @@ AddRemoteEvent("BuyItem", function(player, item)
             }))
 
         PlaySoundSync(player, "sounds/purchase.mp3")
-
-        AddToInventory(player, item)
+        local uuid = RegisterNewItem(item)
+        AddToInventory(player, uuid)
     end)
 end)

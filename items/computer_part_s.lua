@@ -1,4 +1,4 @@
-RegisterObject("computer_part", {
+RegisterItemConfig("computer_part", {
     name = "Computer Part",
     type = 'resource',
     modelid = 1437,

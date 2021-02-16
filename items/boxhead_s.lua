@@ -1,4 +1,4 @@
-RegisterObject("boxhead", {
+RegisterItemConfig("boxhead", {
     name = "Boxhead",
     type = 'equipable',
     category = "Miscellaneous",

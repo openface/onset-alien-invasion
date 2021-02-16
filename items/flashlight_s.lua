@@ -1,4 +1,4 @@
-RegisterObject("flashlight", {
+RegisterItemConfig("flashlight", {
     name = "Flashlight",
     type = 'equipable',
     category = "Supplies",

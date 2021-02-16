@@ -1,4 +1,4 @@
-RegisterObject("landmine", {
+RegisterItemConfig("landmine", {
     name = "Landmine",
     type = 'usable',
     category = "Military Surplus",

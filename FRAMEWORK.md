@@ -5,7 +5,7 @@
 Most item configuration options are optional.  Here is a sample pulled together from various objects:
 
 ```
-RegisterObject("wooden_chair", {        -- [required] unique id / item name
+RegisterItemConfig("wooden_chair", {        -- [required] unique id / item name
     name = "Wooden Chair",              -- [required] display name
     type = 'prop',                      -- [required] item type (see Item Types)
     category = 'Furniture',             -- [required] item category for merchant grouping

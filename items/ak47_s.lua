@@ -1,4 +1,4 @@
-RegisterObject("ak47", {
+RegisterItemConfig("ak47", {
     name = "AK47",
     type = 'weapon',
     weapon_id = 12,

@@ -1,4 +1,4 @@
-RegisterObject("wooden_table", {
+RegisterItemConfig("wooden_table", {
     name = "Wooden Table",
     type = 'placeable',
     category = "Furniture",

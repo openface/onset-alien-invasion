@@ -90,7 +90,7 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
 
     log.debug("Player " .. GetPlayerName(player) .. " picks up item " .. item)
 
-    local uuid = RegisterItem(item)
+    local uuid = RegisterNewItem(item)
 
     -- adds to player inventory and syncs
     AddToInventory(player, uuid)

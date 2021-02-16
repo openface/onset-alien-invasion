@@ -14,13 +14,13 @@
                             @reorder="onReorderInventory"
                         >
                             <template v-slot:item="{ item }">
-                                <drag class="square" :data="item" :key="item.index">
+                                <drag class="square" :data="item" :key="item.uuid">
                                     <inventory-item :item="item" />
                                 </drag>
                             </template>
 
                             <template v-slot:feedback="{ data }">
-                                <div class="feedback" :key="'feedback_' + data.index"></div>
+                                <div class="feedback" :key="'feedback_' + data.uuid"></div>
                             </template>
                         </drop-list>
                     </div>
@@ -31,7 +31,7 @@
                             <div>
                                 HANDS<br />
                                 <drop class="square" @drop="onEquipHands" :accepts-data="CanEquipToHands">
-                                    <drag v-if="equipped_hands" :data="equipped_hands" :key="equipped_hands.index">
+                                    <drag v-if="equipped_hands" :data="equipped_hands" :key="equipped_hands.uuid">
                                         <inventory-item :item="equipped_hands" />
                                     </drag>
                                 </drop>
@@ -39,7 +39,7 @@
                             <div>
                                 HEAD<br />
                                 <drop class="square" @drop="onEquipHead" :accepts-data="CanEquipToHead">
-                                    <drag v-if="equipped_head" :data="equipped_head" :key="equipped_head.index">
+                                    <drag v-if="equipped_head" :data="equipped_head" :key="equipped_head.uuid">
                                         <inventory-item :item="equipped_head" />
                                     </drag>
                                 </drop>
@@ -47,7 +47,7 @@
                             <div>
                                 BODY<br />
                                 <drop class="square" @drop="onEquipBody" :accepts-data="CanEquipToBody">
-                                    <drag v-if="equipped_body" :data="equipped_body" :key="equipped_body.index">
+                                    <drag v-if="equipped_body" :data="equipped_body" :key="equipped_body.uuid">
                                         <inventory-item :item="equipped_body" />
                                     </drag>
                                 </drop>
@@ -61,17 +61,17 @@
                 <!-- weapon slots -->
 
                 <drop class="square" @drop="onEquipWeapon(1, $event)" :accepts-data="CanEquipToWeaponSlot">
-                    <drag v-if="weapon_1" :data="weapon_1" :key="weapon_1.index">
+                    <drag v-if="weapon_1" :data="weapon_1" :key="weapon_1.uuid">
                         <inventory-item :item="weapon_1" :keybind="weapon_1.slot" />
                     </drag>
                 </drop>
                 <drop class="square" @drop="onEquipWeapon(2, $event)" :accepts-data="CanEquipToWeaponSlot">
-                    <drag v-if="weapon_2" :data="weapon_2" :key="weapon_2.index">
+                    <drag v-if="weapon_2" :data="weapon_2" :key="weapon_2.uuid">
                         <inventory-item :item="weapon_2" :keybind="weapon_2.slot" />
                     </drag>
                 </drop>
                 <drop class="square" @drop="onEquipWeapon(3, $event)" :accepts-data="CanEquipToWeaponSlot">
-                    <drag v-if="weapon_3" :data="weapon_3" :key="weapon_3.index">
+                    <drag v-if="weapon_3" :data="weapon_3" :key="weapon_3.uuid">
                         <inventory-item :item="weapon_3" :keybind="weapon_3.slot" />
                     </drag>
                 </drop>
@@ -81,32 +81,32 @@
                 <!-- hotbar slots -->
 
                 <drop class="square" @drop="onEquipHotbar(4, $event)" :accepts-data="CanEquipToHotbarSlot">
-                    <drag v-if="hotbar_4" :data="hotbar_4" :key="hotbar_4.index">
+                    <drag v-if="hotbar_4" :data="hotbar_4" :key="hotbar_4.uuid">
                         <inventory-item :item="hotbar_4" :keybind="hotbar_4.slot" />
                     </drag>
                 </drop>
                 <drop class="square" @drop="onEquipHotbar(5, $event)" :accepts-data="CanEquipToHotbarSlot">
-                    <drag v-if="hotbar_5" :data="hotbar_5" :key="hotbar_5.index">
+                    <drag v-if="hotbar_5" :data="hotbar_5" :key="hotbar_5.uuid">
                         <inventory-item :item="hotbar_5" :keybind="hotbar_5.slot" />
                     </drag>
                 </drop>
                 <drop class="square" @drop="onEquipHotbar(6, $event)" :accepts-data="CanEquipToHotbarSlot">
-                    <drag v-if="hotbar_6" :data="hotbar_6" :key="hotbar_6.index">
+                    <drag v-if="hotbar_6" :data="hotbar_6" :key="hotbar_6.uuid">
                         <inventory-item :item="hotbar_6" :keybind="hotbar_6.slot" />
                     </drag>
                 </drop>
                 <drop class="square" @drop="onEquipHotbar(7, $event)" :accepts-data="CanEquipToHotbarSlot">
-                    <drag v-if="hotbar_7" :data="hotbar_7" :key="hotbar_7.index">
+                    <drag v-if="hotbar_7" :data="hotbar_7" :key="hotbar_7.uuid">
                         <inventory-item :item="hotbar_7" :keybind="hotbar_7.slot" />
                     </drag>
                 </drop>
                 <drop class="square" @drop="onEquipHotbar(8, $event)" :accepts-data="CanEquipToHotbarSlot">
-                    <drag v-if="hotbar_8" :data="hotbar_8" :key="hotbar_8.index">
+                    <drag v-if="hotbar_8" :data="hotbar_8" :key="hotbar_8.uuid">
                         <inventory-item :item="hotbar_8" :keybind="hotbar_8.slot" />
                     </drag>
                 </drop>
                 <drop class="square" @drop="onEquipHotbar(9, $event)" :accepts-data="CanEquipToHotbarSlot">
-                    <drag v-if="hotbar_9" :data="hotbar_9" :key="hotbar_9.index">
+                    <drag v-if="hotbar_9" :data="hotbar_9" :key="hotbar_9.uuid">
                         <inventory-item :item="hotbar_9" :keybind="hotbar_9.slot" />
                     </drag>
                 </drop>
@@ -352,6 +352,7 @@ export default {
                     {
                         index: 2,
                         item: "glock",
+                        uuid: "c83c6b6d-5f46-4eb5-90a7-57e5b407648f",
                         name: "Glock",
                         modelid: 2,
                         quantity: 1,
@@ -362,6 +363,7 @@ export default {
                     {
                         index: 3,
                         item: "rifle",
+                        uuid: "31a15d35-f138-434e-b450-9b25c8c7cc40",
                         name: "Rifle",
                         modelid: 2,
                         quantity: 1,
@@ -372,6 +374,7 @@ export default {
                     {
                         index: 5,
                         item: "metal",
+                        uuid: "f42cc4c6-c0c2-46af-b0bb-79930aa27477",
                         name: "Metal",
                         modelid: 694,
                         quantity: 2,
@@ -382,6 +385,7 @@ export default {
                     {
                         index: 6,
                         item: "plastic",
+                        uuid: "95ce2f7d-e10e-49c2-8737-606e96d3bf71",
                         name: "Plastic",
                         modelid: 627,
                         quantity: 1,
@@ -392,6 +396,7 @@ export default {
                     {
                         index: 7,
                         item: "vest",
+                        uuid: "42d1a6a4-6593-45ea-8820-700879446109",
                         name: "Kevlar Vest",
                         modelid: 14,
                         quantity: 1,
@@ -403,6 +408,7 @@ export default {
                     {
                         index: 18,
                         item: "armyhat",
+                        uuid: "49bbd29a-e0fd-4989-97e5-89954f8b1684",
                         name: "Army Hat",
                         modelid: 15,
                         quantity: 1,
@@ -414,6 +420,7 @@ export default {
                     {
                         index: 9,
                         item: "flashlight",
+                        uuid: "7df6a835-d332-40a5-9a58-d94f9249f645",
                         name: "Flashlight",
                         modelid: 14,
                         quantity: 2,
@@ -425,6 +432,7 @@ export default {
                     {
                         index: 8,
                         item: "beer",
+                        uuid: "c1f5a0f9-ec94-426d-b2f2-eb0ee1aaecbb",
                         name: "Beer",
                         modelid: 15,
                         quantity: 4,
@@ -437,6 +445,7 @@ export default {
                     {
                         index: 10,
                         item: "wooden_chair",
+                        uuid: "e1115819-ade8-4b77-af01-72927e3cd104",
                         name: "Wooden Chair",
                         modelid: 15,
                         quantity: 4,
@@ -448,6 +457,7 @@ export default {
                     {
                         index: 11,
                         item: "chainsaw",
+                        uuid: "727af402-02d6-4dc8-9a1e-17be10549d31",
                         name: "Chainsaw",
                         modelid: 15,
                         quantity: 1,
@@ -459,6 +469,7 @@ export default {
                     {
                         index: 12,
                         item: "headphones",
+                        uuid: "67b377c8-818a-464e-b7eb-b685d42d8caa",
                         name: "Headphones",
                         modelid:15,
                         quantity: 1,

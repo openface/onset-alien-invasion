@@ -18,7 +18,7 @@
                 </template>
 
                 <template v-slot:feedback="{ data }">
-                    <div class="square" :key="'s_' + data.index">
+                    <div class="square" :key="'s_' + data.uuid">
                         <inventory-item :item="data" />
                     </div>
                 </template>

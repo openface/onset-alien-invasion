@@ -45,7 +45,7 @@ AddEvent("SyncInventory", SyncInventory)
 
 -- add object to inventory
 function AddToInventory(player, uuid)
-    local item = GetRegisteredItem(uuid)
+    local item = GetItemInstance(uuid)
 
     item_cfg = GetItemConfig(item)
     if not item_cfg then

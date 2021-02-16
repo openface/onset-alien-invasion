@@ -25,7 +25,7 @@ function RegisterNewItem(item)
     return uuid
 end
 
-function GetRegisteredItem(uuid)
+function GetItemInstance(uuid)
     return ItemInstances[uuid]
 end
 

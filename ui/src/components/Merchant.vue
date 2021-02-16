@@ -6,7 +6,7 @@
                 <div class="category">{{ category }}</div>
 
                 <div class="grid">
-                    <div class="item" v-for="item in items" :key="item.item" @mouseenter="!IsBusy() ? PlayClick() : null">
+                    <div class="item" v-for="item in items" :key="item.index" @mouseenter="!IsBusy() ? PlayClick() : null">
                         <div class="pic">
                             <img :src="getImageUrl(item)" />
                         </div>

@@ -41,16 +41,10 @@ end)
 -- [1] = { ["quantity"] = 1,["index"] = 1,["item"] = axe,}
 AddRemoteEvent("UpdateStorage", function(player, object, type, data)
     local storage_items = json_decode(data)
-    log.debug(GetPlayerName(player) .. " updates storage:" .. object .. " type:" .. type)
+    log.debug(GetPlayerName(player) .. " updates storage:" .. object .. " type:" .. type .. dump(data))
+    local storage_items = json_decode(data)
+    log.debug(dump(storage_items))
     ReplaceStorageContents(object, type, storage_items)
-end)
-
-AddRemoteEvent("MoveStorageItemToInventory", function(player, object, type, data)
-    log.debug("MoveStorageItemToInventory", object, type, dump(data))
-end)
-
-AddRemoteEvent("MoveInventoryItemToStorage", function(player, object, type, data)
-    log.debug("MoveInventoryItemToStorage", object, type, dump(data))
 end)
 
 -- type is either 'object' or 'vehicle'
@@ -61,7 +55,6 @@ function ReplaceStorageContents(object, type, data)
         local item_cfg = GetItemConfig(item.item)
         if item_cfg then
             new_storage[i] = {
-                index = i,
                 item = item.item,
                 quantity = item.quantity,
                 name = item_cfg['name'],

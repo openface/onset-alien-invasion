@@ -7,11 +7,12 @@
                 :items="storage_items"
                 class="storage_items"
                 :accepts-data="CanDropToStorage"
-                @insert="onInsertToStorage"
+                @insert="onInsertStorage"
                 @reorder="onReorderStorage"
+                mode="cut"
             >
                 <template v-slot:item="{ item }">
-                    <drag class="square" :data="item" :key="item.index">
+                    <drag class="square" :data="item" @cut="onCutStorage" :key="item.key">
                         <inventory-item :item="item" />
                     </drag>
                 </template>
@@ -31,11 +32,11 @@
                 :items="inventory_items"
                 class="inventory_items"
                 :accepts-data="CanDropToInventory"
-                @reorder="onReorderInventory"
-                @insert="onInsertToInventory"
+                @insert="onInsertInventory"
+                mode="cut"
             >
                 <template v-slot:item="{ item }">
-                    <drag class="square" :data="item" :key="item.index">
+                    <drag class="square" :data="item" @cut="onCutInventory" :key="item.key">
                         <inventory-item :item="item" />
                     </drag>
                 </template>
@@ -58,6 +59,7 @@ import InventoryItem from "./InventoryItem.vue";
 // TODO
 //const MAX_STORAGE_SLOTS = 7;
 //const MAX_INVENTORY_SLOTS = 14;
+import _ from "lodash";
 
 export default {
     name: "Storage",
@@ -82,6 +84,7 @@ export default {
             } else {
                 return false;
             }
+            // todo: check storage limits
         },
         CanDropToInventory: function(data) {
             if (this.storage_items.findIndex((item) => item.index == data.index) > -1) {
@@ -89,34 +92,71 @@ export default {
             } else {
                 return false;
             }
+            // todo: check inventory limits
+
         },
         SetStorageData: function(data) {
             this.storage_name = data.storage_name;
             this.object = data.object;
             this.type = data.type;
-            this.storage_items = data.storage_items;
-            this.inventory_items = data.inventory_items;
+            //this.storage_items = data.storage_items;
+            this.storage_items = data.storage_items.map(item => {
+                return _.merge(item, { key: _.uniqueId(item.item) })
+            });
+            window.console.log(this.storage_items)
+            //this.inventory_items = data.inventory_items;
+            this.inventory_items = data.inventory_items.map(item => {
+                return _.merge(item, { key: _.uniqueId(item.item) })
+            });
+            window.console.log(this.inventory_items)
+
         },
-        onInsertToStorage: function(e) {
-            window.console.log("Move inventory item to storage", e.data);
-            this.CallEvent("MoveInventoryItemToStorage", this.object, this.type, e.data.item);
+        SaveStorageData: function() {
+            const data = this.storage_items.map(function(item, index) {
+                return {
+                    item: item.item,
+                    quantity: item.quantity,
+                    index: index + 1,
+                };
+            });
+            this.CallEvent("UpdateStorage", this.object, this.type, JSON.stringify(data));         
         },
-        onInsertToInventory: function(e) {
-            window.console.log("Move storage item to inventory", e.data);
-            this.CallEvent("MoveStorageItemToInventory", this.object, this.type, e.data.item);
+        onInsertStorage: function(e) {
+            window.console.log("onInsertStorage:", e);
+            this.storage_items.splice(e.index, 0, e.data);
+            this.SaveStorageData();
+        },
+        onCutStorage: function(e) {
+            window.console.log("onCutStorage:", e);
+            this.storage_items.splice(e.index, 1);
+            this.SaveStorageData();
         },
         onReorderStorage: function(e) {
             window.console.log("onReorderStorage:", e);
             e.apply(this.storage_items);
-
-            this.CallEvent("UpdateStorage", this.object, this.type, JSON.stringify(this.storage_items));
+            this.SaveStorageData();
         },
-        onReorderInventory: function(e) {
-            window.console.log("Reorder inventory");
-            e.apply(this.inventory_items);
+        SaveInventoryData: function() {
+            const data = this.inventory_items.map(function(item, index) {
+                return {
+                    item: item.item,
+                    quantity: item.quantity,
+                    index: index + 1,
+                };
+            });
 
-            this.CallEvent("UpdateInventory", JSON.stringify(this.inventory_items));
-        }
+            this.CallEvent("UpdateInventory", JSON.stringify(data));
+        },
+        onInsertInventory: function(e) {
+            window.console.log("onInsertInventory:", e);
+            this.inventory_items.splice(e.index, 0, e.data);
+            this.SaveInventoryData();
+        },
+        onCutInventory: function(e) {
+            window.console.log("onCutInventory:", e);
+            this.inventory_items.splice(e.index, 1);
+            this.SaveInventoryData();
+        },
     },
     mounted() {
         this.EventBus.$on("SetStorageData", this.SetStorageData);

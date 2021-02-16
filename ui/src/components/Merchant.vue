@@ -6,12 +6,7 @@
                 <div class="category">{{ category }}</div>
 
                 <div class="grid">
-                    <div
-                        class="item"
-                        v-for="item in items"
-                        :key="item.item"
-                        @mouseenter="!IsBusy() ? PlayClick() : null"
-                    >
+                    <div class="item" v-for="item in items" :key="item.item" @mouseenter="!IsBusy() ? PlayClick() : null">
                         <div class="pic">
                             <img :src="getImageUrl(item)" />
                         </div>
@@ -19,16 +14,15 @@
                             <div class="name">{{ item.name }}</div>
                             <div class="action">
                                 <div v-if="player_cash >= item.price">
-                                    <button
-                                        class="buy"
-                                        @click="BuyItem(item.item)"
-                                    >
-                                        BUY ($<b>{{ item.price }}</b>)
+                                    <button class="buy" @click="BuyItem(item.item)">
+                                        BUY ($<b>{{ item.price }}</b
+                                        >)
                                     </button>
                                 </div>
                                 <div v-else>
                                     <button class="need_cash" disabled="true">
-                                        BUY ($<b>{{ item.price }}</b>)
+                                        BUY ($<b>{{ item.price }}</b
+                                        >)
                                     </button>
                                 </div>
                             </div>
@@ -40,13 +34,7 @@
         </div>
 
         <div id="progress" v-if="IsBusy()">
-            <loading-progress
-                :indeterminate="true"
-                size="40"
-                rotate
-                fillDuration="3"
-                rotationDuration="4"
-            />
+            <loading-progress :indeterminate="true" size="40" rotate fillDuration="3" rotationDuration="4" />
         </div>
     </div>
 </template>
@@ -64,9 +52,7 @@ export default {
     },
     methods: {
         LoadMerchantData: function(data) {
-            this.merchant_items = groupBy(data["merchant_items"], function(
-                item
-            ) {
+            this.merchant_items = groupBy(data["merchant_items"], function(item) {
                 return item.category;
             });
             window.console.log(this.merchant_items);
@@ -264,9 +250,9 @@ export default {
     stroke: rgba(0, 0, 0, 0.4);
 }
 .category {
-    margin-top:10px;
+    margin-top: 10px;
     text-transform: uppercase;
-    font-size:12px;
+    font-size: 12px;
 }
 .grid {
     display: flex;
@@ -302,7 +288,7 @@ export default {
 .item .details .name {
     font-size: 18px;
     color: #fff;
-    margin-bottom:18px;
+    margin-bottom: 18px;
 }
 .item .details .info {
     font-size: 11px;

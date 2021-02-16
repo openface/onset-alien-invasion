@@ -33,6 +33,7 @@
                 class="inventory_items"
                 :accepts-data="CanDropToInventory"
                 @insert="onInsertInventory"
+                @reorder="onReorderInventory"
                 mode="cut"
             >
                 <template v-slot:item="{ item }">
@@ -155,6 +156,11 @@ export default {
         onCutInventory: function(e) {
             window.console.log("onCutInventory:", e);
             this.inventory_items.splice(e.index, 1);
+            this.SaveInventoryData();
+        },
+        onReorderInventory: function(e) {
+            window.console.log("onReorderInventory:", e);
+            e.apply(this.inventory_items);
             this.SaveInventoryData();
         },
     },

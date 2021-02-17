@@ -241,3 +241,9 @@ function IsAdmin(steamid)
         return false
     end
 end
+
+AddCommand("die", function(player)
+    SetPlayerHealth(player, 0)
+    AddPlayerChat(player, "You have been forcefully killed.")
+end)
+

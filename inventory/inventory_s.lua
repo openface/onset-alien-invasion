@@ -12,20 +12,22 @@ function SyncInventory(player)
     for index, item in ipairs(inventory_items) do
         local equipped = IsItemEquipped(player, item['item'])
         local bone = GetItemAttachmentBone(item['item'])
+        local item_cfg = GetItemConfig(item['item'])
         table.insert(_send.inventory_items, {
             ['index'] = index,
             ['item'] = item['item'],
             ['uuid'] = item['uuid'],
-            ['name'] = item['name'],
-            ['modelid'] = item['modelid'],
-            ['image'] = item['image'],
             ['quantity'] = item['quantity'],
-            ['type'] = item['type'],
-            ['bone'] = bone,
             ['equipped'] = equipped,
-            ['use_label'] = item['use_label'],
             ['used'] = item['used'],
             ['slot'] = item['slot'],
+            ['bone'] = bone,
+
+            ['type'] = item_cfg['type'],
+            ['name'] = item_cfg['name'],
+            ['modelid'] = item_cfg['modelid'],
+            ['image'] = item_cfg['image'],
+            ['use_label'] = item_cfg['use_label'],
         })
         if equipped and (bone == 'hand_r' or bone == 'hand_r') then
             current_inhand = item['item']
@@ -64,11 +66,6 @@ function AddToInventory(player, uuid)
         table.insert(inventory, {
             item = item,
             uuid = uuid,
-            type = item_cfg['type'],
-            name = item_cfg['name'],
-            modelid = item_cfg['modelid'],
-            image = item_cfg['image'],
-            use_label = item_cfg['use_label'],
             quantity = 1,
             used = 0,
             slot = nil,
@@ -276,21 +273,13 @@ AddRemoteEvent("UpdateInventory", function(player, data)
     local new_inventory = {}
 
     for _, item in pairs(items) do
-        local item_cfg = GetItemConfig(item.item)
-        if item_cfg then
-            table.insert(new_inventory, {
-                item = item.item,
-                uuid = item.uuid,
-                quantity = item.quantity,
-                type = item_cfg['type'],
-                name = item_cfg['name'],
-                modelid = item_cfg['modelid'],
-                image = item_cfg['image'],
-                use_label = item_cfg['use_label'],
-                slot = item.slot,
-                used = 0
-            })
-        end
+        table.insert(new_inventory, {
+            item = item.item,
+            uuid = item.uuid,
+            quantity = item.quantity,
+            slot = item.slot,
+            used = 0
+        })
     end
     log.trace("NEW INVENTORY", dump(new_inventory))
     PlayerData[player].inventory = new_inventory
@@ -301,7 +290,8 @@ AddRemoteEvent("UpdateInventory", function(player, data)
 end)
 
 -- unequip from inventory
-AddRemoteEvent("UnequipItemFromInventory", function(player, item)
+AddRemoteEvent("UnequipItemFromInventory", function(player, uuid)
+    local item = GetItemInstance(uuid)
     UnequipItem(player, item)
     CallEvent("SyncInventory", player)
 end)

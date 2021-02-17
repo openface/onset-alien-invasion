@@ -1,39 +1,41 @@
 -- get inventory data and send to UI
 function SyncInventory(player)
     local inventory_items = PlayerData[player].inventory
-    log.trace("INVENTORY ITEMS ("..GetPlayerName(player).."): " .. dump(inventory_items))
+    --log.trace("INVENTORY ITEMS (" .. GetPlayerName(player) .. "): " .. dump(inventory_items))
 
     local current_inhand
     local _send = {
-        inventory_items = {},
+        inventory_items = {}
     }
 
     -- inventory
     for index, item in ipairs(inventory_items) do
-        local equipped = IsItemEquipped(player, item['item'])
-        local bone = GetItemAttachmentBone(item['item'])
         local item_cfg = GetItemConfig(item['item'])
-        table.insert(_send.inventory_items, {
-            ['index'] = index,
-            ['item'] = item['item'],
-            ['uuid'] = item['uuid'],
-            ['quantity'] = item['quantity'],
-            ['equipped'] = equipped,
-            ['used'] = item['used'],
-            ['slot'] = item['slot'],
-            ['bone'] = bone,
+        if item_cfg then
+            local equipped = IsItemEquipped(player, item['item'])
+            local bone = GetItemAttachmentBone(item['item'])
+            table.insert(_send.inventory_items, {
+                ['index'] = index,
+                ['item'] = item['item'],
+                ['uuid'] = item['uuid'],
+                ['quantity'] = item['quantity'],
+                ['equipped'] = equipped,
+                ['used'] = item['used'],
+                ['slot'] = item['slot'],
+                ['bone'] = bone,
 
-            ['type'] = item_cfg['type'],
-            ['name'] = item_cfg['name'],
-            ['modelid'] = item_cfg['modelid'],
-            ['image'] = item_cfg['image'],
-            ['use_label'] = item_cfg['use_label'],
-        })
-        if equipped and (bone == 'hand_r' or bone == 'hand_r') then
-            current_inhand = item['item']
+                ['type'] = item_cfg['type'],
+                ['name'] = item_cfg['name'],
+                ['modelid'] = item_cfg['modelid'],
+                ['image'] = item_cfg['image'],
+                ['use_label'] = item_cfg['use_label']
+            })
+            if equipped and (bone == 'hand_r' or bone == 'hand_r') then
+                current_inhand = item['item']
+            end
         end
     end
-    log.trace("INVENTORY SYNC ("..GetPlayerName(player).."): " .. json_encode(_send))
+    --log.trace("INVENTORY SYNC (" .. GetPlayerName(player) .. "): " .. json_encode(_send))
     CallRemoteEvent(player, "SetInventory", json_encode(_send))
 
     if current_inhand then
@@ -68,14 +70,14 @@ function AddToInventory(player, uuid)
             uuid = uuid,
             quantity = 1,
             used = 0,
-            slot = nil,
+            slot = nil
         })
         PlayerData[player].inventory = inventory
     end
 
     -- auto-equip when added
     if item_cfg['auto_equip'] == true and (item_cfg['type'] == 'equipable' or item_cfg['type'] == 'weapon') then
-        log.debug("Auto-equipping item",item)
+        log.debug("Auto-equipping item", item)
         EquipItem(player, item)
     end
 
@@ -162,7 +164,7 @@ AddRemoteEvent("DropItemFromInventory", function(player, uuid)
 
     log.info("Player " .. GetPlayerName(player) .. " drops item " .. item)
 
-    --SetPlayerAnimation(player, "CARRY_SETDOWN")
+    -- SetPlayerAnimation(player, "CARRY_SETDOWN")
 
     Delay(1000, function()
         RemoveFromInventory(player, item)
@@ -313,7 +315,7 @@ AddRemoteEvent("UseWeaponSlot", function(player, key)
     UnequipFromBone(player, 'hand_r')
 
     local inventory = PlayerData[player].inventory
-    for i,item in ipairs(inventory) do
+    for i, item in ipairs(inventory) do
         if tostring(item['slot']) == "1" or tostring(item['slot']) == "2" or tostring(item['slot']) == "3" then
             if tostring(item['slot']) == tostring(key) then
                 PlayerData[player].equipped[item.item] = true
@@ -324,7 +326,7 @@ AddRemoteEvent("UseWeaponSlot", function(player, key)
         end
     end
 
-    log.debug("equipped:",dump(PlayerData[player].equipped))
+    log.debug("equipped:", dump(PlayerData[player].equipped))
     CallEvent("SyncInventory", player)
 end)
 

@@ -12,7 +12,7 @@ RegisterItemConfig("axe", {
     },
     modelid = 20002,
     max_use = 20,
-    use_label = "Grind",
+    use_label = "Chop",
     image = "survival/SM_Axe-Neo.png",
     max_carry = 1,
     price = 150,

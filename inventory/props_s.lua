@@ -14,7 +14,7 @@ AddRemoteEvent("prop:HarvestTree", function(player, object, options)
 
     Delay(5000, function()
         AddPlayerChat(player, "You collect some wood")
-        AddToInventory(player, "wood")
+        AddToInventory(player, RegisterNewItem("wood"))
     end)
 
 end)
@@ -34,7 +34,7 @@ AddRemoteEvent("prop:GoFishing", function(player, object, options)
 
     Delay(10000, function()
         AddPlayerChat(player, "You caught a fish!")
-        AddToInventory(player, "wood")
+        AddToInventory(player, RegisterNewItem("wood"))
     end)
 
 end)

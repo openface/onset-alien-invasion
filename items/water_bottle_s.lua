@@ -1,4 +1,4 @@
-RegisterObject("water_bottle", {
+RegisterItemConfig("water_bottle", {
     name = "Water Bottle",
     type = "usable",
     category = "Grocery",

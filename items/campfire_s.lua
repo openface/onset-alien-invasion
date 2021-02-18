@@ -1,4 +1,4 @@
-RegisterObject("campfire", {
+RegisterItemConfig("campfire", {
     name = "Campfire",
     type = 'usable',
     modelid = 20007,

@@ -21,9 +21,9 @@
     "dependencies": {
         "lodash": "^4.17.20",
         "vue": "^2.6.12",
+        "vue-easy-dnd": "^1.10.2",
         "vue-progress-path": "0.0.2",
-        "vue-router": "^3.4.7",
-        "vuedraggable": "^2.24.3"
+        "vue-router": "^3.4.7"
     },
     "eslintConfig": {
         "root": true,

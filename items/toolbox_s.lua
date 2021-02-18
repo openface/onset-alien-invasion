@@ -1,4 +1,4 @@
-RegisterObject("toolbox", {
+RegisterItemConfig("toolbox", {
     name = "Toolbox",
     type = 'resource',
     category = "Supplies",

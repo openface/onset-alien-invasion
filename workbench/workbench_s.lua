@@ -84,7 +84,9 @@ AddRemoteEvent("BuildItem", function(player, item)
         CallRemoteEvent(player, "CompleteBuild", json_encode(_send))
 
         CallRemoteEvent(player, "ShowMessage", item_cfg['name'].." has been added to your inventory.")
-        AddToInventory(player, item)
+
+        local uuid = RegisterNewItem(item)
+        AddToInventory(player, uuid)
     end)
 end)
 

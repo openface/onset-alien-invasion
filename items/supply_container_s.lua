@@ -1,4 +1,4 @@
-RegisterObject("supply_container", {
+RegisterItemConfig("supply_container", {
     name = "Supply Container",
     type = 'placeable',
     category = "Storage",

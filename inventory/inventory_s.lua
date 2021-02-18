@@ -1,51 +1,59 @@
 -- get inventory data and send to UI
 function SyncInventory(player)
-    local inventory = PlayerData[player].inventory
-    local weapons = PlayerData[player].weapons
+    local inventory_items = PlayerData[player].inventory
+    --log.trace("INVENTORY ITEMS (" .. GetPlayerName(player) .. "): " .. dump(inventory_items))
 
+    local current_inhand
     local _send = {
-        weapons = {},
-        items = {}
+        inventory_items = {}
     }
-    -- weapons
-    for index, weapon in ipairs(weapons) do
-        table.insert(_send.weapons, {
-            ['index'] = index,
-            ['item'] = weapon['item'],
-            ['name'] = weapon['name'],
-            ['modelid'] = weapon['modelid'],
-            ['type'] = weapon['type'],
-            ['slot'] = weapon['slot']
-        })
-    end
 
     -- inventory
-    for index, item in ipairs(inventory) do
-        -- usable, equipable, resource
-        table.insert(_send.items, {
-            ['index'] = index,
-            ['item'] = item['item'],
-            ['name'] = item['name'],
-            ['modelid'] = item['modelid'],
-            ['image'] = item['image'],
-            ['quantity'] = item['quantity'],
-            ['type'] = item['type'],
-            ['equipped'] = IsItemEquipped(player, item['item']),
-            ['use_label'] = item['use_label'],
-            ['used'] = item['used']
-        })
+    for index, item in ipairs(inventory_items) do
+        local item_cfg = GetItemConfig(item['item'])
+        if item_cfg then
+            local equipped = IsItemEquipped(player, item['item'])
+            local bone = GetItemAttachmentBone(item['item'])
+            table.insert(_send.inventory_items, {
+                ['index'] = index,
+                ['item'] = item['item'],
+                ['uuid'] = item['uuid'],
+                ['quantity'] = item['quantity'],
+                ['equipped'] = equipped,
+                ['used'] = item['used'],
+                ['slot'] = item['slot'],
+                ['bone'] = bone,
+
+                ['type'] = item_cfg['type'],
+                ['name'] = item_cfg['name'],
+                ['modelid'] = item_cfg['modelid'],
+                ['image'] = item_cfg['image'],
+                ['use_label'] = item_cfg['use_label']
+            })
+            if equipped and (bone == 'hand_r' or bone == 'hand_r') then
+                current_inhand = item['item']
+            end
+        end
     end
+    --log.trace("INVENTORY SYNC (" .. GetPlayerName(player) .. "): " .. json_encode(_send))
     CallRemoteEvent(player, "SetInventory", json_encode(_send))
-    log.trace("INVENTORY SYNC ("..GetPlayerName(player).."): " .. json_encode(_send))
+
+    if current_inhand then
+        CallRemoteEvent(player, "SetInHand", current_inhand)
+    else
+        CallRemoteEvent(player, "SetInHand", nil)
+    end
 end
 AddRemoteEvent("SyncInventory", SyncInventory)
 AddEvent("SyncInventory", SyncInventory)
 
 -- add object to inventory
-function AddToInventory(player, item)
+function AddToInventory(player, uuid)
+    local item = GetItemInstance(uuid)
+
     item_cfg = GetItemConfig(item)
     if not item_cfg then
-        log.error("Invalid object " .. item)
+        log.error("Invalid item " .. item)
         return
     end
 
@@ -59,20 +67,18 @@ function AddToInventory(player, item)
         -- add new item to store
         table.insert(inventory, {
             item = item,
-            type = item_cfg['type'],
-            name = item_cfg['name'],
-            modelid = item_cfg['modelid'],
-            image = item_cfg['image'],
-            use_label = item_cfg['use_label'],
+            uuid = uuid,
             quantity = 1,
-            used = 0
+            used = 0,
+            slot = nil
         })
         PlayerData[player].inventory = inventory
     end
 
     -- auto-equip when added
-    if item_cfg['type'] == 'equipable' and item_cfg['auto_equip'] == true then
-        EquipObject(player, item)
+    if item_cfg['auto_equip'] == true and (item_cfg['type'] == 'equipable' or item_cfg['type'] == 'weapon') then
+        log.debug("Auto-equipping item", item)
+        EquipItem(player, item)
     end
 
     CallEvent("SyncInventory", player)
@@ -109,6 +115,7 @@ function IncrementItemUsed(player, item)
 
             if (item_cfg['max_use'] - _item['used'] == 1) then
                 log.debug "all used up!"
+                UnequipItem(player, item)
                 RemoveFromInventory(player, item)
             else
                 log.debug('increment used by 1')
@@ -131,11 +138,6 @@ function RemoveFromInventory(player, item, amount)
         return
     end
 
-    if item_cfg['type'] == 'weapon' then
-        RemoveWeapon(player, item)
-        return
-    end
-
     local inventory = PlayerData[player].inventory
 
     local amount = amount or 1
@@ -147,8 +149,8 @@ function RemoveFromInventory(player, item, amount)
     if new_qty == 0 then
         log.debug("items:" .. item .. ":drop")
 
-        if item_cfg['type'] == 'equipable' then
-            UnequipObject(player, item)
+        if item_cfg['type'] == 'equipable' or item_cfg['type'] == 'weapon' then
+            UnequipItem(player, item)
         end
     end
 
@@ -157,17 +159,15 @@ function RemoveFromInventory(player, item, amount)
 end
 
 -- unequips item, removes from inventory, and places on ground
-AddRemoteEvent("DropItemFromInventory", function(player, item, x, y, z)
+AddRemoteEvent("DropItemFromInventory", function(player, uuid)
+    local item = GetItemInstance(uuid)
+
     log.info("Player " .. GetPlayerName(player) .. " drops item " .. item)
 
-    --SetPlayerAnimation(player, "CARRY_SETDOWN")
+    -- SetPlayerAnimation(player, "CARRY_SETDOWN")
 
     Delay(1000, function()
-        if GetItemType(item) == 'weapon' then
-            RemoveWeapon(player, item)
-        else
-            RemoveFromInventory(player, item)
-        end
+        RemoveFromInventory(player, item)
 
         -- spawn object near player
         CreatePickupNearPlayer(player, item)
@@ -214,9 +214,8 @@ function UseItemFromInventory(player, item, options)
     local _item = GetItemFromInventory(player, item)
     log.debug(GetPlayerName(player) .. " uses item " .. item .. " from inventory")
 
-    -- equipable items get equipped and that's it
-    if item_cfg['type'] == 'equipable' then
-        EquipObject(player, item)
+    if GetEquippedObject(player, item) == nil then
+        log.error "Cannot use unequipped item!"
         return
     end
 
@@ -225,18 +224,10 @@ function UseItemFromInventory(player, item, options)
         return
     end
 
-    EquipObject(player, item)
-
     PlayInteraction(player, item, function()
         -- increment used
         if item_cfg['max_use'] then
             IncrementItemUsed(player, item)
-        end
-
-        -- auto-unequip after use unless item is equipable
-        if item_cfg['type'] ~= 'equipable' then
-            log.debug("item not equipable, unequipping after use")
-            UnequipObject(player, item)
         end
 
         -- call USE event on object
@@ -255,12 +246,27 @@ function GetItemFromInventory(player, item)
 end
 
 -- equip from inventory
-AddRemoteEvent("EquipItemFromInventory", function(player, item)
-    EquipObject(player, item)
+AddRemoteEvent("EquipItemFromInventory", function(player, uuid)
+    local item = GetItemInstance(uuid)
+    EquipItem(player, item)
     CallEvent("SyncInventory", player)
 end)
 
+-- sets weapon to weapon slot from inventory
+function SetWeaponSlotsFromInventory(player)
+    log.debug("Updating weapon slots from inventory", player)
+    ClearAllWeaponSlots(player)
+
+    local inventory = PlayerData[player].inventory
+    for i, _item in ipairs(inventory) do
+        if _item['slot'] == 1 or _item['slot'] == 2 or _item['slot'] == 3 then
+            AddWeaponFromInventory(player, _item['item'], false)
+        end
+    end
+end
+
 -- updates inventory from inventory UI sorting
+-- recreates the inventory with new indexes
 AddRemoteEvent("UpdateInventory", function(player, data)
     local items = json_decode(data)
     log.debug(GetPlayerName(player) .. " updating inventory:", dump(items))
@@ -269,60 +275,70 @@ AddRemoteEvent("UpdateInventory", function(player, data)
     local new_inventory = {}
 
     for _, item in pairs(items) do
-        local item_cfg = GetItemConfig(item.item)
-        new_inventory[item.index] = {
+        table.insert(new_inventory, {
             item = item.item,
+            uuid = item.uuid,
             quantity = item.quantity,
-            type = item_cfg['type'],
-            name = item_cfg['name'],
-            modelid = item_cfg['modelid'],
-            image = item_cfg['image'],
+            slot = item.slot,
             used = 0
-        }
+        })
     end
     log.trace("NEW INVENTORY", dump(new_inventory))
     PlayerData[player].inventory = new_inventory
 
     CheckEquippedFromInventory(player)
+    SetWeaponSlotsFromInventory(player)
     CallEvent("SyncInventory", player)
 end)
 
 -- unequip from inventory
-AddRemoteEvent("UnequipItemFromInventory", function(player, item)
-    UnequipObject(player, item)
+AddRemoteEvent("UnequipItemFromInventory", function(player, uuid)
+    local item = GetItemInstance(uuid)
+    UnequipItem(player, item)
     CallEvent("SyncInventory", player)
 end)
 
 -- clear inventory on player death
 AddEvent("OnPlayerDeath", function(player, killer)
     PlayerData[player].inventory = {}
-    PlayerData[player].weapons = {}
+    PlayerData[player].equipped = {}
 
     CallEvent("SyncInventory", player)
 end)
 
--- when weapon switching occurs, unequip whatever is in hand_r bone
-AddRemoteEvent("UnequipForWeapon", function(player)
+-- when weapon switching occurs, unequip hands, update PlayerData
+-- and force equip weapon to designated slot
+AddRemoteEvent("UseWeaponSlot", function(player, key)
+    log.trace("UseWeaponSlot", key)
+
+    UnequipFromBone(player, 'hand_l')
     UnequipFromBone(player, 'hand_r')
+
+    local inventory = PlayerData[player].inventory
+    for i, item in ipairs(inventory) do
+        if tostring(item['slot']) == "1" or tostring(item['slot']) == "2" or tostring(item['slot']) == "3" then
+            if tostring(item['slot']) == tostring(key) then
+                PlayerData[player].equipped[item.item] = true
+                EquipWeaponToSlot(player, item.item, item['slot'], true)
+            else
+                PlayerData[player].equipped[item.item] = nil
+            end
+        end
+    end
+
+    log.debug("equipped:", dump(PlayerData[player].equipped))
+    CallEvent("SyncInventory", player)
 end)
 
 -- item hotkeys
 AddRemoteEvent("UseItemHotkey", function(player, key)
+    log.trace("UseItemHotkey", key)
+
     local inventory = PlayerData[player].inventory
-
-    -- find valid hotbar items
-    local usable_items = {}
     for i, item in ipairs(inventory) do
-        if item['type'] == 'usable' or item['type'] == 'equipable' then
-            table.insert(usable_items, item['item'])
+        if tostring(item['slot']) == key then
+            EquipItem(player, item['item'])
         end
-    end
-
-    -- use it by index (1-3 are reserved for weapons)
-    local item = usable_items[key - 3]
-    if item ~= nil then
-        log.debug("Hotkey", item)
-        UseItemFromInventory(player, item)
     end
 end)
 

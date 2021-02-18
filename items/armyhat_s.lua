@@ -1,4 +1,4 @@
-RegisterObject("armyhat", {
+RegisterItemConfig("armyhat", {
     name = "Officer Hat",
     type = 'equipable',
     category = "Military Surplus",

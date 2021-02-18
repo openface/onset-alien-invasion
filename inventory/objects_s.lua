@@ -1,38 +1,57 @@
 -- item configuration
-Objects = {}
+ItemConfigs = {}
 
 -- object factory
 function GetItemConfig(item)
-    return Objects[item]
+    return ItemConfigs[item]
 end
 
 function GetItemConfigs()
-    return Objects
+    return ItemConfigs
 end
 
-function RegisterObject(item, meta)
-    Objects[item] = meta
-    log.debug("Registering object: " .. item)
+function RegisterItemConfig(item, meta)
+    ItemConfigs[item] = meta
+    log.debug("Registering item config: " .. item)
+end
+
+-- item world instances
+-- for now, we store just the item key
+ItemInstances = {}
+
+function RegisterNewItem(item)
+    local uuid = uuid()
+    ItemInstances[uuid] = item
+    log.debug("Registering item instance ("..item..") uuid: "..uuid)
+    return uuid
+end
+
+function GetItemInstance(uuid)
+    return ItemInstances[uuid]
 end
 
 AddEvent("OnPackageStop", function()
     Objects = {}
+    ItemInstances = {}
 end)
 
 function GetItemType(item)
-    if WeaponsConfig[item] then
-        return 'weapon'
-    else
-        local item_cfg = GetItemConfig(item)
-        if item_cfg then
-            return item_cfg['type']
-        end
+    local item_cfg = GetItemConfig(item)
+    if item_cfg then
+        return item_cfg['type']
+    end
+end
+
+function GetItemAttachmentBone(item)
+    local item_cfg = GetItemConfig(item)
+    if item_cfg and item_cfg['attachment'] then
+        return item_cfg['attachment']['bone']
     end
 end
 
 -- 
 function PlayInteraction(player, item, after_use_callback)
-    log.debug("Playing interaction for item "..item)
+    log.debug("Playing interaction for item " .. item)
     local item_cfg = GetItemConfig(item)
     if not item_cfg['interaction'] then
         if after_use_callback then
@@ -44,10 +63,11 @@ function PlayInteraction(player, item, after_use_callback)
         SetPlayerAnimation(player, item_cfg['interaction']['animation']['name'])
 
         local duration = item_cfg['interaction']['animation']['duration'] or 2000 -- default animation delay
-        if item_cfg['interaction']['animation']['spinner'] then
-            CallRemoteEvent(player, "ShowSpinner", duration)
-            AddPlayerChat(player, "spinner")
-        end
+
+        CallRemoteEvent(player, "StartInteraction", {
+            ['duration'] = duration,
+            ['show_spinner'] = item_cfg['interaction']['animation']['spinner']
+        })
 
         Delay(duration, function()
             SetPlayerAnimation(player, "STOP")

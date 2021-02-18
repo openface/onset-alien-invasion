@@ -1,4 +1,4 @@
-RegisterObject("axe", {
+RegisterItemConfig("axe", {
     name = "Axe",
     type = 'usable',
     category = "Supplies",
@@ -11,6 +11,8 @@ RegisterObject("axe", {
         animation = { name = "PICKAXE_SWING", duration = 5000 }
     },
     modelid = 20002,
+    max_use = 20,
+    use_label = "Chop",
     image = "survival/SM_Axe-Neo.png",
     max_carry = 1,
     price = 150,

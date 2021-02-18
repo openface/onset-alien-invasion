@@ -1,4 +1,4 @@
-RegisterObject("fishing_rod", {
+RegisterItemConfig("fishing_rod", {
     name = "Fishing Rod",
     type = 'resource',
     category = "Supplies",

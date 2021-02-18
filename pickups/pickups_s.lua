@@ -31,7 +31,7 @@ function CreateObjectPickup(item, x, y, z)
         log.debug("Invalid object " .. item)
         return
     end
-    log.debug("Creating object pickup " .. item .. " modelid " .. item_cfg['modelid'] .. " type ".. item_cfg['type'])
+    log.debug("Creating object pickup " .. item .. " modelid " .. item_cfg['modelid'] .. " type " .. item_cfg['type'])
 
     local pickup = CreatePickup(item_cfg['modelid'], x, y, z)
     SetPickupPropertyValue(pickup, '_name', item)
@@ -71,44 +71,30 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
         return
     end
 
-    if WeaponsConfig[item] then
-        if GetNextAvailableWeaponSlot(player) == nil then
-            log.debug("No more weapon slots available!")
-            CallRemoteEvent(player, "PlayErrorSound")
-            return
-        end
-
-        CallRemoteEvent(player, "PlayPickupSound", "sounds/pickup.wav")
-        log.debug("Player " .. GetPlayerName(player) .. " picks up weapon " .. item)
-
-        -- adds to player
-        AddWeapon(player, item)
-        DestroyText3D(GetPickupPropertyValue(pickup, '_text'))
-        DestroyPickup(pickup)
-    else
-        local item_cfg = GetItemConfig(item)
-        if not item_cfg then
-            return
-        end
-
-        if item_cfg['max_carry'] ~= nil and GetInventoryCount(player, item) >= item_cfg['max_carry'] then
-            log.debug("Pickup exceeds max_carry")
-            CallRemoteEvent(player, "PlayErrorSound")
-            return
-        elseif GetInventoryAvailableSlots(player) <= 0 then
-            log.debug("Pickup exceeded max inventory slots")
-            CallRemoteEvent(player, "PlayErrorSound")
-            return
-        end
-
-        CallRemoteEvent(player, "PlayPickupSound", item_cfg['pickup_sound'] or "sounds/pickup.wav")
-
-        log.debug("Player " .. GetPlayerName(player) .. " picks up item " .. item)
-
-        -- adds to player inventory and syncs
-        AddToInventory(player, item)
-        DestroyText3D(GetPickupPropertyValue(pickup, '_text'))
-        DestroyPickup(pickup)
+    local item_cfg = GetItemConfig(item)
+    if not item_cfg then
+        return
     end
+
+    if item_cfg['max_carry'] ~= nil and GetInventoryCount(player, item) >= item_cfg['max_carry'] then
+        log.debug("Pickup exceeds max_carry")
+        CallRemoteEvent(player, "PlayErrorSound")
+        return
+    elseif GetInventoryAvailableSlots(player) <= 0 then
+        log.debug("Pickup exceeded max inventory slots")
+        CallRemoteEvent(player, "PlayErrorSound")
+        return
+    end
+
+    CallRemoteEvent(player, "PlayPickupSound", item_cfg['pickup_sound'] or "sounds/pickup.wav")
+
+    log.debug("Player " .. GetPlayerName(player) .. " picks up item " .. item)
+
+    local uuid = RegisterNewItem(item)
+
+    -- adds to player inventory and syncs
+    AddToInventory(player, uuid)
+    DestroyText3D(GetPickupPropertyValue(pickup, '_text'))
+    DestroyPickup(pickup)
 end)
 

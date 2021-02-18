@@ -74,7 +74,9 @@ function PickupScrap(player)
     local item_cfg = GetItemConfig(item)
     if item_cfg ~= nil then
         AddPlayerChat(player, "Some " .. item .. " has been added to your inventory.")
-        AddToInventory(player, item)
+
+        local uuid = RegisterNewItem(item)
+        AddToInventory(player, uuid)
     end
 end
 

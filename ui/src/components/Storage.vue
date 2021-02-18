@@ -1,123 +1,99 @@
 <template>
     <div id="container">
-        <div id="inner">
+        <div class="section">
             <div id="title">{{ storage_name }}</div>
 
-            <draggable
-                ghost-class="ghost"
-                v-model="storage_items"
-                class="draggable storage"
-                v-bind="storageDraggableOptions"
-                @sort="UpdateStorage(object, type, $event)"
-                @start="dragging = true"
-                @end="dragging = false"
-                draggable=".slot"
-                forceFallback="true"
+            <drop-list
+                :items="storage_items"
+                class="storage_items"
+                :accepts-data="CanDropToStorage"
+                @insert="onInsertStorage"
+                @reorder="onReorderStorage"
+                mode="cut"
             >
-                <transition-group tag="div" class="grid" name="grid">
-                    <InventoryItem
-                        v-for="item in storage_items"
-                        :key="item.name"
-                        :item="item"
-                        :dragging="dragging"
-                        :show_options="false"
-                    />
-                    <div
-                        class="freeslot"
-                        v-for="n in FreeStorageSlots"
-                        :key="'hw' + n"
-                    ></div>
-                </transition-group>
-            </draggable>
+                <template v-slot:item="{ item }">
+                    <drag class="square" :data="item" @cut="onCutStorage" :key="item.uuid">
+                        <inventory-item :item="item" />
+                    </drag>
+                </template>
+
+                <template v-slot:feedback="{ data }">
+                    <div class="square" :key="'s_' + data.uuid">
+                        <inventory-item :item="data" />
+                    </div>
+                </template>
+            </drop-list>
         </div>
 
-        <div id="inner">
+        <div class="section">
             <div id="title">INVENTORY</div>
 
-            <draggable
-                ghost-class="ghost"
-                v-model="inventory_items"
-                class="draggable"
-                v-bind="inventoryDraggableOptions"
-                @sort="UpdateInventory"
-                @start="dragging = true"
-                @end="dragging = false"
-                draggable=".slot"
-                forceFallback="true"
+            <drop-list
+                :items="inventory_items"
+                class="inventory_items"
+                :accepts-data="CanDropToInventory"
+                @insert="onInsertInventory"
+                @reorder="onReorderInventory"
+                mode="cut"
             >
-                <transition-group tag="div" class="grid" name="grid">
-                    <InventoryItem
-                        v-for="item in inventory_items"
-                        :key="item.name"
-                        :item="item"
-                        :dragging="dragging"
-                        :show_options="false"
-                    />
-                    <div
-                        class="freeslot"
-                        v-for="n in FreeInventorySlots"
-                        :key="'hw' + n"
-                    ></div>
-                </transition-group>
-            </draggable>
+                <template v-slot:item="{ item }">
+                    <drag class="square" :data="item" @cut="onCutInventory" :key="item.uuid">
+                        <inventory-item :item="item" />
+                    </drag>
+                </template>
+
+                <template v-slot:feedback="{ data }">
+                    <div class="square" :key="'i_' + data.index">
+                        <inventory-item :item="data" />
+                    </div>
+                </template>
+
+            </drop-list>
         </div>
     </div>
 </template>
 
 <script>
-import draggable from "vuedraggable";
+import { Drag, DropList } from "vue-easy-dnd";
 import InventoryItem from "./InventoryItem.vue";
 
-const MAX_STORAGE_SLOTS = 7;
-const MAX_INVENTORY_SLOTS = 14;
-
+// TODO
+//const MAX_STORAGE_SLOTS = 7;
+//const MAX_INVENTORY_SLOTS = 14;
 export default {
     name: "Storage",
     components: {
-        draggable,
         InventoryItem,
+        Drag,
+        DropList,
     },
     data() {
         return {
             storage_name: null,
+            object: null,
+            type: null,
             storage_items: [],
             inventory_items: [],
-            dragging: false,
-            storageDraggableOptions: {
-                group: {
-                    name: "storage_inventory",
-                    put: function(to) {
-                        // allow drops if storage has less than 7
-                        return (
-                            to.el.getElementsByClassName("slot").length <
-                            MAX_STORAGE_SLOTS
-                        );
-                    },
-                },
-            },
-            inventoryDraggableOptions: {
-                group: {
-                    name: "storage_inventory",
-                    put: function(to) {
-                        // allow drops if inventory has less than 14
-                        return (
-                            to.el.getElementsByClassName("slot").length <
-                            MAX_INVENTORY_SLOTS
-                        );
-                    },
-                },
-            },
         };
     },
-    computed: {
-        FreeStorageSlots: function() {
-            return MAX_STORAGE_SLOTS - this.storage_items.length;
-        },
-        FreeInventorySlots: function() {
-            return MAX_INVENTORY_SLOTS - this.inventory_items.length;
-        },
-    },
     methods: {
+        CanDropToStorage: function(data) {
+            if (this.inventory_items.findIndex((item) => item.uuid == data.uuid) > -1) {
+                return true;
+            } else {
+                return false;
+            }
+            // todo: check storage limits
+        },
+        CanDropToInventory: function(data) {
+            if (this.storage_items.findIndex((item) => item.uuid == data.uuid) > -1) {
+                return true;
+            } else {
+                return false;
+            }
+            // todo: check inventory limits
+
+        },
         SetStorageData: function(data) {
             this.storage_name = data.storage_name;
             this.object = data.object;
@@ -125,34 +101,60 @@ export default {
             this.storage_items = data.storage_items;
             this.inventory_items = data.inventory_items;
         },
-        range: function(start, end) {
-            return Array(end - start + 1)
-                .fill()
-                .map((_, idx) => start + idx);
-        },
-        UpdateStorage: function(object, type) {
-            //window.console.log("object:" + object);
-
-            var data = this.storage_items.map(function(item, index) {
+        SaveStorageData: function() {
+            const data = this.storage_items.map(function(item, index) {
                 return {
                     item: item.item,
+                    uuid: item.uuid,
                     quantity: item.quantity,
                     index: index + 1,
                 };
             });
-
-            this.CallEvent("UpdateStorage", object, type, JSON.stringify(data));
+            this.CallEvent("UpdateStorage", this.object, this.type, JSON.stringify(data));         
         },
-        UpdateInventory: function() {
-            var data = this.inventory_items.map(function(item, index) {
+        onInsertStorage: function(e) {
+            window.console.log("onInsertStorage:", e);
+            this.storage_items.splice(e.index, 0, e.data);
+            this.SaveStorageData();
+        },
+        onCutStorage: function(e) {
+            window.console.log("onCutStorage:", e.data);
+
+            this.storage_items.splice(this.storage_items.indexOf(e.data), 1);
+            this.SaveStorageData();
+        },
+        onReorderStorage: function(e) {
+            window.console.log("onReorderStorage:", e);
+            e.apply(this.storage_items);
+            this.SaveStorageData();
+        },
+        SaveInventoryData: function() {
+            const data = this.inventory_items.map(function(item, index) {
                 return {
                     item: item.item,
+                    uuid: item.uuid,
                     quantity: item.quantity,
                     index: index + 1,
                 };
             });
 
             this.CallEvent("UpdateInventory", JSON.stringify(data));
+        },
+        onInsertInventory: function(e) {
+            window.console.log("onInsertInventory:", e);
+            this.inventory_items.splice(e.index, 0, e.data);
+            this.SaveInventoryData();
+        },
+        onCutInventory: function(e) {
+            window.console.log("onCutInventory:", e.data);
+
+            this.inventory_items.splice(this.inventory_items.indexOf(e.data), 1);
+            this.SaveInventoryData();
+        },
+        onReorderInventory: function(e) {
+            window.console.log("onReorderInventory:", e);
+            e.apply(this.inventory_items);
+            this.SaveInventoryData();
         },
     },
     mounted() {
@@ -164,8 +166,19 @@ export default {
                 type: "object",
                 storage_name: "Crate",
                 storage_items: [
+                     {
+                        index: 1,
+                        item: "lighter",
+                        uuid: "68c6486c-10b0-4a64-8b94-08befa079323",
+                        name: "Lighter",
+                        modelid: 2,
+                        quantity: 1,
+                        type: "usable",
+                    },
                     {
+                        index: 2,
                         item: "boxhead",
+                        uuid: "72491e7d-8e4f-46cc-9df6-e46c5df64c1c",
                         name: "Boxhead",
                         modelid: 2,
                         quantity: 1,
@@ -173,8 +186,10 @@ export default {
                     },
                 ],
                 inventory_items: [
-                    {
+                     {
+                        index: 1,
                         item: "metal",
+                        uuid: "bdf427f4-76a7-431c-916b-7e96252d0c6f",
                         name: "Metal",
                         modelid: 694,
                         quantity: 2,
@@ -182,7 +197,9 @@ export default {
                         equipped: false,
                     },
                     {
+                        index: 2,
                         item: "plastic",
+                        uuid: "a538d5da-3444-4b97-b1ff-eb9594cdd706",
                         name: "Plastic",
                         modelid: 627,
                         quantity: 1,
@@ -190,13 +207,15 @@ export default {
                         equipped: false,
                     },
                     {
+                        index: 3,
                         item: "flashlight",
+                        uuid: "9c055cdf-ef2e-4b55-b4ca-036b13cafe36",
                         name: "Flashlight",
                         modelid: 627,
                         quantity: 1,
                         type: "equipable",
                         equipped: true,
-                    },
+                    }, 
                 ],
             });
         }
@@ -214,7 +233,7 @@ export default {
     justify-content: center;
     height: 100vh;
 }
-#inner {
+.section {
     order: 0;
     flex: 0 1 auto;
     align-self: auto;
@@ -227,6 +246,7 @@ export default {
     text-shadow: 3px black;
     padding: 10px;
     margin-bottom: 25px;
+    min-height:146px;
 }
 
 #title {
@@ -234,53 +254,26 @@ export default {
     font-size: 36px;
     text-align: center;
     margin: 0;
-    margin-bottom: 5px;
     font-weight: bold;
     font-family: impact;
+    background: rgba(0, 0, 0, 0.1);
     text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
-    text-transform: uppercase;
+    margin-bottom:10px;
+    text-transform:uppercase;
 }
-.subtitle {
-    color: #fff;
-    font-size: 20px;
-    text-align: center;
-    margin: 0;
-    font-weight: bold;
-    font-family: impact;
-    text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
-    background: rgba(255, 255, 255, 0.1);
-}
-.grid {
+.inventory_items, .storage_items {
     display: grid;
-    grid-template-columns: repeat(7, 77px);
-    grid-template-rows: repeat(2, 77px);
-    grid-gap: 0.7em;
+    grid-auto-flow: dense;
+    grid-column-gap: 1px;
+    grid-row-gap: 1px;
+    grid-template-columns: repeat(7, 90px);
+    height: 100%;
 }
-.grid-move {
-    transition: transform 0.2s;
-}
-.no-move {
-    transition: transform 0s;
-}
-.ghost {
-    opacity: 1;
-}
-.draggable {
-    padding: 5px;
-    min-height: 80px;
-    max-height: 165px;
-    overflow: hidden;
-    width: 97%;
-    border: 3px dotted rgba(0, 0, 0, 0.2);
-}
-.draggable.storage {
-    max-height: 75px;
-}
-.draggable:empty {
-    text-align: center;
-    height: 85px;
-    width: 100%;
-    border: 3px dotted rgba(255, 255, 255, 0.1);
+.square {
     background: rgba(255, 255, 255, 0.1);
+    width: 80px;
+    height: 80px;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    padding: 5px;
 }
 </style>

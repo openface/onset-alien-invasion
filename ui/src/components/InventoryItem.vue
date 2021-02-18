@@ -1,87 +1,31 @@
 <template>
-    <div
-        v-if="item"
-        :class="{ slot: true, equipped: IsEquipped }"
-        @mouseenter="
-            PlayClick();
-            hover = true;
-        "
-        @mouseleave="hover = false"
-    >
-        <img :src="getImageUrl(item)" @mousedown="hover = false" />
+    <div v-if="item" :class="{ item: true, equipped: currentlyEquipped }" @mouseenter="PlayClick()">
+        <img :src="getImageUrl(item)" />
         <span class="keybind" v-if="keybind">{{ keybind }}</span>
         <span class="name">{{ item.name }}</span>
-        <span v-if="item.quantity > 1" class="quantity">
-            x{{ item.quantity }}
-        </span>
-        <div class="options" v-if="OptionsVisible">
-            <div v-if="item.type == 'equipable'">
-                <a v-if="!item.equipped" @click="EquipItem(item.item)">Equip</a>
-                <a v-if="item.equipped" @click="UnequipItem(item.item)"
-                    >Unequip</a
-                >
-            </div>
-            <div v-else-if="item.type == 'usable'">
-                <a @click="UseItem(item.item)">{{ item.use_label || "Use" }}</a>
-                <a v-if="item.equipped" @click="UnequipItem(item.item)"
-                    >Put Away</a
-                >
-            </div>
-            <div v-else-if="item.type == 'placeable'">
-                <a @click="PlaceItem(item.item)">Place</a>
-            </div>
-            <a @click="DropItem(item.item)">Drop</a>
-        </div>
+        <span v-if="item.quantity > 1" class="quantity"> x{{ item.quantity }} </span>
     </div>
-    <div v-else class="freeslot"></div>
 </template>
 
 <script>
 export default {
     name: "InventoryItem",
-    props: ["item", "dragging", "keybind", "show_options"],
-    data() {
-        return {
-            hover: false,
-        };
-    },
+    props: ["item", "keybind"],
     computed: {
-        IsEquipped: function() {
-            return this.item.equipped;
-        },
-        OptionsVisible: function() {
-            return this.show_options && !this.dragging && this.hover;
-        },
+        currentlyEquipped: function() {
+            return this.item.equipped && this.keybind && this.item.type != 'weapon'
+        }
     },
     methods: {
-        DropItem: function(item) {
-            window.console.log("drop");
-            this.CallEvent("DropItem", item);
-        },
-        EquipItem: function(item) {
-            this.CallEvent("EquipItem", item);
-        },
-        UnequipItem: function(item) {
-            this.CallEvent("UnequipItem", item);
-        },
-        UseItem: function(item) {
-            this.CallEvent("UseItem", item);
-        },
-        PlaceItem: function(item) {
-            this.CallEvent("PlaceItem", item);
-        },
         PlayClick() {
-            if (!this.dragging) {
-                this.CallEvent("PlayClick");
-            }
+            this.CallEvent("PlayClick");
         },
     },
 };
 </script>
 
-<style>
-.slot,
-.freeslot {
+<style scoped>
+.item {
     background: rgba(255, 255, 255, 0.1);
     border: 2px solid rgba(0, 0, 0, 0.3);
     position: relative;
@@ -89,34 +33,35 @@ export default {
     width: 75px;
     height: 75px;
 }
-.slot:hover {
+.item:hover {
     background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255,255,255, 0.6);
 }
-.slot:hover img {
+.item:hover img {
     opacity: 1;
 }
-.slot.equipped {
+.item.equipped {
     border-color: rgba(255, 255, 0, 0.7);
 }
-.slot img {
+.item img {
     object-fit: scale-down;
     width: 75px;
     height: 75px;
-    opacity: 0.5;
+    opacity: 0.9;
 }
-.slot .quantity {
+.item .quantity {
     color: #fff;
     font-weight: bold;
     position: absolute;
     text-shadow: 2px 2px #000;
-    bottom: -2px;
+    bottom: -1px;
     right: -2px;
     z-index: 1;
     font-size: 12px;
     padding: 5px 7px;
     background: rgba(0, 0, 0, 0.5);
 }
-.slot .keybind {
+.item .keybind {
     position: absolute;
     top: 1px;
     left: 1px;
@@ -124,40 +69,14 @@ export default {
     background: rgba(255, 255, 255, 0.2);
     text-shadow: 1px 1px #000;
     padding: 0px 3px;
+    font-weight: bold;
 }
-.slot .name {
+.item .name {
     position: absolute;
     bottom: 1px;
     left: 1px;
     font-size: 12px;
     color: #fff;
     text-shadow: 1px 1px #000;
-}
-
-/* options */
-
-.slot .options {
-    position: absolute;
-    z-index: 1;
-    background: rgba(0, 0, 0, 0.4);
-    left: 0;
-    width: 100%;
-    border: 1px solid rgba(0, 0, 0, 0.4);
-}
-
-.slot .options a {
-    color: #eee;
-    display: block;
-    padding: 6px 5px;
-    text-decoration: none;
-    font-size: 11px;
-    font-weight: bold;
-    text-transform: uppercase;
-    text-shadow: 1px 1px rgba(0, 0, 0, 0.6);
-}
-
-.slot .options a:hover {
-    background: rgba(0, 0, 0, 0.9);
-    cursor: pointer;
 }
 </style>

@@ -22,15 +22,20 @@ AddRemoteEvent("prop:OpenStorage", function(player, object, options)
     local inventory = PlayerData[player].inventory
     for index, item in ipairs(inventory) do
         -- usable, equipable, resource
-        table.insert(_send.inventory_items, {
-            ['index'] = index,
-            ['item'] = item['item'],
-            ['name'] = item['name'],
-            ['modelid'] = item['modelid'],
-            ['image'] = item['image'],
-            ['quantity'] = item['quantity'],
-            ['type'] = item['type']
-        })
+        local item_cfg = GetItemConfig(item['item'])
+        if item_cfg then
+            table.insert(_send.inventory_items, {
+                ['index'] = index,
+                ['item'] = item['item'],
+                ['uuid'] = item['uuid'],
+                ['quantity'] = item['quantity'],
+
+                ['name'] = item_cfg['name'],
+                ['modelid'] = item_cfg['modelid'],
+                ['image'] = item_cfg['image'],
+                ['type'] = item_cfg['type']
+            })
+        end
     end
 
     log.trace("STORAGE SYNC: " .. json_encode(_send))
@@ -41,7 +46,9 @@ end)
 -- [1] = { ["quantity"] = 1,["index"] = 1,["item"] = axe,}
 AddRemoteEvent("UpdateStorage", function(player, object, type, data)
     local storage_items = json_decode(data)
-    log.debug(GetPlayerName(player) .. " updates storage:" .. object .. " type:" .. type)
+    log.debug(GetPlayerName(player) .. " updates storage:" .. object .. " type:" .. type .. dump(data))
+    local storage_items = json_decode(data)
+    log.debug(dump(storage_items))
     ReplaceStorageContents(object, type, storage_items)
 end)
 
@@ -54,6 +61,7 @@ function ReplaceStorageContents(object, type, data)
         if item_cfg then
             new_storage[i] = {
                 item = item.item,
+                uuid = item.uuid,
                 quantity = item.quantity,
                 name = item_cfg['name'],
                 modelid = item_cfg['modelid'],

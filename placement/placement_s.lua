@@ -59,7 +59,8 @@ AddRemoteEvent("UnplaceItem", function(player, object)
     PlacedObjects[object] = nil
     DestroyObject(object)
 
-    AddToInventory(player, item)
+    local uuid = RegisterNewItem(item)
+    AddToInventory(player, uuid)
 
     AddPlayerChat(player, item_cfg["name"] .. " has been added to your inventory.")
     log.debug(GetPlayerName(player) .. " unplaced object " .. object .. " item " .. item)

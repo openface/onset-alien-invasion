@@ -1,5 +1,6 @@
 -- global
 InventoryUI = nil
+HoldingUsableItem = nil
 
 AddEvent("OnPackageStart", function()
     InventoryUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
@@ -11,6 +12,10 @@ end)
 
 AddEvent("OnPackageStop", function()
     DestroyWebUI(InventoryUI)
+end)
+
+AddRemoteEvent("Play3DSound", function(sound, x, y, z)
+    SetSoundVolume(CreateSound3D("client/"..sound, x, y, z, 1000), 1.0)
 end)
 
 AddEvent('OnKeyPress', function(key)
@@ -26,10 +31,13 @@ AddEvent('OnKeyPress', function(key)
             ExecuteWebJS(InventoryUI, "EmitEvent('ShowInventory')")
         elseif key == '1' or key == '2' or key == '3' then
             -- weapon switching
-            CallRemoteEvent("UnequipForWeapon")
+            CallRemoteEvent("UseWeaponSlot", key)
         elseif key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' then
             -- item hotkeys
             CallRemoteEvent("UseItemHotkey", key)
+        elseif key == 'Left Mouse Button' and HoldingUsableItem and not CurrentlyInteracting then
+            -- use item currently in hands
+            CallRemoteEvent("UseItemFromInventory", HoldingUsableItem)
         end
     end
 end)
@@ -53,25 +61,30 @@ AddRemoteEvent("SetInventory", function(data)
     ExecuteWebJS(InventoryUI, "EmitEvent('SetInventory'," .. data .. ")")
 end)
 
+-- controls whether or not player can aim
+AddRemoteEvent("SetInHand", function(item_or_nil)
+    HoldingUsableItem = item_or_nil
+end)
+
 -- drop item
-AddEvent("DropItem", function(item)
-    CallRemoteEvent("DropItemFromInventory", item)
+AddEvent("DropItem", function(uuid)
+    CallRemoteEvent("DropItemFromInventory", uuid)
 end)
 
 -- equip item
-AddEvent("EquipItem", function(item)
-    CallRemoteEvent("EquipItemFromInventory", item)
+AddEvent("EquipItem", function(uuid)
+    CallRemoteEvent("EquipItemFromInventory", uuid)
 end)
 
 -- unequip item
-AddEvent("UnequipItem", function(item)
-    CallRemoteEvent("UnequipItemFromInventory", item)
+AddEvent("UnequipItem", function(uuid)
+    CallRemoteEvent("UnequipItemFromInventory", uuid)
 end)
 
--- use item
-AddEvent("UseItem", function(item)
-    CallRemoteEvent("UseItemFromInventory", item)
-end)
+--[[ -- use item
+AddEvent("UseItem", function(uuid)
+    CallRemoteEvent("UseItemFromInventory", uuid)
+end) ]]
 
 -- sort inventory
 AddEvent("UpdateInventory", function(data)

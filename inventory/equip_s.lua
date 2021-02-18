@@ -15,38 +15,41 @@ function ClearEquippedObjects(player)
     SetPlayerAnimation(player, "STOP")
 end
 
-function SyncEquipped(player)
-    local equipped = PlayerData[player].equipped
-    for item, object in pairs(equipped) do
-        AttachItemToPlayer(player, item)
-    end
-end
-
-function EquipObject(player, item)
+function EquipItem(player, item)
+    log.trace("EquipItem", item)
     local item_cfg = GetItemConfig(item)
 
-    if item_cfg['attachment'] == nil then
+    if item_cfg['attachment'] == nil and item_cfg['type'] ~= 'weapon' then
         log.debug "not attachable"
         return
     end
 
-    -- equipable items can be toggled via hotkey
-    if item_cfg['type'] == 'equipable' and GetEquippedObject(player, item) ~= nil then
+    if GetEquippedObject(player, item) ~= nil then
         log.debug "already equipped; unequipping..."
-        UnequipObject(player, item)
+        UnequipItem(player, item)
         return
     end
 
     -- start equipping
     log.debug(GetPlayerName(player) .. " equips item " .. item)
 
-    -- unarm first if equipping to hands
-    if item_cfg['attachment']['bone'] == 'hand_r' or item_cfg['attachment']['bone'] == 'hand_l' then
-        SwitchToFists(player)
-    end
+    -- unequip whatever might already be in the designated bone
+    if item_cfg['attachment'] then
+        -- unarm first if equipping to hands
+        if item_cfg['attachment']['bone'] == 'hand_r' or item_cfg['attachment']['bone'] == 'hand_l' then
+            SwitchToFists(player)
+        end
 
-    -- unequip whatever is in the player's bone first
-    UnequipFromBone(player, item_cfg['attachment']['bone'])
+        -- unequip whatever is in the player's bone first
+        UnequipFromBone(player, item_cfg['attachment']['bone'])
+    elseif item_cfg['type'] == 'weapon' then
+        -- switching to weapon, unequip hands
+
+        -- unequip right hand
+        UnequipFromBone(player, 'hand_r')
+        -- unequip left hand
+        UnequipFromBone(player, 'hand_l')
+    end
 
     -- equipable animations
     if item_cfg['type'] == 'equipable' then
@@ -65,20 +68,22 @@ function EquipObject(player, item)
     CallEvent("items:" .. item .. ":equip", player, object)
 
     -- sync inventory
-    if item_cfg['type'] == 'equipable' then
-        CallEvent("SyncInventory", player)
-    end
+    CallEvent("SyncInventory", player)
 end
 
--- attaches directly without any checking
+-- attaches object or weapon to player
 function AttachItemToPlayer(player, item)
     local item_cfg = GetItemConfig(item)
+
+    if item_cfg['type'] == 'weapon' then
+        AddWeaponFromInventory(player, item, false)
+        return true
+    end
 
     local x, y, z = GetPlayerLocation(player)
     local attached_object = CreateObject(item_cfg['modelid'], x, y, z)
 
     SetObjectPropertyValue(attached_object, "_name", item)
-    SetObjectPropertyValue(attached_object, "_bone", item_cfg['attachment']['bone'])
     SetObjectAttached(attached_object, ATTACH_PLAYER, player, item_cfg['attachment']['x'], item_cfg['attachment']['y'],
         item_cfg['attachment']['z'], item_cfg['attachment']['rx'], item_cfg['attachment']['ry'],
         item_cfg['attachment']['rz'], item_cfg['attachment']['bone'])
@@ -96,16 +101,26 @@ function AttachItemToPlayer(player, item)
     return attached_object
 end
 
+-- unequip whatever is equipped on given bone
+-- returns unequipped item or nil
 function UnequipFromBone(player, bone)
+    log.debug("UnequipFromBone", bone)
     -- unequip whatever is in the player's bone
-    local equipped_object = GetEquippedObjectNameFromBone(player, bone)
-    if equipped_object ~= nil then
+    local equipped_item = GetEquippedItemNameFromBone(player, bone)
+    if equipped_item ~= nil then
         log.debug("Bone " .. bone .. " is already equipped, unequipping...")
-        UnequipObject(player, equipped_object)
+        UnequipItem(player, equipped_item)
     end
 end
 
-function UnequipObject(player, item)
+-- Unequips objects or weapons from player
+function UnequipItem(player, item)
+    local item_cfg = GetItemConfig(item)
+    if not item_cfg then
+        return
+    end
+
+    -- item is attached object to player
     local object = GetEquippedObject(player, item)
     if not object then
         log.warn "item not equipped"
@@ -116,8 +131,6 @@ function UnequipObject(player, item)
     -- cancel any currently running animations
     SetPlayerAnimation(player, "STOP")
 
-    local item_cfg = GetItemConfig(item)
-
     -- remove from equipped list
     local equipped = PlayerData[player].equipped
     equipped[item] = nil
@@ -125,9 +138,13 @@ function UnequipObject(player, item)
 
     log.trace("EQUIPPED: ", dump(equipped))
 
-    DestroyObject(object)
+    if item_cfg['type'] == 'weapon' then
+        UnequipWeapon(player, item)
+    else
+        DestroyObject(object)
+    end
 
-    log.debug(GetPlayerName(player).. " unequipped item "..item)
+    log.debug(GetPlayerName(player) .. " unequipped item " .. item)
 
     -- call UNEQUIP event on object
     CallEvent("items:" .. item .. ":unequip", player, object)
@@ -141,32 +158,36 @@ function GetEquippedObject(player, item)
 end
 
 function IsItemEquipped(player, item)
-    if GetEquippedObject(player, item) ~= nil then
+    if WeaponsConfig[item] then
+        return IsWeaponEquipped(player, item)
+    elseif GetEquippedObject(player, item) ~= nil then
         return true
     else
         return false
     end
 end
 
-function GetEquippedObjectNameFromBone(player, bone)
+function GetEquippedItemNameFromBone(player, bone)
     local equipped = PlayerData[player].equipped
-    for _, object in pairs(equipped) do
-        if GetObjectPropertyValue(object, "_bone") == bone then
-            -- log.debug "found bone"
-            return GetObjectPropertyValue(object, "_name")
+    for item, object in pairs(equipped) do
+        local item_cfg = GetItemConfig(item)
+        if item_cfg['type'] == 'weapon' and (bone == 'hand_l' or bone == 'hand_r') then
+            return item
+        elseif item_cfg['attachment'] and item_cfg['attachment']['bone'] == bone then
+            return item
         end
     end
 end
 
 -- unequip items no longer in player inventory
 function CheckEquippedFromInventory(player)
-  local equipped = PlayerData[player].equipped
-  local inventory = PlayerData[player].inventory
+    local equipped = PlayerData[player].equipped
+    local inventory = PlayerData[player].inventory
 
-  for item,_ in pairs(equipped) do
-    if GetInventoryCount(player,item) == 0 then
-      log.debug("Unequipping item "..item.." no longer in inventory")
-      UnequipObject(player, item)
+    for item, _ in pairs(equipped) do
+        if GetInventoryCount(player, item) == 0 then
+            log.debug("Unequipping item " .. item .. " no longer in inventory")
+            UnequipItem(player, item)
+        end
     end
-  end
 end

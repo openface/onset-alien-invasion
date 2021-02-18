@@ -12,10 +12,9 @@ InitTable("accounts", {
     is_admin = { type = 'bool', default = false },
     clothing = { type = 'number', length = 11 },
     location = { type = 'json' },
-    weapons = { type = 'json' },
     equipped = { type = 'json' },
     inventory = { type = 'json' }
-}) 
+}, false) -- true to recreate table
 
 PlayerData = {}
 
@@ -59,7 +58,6 @@ AddEvent("OnPlayerJoin", function(player)
     -- initialize PlayerData
     PlayerData[player] = {
         inventory = {},
-        weapons = {},
         equipped = {}
     }
 
@@ -88,7 +86,6 @@ AddEvent("OnPlayerSpawn", function(player)
     -- initialize PlayerData
     PlayerData[player] = {
         inventory = {},
-        weapons = {},
         equipped = {}
     }
 
@@ -113,7 +110,6 @@ AddEvent("OnPlayerDeath", function(player, killer)
     -- clear player data on death
     UpdateRows("accounts", {
         inventory = {},
-        weapons = {},
         equipped = {}
     }, { steamid = GetPlayerSteamId(player) })
 
@@ -140,7 +136,10 @@ AddEvent("OnPlayerSteamAuth", function(player)
         log.info("Loading existing character for player " .. GetPlayerName(player))
 
         -- setup inventory
-        InitializePlayer(player)
+        -- give time to fully spawn player
+        Delay(2500, function()
+            InitializePlayer(player)
+        end)
 
         -- player is already spawned, relocate them
         local loc = json_decode(account['location'])
@@ -197,17 +196,22 @@ function InitializePlayer(player)
 
     -- setup inventory
     PlayerData[player].inventory = json_decode(account['inventory'])
-    PlayerData[player].weapons = json_decode(account['weapons'])
-    PlayerData[player].equipped = json_decode(account['equipped'])
 
     -- setup properties
     SetPlayerPropertyValue(player, 'clothing', account['clothing'], true)
 
-    Delay(2500, function(player)
-        SyncInventory(player)
-        SyncEquipped(player)
-        SyncWeapons(player)
-    end, player)
+    -- initialize inventory
+    for i,item in ipairs(PlayerData[player].inventory) do
+        ItemInstances[item.uuid] = item.item
+    end
+
+    local equipped = json_decode(account['equipped'])
+    for item, object in pairs(equipped) do
+        EquipItem(player, item)
+    end
+
+    SyncWeaponSlotsFromInventory(player)
+    CallEvent("SyncInventory", player)
 end
 
 -- Chat
@@ -228,7 +232,6 @@ function SavePlayer(player)
     UpdateRows("accounts", {
         location = { x = x, y = y, z =z },
         inventory = PlayerData[player].inventory,
-        weapons = PlayerData[player].weapons,
         equipped = PlayerData[player].equipped
     }, { steamid = GetPlayerSteamId(player) })
 end
@@ -241,3 +244,9 @@ function IsAdmin(steamid)
         return false
     end
 end
+
+AddCommand("die", function(player)
+    SetPlayerHealth(player, 0)
+    AddPlayerChat(player, "You have been forcefully killed.")
+end)
+

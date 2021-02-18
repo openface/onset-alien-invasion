@@ -72,4 +72,3 @@ end
 AddEvent("UpdateStorage", function(object, type, data)
     CallRemoteEvent("UpdateStorage", object, type, data)
 end)
-

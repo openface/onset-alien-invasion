@@ -338,7 +338,6 @@ AddRemoteEvent("UseItemHotkey", function(player, key)
     for i, item in ipairs(inventory) do
         if tostring(item['slot']) == key then
             EquipItem(player, item['item'])
-            return
         end
     end
 end)

@@ -1,8 +1,6 @@
 -- global
 InventoryUI = nil
-
--- item currently in hands or nil
-local HoldingUsableItem
+HoldingUsableItem = nil
 
 AddEvent("OnPackageStart", function()
     InventoryUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
@@ -55,12 +53,6 @@ AddEvent('OnKeyRelease', function(key)
         ExecuteWebJS(InventoryUI, "EmitEvent('HideInventory')")
         ShowMouseCursor(false)
         SetInputMode(INPUT_GAME)
-    end
-end)
-
-AddEvent("OnPlayerToggleAim", function(toggle)
-    if toggle == true and HoldingUsableItem then
-        return false -- do not allow the player to aim
     end
 end)
 

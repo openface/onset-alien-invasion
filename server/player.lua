@@ -196,7 +196,6 @@ function InitializePlayer(player)
 
     -- setup inventory
     PlayerData[player].inventory = json_decode(account['inventory'])
-    PlayerData[player].equipped = json_decode(account['equipped'])
 
     -- setup properties
     SetPlayerPropertyValue(player, 'clothing', account['clothing'], true)
@@ -206,7 +205,11 @@ function InitializePlayer(player)
         ItemInstances[item.uuid] = item.item
     end
 
-    SyncEquipped(player)
+    local equipped = json_decode(account['equipped'])
+    for item, object in pairs(equipped) do
+        EquipItem(player, item)
+    end
+
     SyncWeaponSlotsFromInventory(player)
     CallEvent("SyncInventory", player)
 end

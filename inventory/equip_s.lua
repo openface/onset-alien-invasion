@@ -15,14 +15,8 @@ function ClearEquippedObjects(player)
     SetPlayerAnimation(player, "STOP")
 end
 
-function SyncEquipped(player)
-    local equipped = PlayerData[player].equipped
-    for item, object in pairs(equipped) do
-        EquipItem(player, item)
-    end
-end
-
 function EquipItem(player, item)
+    log.trace("EquipItem", item)
     local item_cfg = GetItemConfig(item)
 
     if item_cfg['attachment'] == nil and item_cfg['type'] ~= 'weapon' then
@@ -30,7 +24,6 @@ function EquipItem(player, item)
         return
     end
 
-    -- equipable items can be toggled via hotkey
     if GetEquippedObject(player, item) ~= nil then
         log.debug "already equipped; unequipping..."
         UnequipItem(player, item)

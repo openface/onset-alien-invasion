@@ -33,21 +33,16 @@ function EquipItem(player, item)
     -- start equipping
     log.debug(GetPlayerName(player) .. " equips item " .. item)
 
-    -- unequip whatever might already be in the designated bone
-    if item_cfg['attachment'] then
-        -- unarm first if equipping to hands
-        if item_cfg['attachment']['bone'] == 'hand_r' or item_cfg['attachment']['bone'] == 'hand_l' then
+    -- unequip whatever is in hands if equipping to hands
+    if item_cfg['attachment']['bone'] == 'hand_r' or item_cfg['attachment']['bone'] == 'hand_l' or item_cfg['type'] == 'weapon' then
+
+        -- switch to fists if not equipping a weapon
+        if item_cfg['type'] ~= 'weapon' then
             SwitchToFists(player)
         end
 
-        -- unequip whatever is in the player's bone first
-        UnequipFromBone(player, item_cfg['attachment']['bone'])
-    elseif item_cfg['type'] == 'weapon' then
-        -- switching to weapon, unequip hands
-
-        -- unequip right hand
+        -- unequip hands
         UnequipFromBone(player, 'hand_r')
-        -- unequip left hand
         UnequipFromBone(player, 'hand_l')
     end
 

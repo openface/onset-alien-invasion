@@ -56,6 +56,13 @@ AddEvent('OnKeyRelease', function(key)
     end
 end)
 
+-- prevent aiming while holding item
+AddEvent("OnPlayerToggleAim", function(toggle)
+    if toggle == true and HoldingUsableItem then
+        return false -- do not allow the player to aim
+    end
+end)
+
 -- sync inventory
 AddRemoteEvent("SetInventory", function(data)
     ExecuteWebJS(InventoryUI, "EmitEvent('SetInventory'," .. data .. ")")

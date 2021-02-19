@@ -1,7 +1,7 @@
 -- get inventory data and send to UI
 function SyncInventory(player)
     log.trace('SyncInventory')
-    
+
     local inventory_items = PlayerData[player].inventory
     --log.trace("INVENTORY ITEMS (" .. GetPlayerName(player) .. "): " .. dump(inventory_items))
 
@@ -32,7 +32,7 @@ function SyncInventory(player)
                 ['image'] = item_cfg['image'],
                 ['use_label'] = item_cfg['use_label']
             })
-            if equipped and (bone == 'hand_r' or bone == 'hand_r') then
+            if equipped and (bone == 'hand_l' or bone == 'hand_r') then
                 current_inhand = item['item']
             end
         end

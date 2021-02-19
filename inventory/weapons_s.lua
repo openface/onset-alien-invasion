@@ -140,7 +140,7 @@ function UnequipWeapon(player, item)
     end
 end
 
--- if weapon is not 1, set weapon 1 to slot 1
+-- if weapon is not 1, set weapon 1 to slot 1 (fists)
 function SwitchToFists(player)
     log.debug("SwitchToFist")
     local wep = GetPlayerEquippedWeapon(player)

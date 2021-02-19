@@ -95,6 +95,12 @@ import VueProgress from "vue-progress-path";
 Vue.use(VueProgress);
 
 /*
+ * Toasts
+ */
+import Toasted from 'vue-toasted';
+Vue.use(Toasted);
+
+/*
  * Routing
  */
 Vue.use(VueRouter);

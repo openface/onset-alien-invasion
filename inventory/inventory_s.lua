@@ -79,8 +79,10 @@ function AddToInventory(player, uuid)
 
     -- auto-equip when added
     if item_cfg['auto_equip'] == true and (item_cfg['type'] == 'equipable' or item_cfg['type'] == 'weapon') then
-        log.debug("Auto-equipping item", item)
-        EquipItem(player, item)
+        if GetEquippedObject(player, item) ~= nil then
+            log.debug("Auto-equipping item", item)
+            EquipItem(player, item)
+        end
     end
 
     CallEvent("SyncInventory", player)

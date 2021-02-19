@@ -3,27 +3,15 @@
         <div id="banner" v-if="banner">
             <span class="message">{{ banner }}</span>
         </div>
-        <div id="messages" v-if="message">
-            <span class="message">{{ message }}</span>
-        </div>
         <div id="boss-health" v-if="boss_health">
             <div class="health-bar" :style="{ width: boss_health + '%' }"></div>
         </div>
-        <div
-            id="interaction-message"
-            v-if="interaction_message && !show_spinner"
-        >
+        <div id="interaction-message" v-if="interaction_message && !show_spinner">
             <span class="key">E</span><br />
             {{ interaction_message }}
         </div>
         <div id="progress" v-if="show_spinner">
-            <loading-progress
-                :indeterminate="true"
-                size="40"
-                rotate
-                fillDuration="3"
-                rotationDuration="4"
-            />
+            <loading-progress :indeterminate="true" size="40" rotate fillDuration="3" rotationDuration="4" />
         </div>
     </div>
 </template>
@@ -33,7 +21,6 @@ export default {
     name: "Hud",
     data() {
         return {
-            message: null,
             banner: null,
             boss_health: null,
             interaction_message: null,
@@ -42,12 +29,11 @@ export default {
     },
     methods: {
         ShowMessage: function(message) {
-            this.message = message;
-
-            var that = this;
-            setTimeout(function() {
-                that.message = null;
-            }, 5000);
+            this.$toasted.show(message, {
+                className: "toast-message",
+                position: "bottom-right",
+                duration: 5000,
+            });
         },
         ShowBanner: function(banner) {
             this.banner = banner;
@@ -68,35 +54,23 @@ export default {
         },
         ShowSpinner: function(ms) {
             this.show_spinner = true;
-            setTimeout(() => this.show_spinner = false, ms);
+            setTimeout(() => (this.show_spinner = false), ms);
         },
     },
     mounted() {
         this.EventBus.$on("ShowMessage", this.ShowMessage);
         this.EventBus.$on("ShowBanner", this.ShowBanner);
         this.EventBus.$on("SetBossHealth", this.SetBossHealth);
-        this.EventBus.$on(
-            "ShowInteractionMessage",
-            this.ShowInteractionMessage
-        );
-        this.EventBus.$on(
-            "HideInteractionMessage",
-            this.HideInteractionMessage
-        );
+        this.EventBus.$on("ShowInteractionMessage", this.ShowInteractionMessage);
+        this.EventBus.$on("HideInteractionMessage", this.HideInteractionMessage);
         this.EventBus.$on("ShowSpinner", this.ShowSpinner);
 
         if (!this.InGame) {
-            this.EventBus.$emit(
-                "ShowMessage",
-                "You have found an important piece! Take this to the satellite!"
-            );
+            this.EventBus.$emit("ShowMessage", "You have found an important piece! Take this to the satellite!");
             this.EventBus.$emit("ShowBanner", "Welcome to the invasion!");
 
             this.EventBus.$emit("ShowInteractionMessage", "Search");
-            setTimeout(
-                () => this.EventBus.$emit("HideInteractionMessage"),
-                1000
-            );
+            setTimeout(() => this.EventBus.$emit("HideInteractionMessage"), 1000);
 
             this.EventBus.$emit("ShowSpinner", 5000);
             setTimeout(() => this.EventBus.$emit("ShowSpinner", 2000), 7000);
@@ -112,7 +86,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 #hud {
     height: 100%;
     position: relative;
@@ -165,34 +139,17 @@ export default {
     line-height: 1.5em;
 }
 
-/**
- * Toast-like message
+/*
+ * Toast messages
  */
-#messages {
-    position: fixed;
-    width: 100%;
-    bottom: 30vh;
-    text-align: center;
-    z-index: 10;
-}
-#messages .message {
-    padding: 10px 25px;
+
+.toast-message {
+    background: rgba(0, 0, 0, 0.4) !important;
     text-shadow: 2px 2px rgba(0, 0, 0, 0.5);
-    background: rgba(0, 0, 0, 0.4);
     color: #fff;
     font-size: 22px;
     font-weight: normal;
-    font-family: Helvetica;
-    animation: fadeout 1s 4.5s;
-    z-index: 10;
-}
-@keyframes fadeout {
-    from {
-        opacity: 1;
-    }
-    to {
-        opacity: 0;
-    }
+    font-family: Helvetica !important;
 }
 
 /*

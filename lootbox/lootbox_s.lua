@@ -107,9 +107,9 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
     end
 
     -- add loot items to inventory
-    AddToInventory(player, RegisterNewItem('vest'))
-    AddToInventory(player, RegisterNewItem('bandage'))
-    AddToInventory(player, RegisterNewItem(LootWeapons[math.random(#LootWeapons)]))
+    AddLootItem(player, 'vest')
+    AddLootItem(player, 'bandage')
+    AddLootItem(player, LootWeapons[math.random(#LootWeapons)])
 
     DestroyPickup(pickup)
 
@@ -124,4 +124,13 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
         CallRemoteEvent(p, "HideLootWaypoint")
     end
 end)
+
+function AddLootItem(player, item)
+    local item_cfg = GetItemConfig(item)
+    if item_cfg then
+        local uuid = RegisterNewItem(item)
+        AddToInventory(player, uuid)
+        CallRemoteEvent(player, "ShowMessage", "You picked up a "..item_cfg['name'])
+    end
+end
 

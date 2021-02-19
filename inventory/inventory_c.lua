@@ -1,6 +1,6 @@
 -- global
 InventoryUI = nil
-HoldingUsableItem = nil
+CurrentInHand = nil
 
 AddEvent("OnPackageStart", function()
     InventoryUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
@@ -35,9 +35,9 @@ AddEvent('OnKeyPress', function(key)
         elseif key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' then
             -- item hotkeys
             CallRemoteEvent("UseItemHotkey", key)
-        elseif key == 'Left Mouse Button' and HoldingUsableItem and not CurrentlyInteracting then
+        elseif key == 'Left Mouse Button' and CurrentInHand and not CurrentlyInteracting then
             -- use item currently in hands
-            CallRemoteEvent("UseItemFromInventory", HoldingUsableItem)
+            CallRemoteEvent("UseItemFromInventory", CurrentInHand['item'])
         end
     end
 end)
@@ -58,7 +58,7 @@ end)
 
 -- prevent aiming while holding item
 AddEvent("OnPlayerToggleAim", function(toggle)
-    if toggle == true and HoldingUsableItem then
+    if toggle == true and CurrentInHand then
         return false -- do not allow the player to aim
     end
 end)
@@ -69,8 +69,8 @@ AddRemoteEvent("SetInventory", function(data)
 end)
 
 -- controls whether or not player can aim
-AddRemoteEvent("SetInHand", function(item_or_nil)
-    HoldingUsableItem = item_or_nil
+AddRemoteEvent("SetInHand", function(data)
+    CurrentInHand = data
 end)
 
 -- drop item

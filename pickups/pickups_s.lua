@@ -89,7 +89,7 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
     CallRemoteEvent(player, "PlayPickupSound", item_cfg['pickup_sound'] or "sounds/pickup.wav")
 
     log.debug("Player " .. GetPlayerName(player) .. " picks up item " .. item)
-    CallRemoteEvent(player, "ShowMessage", "You have picked up a "..item)
+    CallRemoteEvent(player, "ShowMessage", "You have picked up a "..item_cfg['name'])
 
     local uuid = RegisterNewItem(item)
 

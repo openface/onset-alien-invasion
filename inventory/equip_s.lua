@@ -19,6 +19,11 @@ function EquipItem(player, item)
     log.trace("EquipItem", item)
     local item_cfg = GetItemConfig(item)
 
+    if not item_cfg then
+        log.error("Cannot equip invalid item "..item)
+        return
+    end
+
     if item_cfg['attachment'] == nil and item_cfg['type'] ~= 'weapon' then
         log.debug "not attachable"
         return
@@ -34,12 +39,13 @@ function EquipItem(player, item)
     log.debug(GetPlayerName(player) .. " equips item " .. item)
 
     -- unequip whatever is in hands if equipping to hands
-    if item_cfg['attachment']['bone'] == 'hand_r' or item_cfg['attachment']['bone'] == 'hand_l' or item_cfg['type'] == 'weapon' then
-
-        -- switch to fists if not equipping a weapon
-        if item_cfg['type'] ~= 'weapon' then
-            SwitchToFists(player)
-        end
+    if item_cfg['type'] == 'weapon' then
+        -- unequip hands when switching to a weapon
+        UnequipFromBone(player, 'hand_r')
+        UnequipFromBone(player, 'hand_l')
+    elseif item_cfg['attachment']['bone'] == 'hand_r' or item_cfg['attachment']['bone'] == 'hand_l' then
+        -- switch to fists when equipping an object
+        SwitchToFists(player)
 
         -- unequip hands
         UnequipFromBone(player, 'hand_r')

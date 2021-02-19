@@ -41,6 +41,14 @@ purpose of this project was to learn Lua scripting for Onset.  This project has 
 grown quite a bit with features not really applicable to a simple alien shooter, and that
 is OK.  This code will continue to morph and shift into something more general and widely-usable for other Onset gamemodes in the future.
 
+### Dependencies
+
+This package has dependencies upon the following packages, which should be defined prior in the server_config.json file:
+
+* Onset_Weapon_Patch
+* bpevents
+* vnpcs
+
 ### Thanks
 
 * Voltaism for help with Onset pak integration, his awesome onset packages, and testing contributions.

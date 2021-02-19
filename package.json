@@ -28,7 +28,6 @@
         "inventory/equip_s.lua",
         "inventory/weapons_s.lua",
         "inventory/objects_s.lua",
-        "inventory/props_s.lua",
 
         "scoreboard/scoreboard_s.lua",
         "pickups/pickups_s.lua",

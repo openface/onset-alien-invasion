@@ -503,7 +503,6 @@ export default {
     height: 100vh;
 }
 #inner {
-    z-index: 1000;
     background: rgba(0, 0, 0, 0.6);
     font-family: helvetica;
     font-size: 16px;

@@ -8,7 +8,8 @@ RegisterItemConfig("axe", {
     },
     interaction = {
         sound = "sounds/chopping_wood.mp3",
-        animation = { name = "PICKAXE_SWING", duration = 5000 }
+        animation = { name = "PICKAXE_SWING", duration = 5000 },
+        prop = { target = "tree", desc = "Chop Tree", remote_event = "HarvestTree" }
     },
     modelid = 20002,
     max_use = 20,
@@ -26,3 +27,24 @@ RegisterItemConfig("axe", {
       bone = "hand_r" 
     }
 })
+
+--
+-- Chopping
+--
+
+AddRemoteEvent("HarvestTree", function(player, object, options)
+    if GetInventoryCount(player, "axe") == 0 then
+        AddPlayerChat(player, "You need an axe to harvest this!")
+        CallRemoteEvent(player, "PlayErrorSound")
+        return
+    end
+
+    log.debug(GetPlayerName(player) .. " is chopping a tree")
+    UseItemFromInventory(player, "axe")
+
+    Delay(5000, function()
+        CallRemoteEvent(player, "ShowMessage", "You collect some wood and put it in your inventory")
+        AddToInventory(player, RegisterNewItem("wood"))
+    end)
+
+end)

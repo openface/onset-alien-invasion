@@ -210,7 +210,7 @@ function InitializePlayer(player)
     end
 
     SyncWeaponSlotsFromInventory(player)
-    Delay(2500, function()
+    Delay(3000, function()
         CallEvent("SyncInventory", player)
     end)
 end

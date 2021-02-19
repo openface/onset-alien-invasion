@@ -11,7 +11,7 @@ RegisterItemConfig("flashlight", {
     max_carry = 1,
     use_label = "On/Off",
     interaction = {
-      sound = "sounds/flashlight.wav",
+        sound = "sounds/flashlight.wav"
     },
     price = 50,
     light_component = {

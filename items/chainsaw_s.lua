@@ -8,7 +8,8 @@ RegisterItemConfig("chainsaw", {
     },
     interaction = {
         sound = "sounds/chainsaw.wav",
-        animation = { name = "FISHING", duration = 4000 }
+        animation = { name = "FISHING", duration = 4000 },
+        prop = { target = "tree", desc = "Murder Tree", remote_event = "HarvestTree" }
     },
     modelid = 1047,
     max_carry = 1,

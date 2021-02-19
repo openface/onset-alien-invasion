@@ -49,29 +49,22 @@ AddEvent("OnGameTick", function()
                     remote_event = prop_options['remote_event'] or nil,
                     options = prop_options['options']
                 }
-                --AddPlayerChat(dump(ActiveProp))
+                -- AddPlayerChat(dump(ActiveProp))
             end
-        elseif hitStruct.type == 'tree' then
-            -- foliage component
-            ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','Harvest')")
-            ActiveProp = {
-                object = hitObject,
-                remote_event = "HarvestTree",
-            }
-        elseif hitStruct.type == 'water' then
-            -- water component
-            ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','Go Fishing')")
-            ActiveProp = {
-                object = hitObject,
-                remote_event = "GoFishing"
-            }
-        elseif hitStruct.type == 'vehicle' then
-            -- vehicle component
-            ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','Repair')")
-            ActiveProp = {
-                object = hitObject,
-                remote_event = "RepairVehicle"
-            }
+        elseif CurrentInHand and CurrentInHand['prop'] ~= nil then
+            -- if item is in hand, check for matching target
+            if CurrentInHand['prop']['target'] == hitStruct.type then
+                AddPlayerChat("item: " .. CurrentInHand['item'])
+                AddPlayerChat("target: " .. CurrentInHand['prop']['target'])
+                AddPlayerChat("desc: " .. CurrentInHand['prop']['desc'])
+                AddPlayerChat("remote_event: " .. CurrentInHand['prop']['remote_event'])
+
+                ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. CurrentInHand['prop']['desc'] .. "')")
+                ActiveProp = {
+                    object = hitObject,
+                    remote_event = CurrentInHand['prop']['remote_event']
+                }
+            end
         end
 
         LastHitObject = hitObject
@@ -107,7 +100,7 @@ function ProcessHitResult(HitResult)
         return
     end
 
-    --AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName() .." id:"..Comp:GetUniqueID())
+    -- AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName() .." id:"..Comp:GetUniqueID())
 
     -- environment
     if string.find(Comp:GetName(), "FoliageInstancedStaticMeshComponent") then
@@ -141,7 +134,7 @@ function ProcessHitResult(HitResult)
             -- we only care about being close to the hood bone
             if IsNearVehicleOpenHood(veh) then
                 return veh, {
-                    type = 'vehicle'
+                    type = 'vehicle_hood'
                 }
             end
         end
@@ -152,12 +145,12 @@ AddEvent("OnKeyPress", function(key)
     if ActiveProp ~= nil and key == "E" then
         -- call prop events
         if ActiveProp['client_event'] then
-            --AddPlayerChat("calling client event: "..ActiveProp['event'])
+            -- AddPlayerChat("calling client event: "..ActiveProp['event'])
             CallEvent("prop:" .. ActiveProp['client_event'], ActiveProp['object'], ActiveProp['options'])
         end
         if ActiveProp['remote_event'] then
-            --AddPlayerChat("calling remote event: "..ActiveProp['remote_event'])
-            CallRemoteEvent("prop:" .. ActiveProp['remote_event'], ActiveProp['object'], ActiveProp['options'])
+            -- AddPlayerChat("calling remote event: "..ActiveProp['remote_event'])
+            CallRemoteEvent(ActiveProp['remote_event'], ActiveProp['object'], ActiveProp['options'])
         end
         ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
         SetObjectOutline(ActiveProp['object'], false)

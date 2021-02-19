@@ -150,6 +150,7 @@ export default {
     font-size: 22px;
     font-weight: normal;
     font-family: Helvetica !important;
+    z-index:1001;
 }
 
 /*

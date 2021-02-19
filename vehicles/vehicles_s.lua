@@ -102,27 +102,3 @@ function GetVehicleHealthPercentage(vehicle)
     return math.floor(GetVehicleHealth(vehicle) / VehicleMaxHealth * 100.0)
 end
 
-AddRemoteEvent("prop:RepairVehicle", function(player, vehicle)
-    log.info(GetPlayerName(player) .. " inspects vehicle " .. vehicle)
-
-    local health_percentage = GetVehicleHealthPercentage(vehicle)
-    CallRemoteEvent(player, "ShowMessage", "Vehicle Health: " .. health_percentage .. "%%")
-
-    if GetVehicleDamage(vehicle, 1) == 1 then
-        -- unrepairable
-        AddPlayerChat(player, "The vehicle is unrepairable.")
-        CallRemoteEvent(player, "PlayErrorSound")
-    elseif health_percentage <= 75 then
-        -- repairable
-        if GetInventoryCount(player, "toolbox") > 0 then
-            AddPlayerChat(player, "You begin to repair the vehicle...")
-            UseItemFromInventory(player, "toolbox", { vehicle = vehicle })
-        else
-            AddPlayerChat(player, "You need tools to repair this vehicle!")
-            CallRemoteEvent(player, "PlayErrorSound")
-        end
-    else
-        AddPlayerChat(player, "Vehicle can not be repaired any further.")
-        CallRemoteEvent(player, "PlayErrorSound")
-    end
-end)

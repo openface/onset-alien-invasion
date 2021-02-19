@@ -238,7 +238,6 @@ export default {
     flex: 0 1 auto;
     align-self: auto;
     width: 610px;
-    z-index: 1000;
     background: rgba(0, 0, 0, 0.6);
     font-family: helvetica;
     font-size: 16px;

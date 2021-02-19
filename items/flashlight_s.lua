@@ -7,13 +7,11 @@ RegisterItemConfig("flashlight", {
         plastic = 5,
         computer_part = 1
     },
-    modelid = 1271,
+    modelid = 1270,
     max_carry = 1,
+    use_label = "On/Off",
     interaction = {
-      sound = "sounds/backpack.wav",
-      animation = {
-          name = "CHECK_EQUIPMENT"
-      }
+      sound = "sounds/flashlight.wav",
     },
     price = 50,
     light_component = {
@@ -26,7 +24,8 @@ RegisterItemConfig("flashlight", {
             ry = 270,
             rz = 0
         },
-        intensity = 5000
+        intensity = 5000,
+        enabled = false
     },
     attachment = {
         x = 33,
@@ -39,3 +38,17 @@ RegisterItemConfig("flashlight", {
     }
 })
 
+AddEvent("items:flashlight:use", function(player, item_cfg, options, object)
+    log.trace("items:flashlight:use", player, options, object)
+
+    log.info(GetPlayerName(player) .. " toggles light object " .. object)
+
+    local light_enabled = GetObjectPropertyValue(object, "light_enabled")
+    local new_enabled = not light_enabled
+    if new_enabled then
+        SetObjectModel(object, 1271)
+    else
+        SetObjectModel(object, 1270)
+    end
+    SetObjectPropertyValue(object, "light_enabled", new_enabled)
+end)

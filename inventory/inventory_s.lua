@@ -216,7 +216,8 @@ function UseItemFromInventory(player, item, options)
     local _item = GetItemFromInventory(player, item)
     log.debug(GetPlayerName(player) .. " uses item " .. item .. " from inventory")
 
-    if GetEquippedObject(player, item) == nil then
+    local equipped_object = GetEquippedObject(player, item)
+    if not equipped_object then
         log.error "Cannot use unequipped item!"
         return
     end
@@ -233,7 +234,7 @@ function UseItemFromInventory(player, item, options)
         end
 
         -- call USE event on object
-        CallEvent("items:" .. item .. ":use", player, item_cfg, options)
+        CallEvent("items:" .. item .. ":use", player, item_cfg, options, equipped_object)
     end)
 end
 AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)

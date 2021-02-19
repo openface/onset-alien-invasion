@@ -1,5 +1,7 @@
 -- get inventory data and send to UI
 function SyncInventory(player)
+    log.trace('SyncInventory')
+    
     local inventory_items = PlayerData[player].inventory
     --log.trace("INVENTORY ITEMS (" .. GetPlayerName(player) .. "): " .. dump(inventory_items))
 

@@ -42,7 +42,8 @@ end)
 
 -- player disconnected
 AddEvent("OnPlayerQuit", function(player)
-    log.debug("OnPlayerQuit")
+    log.trace("OnPlayerQuit")
+
     if PlayerData[player] == nil then return end
     
     SavePlayer(player)
@@ -53,7 +54,7 @@ end)
 
 -- joins the server, happens just before initial spawn
 AddEvent("OnPlayerJoin", function(player)
-    log.debug("OnPlayerJoin")
+    log.trace("OnPlayerJoin")
 
     -- initialize PlayerData
     PlayerData[player] = {
@@ -78,7 +79,7 @@ end)
 -- Player spawn
 -- happens initially before auth!
 AddEvent("OnPlayerSpawn", function(player)
-    log.debug("OnPlayerSpawn")
+    log.trace("OnPlayerSpawn")
 
     -- cleansing
     SetPlayerArmor(player, 0)
@@ -120,7 +121,7 @@ end)
 
 -- Happens after spawn!
 AddEvent("OnPlayerSteamAuth", function(player)
-    log.debug("OnPlayerSteamAuth")
+    log.trace("OnPlayerSteamAuth")
 
     local steamid = GetPlayerSteamId(player)
     log.info("Player " .. GetPlayerName(player) .. " (ID " .. player .. ") authenticated with steam ID " .. steamid)
@@ -135,11 +136,8 @@ AddEvent("OnPlayerSteamAuth", function(player)
     else
         log.info("Loading existing character for player " .. GetPlayerName(player))
 
-        -- setup inventory
-        -- give time to fully spawn player
-        Delay(2500, function()
-            InitializePlayer(player)
-        end)
+        -- initialize player from database
+        InitializePlayer(player)
 
         -- player is already spawned, relocate them
         local loc = json_decode(account['location'])
@@ -180,6 +178,8 @@ end)
 
 -- initialize player from database values
 function InitializePlayer(player)
+    log.trace("InitializePlayer")
+
     if PlayerData[player] == nil then
         PlayerData[player] = {}
     end
@@ -194,24 +194,25 @@ function InitializePlayer(player)
 
     log.debug("Initializing player from database")
 
-    -- setup inventory
-    PlayerData[player].inventory = json_decode(account['inventory'])
-
     -- setup properties
     SetPlayerPropertyValue(player, 'clothing', account['clothing'], true)
 
-    -- initialize inventory
+    -- setup inventory
+    PlayerData[player].inventory = json_decode(account['inventory'])
     for i,item in ipairs(PlayerData[player].inventory) do
         ItemInstances[item.uuid] = item.item
     end
 
+    -- equip items
     local equipped = json_decode(account['equipped'])
     for item, object in pairs(equipped) do
         EquipItem(player, item)
     end
 
     SyncWeaponSlotsFromInventory(player)
-    CallEvent("SyncInventory", player)
+    Delay(2000, function()
+        CallEvent("SyncInventory", player)
+    end)
 end
 
 -- Chat

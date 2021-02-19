@@ -25,7 +25,7 @@ RegisterItemConfig("flashlight", {
             rz = 0
         },
         intensity = 5000,
-        enabled = false
+        default_enabled = false
     },
     attachment = {
         x = 33,

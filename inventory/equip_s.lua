@@ -92,9 +92,12 @@ function AttachItemToPlayer(player, item)
     -- set lighting component config to object
     if item_cfg['light_component'] ~= nil then
         SetObjectPropertyValue(attached_object, "light_component", item_cfg['light_component'])
-        if item_cfg['light_component']['enabled'] == false then
+
+        -- allow item to not have light enabled by default
+        if item_cfg['light_component']['default_enabled'] == false then
             SetObjectPropertyValue(attached_object, "light_enabled", false)
         else
+            -- if default_enabled is not given, default to enabled
             SetObjectPropertyValue(attached_object, "light_enabled", true)
         end
     end

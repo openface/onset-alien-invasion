@@ -16,12 +16,17 @@ RegisterItemConfig("wooden_chair", {        -- [required] unique id / item name
             spinner = false             -- shows a spinner for the duration of interaction
         },
         sound = "sounds/squeak.mp3"     -- sound to play during interaction with object
+        prop = {
+            target = "tree",            -- for interacting with world objects (Eg. tree, water, vehicle_hood)
+            desc = "Chop Tree",         -- label for "Use" when interacting
+            remote_event = "HarvestTree" -- event called when [E] is pressed to interact with world object
+        }
     },
     modelid = 1262,                     -- [required] object modelid
     image = "survival/SM_Axe-Neo.png",  -- 2D image for objects using a custom asset
     max_carry = 1,                      -- [required] maximum number that can be carried in inventory
     max_use = 1,                        -- for usable types, number of times it can be used
-    use_label = "Activate",             -- for usable types, the alternate name for "Use"
+    use_label = "Activate",             -- alternate name for "Use" (Eg. Drink, Eat, Chop, etc)
     recipe = {                          -- resources required to build this item at workbench (nil = non-buildable)
         metal = 20,
         plastic = 5,
@@ -49,6 +54,7 @@ RegisterItemConfig("wooden_chair", {        -- [required] unique id / item name
             rz = 0
         },
         intensity = 5000                -- light intensity
+        default_enabled = false         -- default light enabled
     },
     particle = {                        -- particle to emit for this object
         path = "/Game/Geometry/OldTown/Effects/PS_LanternFire",

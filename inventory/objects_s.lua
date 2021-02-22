@@ -38,28 +38,28 @@ function GetItemType(item)
 end
 
 function GetItemAttachmentBone(item)
-    if ItemConfig[item] and ItemConfig[item]['attachment'] then
-        return ItemConfig[item]['attachment']['bone']
+    if ItemConfig[item] and ItemConfig[item].attachment then
+        return ItemConfig[item].attachment['bone']
     end
 end
 
 -- 
 function PlayInteraction(player, item, after_use_callback)
     log.debug("Playing interaction for item " .. item)
-    if not ItemConfig[item]['interaction'] then
+    if not ItemConfig[item].interaction then
         if after_use_callback then
             after_use_callback()
         end
         return
     end
-    if ItemConfig[item]['interaction']['animation'] then
-        SetPlayerAnimation(player, ItemConfig[item]['interaction']['animation']['name'])
+    if ItemConfig[item].interaction['animation'] then
+        SetPlayerAnimation(player, ItemConfig[item].interaction['animation']['name'])
 
-        local duration = ItemConfig[item]['interaction']['animation']['duration'] or 2000 -- default animation delay
+        local duration = ItemConfig[item].interaction['animation']['duration'] or 2000 -- default animation delay
 
         CallRemoteEvent(player, "StartInteraction", {
             ['duration'] = duration,
-            ['show_spinner'] = ItemConfig[item]['interaction']['animation']['spinner']
+            ['show_spinner'] = ItemConfig[item].interaction['animation']['spinner']
         })
 
         Delay(duration, function()
@@ -74,8 +74,8 @@ function PlayInteraction(player, item, after_use_callback)
             after_use_callback()
         end
     end
-    if ItemConfig[item]['interaction']['sound'] then
-        PlaySoundSync(player, ItemConfig[item]['interaction']['sound'])
+    if ItemConfig[item].interaction['sound'] then
+        PlaySoundSync(player, ItemConfig[item].interaction['sound'])
     end
 end
 

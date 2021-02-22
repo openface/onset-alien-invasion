@@ -3,7 +3,7 @@ function SyncInventory(player)
     log.trace('SyncInventory')
 
     local inventory_items = PlayerData[player].inventory
-    --log.trace("INVENTORY ITEMS (" .. GetPlayerName(player) .. "): " .. dump(inventory_items))
+    -- log.trace("INVENTORY ITEMS (" .. GetPlayerName(player) .. "): " .. dump(inventory_items))
 
     local current_inhand
     local _send = {
@@ -25,21 +25,21 @@ function SyncInventory(player)
                 ['slot'] = item['slot'],
                 ['bone'] = bone,
 
-                ['type'] = ItemConfig[item.item]['type'],
-                ['name'] = ItemConfig[item.item]['name'],
-                ['modelid'] = ItemConfig[item.item]['modelid'],
-                ['image'] = ItemConfig[item.item]['image'],
-                ['use_label'] = ItemConfig[item.item]['use_label']
+                ['type'] = ItemConfig[item.item].type,
+                ['name'] = ItemConfig[item.item].name,
+                ['modelid'] = ItemConfig[item.item].modelid,
+                ['image'] = ItemConfig[item.item].image,
+                ['use_label'] = ItemConfig[item.item].use_label
             })
             if equipped and (bone == 'hand_l' or bone == 'hand_r') then
                 current_inhand = {
                     ['item'] = item['item'],
-                    ['prop'] = ItemConfig[item.item]['interaction']['prop']
+                    ['prop'] = ItemConfig[item.item].interaction['prop']
                 }
             end
         end
     end
-    --log.trace("INVENTORY SYNC (" .. GetPlayerName(player) .. "): " .. json_encode(_send))
+    -- log.trace("INVENTORY SYNC (" .. GetPlayerName(player) .. "): " .. json_encode(_send))
     CallRemoteEvent(player, "SetInventory", json_encode(_send), current_inhand)
 end
 AddRemoteEvent("SyncInventory", SyncInventory)
@@ -72,7 +72,8 @@ function AddToInventory(player, uuid)
     end
 
     -- auto-equip when added
-    if ItemConfig[item]['auto_equip'] == true and (ItemConfig[item]['type'] == 'equipable' or ItemConfig[item]['type'] == 'weapon') then
+    if ItemConfig[item].auto_equip == true and
+        (ItemConfig[item].type == 'equipable' or ItemConfig[item].type == 'weapon') then
         if GetEquippedObject(player, item) ~= nil then
             log.debug("Auto-equipping item", item)
             EquipItem(player, item)
@@ -144,7 +145,7 @@ function RemoveFromInventory(player, item, amount)
     if new_qty == 0 then
         log.debug("items:" .. item .. ":drop")
 
-        if ItemConfig[item]['type'] == 'equipable' or ItemConfig[item]['type'] == 'weapon' then
+        if ItemConfig[item].type == 'equipable' or ItemConfig[item].type == 'weapon' then
             UnequipItem(player, item)
         end
     end
@@ -213,14 +214,14 @@ function UseItemFromInventory(player, item, options)
         return
     end
 
-    if ItemConfig[item]['max_use'] and _item['used'] > ItemConfig[item]['max_use'] then
+    if ItemConfig[item].max_use and _item['used'] > ItemConfig[item].max_use then
         log.error "Max use exceeded!"
         return
     end
 
     PlayInteraction(player, item, function()
         -- increment used
-        if ItemConfig[item]['max_use'] then
+        if ItemConfig[item].max_use then
             IncrementItemUsed(player, item)
         end
 

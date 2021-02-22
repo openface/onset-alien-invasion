@@ -23,7 +23,7 @@ function EquipItem(player, item)
         return
     end
 
-    if ItemConfig[item]['attachment'] == nil and ItemConfig[item]['type'] ~= 'weapon' then
+    if ItemConfig[item].attachment == nil and ItemConfig[item].type ~= 'weapon' then
         log.debug "not attachable"
         return
     end
@@ -38,11 +38,11 @@ function EquipItem(player, item)
     log.debug(GetPlayerName(player) .. " equips item " .. item)
 
     -- unequip whatever is in hands if equipping to hands
-    if ItemConfig[item]['type'] == 'weapon' then
+    if ItemConfig[item].type == 'weapon' then
         -- unequip hands when switching to a weapon
         UnequipFromBone(player, 'hand_r')
         UnequipFromBone(player, 'hand_l')
-    elseif ItemConfig[item]['attachment']['bone'] == 'hand_r' or ItemConfig[item]['attachment']['bone'] == 'hand_l' then
+    elseif ItemConfig[item].attachment['bone'] == 'hand_r' or ItemConfig[item].attachment['bone'] == 'hand_l' then
         -- switch to fists when equipping an object
         SwitchToFists(player)
 
@@ -52,7 +52,7 @@ function EquipItem(player, item)
     end
 
     -- equipable animations
-    if ItemConfig[item]['type'] == 'equipable' then
+    if ItemConfig[item].type == 'equipable' then
         PlayInteraction(player, item)
     end
 
@@ -73,26 +73,25 @@ end
 
 -- attaches object or weapon to player
 function AttachItemToPlayer(player, item)
-    if ItemConfig[item]['type'] == 'weapon' then
+    if ItemConfig[item].type == 'weapon' then
         AddWeaponFromInventory(player, item, false)
         return true
     end
 
     local x, y, z = GetPlayerLocation(player)
-    local attached_object = CreateObject(ItemConfig[item]['modelid'], x, y, z)
+    local attached_object = CreateObject(ItemConfig[item].modelid, x, y, z)
 
     SetObjectPropertyValue(attached_object, "_name", item)
-    SetObjectAttached(attached_object, ATTACH_PLAYER, player, ItemConfig[item]['attachment']['x'],
-        ItemConfig[item]['attachment']['y'], ItemConfig[item]['attachment']['z'], ItemConfig[item]['attachment']['rx'],
-        ItemConfig[item]['attachment']['ry'], ItemConfig[item]['attachment']['rz'],
-        ItemConfig[item]['attachment']['bone'])
+    SetObjectAttached(attached_object, ATTACH_PLAYER, player, ItemConfig[item].attachment['x'],
+        ItemConfig[item].attachment['y'], ItemConfig[item].attachment['z'], ItemConfig[item].attachment['rx'],
+        ItemConfig[item].attachment['ry'], ItemConfig[item].attachment['rz'], ItemConfig[item].attachment['bone'])
 
     -- set lighting component config to object
     if ItemConfig[item]['light_component'] ~= nil then
-        SetObjectPropertyValue(attached_object, "light_component", ItemConfig[item]['light_component'])
+        SetObjectPropertyValue(attached_object, "light_component", ItemConfig[item].light_component)
 
         -- allow item to not have light enabled by default
-        if ItemConfig[item]['light_component']['default_enabled'] == false then
+        if ItemConfig[item].light_component['default_enabled'] == false then
             SetObjectPropertyValue(attached_object, "light_enabled", false)
         else
             -- if default_enabled is not given, default to enabled
@@ -101,8 +100,8 @@ function AttachItemToPlayer(player, item)
     end
 
     -- set particle config to object
-    if ItemConfig[item]['particle'] ~= nil then
-        SetObjectPropertyValue(attached_object, "particle", ItemConfig[item]['particle'])
+    if ItemConfig[item].particle then
+        SetObjectPropertyValue(attached_object, "particle", ItemConfig[item].particle)
     end
 
     return attached_object
@@ -144,7 +143,7 @@ function UnequipItem(player, item)
 
     log.trace("EQUIPPED: ", dump(equipped))
 
-    if ItemConfig[item]['type'] == 'weapon' then
+    if ItemConfig[item].type == 'weapon' then
         UnequipWeapon(player, item)
     else
         DestroyObject(object)
@@ -164,7 +163,7 @@ function GetEquippedObject(player, item)
 end
 
 function IsItemEquipped(player, item)
-    if ItemConfig[item]['type'] == 'weapon' then
+    if ItemConfig[item].type == 'weapon' then
         return IsWeaponEquipped(player, item)
     elseif GetEquippedObject(player, item) ~= nil then
         return true
@@ -176,9 +175,9 @@ end
 function GetEquippedItemNameFromBone(player, bone)
     local equipped = PlayerData[player].equipped
     for item, object in pairs(equipped) do
-        if ItemConfig[item]['type'] == 'weapon' and (bone == 'hand_l' or bone == 'hand_r') then
+        if ItemConfig[item].type == 'weapon' and (bone == 'hand_l' or bone == 'hand_r') then
             return item
-        elseif ItemConfig[item]['attachment'] and ItemConfig[item]['attachment']['bone'] == bone then
+        elseif ItemConfig[item].attachment and ItemConfig[item].attachment['bone'] == bone then
             return item
         end
     end

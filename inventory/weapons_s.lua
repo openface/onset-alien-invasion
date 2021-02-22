@@ -9,12 +9,14 @@ WeaponsConfig = {
     ["ak47"] = {
         name = "AK47",
         weapon_id = 12,
-        modelid = 14
+        modelid = 14,
+        mag_size = 30
     },
     ["ak47g"] = {
         name = "AK47 (Gold)",
         weapon_id = 13,
-        modelid = 15
+        modelid = 15,
+        mag_size = 30
     },
     ["auto_shotgun"] = {
         name = "Auto Shotgun",
@@ -81,7 +83,7 @@ function SyncWeaponSlotsFromInventory(player)
     for i,item in ipairs(inventory) do
         log.debug(dump(item))
         if item['type'] == 'weapon' and WeaponsConfig[item.item] then
-            WeaponPatch.SetWeapon(player, WeaponsConfig[item.item].weapon_id, 100, false, item['slot'], true)
+            WeaponPatch.SetWeapon(player, WeaponsConfig[item.item].weapon_id, WeaponsConfig[item.item].mag_size, false, item['slot'], true)
         end
     end
 end
@@ -114,7 +116,7 @@ function AddWeaponFromInventory(player, item, equip)
 end
 
 function EquipWeaponToSlot(player, item, slot, equip)
-    WeaponPatch.SetWeapon(player, WeaponsConfig[item].weapon_id, 100, equip, slot, true)
+    WeaponPatch.SetWeapon(player, WeaponsConfig[item].weapon_id, WeaponsConfig[item].mag_size, equip, slot, true)
 end
 
 -- returns the next available weapon slot (checks for fists)

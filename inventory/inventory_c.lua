@@ -20,7 +20,6 @@ end)
 
 AddEvent("OnWebLoadComplete", function(ui)
     if ui == InventoryUI then
-        AddPlayerChat("load done")
 	    CallRemoteEvent("GetInventory")
     end
 end)

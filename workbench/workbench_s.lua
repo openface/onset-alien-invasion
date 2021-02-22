@@ -18,15 +18,15 @@ AddEvent("OnPackageStop", function()
 end)
 
 function CreateWorkbench(config)
-    log.debug("Creating workbench: " .. config['name'])
-    local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'], config['ry'],
-                       config['rz'], config['sx'], config['sy'], config['sz'])
+    log.debug("Creating workbench: " .. config.name)
+    local object = CreateObject(config.modelID, config.x, config.y, config.z, config.rx, config.ry, config.rz,
+                       config.sx, config.sy, config.sz)
     SetObjectPropertyValue(object, "prop", {
         message = "Interact",
         remote_event = "GetWorkbenchData",
         options = {
-            id = config['id'],
-            name = config['name']
+            id = config.id,
+            name = config.name
         }
     })
     Workbenches[object] = true
@@ -35,14 +35,14 @@ end
 AddRemoteEvent("GetWorkbenchData", function(player, object, options)
     log.debug("Workbench: " .. options['id'])
     local item_data = {}
-    for key, item in pairs(GetItemConfigs()) do
-        if item['recipe'] ~= nil then
+    for key, item in pairs(ItemConfig) do
+        if item.recipe then
             table.insert(item_data, {
                 item = key,
-                name = item['name'],
-                modelid = item['modelid'],
-                image = item['image'],
-                recipe = item['recipe']
+                name = item.name,
+                modelid = item.modelid,
+                image = item.image,
+                recipe = item.recipe
             })
         end
     end
@@ -101,7 +101,7 @@ function GetPlayerResources(player)
     local resources = {}
     for _, item in pairs(inventory) do
         if item['type'] == 'resource' then
-            resources[item['item']] = item['quantity']
+            resources[item.item] = item.quantity
         end
     end
     -- log.debug(dump(resources))

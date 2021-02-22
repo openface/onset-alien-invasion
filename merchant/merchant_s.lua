@@ -20,8 +20,8 @@ end)
 
 function RegisterMerchant(name, config)
     log.debug("Registering merchant: " .. name)
-    local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'], config['ry'],
-                       config['rz'], config['sx'], config['sy'], config['sz'])
+    local object = CreateObject(config.modelID, config.x, config.y, config.z, config.rx, config.ry, config.rz,
+                       config.sx, config.sy, config.sz)
     SetObjectPropertyValue(object, "prop", {
         message = "Interact",
         remote_event = "GetMerchantData"
@@ -31,15 +31,15 @@ end
 
 AddRemoteEvent("GetMerchantData", function(player)
     local item_data = {}
-    for key, item in pairs(GetItemConfigs()) do
+    for key, item in pairs(GetItemConfig) do
         if item['price'] ~= nil then
             table.insert(item_data, {
                 item = key,
-                name = item['name'],
-                category = item['category'],
-                modelid = item['modelid'],
-                image = item['image'],
-                price = item['price']
+                name = item.name,
+                category = item.category,
+                modelid = item.modelid,
+                image = item.image,
+                price = item.price
             })
         end
     end
@@ -57,9 +57,9 @@ AddRemoteEvent("BuyItem", function(player, item)
         return
     end
 
-    log.debug("Player " .. GetPlayerName(player) .. " buys item " .. ItemConfig[item]['name'])
+    log.debug("Player " .. GetPlayerName(player) .. " buys item " .. ItemConfig[item].name)
 
-    if ItemConfig[item]['max_carry'] ~= nil and GetInventoryCount(player, item) >= ItemConfig[item]['max_carry'] then
+    if ItemConfig[item].max_carry ~= nil and GetInventoryCount(player, item) >= ItemConfig[item].max_carry then
         log.debug("Pickup exceeds max_carry")
         AddPlayerChat(player, "You cannot carry anymore of this item!")
         CallRemoteEvent(player, "PurchaseDenied")

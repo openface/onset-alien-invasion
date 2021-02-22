@@ -4,7 +4,6 @@ AddEvent('OnKeyPress', function(key)
     end
     if key == 'R' then
         if not IsPlayerReloading(GetPlayerId()) then
-            AddPlayerChat('Reloading new magazine')
             CallRemoteEvent("ReloadWeapon")
         end
     end

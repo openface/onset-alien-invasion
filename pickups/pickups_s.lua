@@ -18,11 +18,7 @@ end)
 function CreatePickupNearPlayer(player, item)
     local x, y, z = GetPlayerLocation(player)
     local x, y = randomPointInCircle(x, y, 150)
-    if GetItemType(item) == 'weapon' then
-        CreateWeaponPickup(item, x, y, z - 75)
-    else
-        CreateObjectPickup(item, x, y, z - 75)
-    end
+    CreateObjectPickup(item, x, y, z - 75)
 end
 
 function CreateObjectPickup(item, x, y, z)
@@ -39,20 +35,6 @@ function CreateObjectPickup(item, x, y, z)
     if item_cfg['scale'] ~= nil then
         SetPickupScale(pickup, item_cfg['scale'].x, item_cfg['scale'].y, item_cfg['scale'].z)
     end
-    Pickups[pickup] = pickup
-end
-
-function CreateWeaponPickup(item, x, y, z)
-    if not WeaponsConfig[item] then
-        log.debug("Invalid weapon " .. item)
-        return
-    end
-    log.debug("Creating weapon pickup " .. item .. " modelid " .. WeaponsConfig[item].modelid)
-
-    local pickup = CreatePickup(WeaponsConfig[item].modelid, x, y, z)
-    SetPickupPropertyValue(pickup, '_name', item) -- todo: rename to _item
-    SetPickupPropertyValue(pickup, '_text', CreateText3D(WeaponsConfig[item].name, 8, x, y, z + 100, 0, 0, 0))
-
     Pickups[pickup] = pickup
 end
 

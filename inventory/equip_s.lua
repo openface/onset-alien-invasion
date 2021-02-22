@@ -167,7 +167,8 @@ function GetEquippedObject(player, item)
 end
 
 function IsItemEquipped(player, item)
-    if WeaponsConfig[item] then
+    local item_cfg = GetItemConfig(item)
+    if item_cfg['type'] == 'weapon' then
         return IsWeaponEquipped(player, item)
     elseif GetEquippedObject(player, item) ~= nil then
         return true

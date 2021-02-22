@@ -5,7 +5,7 @@ if WeaponPatch == nil then
 end
 
 -- weapon map
-WeaponsConfig = {
+--[[ WeaponsConfig = {
     ["ak47"] = {
         name = "AK47",
         weapon_id = 12,
@@ -70,7 +70,7 @@ WeaponsConfig = {
         modelid = 11
     }
 }
-
+ ]]
 -- replace all weapon slots for all players to fists
 AddEvent("OnPackageStop", function()
     for _, player in pairs(GetAllPlayers()) do
@@ -81,10 +81,11 @@ end)
 -- sets weapons slots from inventory data
 function SyncWeaponSlotsFromInventory(player)
     local inventory = PlayerData[player].inventory
+    local item_cfg
     for i,item in ipairs(inventory) do
-        log.debug(dump(item))
-        if item['type'] == 'weapon' and WeaponsConfig[item.item] then
-            WeaponPatch.SetWeapon(player, WeaponsConfig[item.item].weapon_id, WeaponsConfig[item.item].mag_size, false, item['slot'], true)
+        item_cfg = GetItemConfig(item.item)
+        if item['type'] == 'weapon' then
+            WeaponPatch.SetWeapon(player, item_cfg.weapon_id, item_cfg.mag_size, false, item['slot'], true)
         end
     end
 end
@@ -99,8 +100,10 @@ end
 function AddWeaponFromInventory(player, item, equip)
     local inventory = PlayerData[player].inventory
     local slot
+    local item_cfg
     for i, _item in ipairs(inventory) do
-        if _item['item'] == item and WeaponsConfig[item] then
+        item_cfg = GetItemConfig(_item['item'])
+        if _item['item'] == item and item_cfg['type'] == 'weapon' then
             if _item['slot'] then 
                 slot = _item['slot']
             else
@@ -117,7 +120,8 @@ function AddWeaponFromInventory(player, item, equip)
 end
 
 function EquipWeaponToSlot(player, item, slot, equip)
-    WeaponPatch.SetWeapon(player, WeaponsConfig[item].weapon_id, WeaponsConfig[item].mag_size, equip, slot, true)
+    local item_cfg = GetItemConfig(item)
+    WeaponPatch.SetWeapon(player, item_cfg.weapon_id, item_cfg.mag_size, equip, slot, true)
 end
 
 -- returns the next available weapon slot (checks for fists)
@@ -135,9 +139,10 @@ end
 
 -- switch to fists if weapon is equipped for given weapon/item
 function UnequipWeapon(player, item)
+    local item_cfg = GetItemConfig(item)
     for slot = 1, 3 do
         local weapon_id, ammo = GetPlayerWeapon(player, slot)
-        if WeaponsConfig[item].weapon_id == weapon_id then
+        if item_cfg.weapon_id == weapon_id then
             WeaponPatch.SetWeapon(player, 1, 0, true, slot, true)
         end
     end
@@ -152,27 +157,24 @@ function SwitchToFists(player)
     end
 end
 
-function GetWeaponItemByID(weapon_id)
-    log.debug(weapon_id)
-    for item,wep in pairs(WeaponsConfig) do
-        if wep['weapon_id'] == weapon_id then
-            return item
+function GetItemConfigByWeaponID(weapon_id)
+    for item,cfg in pairs(GetItemConfigsByType('weapon')) do
+        if cfg['weapon_id'] == weapon_id then
+            return item, cfg
         end
     end
 end
 
 AddRemoteEvent("ReloadWeapon", function(player)
-    local slot = GetPlayerEquippedWeaponSlot(player)
     local weapon_id = GetPlayerEquippedWeapon(player)
-    local item = GetWeaponItemByID(weapon_id)
     if weapon_id ~= 1 then
-        if GetItemFromInventory(player, WeaponsConfig[item].mag_item) then
+        local item, item_cfg = GetItemConfigByWeaponID(weapon_id)
+        if GetItemFromInventory(player, item_cfg['mag_item']) then
             log.debug("Reloading player weapon "..item.." from magazine")
 
-            RemoveFromInventory(player, WeaponsConfig[item].mag_item, 1)
-            WeaponPatch.SetWeapon(player, weapon_id, WeaponsConfig[item].mag_size, true, slot, true)
-        else
-            log.debug("Reloading but no mag in inventory")
+            RemoveFromInventory(player, item_cfg['mag_item'], 1)
+            local slot = GetPlayerEquippedWeaponSlot(player)
+            WeaponPatch.SetWeapon(player, weapon_id, item_cfg.mag_size, true, slot, true)
         end
     end
 end)

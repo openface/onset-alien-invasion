@@ -10,6 +10,16 @@ function GetItemConfigs()
     return ItemConfigs
 end
 
+function GetItemConfigsByType(type)
+    local items = {}
+    for item,cfg in pairs(ItemConfigs) do
+        if cfg['type'] == type then
+            items[item] = cfg
+        end
+    end
+    return items
+end
+
 function RegisterItemConfig(item, meta)
     ItemConfigs[item] = meta
     log.debug("Registering item config: " .. item)

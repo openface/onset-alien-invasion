@@ -284,8 +284,8 @@ AddEvent("OnVNPCReachTargetFailed", function(npc)
         end)
     else
         -- alien is stuck, summon an alien friend and go away
-        log.debug("Stuck alien.. spawning a friend")
-        SpawnAlienNearPlayer(target)
+        --log.debug("Stuck alien.. spawning a friend")
+        --SpawnAlienNearPlayer(target)
         AlienReturn(npc)
     end
 end)

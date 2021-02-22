@@ -55,6 +55,7 @@
         "scoreboard/scoreboard_c.lua",
         "inventory/inventory_c.lua",
         "inventory/props_c.lua",
+        "inventory/weapons_c.lua",
         "storage/storage_c.lua",
         "vehicles/vehicles_c.lua",
         "placement/placement_c.lua",

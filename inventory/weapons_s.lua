@@ -10,6 +10,7 @@ WeaponsConfig = {
         name = "AK47",
         weapon_id = 12,
         modelid = 14,
+        mag_item = "rifle_mag",
         mag_size = 30
     },
     ["ak47g"] = {
@@ -150,3 +151,28 @@ function SwitchToFists(player)
         WeaponPatch.SetWeapon(player, 1, 0, true, 1, true)
     end
 end
+
+function GetWeaponItemByID(weapon_id)
+    log.debug(weapon_id)
+    for item,wep in pairs(WeaponsConfig) do
+        if wep['weapon_id'] == weapon_id then
+            return item
+        end
+    end
+end
+
+AddRemoteEvent("ReloadWeapon", function(player)
+    local slot = GetPlayerEquippedWeaponSlot(player)
+    local weapon_id = GetPlayerEquippedWeapon(player)
+    local item = GetWeaponItemByID(weapon_id)
+    if weapon_id ~= 1 then
+        if GetItemFromInventory(player, WeaponsConfig[item].mag_item) then
+            log.debug("Reloading player weapon "..item.." from magazine")
+
+            RemoveFromInventory(player, WeaponsConfig[item].mag_item, 1)
+            WeaponPatch.SetWeapon(player, weapon_id, WeaponsConfig[item].mag_size, true, slot, true)
+        else
+            log.debug("Reloading but no mag in inventory")
+        end
+    end
+end)

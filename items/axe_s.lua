@@ -33,18 +33,10 @@ ItemConfig["axe"] = {
 --
 
 AddRemoteEvent("HarvestTree", function(player, object, options)
-    if GetInventoryCount(player, "axe") == 0 then
-        AddPlayerChat(player, "You need an axe to harvest this!")
-        CallRemoteEvent(player, "PlayErrorSound")
-        return
-    end
-
     log.debug(GetPlayerName(player) .. " is chopping a tree")
-    UseItemFromInventory(player, "axe")
 
     Delay(5000, function()
         CallRemoteEvent(player, "ShowMessage", "You collect some wood and put it in your inventory")
-        AddToInventory(player, RegisterNewItem("wood"))
+        AddToInventory(player, RegisterNewItem("wood"), 10)
     end)
-
 end)

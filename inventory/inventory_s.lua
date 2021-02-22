@@ -50,25 +50,26 @@ AddRemoteEvent("SyncInventory", SyncInventory)
 AddEvent("SyncInventory", SyncInventory)
 
 -- add object to inventory
-function AddToInventory(player, uuid)
+function AddToInventory(player, uuid, amount)
     local item = GetItemInstance(uuid)
     if not ItemConfig[item] then
         log.error("Invalid item " .. item)
         return
     end
 
+    local amount = amount or 1
+
     local inventory = PlayerData[player].inventory
-    local curr_qty = GetInventoryCount(player, item)
+    local curr_qty = GetInventoryCount(player, uuid)
 
     if curr_qty > 0 then
-        -- update existing object quantity unless it's a weapon
-        SetItemQuantity(player, item, curr_qty + 1)
+        SetItemQuantity(player, item, curr_qty + amount)
     else
         -- add new item to store
         table.insert(inventory, {
             item = item,
             uuid = uuid,
-            quantity = 1,
+            quantity = amount,
             used = 0,
             slot = nil
         })

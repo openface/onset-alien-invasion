@@ -82,10 +82,9 @@ end)
 function SyncWeaponSlotsFromInventory(player)
     local inventory = PlayerData[player].inventory
     for i, inventory_item in ipairs(inventory) do
-        if ItemConfig[inventory_item['item']]['type'] == 'weapon' and inventory_item['slot'] ~=
-            GetPlayerEquippedWeaponSlot(player) then
-            WeaponPatch.SetWeapon(player, ItemConfig[inventory_item['item']].weapon_id,
-                ItemConfig[inventory_item['item']].mag_size, false, inventory_item['slot'], true)
+        if GetEquippedObject(player, inventory_item.uuid) then
+            EquipWeaponFromInventory(player, inventory_item.uuid, false)
+            return
         end
     end
 end
@@ -98,11 +97,12 @@ end
 
 -- equips weapon by item and adds to weapon slot
 function EquipWeaponFromInventory(player, uuid, equip)
+    log.trace("EquipWeaponFromInventory",uuid,equip)
     local inventory = PlayerData[player].inventory
     local slot
     for i, inventory_item in ipairs(inventory) do
         log.debug(dump(inventory_item))
-        if inventory_item['uuid'] == uuid and ItemConfig[inventory_item.item].type == 'weapon' then
+        if inventory_item.uuid == uuid and ItemConfig[inventory_item.item].type == 'weapon' then
             if inventory_item.slot then
                 -- if we already know which weapon slot is used, use it
                 slot = inventory_item.slot

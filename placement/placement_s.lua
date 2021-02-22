@@ -14,15 +14,14 @@ AddEvent("OnPackageStop", function()
 end)
 
 AddRemoteEvent("PlaceItem", function(player, item, loc)
-    local item_cfg = GetItemConfig(item)
-    if not item_cfg or item_cfg['type'] ~= "placeable" then
+    if not ItemConfig[item] or ItemConfig[item].type ~= "placeable" then
         log.error("Cannot place invalid or non-placeable item!")
         return
     end
 
     RemoveFromInventory(player, item)
 
-    local object = CreateObject(item_cfg['modelid'], loc.x, loc.y, loc.z)
+    local object = CreateObject(ItemConfig[item].modelid, loc.x, loc.y, loc.z)
     if not object then
         return
     end
@@ -31,8 +30,8 @@ AddRemoteEvent("PlaceItem", function(player, item, loc)
     SetObjectPropertyValue(object, "placeable", true)
     SetObjectPropertyValue(object, "placed_by", GetPlayerSteamId(player))
 
-    if item_cfg['prop_options'] then
-        SetObjectPropertyValue(object, "prop", item_cfg['prop_options'])
+    if ItemConfig[item].prop_options then
+        SetObjectPropertyValue(object, "prop", ItemConfig[item].prop_options)
     end
 
     PlacedObjects[object] = true
@@ -40,7 +39,7 @@ AddRemoteEvent("PlaceItem", function(player, item, loc)
     CallRemoteEvent(player, "ObjectPlaced", object)
     AddPlayerChat(player, "Object placed.")
 
-    AddPlayerChat(player, item_cfg["name"] .. " has been placed.")
+    AddPlayerChat(player, ItemConfig[item].name .. " has been placed.")
     log.debug(GetPlayerName(player) .. " placed object " .. object .. " item " .. item)
 end)
 
@@ -51,7 +50,7 @@ end)
 
 AddRemoteEvent("UnplaceItem", function(player, object)
     local item = GetObjectPropertyValue(object, "item")
-    if not item_cfg or item_cfg['type'] ~= "placeable" then
+    if not ItemConfig[item] or ItemConfig[item].type ~= "placeable" then
         log.error("Cannot unplace invalid or non-placeable item!")
         return
     end
@@ -62,6 +61,6 @@ AddRemoteEvent("UnplaceItem", function(player, object)
     local uuid = RegisterNewItem(item)
     AddToInventory(player, uuid)
 
-    AddPlayerChat(player, item_cfg["name"] .. " has been added to your inventory.")
+    AddPlayerChat(player, ItemConfig[item].name .. " has been added to your inventory.")
     log.debug(GetPlayerName(player) .. " unplaced object " .. object .. " item " .. item)
 end)

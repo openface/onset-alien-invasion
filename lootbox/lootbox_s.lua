@@ -126,11 +126,10 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
 end)
 
 function AddLootItem(player, item)
-    local item_cfg = GetItemConfig(item)
-    if item_cfg then
+    if ItemConfig[item] then
         local uuid = RegisterNewItem(item)
         AddToInventory(player, uuid)
-        CallRemoteEvent(player, "ShowMessage", "You picked up a "..item_cfg['name'])
+        CallRemoteEvent(player, "ShowMessage", "You picked up a "..ItemConfig[item].name)
     end
 end
 

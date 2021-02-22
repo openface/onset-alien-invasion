@@ -1,4 +1,4 @@
-RegisterItemConfig("landmine", {
+ItemConfig["landmine"] = {
     name = "Landmine",
     type = 'usable',
     category = "Military Surplus",
@@ -26,7 +26,7 @@ RegisterItemConfig("landmine", {
         rz = 10,
         bone = "hand_l"
     }
-})
+}
 
 -- This uses a global timer to watch all landmines
 -- TODO: it would be better to have each landmine maintain it's own timer 
@@ -61,7 +61,7 @@ AddEvent("OnPackageStop", function()
     Landmines = {}
 end)
 
-AddEvent("items:landmine:use", function(player, item_cfg)
+AddEvent("items:landmine:use", function(player)
     local x, y, z = GetPlayerLocation(player)
     local object = CreateObject(1030, x + 100, y, z - 100)
 

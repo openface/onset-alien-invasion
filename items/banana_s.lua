@@ -1,4 +1,4 @@
-RegisterItemConfig("banana", {
+ItemConfig["banana"] = {
     name = "Banana",
     type = "usable",
     category = "Grocery",
@@ -20,4 +20,4 @@ RegisterItemConfig("banana", {
         rz = 0, 
         bone = "hand_r" 
     }
-})
+}

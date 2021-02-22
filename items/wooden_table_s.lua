@@ -1,4 +1,4 @@
-RegisterItemConfig("wooden_table", {
+ItemConfig["wooden_table"] = {
     name = "Wooden Table",
     type = 'placeable',
     category = "Furniture",
@@ -8,4 +8,4 @@ RegisterItemConfig("wooden_table", {
         wood = 40
     },
     price = 50,
-})
+}

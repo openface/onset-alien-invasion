@@ -1,4 +1,4 @@
-RegisterItemConfig("wooden_chair", {
+ItemConfig["wooden_chair"] = {
     name = "Wooden Chair",
     type = 'placeable',
     category = "Furniture",
@@ -16,7 +16,7 @@ RegisterItemConfig("wooden_chair", {
             type = 'object',
         }
     }
-})
+}
 
 --
 -- Sitting (TODO)

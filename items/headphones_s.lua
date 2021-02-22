@@ -1,4 +1,4 @@
-RegisterItemConfig("headphones", {
+ItemConfig["headphones"] = {
     name = "Headphones",
     type = 'equipable',
     category = "Miscellaneous",
@@ -18,4 +18,4 @@ RegisterItemConfig("headphones", {
         rz = 100, 
         bone = "head" 
     }
-})
+}

@@ -1,4 +1,4 @@
-RegisterItemConfig("flashlight", {
+ItemConfig["flashlight"] = {
     name = "Flashlight",
     type = 'equipable',
     category = "Supplies",
@@ -36,9 +36,9 @@ RegisterItemConfig("flashlight", {
         rz = -120,
         bone = "hand_l"
     }
-})
+}
 
-AddEvent("items:flashlight:use", function(player, item_cfg, options, object)
+AddEvent("items:flashlight:use", function(player, options, object)
     log.trace("items:flashlight:use", player, options, object)
 
     log.info(GetPlayerName(player) .. " toggles light object " .. object)

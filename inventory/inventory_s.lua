@@ -12,8 +12,7 @@ function SyncInventory(player)
 
     -- inventory
     for index, item in ipairs(inventory_items) do
-        local item_cfg = GetItemConfig(item['item'])
-        if item_cfg then
+        if ItemConfig[item.item] then
             local equipped = IsItemEquipped(player, item['item'])
             local bone = GetItemAttachmentBone(item['item'])
             table.insert(_send.inventory_items, {
@@ -26,16 +25,16 @@ function SyncInventory(player)
                 ['slot'] = item['slot'],
                 ['bone'] = bone,
 
-                ['type'] = item_cfg['type'],
-                ['name'] = item_cfg['name'],
-                ['modelid'] = item_cfg['modelid'],
-                ['image'] = item_cfg['image'],
-                ['use_label'] = item_cfg['use_label']
+                ['type'] = ItemConfig[item.item]['type'],
+                ['name'] = ItemConfig[item.item]['name'],
+                ['modelid'] = ItemConfig[item.item]['modelid'],
+                ['image'] = ItemConfig[item.item]['image'],
+                ['use_label'] = ItemConfig[item.item]['use_label']
             })
             if equipped and (bone == 'hand_l' or bone == 'hand_r') then
                 current_inhand = {
                     ['item'] = item['item'],
-                    ['prop'] = item_cfg['interaction']['prop']
+                    ['prop'] = ItemConfig[item.item]['interaction']['prop']
                 }
             end
         end
@@ -49,9 +48,7 @@ AddEvent("SyncInventory", SyncInventory)
 -- add object to inventory
 function AddToInventory(player, uuid)
     local item = GetItemInstance(uuid)
-
-    item_cfg = GetItemConfig(item)
-    if not item_cfg then
+    if not ItemConfig[item] then
         log.error("Invalid item " .. item)
         return
     end
@@ -75,7 +72,7 @@ function AddToInventory(player, uuid)
     end
 
     -- auto-equip when added
-    if item_cfg['auto_equip'] == true and (item_cfg['type'] == 'equipable' or item_cfg['type'] == 'weapon') then
+    if ItemConfig[item]['auto_equip'] == true and (ItemConfig[item]['type'] == 'equipable' or ItemConfig[item]['type'] == 'weapon') then
         if GetEquippedObject(player, item) ~= nil then
             log.debug("Auto-equipping item", item)
             EquipItem(player, item)
@@ -112,9 +109,7 @@ function IncrementItemUsed(player, item)
     for i, _item in ipairs(inventory) do
         if _item['item'] == item then
             -- delete if this is the last use
-            local item_cfg = GetItemConfig(item)
-
-            if (item_cfg['max_use'] - _item['used'] == 1) then
+            if (ItemConfig[item]['max_use'] - _item['used'] == 1) then
                 log.debug "all used up!"
                 UnequipItem(player, item)
                 RemoveFromInventory(player, item)
@@ -133,8 +128,7 @@ end
 -- deletes item from inventory
 -- deduces by quantity if carrying more than 1
 function RemoveFromInventory(player, item, amount)
-    local item_cfg = GetItemConfig(item)
-    if not item_cfg then
+    if not ItemConfig[item] then
         log.error("Invalid item: " .. item)
         return
     end
@@ -150,7 +144,7 @@ function RemoveFromInventory(player, item, amount)
     if new_qty == 0 then
         log.debug("items:" .. item .. ":drop")
 
-        if item_cfg['type'] == 'equipable' or item_cfg['type'] == 'weapon' then
+        if ItemConfig[item]['type'] == 'equipable' or ItemConfig[item]['type'] == 'weapon' then
             UnequipItem(player, item)
         end
     end
@@ -210,8 +204,6 @@ end
 
 -- use object from inventory
 function UseItemFromInventory(player, item, options)
-    local item_cfg = GetItemConfig(item)
-
     local _item = GetItemFromInventory(player, item)
     log.debug(GetPlayerName(player) .. " uses item " .. item .. " from inventory")
 
@@ -221,19 +213,19 @@ function UseItemFromInventory(player, item, options)
         return
     end
 
-    if item_cfg['max_use'] and _item['used'] > item_cfg['max_use'] then
+    if ItemConfig[item]['max_use'] and _item['used'] > ItemConfig[item]['max_use'] then
         log.error "Max use exceeded!"
         return
     end
 
     PlayInteraction(player, item, function()
         -- increment used
-        if item_cfg['max_use'] then
+        if ItemConfig[item]['max_use'] then
             IncrementItemUsed(player, item)
         end
 
         -- call USE event on object
-        CallEvent("items:" .. item .. ":use", player, item_cfg, options, equipped_object)
+        CallEvent("items:" .. item .. ":use", player, options, equipped_object)
     end)
 end
 AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)

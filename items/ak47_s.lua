@@ -1,4 +1,4 @@
-RegisterItemConfig("ak47", {
+ItemConfig["ak47"] = {
     name = "AK47",
     type = 'weapon',
     weapon_id = 12,
@@ -6,4 +6,4 @@ RegisterItemConfig("ak47", {
     mag_item = "rifle_mag",
     mag_size = 30,
     auto_equip = true
-})
+}

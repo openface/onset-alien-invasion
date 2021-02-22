@@ -53,14 +53,13 @@ AddRemoteEvent("prop:GetMerchantData", function(player)
 end)
 
 AddRemoteEvent("BuyItem", function(player, item)
-    local item_cfg = GetItemConfig(item)
-    if item_cfg == nil then
+    if ItemConfig[item] == nil then
         return
     end
 
-    log.debug("Player " .. GetPlayerName(player) .. " buys item " .. item_cfg['name'])
+    log.debug("Player " .. GetPlayerName(player) .. " buys item " .. ItemConfig[item]['name'])
 
-    if item_cfg['max_carry'] ~= nil and GetInventoryCount(player, item) >= item_cfg['max_carry'] then
+    if ItemConfig[item]['max_carry'] ~= nil and GetInventoryCount(player, item) >= ItemConfig[item]['max_carry'] then
         log.debug("Pickup exceeds max_carry")
         AddPlayerChat(player, "You cannot carry anymore of this item!")
         CallRemoteEvent(player, "PurchaseDenied")

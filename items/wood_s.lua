@@ -1,4 +1,4 @@
-RegisterItemConfig("wood", {
+ItemConfig["wood"] = {
     name = "Wood",
     type = 'resource',
     modelid = 297,
@@ -8,5 +8,5 @@ RegisterItemConfig("wood", {
         z = 0.5
     },
     max_carry = 25,
-})
+}
 

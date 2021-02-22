@@ -1,5 +1,5 @@
-RegisterItemConfig("rifle_mag", {
+ItemConfig["rifle_mag"] = {
     name = "Rifle Magazine",
     type = 'resource',
-    modelid = 28,
-})
+    modelid = 28
+}

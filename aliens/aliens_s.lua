@@ -1,4 +1,8 @@
 local VNPCS = ImportPackage("vnpcs")
+if VNPCS == nil then
+    print("Missing Onset_Weapon_Patch package!")
+    ServerExit()
+end
 
 local AlienHealth = 300
 local AlienAttackRange = 5000
@@ -73,7 +77,9 @@ function ClearAliens()
 end
 
 function IsPlayerAttackable(player)
-    if player == nil or player == 0 then return false end
+    if player == nil or player == 0 then
+        return false
+    end
 
     -- don't attack if player is in lobby (character selection)
     if GetPlayerDimension(player) ~= 0 then
@@ -85,9 +91,11 @@ function IsPlayerAttackable(player)
         return false
     end
 
-    if IsBossPresent() then return true end
+    if IsBossPresent() then
+        return true
+    end
 
-    --if IsAdmin(GetPlayerSteamId(player)) then return false end
+    -- if IsAdmin(GetPlayerSteamId(player)) then return false end
 
     -- don't attack if player is in safe zone
     local x, y, z = GetPlayerLocation(player)
@@ -192,7 +200,7 @@ function SetAlienTarget(npc, player)
         SetNPCPropertyValue(npc, 'target', player, true)
 
         -- alien has a new target
-        --SetNPCFollowPlayer(npc, player, math.random(325, 360)) -- random speed
+        -- SetNPCFollowPlayer(npc, player, math.random(325, 360)) -- random speed
         VNPCS.SetVNPCFollowPlayer(npc, player, 50)
 
         CallRemoteEvent(player, 'AlienAttacking', npc)
@@ -202,7 +210,7 @@ function SetAlienTarget(npc, player)
         SetNPCPropertyValue(npc, 'target', player, true)
 
         -- alien has a new target vehicle
-        --SetNPCFollowVehicle(npc, vehicle, 400)
+        -- SetNPCFollowVehicle(npc, vehicle, 400)
         VNPCS.SetVNPCFollowVehicle(npc, vehicle, 50)
 
         local x, y, z = GetNPCLocation(npc)
@@ -231,7 +239,7 @@ function ResetAlien(npc)
         -- we found a nearby target
         SetAlienTarget(npc, player)
     elseif (GetNPCPropertyValue(npc, 'target') == player) then
-        log.debug("NPC (ID " .. npc .. ") target "..GetPlayerName(player).." is no longer attackable")
+        log.debug("NPC (ID " .. npc .. ") target " .. GetPlayerName(player) .. " is no longer attackable")
         -- target is out of range, stop following
         SetNPCPropertyValue(npc, 'target', nil, true)
         VNPCS.StopVNPC(npc)
@@ -249,7 +257,7 @@ AddEvent("OnNPCDestroyed", function(npc)
         return
     end
 
-    log.info("Despawned alien "..npc)
+    log.info("Despawned alien " .. npc)
     AlienRetargetCooldown[npc] = nil
 end)
 
@@ -263,7 +271,7 @@ AddEvent("OnVNPCReachTargetFailed", function(npc)
     SetNPCAnimation(npc, "DONTKNOW", false)
 
     local target = GetNPCPropertyValue(npc, 'target')
-    
+
     if target == nil then
         log.error("Alien is confused.  Despawning.")
         DestroyNPC(npc)
@@ -275,10 +283,10 @@ AddEvent("OnVNPCReachTargetFailed", function(npc)
             AlienReturn(npc)
         end)
     else
-       -- alien is stuck, summon an alien friend and go away
-       log.debug("Stuck alien.. spawning a friend")
-       SpawnAlienNearPlayer(target)
-       AlienReturn(npc)
+        -- alien is stuck, summon an alien friend and go away
+        log.debug("Stuck alien.. spawning a friend")
+        SpawnAlienNearPlayer(target)
+        AlienReturn(npc)
     end
 end)
 
@@ -287,7 +295,7 @@ AddEvent("OnVNPCReachTarget", function(npc)
     if GetNPCPropertyValue(npc, 'type') ~= 'alien' then
         return
     end
-    log.debug("NPC (ID "..npc..") reached target")
+    log.debug("NPC (ID " .. npc .. ") reached target")
 
     local health = GetNPCHealth(npc)
     if (health == false or health <= 0) then
@@ -311,7 +319,7 @@ AddEvent("OnVNPCReachTarget", function(npc)
 
     if IsPlayerDead(target) or not IsValidPlayer(target) then
         -- target was dead or gone when we got here
-        log.debug("NPC (ID " .. npc ..") reached dead target")
+        log.debug("NPC (ID " .. npc .. ") reached dead target")
         return
     end
 
@@ -365,7 +373,7 @@ function AlienReturn(npc)
 
     local location = GetNPCPropertyValue(npc, 'location')
 
-    --SetNPCTargetLocation(npc, location[1], location[2], location[3], 800)
+    -- SetNPCTargetLocation(npc, location[1], location[2], location[3], 800)
     VNPCS.SetVNPCTargetLocation(npc, location[1], location[2], location[3], 300)
 end
 

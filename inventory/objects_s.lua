@@ -1,28 +1,14 @@
 -- item configuration
-ItemConfigs = {}
-
--- object factory
-function GetItemConfig(item)
-    return ItemConfigs[item]
-end
-
-function GetItemConfigs()
-    return ItemConfigs
-end
+ItemConfig = {}
 
 function GetItemConfigsByType(type)
     local items = {}
-    for item,cfg in pairs(ItemConfigs) do
+    for item,cfg in pairs(ItemConfig) do
         if cfg['type'] == type then
             items[item] = cfg
         end
     end
     return items
-end
-
-function RegisterItemConfig(item, meta)
-    ItemConfigs[item] = meta
-    log.debug("Registering item config: " .. item)
 end
 
 -- item world instances
@@ -46,37 +32,34 @@ AddEvent("OnPackageStop", function()
 end)
 
 function GetItemType(item)
-    local item_cfg = GetItemConfig(item)
-    if item_cfg then
-        return item_cfg['type']
+    if ItemConfig[item] then
+        return ItemConfig[item]['type']
     end
 end
 
 function GetItemAttachmentBone(item)
-    local item_cfg = GetItemConfig(item)
-    if item_cfg and item_cfg['attachment'] then
-        return item_cfg['attachment']['bone']
+    if ItemConfig[item] and ItemConfig[item]['attachment'] then
+        return ItemConfig[item]['attachment']['bone']
     end
 end
 
 -- 
 function PlayInteraction(player, item, after_use_callback)
     log.debug("Playing interaction for item " .. item)
-    local item_cfg = GetItemConfig(item)
-    if not item_cfg['interaction'] then
+    if not ItemConfig[item]['interaction'] then
         if after_use_callback then
             after_use_callback()
         end
         return
     end
-    if item_cfg['interaction']['animation'] then
-        SetPlayerAnimation(player, item_cfg['interaction']['animation']['name'])
+    if ItemConfig[item]['interaction']['animation'] then
+        SetPlayerAnimation(player, ItemConfig[item]['interaction']['animation']['name'])
 
-        local duration = item_cfg['interaction']['animation']['duration'] or 2000 -- default animation delay
+        local duration = ItemConfig[item]['interaction']['animation']['duration'] or 2000 -- default animation delay
 
         CallRemoteEvent(player, "StartInteraction", {
             ['duration'] = duration,
-            ['show_spinner'] = item_cfg['interaction']['animation']['spinner']
+            ['show_spinner'] = ItemConfig[item]['interaction']['animation']['spinner']
         })
 
         Delay(duration, function()
@@ -91,8 +74,8 @@ function PlayInteraction(player, item, after_use_callback)
             after_use_callback()
         end
     end
-    if item_cfg['interaction']['sound'] then
-        PlaySoundSync(player, item_cfg['interaction']['sound'])
+    if ItemConfig[item]['interaction']['sound'] then
+        PlaySoundSync(player, ItemConfig[item]['interaction']['sound'])
     end
 end
 

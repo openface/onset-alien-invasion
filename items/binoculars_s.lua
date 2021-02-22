@@ -1,4 +1,4 @@
-RegisterItemConfig("binoculars", {
+ItemConfig["binoculars"] = {
     name = "Binoculars",
     type = 'usable',
     category = "Supplies",
@@ -23,4 +23,4 @@ RegisterItemConfig("binoculars", {
       rz = 15.4, 
       bone = "hand_r" 
     }
-})
+}

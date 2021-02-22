@@ -139,7 +139,7 @@ AddRemoteEvent("prop:GetWorkbenchData", function(player, object, options)
 #### After Use
 
 ```
-AddEvent("items:beer:use", function(player, item_cfg, options, object)
+AddEvent("items:beer:use", function(player, options, object)
     -- drunk effect
 end)
 ```

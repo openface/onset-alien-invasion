@@ -1,4 +1,4 @@
-RegisterItemConfig("bandage", {
+ItemConfig["bandage"] = {
   name = "Bandage",
   type = "usable",
   category = "Supplies",
@@ -20,7 +20,7 @@ RegisterItemConfig("bandage", {
       rz = 0, 
       bone = "hand_r" 
   }
-})
+}
 
 AddEvent("items:bandage:use", function(player)
   local health = GetPlayerHealth(player)

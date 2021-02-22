@@ -22,18 +22,17 @@ AddRemoteEvent("prop:OpenStorage", function(player, object, options)
     local inventory = PlayerData[player].inventory
     for index, item in ipairs(inventory) do
         -- usable, equipable, resource
-        local item_cfg = GetItemConfig(item['item'])
-        if item_cfg then
+        if ItemConfig[item.item] then
             table.insert(_send.inventory_items, {
                 ['index'] = index,
                 ['item'] = item['item'],
                 ['uuid'] = item['uuid'],
                 ['quantity'] = item['quantity'],
 
-                ['name'] = item_cfg['name'],
-                ['modelid'] = item_cfg['modelid'],
-                ['image'] = item_cfg['image'],
-                ['type'] = item_cfg['type']
+                ['name'] = ItemConfig[item].name,
+                ['modelid'] = ItemConfig[item].modelid,
+                ['image'] = ItemConfig[item].image,
+                ['type'] = ItemConfig[item].type
             })
         end
     end
@@ -57,16 +56,15 @@ function ReplaceStorageContents(object, type, data)
     local new_storage = {}
     for i, item in ipairs(data) do
         -- lookup item configuration before storing it to ensure they are still valid
-        local item_cfg = GetItemConfig(item.item)
-        if item_cfg then
+        if ItemConfig[item.item] then
             new_storage[i] = {
                 item = item.item,
                 uuid = item.uuid,
                 quantity = item.quantity,
-                name = item_cfg['name'],
-                modelid = item_cfg['modelid'],
-                image = item_cfg['image'],
-                type = item_cfg['type']
+                name = ItemConfig[item.item].name,
+                modelid = ItemConfig[item.item].modelid,
+                image = ItemConfig[item.item].image,
+                type = ItemConfig[item.item].type
             }
         end
     end

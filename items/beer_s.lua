@@ -1,4 +1,4 @@
-RegisterItemConfig("beer", {
+ItemConfig["beer"] = {
     name = "Beer",
     type = 'usable',
     category = "Grocery",
@@ -21,7 +21,7 @@ RegisterItemConfig("beer", {
         rz = -10, 
         bone = "hand_r" 
     }
-})
+}
 
 AddEvent("items:beer:use", function(player)
 

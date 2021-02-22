@@ -1,4 +1,4 @@
-RegisterItemConfig("boxhead", {
+ItemConfig["boxhead"] = {
     name = "Boxhead",
     type = 'equipable',
     category = "Miscellaneous",
@@ -17,7 +17,7 @@ RegisterItemConfig("boxhead", {
         rz = -90, 
         bone = "head" 
     }
-})
+}
 
 AddEvent("items:boxhead:use", function(player, object)
 end)

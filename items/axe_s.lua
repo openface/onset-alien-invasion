@@ -1,4 +1,4 @@
-RegisterItemConfig("axe", {
+ItemConfig["axe"] = {
     name = "Axe",
     type = 'usable',
     category = "Supplies",
@@ -26,7 +26,7 @@ RegisterItemConfig("axe", {
       rz = -15.1, 
       bone = "hand_r" 
     }
-})
+}
 
 --
 -- Chopping

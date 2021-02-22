@@ -1,4 +1,4 @@
-RegisterItemConfig("supply_container", {
+ItemConfig["supply_container"] = {
     name = "Supply Container",
     type = 'placeable',
     category = "Storage",
@@ -14,4 +14,4 @@ RegisterItemConfig("supply_container", {
             name = "Supply Container"
         }
     }
-})
+}

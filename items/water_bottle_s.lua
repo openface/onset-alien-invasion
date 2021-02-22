@@ -1,4 +1,4 @@
-RegisterItemConfig("water_bottle", {
+ItemConfig["water_bottle"] = {
     name = "Water Bottle",
     type = "usable",
     category = "Grocery",
@@ -22,7 +22,7 @@ RegisterItemConfig("water_bottle", {
         rz = 0,
         bone = "hand_r"
     }
-})
+}
 
 AddEvent("items:water_bottle:use", function(player)
     local health = GetPlayerHealth(player)

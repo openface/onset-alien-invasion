@@ -1,4 +1,4 @@
-RegisterItemConfig("fishing_rod", {
+ItemConfig["fishing_rod"] = {
     name = "Fishing Rod",
     type = 'resource',
     category = "Supplies",
@@ -25,7 +25,7 @@ RegisterItemConfig("fishing_rod", {
         rz = -86.3, 
         bone = "hand_r" 
     }
-})
+}
 
 AddRemoteEvent("GoFishing", function(player, object, options)
     if GetInventoryCount(player, "fishing_rod") == 0 then
@@ -40,5 +40,4 @@ AddRemoteEvent("GoFishing", function(player, object, options)
         CallRemoteEvent(player, "ShowMessage", "You caught a fish and put it in your inventory!")
         AddToInventory(player, RegisterNewItem("wood"))
     end)
-
 end)

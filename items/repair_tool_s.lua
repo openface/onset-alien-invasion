@@ -1,4 +1,4 @@
-RegisterItemConfig("repair_tool", {
+ItemConfig["repair_tool"] = {
     name = "Repair Tool",
     type = 'usable',
     category = "Supplies",
@@ -24,9 +24,9 @@ RegisterItemConfig("repair_tool", {
         bone = "hand_r"
     },
     price = 50
-})
+}
 
-AddEvent("items:repair_tool:use", function(player, item_cfg, options)
+AddEvent("items:repair_tool:use", function(player, options)
     if options and options.vehicle then
         SetVehicleHealth(options.vehicle, GetVehicleHealth(options.vehicle) + 250)
 

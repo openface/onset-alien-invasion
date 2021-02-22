@@ -1,4 +1,4 @@
-RegisterItemConfig("armyhat", {
+ItemConfig["armyhat"] = {
     name = "Officer Hat",
     type = 'equipable',
     category = "Military Surplus",
@@ -18,4 +18,4 @@ RegisterItemConfig("armyhat", {
         rz = -86.3, 
         bone = "head" 
     }
-})
+}

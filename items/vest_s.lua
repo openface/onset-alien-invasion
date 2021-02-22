@@ -1,4 +1,4 @@
-RegisterItemConfig("vest", {
+ItemConfig["vest"] = {
     name = "Kevlar Vest",
     type = 'equipable',
     category = "Military Surplus",
@@ -25,7 +25,7 @@ RegisterItemConfig("vest", {
         rz = 5,
         bone = "spine_02"
     },
-})
+}
 
 AddEvent("items:vest:equip", function(player, object)
     SetPlayerArmor(player, 100)

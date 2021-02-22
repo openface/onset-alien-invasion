@@ -22,18 +22,17 @@ function CreatePickupNearPlayer(player, item)
 end
 
 function CreateObjectPickup(item, x, y, z)
-    local item_cfg = GetItemConfig(item)
-    if not item_cfg then
+    if not ItemConfig[item] then
         log.debug("Invalid object " .. item)
         return
     end
-    log.debug("Creating object pickup " .. item .. " modelid " .. item_cfg['modelid'] .. " type " .. item_cfg['type'])
+    log.debug("Creating object pickup " .. item .. " modelid " .. ItemConfig[item].modelid .. " type " .. ItemConfig[item].type)
 
-    local pickup = CreatePickup(item_cfg['modelid'], x, y, z)
+    local pickup = CreatePickup(ItemConfig[item].modelid, x, y, z)
     SetPickupPropertyValue(pickup, '_name', item)
-    SetPickupPropertyValue(pickup, '_text', CreateText3D(item_cfg['name'], 8, x, y, z + 100, 0, 0, 0))
-    if item_cfg['scale'] ~= nil then
-        SetPickupScale(pickup, item_cfg['scale'].x, item_cfg['scale'].y, item_cfg['scale'].z)
+    SetPickupPropertyValue(pickup, '_text', CreateText3D(ItemConfig[item].name, 8, x, y, z + 100, 0, 0, 0))
+    if ItemConfig[item].scale ~= nil then
+        SetPickupScale(pickup, ItemConfig[item].scale.x, ItemConfig[item].scale.y, ItemConfig[item].scale.z)
     end
     Pickups[pickup] = pickup
 end
@@ -53,12 +52,11 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
         return
     end
 
-    local item_cfg = GetItemConfig(item)
-    if not item_cfg then
+    if not ItemConfig[item] then
         return
     end
 
-    if item_cfg['max_carry'] ~= nil and GetInventoryCount(player, item) >= item_cfg['max_carry'] then
+    if ItemConfig[item].max_carry ~= nil and GetInventoryCount(player, item) >= ItemConfig[item].max_carry then
         log.debug("Pickup exceeds max_carry")
         CallRemoteEvent(player, "PlayErrorSound")
         return
@@ -68,10 +66,10 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
         return
     end
 
-    CallRemoteEvent(player, "PlayPickupSound", item_cfg['pickup_sound'] or "sounds/pickup.wav")
+    CallRemoteEvent(player, "PlayPickupSound", ItemConfig[item].pickup_sound or "sounds/pickup.wav")
 
     log.debug("Player " .. GetPlayerName(player) .. " picks up item " .. item)
-    CallRemoteEvent(player, "ShowMessage", "You have picked up a "..item_cfg['name'])
+    CallRemoteEvent(player, "ShowMessage", "You have picked up a "..ItemConfig[item].name)
 
     local uuid = RegisterNewItem(item)
 

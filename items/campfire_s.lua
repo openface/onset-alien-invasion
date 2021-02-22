@@ -1,4 +1,4 @@
-RegisterItemConfig("campfire", {
+ItemConfig["campfire"] = {
     name = "Campfire",
     type = 'usable',
     modelid = 20007,
@@ -12,11 +12,11 @@ RegisterItemConfig("campfire", {
     },
     price = nil,
     interaction = nil -- animation sequence is done in event
-})
+}
 
 local Campfires = {}
 
-AddEvent("items:campfire:use", function(player, item_cfg)
+AddEvent("items:campfire:use", function(player)
     local x, y, z = GetPlayerLocation(player)
     local object = CreateObject(20007, x + 50, y, z - 100)
     Campfires[object] = object

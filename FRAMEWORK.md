@@ -33,6 +33,10 @@ RegisterItemConfig("wooden_chair", {        -- [required] unique id / item name
         wood = 2,
         computer_part = 1
     },
+    weapon_id = 12,                     -- weapon id (type weapon only)
+    mag_item = "rifle_mag",             -- magazine item used by this weapon (type weapon only)
+    mag_size = 30,                      -- magazine size for this weapon (type weapon only)
+    auto_equip = true                   -- automatically equip the item when picked up
     price = 150,                        -- cash required to purchase this item at merchant (nil = non-purchasable)
     attachment = {                      -- how to attach this item to player when equipped/using
         x = -20, 

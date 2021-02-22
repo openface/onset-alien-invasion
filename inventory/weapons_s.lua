@@ -101,7 +101,7 @@ function AddWeaponFromInventory(player, item, equip)
     local inventory = PlayerData[player].inventory
     local slot
     for i, _item in ipairs(inventory) do
-        if _item['item'] == item and ItemConfig[_item['item']]['type'] == 'weapon' then
+        if _item['item'] == item and ItemConfig[_item['item']].type == 'weapon' then
             if _item['slot'] then
                 slot = _item['slot']
             else
@@ -161,9 +161,19 @@ function GetItemConfigByWeaponID(weapon_id)
     end
 end
 
-AddRemoteEvent("ReloadWeapon", function(player)
+-- return currently equipped weapon ID or nil
+function GetCurrentWeaponID(player)
     local weapon_id = GetPlayerEquippedWeapon(player)
-    if weapon_id ~= 1 then
+    if weapon_id == 1 then
+        return nil
+    else
+        return weapon_id
+    end
+end
+
+AddRemoteEvent("ReloadWeapon", function(player)
+    local weapon_id = GetCurrentWeaponID(player)
+    if weapon_id then
         local item, item_cfg = GetItemConfigByWeaponID(weapon_id)
         if GetItemFromInventory(player, item_cfg['mag_item']) then
             log.debug("Reloading player weapon " .. item .. " from magazine")

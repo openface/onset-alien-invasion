@@ -40,11 +40,17 @@ function EquipItem(player, item)
     -- unequip whatever is in hands if equipping to hands
     if ItemConfig[item].type == 'weapon' then
         -- unequip hands when switching to a weapon
-        UnequipFromBone(player, 'hand_r')
-        UnequipFromBone(player, 'hand_l')
+        -- and not currently holding a weapon
+        if not GetCurrentWeaponID(player) then
+            UnequipFromBone(player, 'hand_r')
+            UnequipFromBone(player, 'hand_l')
+        end
     elseif ItemConfig[item].attachment['bone'] == 'hand_r' or ItemConfig[item].attachment['bone'] == 'hand_l' then
         -- switch to fists when equipping an object
-        SwitchToFists(player)
+        -- and currently holding a weapon
+        if GetCurrentWeaponID(player) then
+            SwitchToFists(player)
+        end
 
         -- unequip hands
         UnequipFromBone(player, 'hand_r')

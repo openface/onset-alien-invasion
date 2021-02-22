@@ -18,6 +18,13 @@ AddRemoteEvent("Play3DSound", function(sound, x, y, z)
     SetSoundVolume(CreateSound3D("client/"..sound, x, y, z, 1000), 1.0)
 end)
 
+AddEvent("OnWebLoadComplete", function(ui)
+    if ui == InventoryUI then
+        AddPlayerChat("load done")
+	    CallRemoteEvent("GetInventory")
+    end
+end)
+
 AddEvent('OnKeyPress', function(key)
     if IsShiftPressed() or IsAltPressed() or EditingObject or GetWebVisibility(InventoryUI) == WEB_HIDDEN then
         return
@@ -64,13 +71,9 @@ AddEvent("OnPlayerToggleAim", function(toggle)
 end)
 
 -- sync inventory
-AddRemoteEvent("SetInventory", function(data)
-    ExecuteWebJS(InventoryUI, "EmitEvent('SetInventory'," .. data .. ")")
-end)
-
--- controls whether or not player can aim
-AddRemoteEvent("SetInHand", function(data)
-    CurrentInHand = data
+AddRemoteEvent("SetInventory", function(inventory_data, inhand_data)
+    ExecuteWebJS(InventoryUI, "EmitEvent('SetInventory'," .. inventory_data .. ")")
+    CurrentInHand = inhand_data
 end)
 
 -- drop item

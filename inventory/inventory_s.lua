@@ -41,13 +41,7 @@ function SyncInventory(player)
         end
     end
     --log.trace("INVENTORY SYNC (" .. GetPlayerName(player) .. "): " .. json_encode(_send))
-    CallRemoteEvent(player, "SetInventory", json_encode(_send))
-
-    if current_inhand then
-        CallRemoteEvent(player, "SetInHand", current_inhand)
-    else
-        CallRemoteEvent(player, "SetInHand", nil)
-    end
+    CallRemoteEvent(player, "SetInventory", json_encode(_send), current_inhand)
 end
 AddRemoteEvent("SyncInventory", SyncInventory)
 AddEvent("SyncInventory", SyncInventory)
@@ -272,6 +266,10 @@ function SetWeaponSlotsFromInventory(player)
         end
     end
 end
+
+AddRemoteEvent("GetInventory", function(player)
+    CallEvent("SyncInventory", player)
+end)
 
 -- updates inventory from inventory UI sorting
 -- recreates the inventory with new indexes

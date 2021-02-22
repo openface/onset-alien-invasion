@@ -210,10 +210,7 @@ function InitializePlayer(player)
     end
 
     SyncWeaponSlotsFromInventory(player)
---[[     Delay(3000, function()
-        CallEvent("SyncInventory", player)
-    end)
- ]]end
+end
 
 -- Chat
 AddEvent("OnPlayerChat", function(player, message)

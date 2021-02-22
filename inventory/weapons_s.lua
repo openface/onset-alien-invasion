@@ -82,10 +82,10 @@ end)
 function SyncWeaponSlotsFromInventory(player)
     local inventory = PlayerData[player].inventory
     local item_cfg
-    for i,item in ipairs(inventory) do
-        item_cfg = GetItemConfig(item.item)
-        if item['type'] == 'weapon' then
-            WeaponPatch.SetWeapon(player, item_cfg.weapon_id, item_cfg.mag_size, false, item['slot'], true)
+    for i,inventory_item in ipairs(inventory) do
+        item_cfg = GetItemConfig(inventory_item['item'])
+        if item_cfg['type'] == 'weapon' and inventory_item['slot'] ~= GetPlayerEquippedWeaponSlot(player) then
+            WeaponPatch.SetWeapon(player, item_cfg.weapon_id, item_cfg.mag_size, false, inventory_item['slot'], true)
         end
     end
 end

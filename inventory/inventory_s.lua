@@ -254,19 +254,6 @@ AddRemoteEvent("EquipItemFromInventory", function(player, uuid)
     CallEvent("SyncInventory", player)
 end)
 
--- sets weapon to weapon slot from inventory
-function SetWeaponSlotsFromInventory(player)
-    log.debug("Updating weapon slots from inventory", player)
-    ClearAllWeaponSlots(player)
-
-    local inventory = PlayerData[player].inventory
-    for i, _item in ipairs(inventory) do
-        if _item['slot'] == 1 or _item['slot'] == 2 or _item['slot'] == 3 then
-            AddWeaponFromInventory(player, _item['item'], false)
-        end
-    end
-end
-
 AddRemoteEvent("GetInventory", function(player)
     CallEvent("SyncInventory", player)
 end)
@@ -293,7 +280,7 @@ AddRemoteEvent("UpdateInventory", function(player, data)
     PlayerData[player].inventory = new_inventory
 
     CheckEquippedFromInventory(player)
-    SetWeaponSlotsFromInventory(player)
+    SyncWeaponSlotsFromInventory(player)
     CallEvent("SyncInventory", player)
 end)
 

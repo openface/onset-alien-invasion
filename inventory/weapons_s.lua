@@ -79,10 +79,11 @@ AddEvent("OnPackageStop", function()
 end)
 
 -- sets weapons slots from inventory data
+-- if we find a weapon in inventory that is supposed to be equipped, equip it
 function SyncWeaponSlotsFromInventory(player)
     local inventory = PlayerData[player].inventory
     for i, inventory_item in ipairs(inventory) do
-        if GetEquippedObject(player, inventory_item.uuid) then
+        if inventory_item.type == 'weapon' and GetEquippedObject(player, inventory_item.uuid) then
             EquipWeaponFromInventory(player, inventory_item.uuid, false)
             return
         end

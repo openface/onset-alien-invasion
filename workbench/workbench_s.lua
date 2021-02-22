@@ -32,7 +32,7 @@ function CreateWorkbench(config)
     Workbenches[object] = true
 end
 
-AddRemoteEvent("prop:GetWorkbenchData", function(player, object, options)
+AddRemoteEvent("GetWorkbenchData", function(player, object, options)
     log.debug("Workbench: " .. options['id'])
     local item_data = {}
     for key, item in pairs(GetItemConfigs()) do

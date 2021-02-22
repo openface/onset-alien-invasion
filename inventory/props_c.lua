@@ -55,6 +55,7 @@ AddEvent("OnGameTick", function()
             -- if item is in hand, check for matching target
             if CurrentInHand['prop']['target'] == hitStruct.type then
                 AddPlayerChat("item: " .. CurrentInHand['item'])
+                AddPlayerChat("uuid: " .. CurrentInHand['uuid'])
                 AddPlayerChat("target: " .. CurrentInHand['prop']['target'])
                 AddPlayerChat("desc: " .. CurrentInHand['prop']['desc'])
                 AddPlayerChat("remote_event: " .. CurrentInHand['prop']['remote_event'])
@@ -146,10 +147,10 @@ AddEvent("OnKeyPress", function(key)
         -- call prop events
         if ActiveProp['client_event'] then
             -- AddPlayerChat("calling client event: "..ActiveProp['event'])
-            CallEvent("prop:" .. ActiveProp['client_event'], ActiveProp['object'], ActiveProp['options'])
+            CallEvent(ActiveProp['client_event'], ActiveProp['object'], ActiveProp['options'])
         end
         if ActiveProp['remote_event'] then
-            -- AddPlayerChat("calling remote event: "..ActiveProp['remote_event'])
+            AddPlayerChat("calling remote event: "..ActiveProp['remote_event'])
             CallRemoteEvent(ActiveProp['remote_event'], ActiveProp['object'], ActiveProp['options'])
         end
         ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
@@ -160,7 +161,7 @@ AddEvent("OnKeyPress", function(key)
         local actor = GetPlayerActor(GetPlayerId())
         actor:SetActorEnableCollision(true)
 
-        CallRemoteEvent("prop:StopSitting", StandingPlayerLocation)
+        CallRemoteEvent("StopSitting", StandingPlayerLocation)
         StandingPlayerLocation = nil
     end
 end)
@@ -170,7 +171,7 @@ end)
 -- Thanks Pindrought!
 --
 
-AddEvent("prop:SitInChair", function(object, options)
+AddEvent("SitInChair", function(object, options)
     -- save previous location
     local x, y, z = GetPlayerLocation()
     StandingPlayerLocation = {

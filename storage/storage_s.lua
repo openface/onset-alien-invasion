@@ -1,4 +1,4 @@
-AddRemoteEvent("prop:OpenStorage", function(player, object, options)
+AddRemoteEvent("OpenStorage", function(player, object, options)
     log.info(GetPlayerName(player) .. " opens storage " .. object .. " type " .. options['type'])
 
     PlaySoundSync(player, "sounds/storage_open.wav")

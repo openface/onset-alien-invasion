@@ -22,7 +22,7 @@ AddCommand("scrap", function(player, amt)
 end)
 
 -- search for scrap
-AddRemoteEvent("prop:SearchForScrap", function(player, object, options)
+AddRemoteEvent("SearchForScrap", function(player, object, options)
     if CurrentlySearching[player] ~= nil then
         return
     end

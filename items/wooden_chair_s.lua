@@ -22,12 +22,12 @@ ItemConfig["wooden_chair"] = {
 -- Sitting (TODO)
 --
 
-AddRemoteEvent("prop:SitInChair", function(player, object, options)
+AddRemoteEvent("SitInChair", function(player, object, options)
     SetPlayerAnimation(player, "SIT04")
     log.debug(GetPlayerName(player).." sitting...")
 end)
 
-AddRemoteEvent("prop:StopSitting", function(player, loc)
+AddRemoteEvent("StopSitting", function(player, loc)
     SetPlayerAnimation(player, "STOP")
     SetPlayerLocation(player, loc.x, loc.y, loc.z)
     log.debug(GetPlayerName(player).." no longer sitting...")

@@ -29,7 +29,7 @@ function RegisterMerchant(name, config)
     Merchants[object] = true
 end
 
-AddRemoteEvent("prop:GetMerchantData", function(player)
+AddRemoteEvent("GetMerchantData", function(player)
     local item_data = {}
     for key, item in pairs(GetItemConfigs()) do
         if item['price'] ~= nil then

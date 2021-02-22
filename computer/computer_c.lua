@@ -24,7 +24,7 @@ function ShowComputerTimer(object_location)
 end
 
 -- interacting with garage computer
-AddEvent("prop:InteractGarageComputer", function(object)
+AddEvent("InteractGarageComputer", function(object)
     local x, y, z = GetObjectLocation(object)
     SetSoundVolume(CreateSound3D("client/sounds/modem.mp3", x, y, z, 1500), 0.7)
     SetWebVisibility(ComputerUI, WEB_HITINVISIBLE)
@@ -37,7 +37,7 @@ AddEvent("prop:InteractGarageComputer", function(object)
 end)
 
 -- interacting with satellite computer
-AddEvent("prop:InteractSatelliteTerminal", function(object)
+AddEvent("InteractSatelliteTerminal", function(object)
     local x, y, z = GetObjectLocation(object)
 
     SetSoundVolume(CreateSound3D("client/sounds/modem.mp3", x, y, z, 1500), 0.7)

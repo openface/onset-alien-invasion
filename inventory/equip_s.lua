@@ -15,8 +15,13 @@ function ClearEquippedObjects(player)
     SetPlayerAnimation(player, "STOP")
 end
 
-function EquipItem(player, item)
-    log.trace("EquipItem", item)
+function EquipItem(player, uuid)
+    log.trace("EquipItem", uuid)
+    local item = GetItemInstance(uuid)
+    if not item then
+        log.error("Cannot equip unknown item "..uuid)
+        return
+    end
 
     if not ItemConfig[item] then
         log.error("Cannot equip invalid item " .. item)
@@ -28,20 +33,21 @@ function EquipItem(player, item)
         return
     end
 
-    if GetEquippedObject(player, item) ~= nil then
+    if GetEquippedObject(player, uuid) ~= nil then
         log.debug "already equipped; unequipping..."
-        UnequipItem(player, item)
+        UnequipItem(player, uuid)
         return
     end
 
     -- start equipping
-    log.debug(GetPlayerName(player) .. " equips item " .. item)
+    log.debug(GetPlayerName(player) .. " equips item " .. item .." uuid: " .. uuid)
 
     -- unequip whatever is in hands if equipping to hands
     if ItemConfig[item].type == 'weapon' then
         -- unequip hands when switching to a weapon
         -- and not currently holding a weapon
         if not GetCurrentWeaponID(player) then
+            log.debug("Unequipping object before equipping weapon")
             UnequipFromBone(player, 'hand_r')
             UnequipFromBone(player, 'hand_l')
         end
@@ -59,14 +65,14 @@ function EquipItem(player, item)
 
     -- equipable animations
     if ItemConfig[item].type == 'equipable' then
-        PlayInteraction(player, item)
+        PlayInteraction(player, uuid)
     end
 
-    attached_object = AttachItemToPlayer(player, item)
+    attached_object = AttachItemToPlayer(player, uuid)
 
     -- update equipped store
     local equipped = PlayerData[player].equipped
-    equipped[item] = attached_object
+    equipped[uuid] = attached_object
     PlayerData[player].equipped = equipped
     log.trace("EQUIPPED: ", dump(equipped))
 
@@ -78,9 +84,11 @@ function EquipItem(player, item)
 end
 
 -- attaches object or weapon to player
-function AttachItemToPlayer(player, item)
+function AttachItemToPlayer(player, uuid)
+    local item = GetItemInstance(uuid)
+
     if ItemConfig[item].type == 'weapon' then
-        AddWeaponFromInventory(player, item, false)
+        EquipWeaponFromInventory(player, uuid, false)
         return true
     end
 
@@ -118,23 +126,25 @@ end
 function UnequipFromBone(player, bone)
     log.debug("UnequipFromBone", bone)
     -- unequip whatever is in the player's bone
-    local equipped_item = GetEquippedItemNameFromBone(player, bone)
-    if equipped_item ~= nil then
-        log.debug("Bone " .. bone .. " is already equipped, unequipping...")
-        UnequipItem(player, equipped_item)
+    local equipped_uuid = GetEquippedItemFromBone(player, bone)
+    if equipped_uuid then
+        log.debug("Bone " .. bone .. " is already equipped " .. equipped_uuid .. ", unequipping...")
+        UnequipItem(player, equipped_uuid)
     end
 end
 
 -- Unequips objects or weapons from player
-function UnequipItem(player, item)
+function UnequipItem(player, uuid)
+    local item = GetItemInstance(uuid)
+
     if not ItemConfig[item] then
         return
     end
 
     -- item is attached object to player
-    local object = GetEquippedObject(player, item)
+    local object = GetEquippedObject(player, uuid)
     if not object then
-        log.warn "item not equipped"
+        log.warn("item "..uuid.."not equipped")
         return
     end
 
@@ -144,18 +154,18 @@ function UnequipItem(player, item)
 
     -- remove from equipped list
     local equipped = PlayerData[player].equipped
-    equipped[item] = nil
+    equipped[uuid] = nil
     PlayerData[player].equipped = equipped
 
     log.trace("EQUIPPED: ", dump(equipped))
 
     if ItemConfig[item].type == 'weapon' then
-        UnequipWeapon(player, item)
+        UnequipWeapon(player, uuid)
     else
         DestroyObject(object)
     end
 
-    log.debug(GetPlayerName(player) .. " unequipped item " .. item)
+    log.debug(GetPlayerName(player) .. " unequipped item " .. item .." uuid: ".. uuid)
 
     -- call UNEQUIP event on object
     CallEvent("items:" .. item .. ":unequip", player, object)
@@ -164,27 +174,30 @@ function UnequipItem(player, item)
     CallEvent("SyncInventory", player)
 end
 
-function GetEquippedObject(player, item)
-    return PlayerData[player].equipped[item] or nil
+function GetEquippedObject(player, uuid)
+    return PlayerData[player].equipped[uuid] or nil
 end
 
-function IsItemEquipped(player, item)
+function IsItemEquipped(player, uuid)
+    local item = GetItemInstance(uuid)
+
     if ItemConfig[item].type == 'weapon' then
-        return IsWeaponEquipped(player, item)
-    elseif GetEquippedObject(player, item) ~= nil then
+        return IsWeaponEquipped(player, uuid)
+    elseif GetEquippedObject(player, uuid) ~= nil then
         return true
     else
         return false
     end
 end
 
-function GetEquippedItemNameFromBone(player, bone)
+function GetEquippedItemFromBone(player, bone)
     local equipped = PlayerData[player].equipped
-    for item, object in pairs(equipped) do
+    for uuid, object in pairs(equipped) do
+        local item = GetItemInstance(uuid)
         if ItemConfig[item].type == 'weapon' and (bone == 'hand_l' or bone == 'hand_r') then
-            return item
+            return uuid
         elseif ItemConfig[item].attachment and ItemConfig[item].attachment['bone'] == bone then
-            return item
+            return uuid
         end
     end
 end
@@ -194,10 +207,11 @@ function CheckEquippedFromInventory(player)
     local equipped = PlayerData[player].equipped
     local inventory = PlayerData[player].inventory
 
-    for item, _ in pairs(equipped) do
-        if GetInventoryCount(player, item) == 0 then
+    for uuid, _ in pairs(equipped) do
+        if GetInventoryCount(player, uuid) == 0 then
+            local item = GetItemInstance(uuid)
             log.debug("Unequipping item " .. item .. " no longer in inventory")
-            UnequipItem(player, item)
+            UnequipItem(player, uuid)
         end
     end
 end

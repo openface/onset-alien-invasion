@@ -34,7 +34,7 @@ AddRemoteEvent("GoFishing", function(player, object, options)
     end
 
     log.debug(GetPlayerName(player) .. " is fishing")
-    UseItemFromInventory(player, "fishing_rod")
+    --UseItemFromInventory(player, "fishing_rod")
 
     Delay(10000, function()
         CallRemoteEvent(player, "ShowMessage", "You caught a fish and put it in your inventory!")

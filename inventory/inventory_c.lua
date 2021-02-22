@@ -43,7 +43,7 @@ AddEvent('OnKeyPress', function(key)
             CallRemoteEvent("UseItemHotkey", key)
         elseif key == 'Left Mouse Button' and CurrentInHand and not CurrentlyInteracting then
             -- use item currently in hands
-            CallRemoteEvent("UseItemFromInventory", CurrentInHand['item'])
+            CallRemoteEvent("UseItemFromInventory", CurrentInHand['uuid'])
         end
     end
 end)
@@ -89,11 +89,6 @@ end)
 AddEvent("UnequipItem", function(uuid)
     CallRemoteEvent("UnequipItemFromInventory", uuid)
 end)
-
---[[ -- use item
-AddEvent("UseItem", function(uuid)
-    CallRemoteEvent("UseItemFromInventory", uuid)
-end) ]]
 
 -- sort inventory
 AddEvent("UpdateInventory", function(data)

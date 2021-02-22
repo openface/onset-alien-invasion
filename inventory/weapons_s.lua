@@ -97,27 +97,31 @@ function ClearAllWeaponSlots(player)
 end
 
 -- equips weapon by item and adds to weapon slot
-function AddWeaponFromInventory(player, item, equip)
+function EquipWeaponFromInventory(player, uuid, equip)
     local inventory = PlayerData[player].inventory
     local slot
-    for i, _item in ipairs(inventory) do
-        if _item['item'] == item and ItemConfig[_item['item']].type == 'weapon' then
-            if _item['slot'] then
-                slot = _item['slot']
+    for i, inventory_item in ipairs(inventory) do
+        log.debug(dump(inventory_item))
+        if inventory_item['uuid'] == uuid and ItemConfig[inventory_item.item].type == 'weapon' then
+            if inventory_item.slot then
+                -- if we already know which weapon slot is used, use it
+                slot = inventory_item.slot
             else
+                -- pick a new weapon slot
                 slot = GetNextAvailableWeaponSlot(player)
                 PlayerData[player].inventory[i].slot = slot
                 CallEvent("SyncInventory", player)
             end
 
-            log.debug("Equipping weapon from inventory to slot", player, item, slot)
-            EquipWeaponToSlot(player, item, slot, equip)
+            log.debug("Equipping weapon from inventory to slot", player, uuid, slot)
+            EquipWeaponToSlot(player, uuid, slot, equip)
             return
         end
     end
 end
 
-function EquipWeaponToSlot(player, item, slot, equip)
+function EquipWeaponToSlot(player, uuid, slot, equip)
+    local item = GetItemInstance(uuid)
     WeaponPatch.SetWeapon(player, ItemConfig[item].weapon_id, ItemConfig[item].mag_size, equip, slot, true)
 end
 
@@ -130,12 +134,13 @@ function GetNextAvailableWeaponSlot(player)
     end
 end
 
-function IsWeaponEquipped(player, item)
-    return PlayerData[player].equipped[item] or nil
+function IsWeaponEquipped(player, uuid)
+    return PlayerData[player].equipped[uuid] or nil
 end
 
 -- switch to fists if weapon is equipped for given weapon/item
-function UnequipWeapon(player, item)
+function UnequipWeapon(player, uuid)
+    local item = GetItemInstance(uuid)
     for slot = 1, 3 do
         local weapon_id, ammo = GetPlayerWeapon(player, slot)
         if ItemConfig[item].weapon_id == weapon_id then
@@ -175,7 +180,7 @@ AddRemoteEvent("ReloadWeapon", function(player)
     local weapon_id = GetCurrentWeaponID(player)
     if weapon_id then
         local item, item_cfg = GetItemConfigByWeaponID(weapon_id)
-        if GetItemFromInventory(player, item_cfg['mag_item']) then
+        if GetItemFromInventoryByName(player, item_cfg['mag_item']) then
             log.debug("Reloading player weapon " .. item .. " from magazine")
 
             RemoveFromInventory(player, item_cfg['mag_item'], 1)

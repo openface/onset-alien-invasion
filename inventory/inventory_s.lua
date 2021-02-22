@@ -13,16 +13,16 @@ function SyncInventory(player)
     -- inventory
     for index, item in ipairs(inventory_items) do
         if ItemConfig[item.item] then
-            local equipped = IsItemEquipped(player, item['item'])
-            local bone = GetItemAttachmentBone(item['item'])
+            local equipped = IsItemEquipped(player, item.uuid)
+            local bone = GetItemAttachmentBone(item.item)
             table.insert(_send.inventory_items, {
                 ['index'] = index,
-                ['item'] = item['item'],
-                ['uuid'] = item['uuid'],
-                ['quantity'] = item['quantity'],
+                ['item'] = item.item,
+                ['uuid'] = item.uuid,
+                ['quantity'] = item.quantity,
                 ['equipped'] = equipped,
-                ['used'] = item['used'],
-                ['slot'] = item['slot'],
+                ['used'] = item.used,
+                ['slot'] = item.slot,
                 ['bone'] = bone,
 
                 ['type'] = ItemConfig[item.item].type,
@@ -34,12 +34,16 @@ function SyncInventory(player)
             if equipped and (bone == 'hand_l' or bone == 'hand_r') then
                 current_inhand = {
                     ['item'] = item['item'],
-                    ['prop'] = ItemConfig[item.item].interaction['prop']
+                    ['uuid'] = item['uuid'],
                 }
+                if ItemConfig[item.item].interaction then
+                    current_inhand['prop'] = ItemConfig[item.item].interaction['prop']
+                end
             end
         end
     end
-    -- log.trace("INVENTORY SYNC (" .. GetPlayerName(player) .. "): " .. json_encode(_send))
+    --log.trace("INVENTORY SYNC (" .. GetPlayerName(player) .. "): " .. json_encode(_send))
+    log.trace("CURRENT INHAND: "..dump(current_inhand))
     CallRemoteEvent(player, "SetInventory", json_encode(_send), current_inhand)
 end
 AddRemoteEvent("SyncInventory", SyncInventory)
@@ -84,11 +88,11 @@ function AddToInventory(player, uuid)
 end
 
 -- private function to update inventory item quantity
-function SetItemQuantity(player, item, quantity)
+function SetItemQuantity(player, uuid, quantity)
     local inventory = PlayerData[player].inventory
 
-    for i, _item in ipairs(inventory) do
-        if _item['item'] == item then
+    for i, inventory_item in ipairs(inventory) do
+        if inventory_item.uuid == uuid then
             if quantity > 0 then
                 -- update quantity
                 inventory[i]['quantity'] = quantity
@@ -100,23 +104,24 @@ function SetItemQuantity(player, item, quantity)
         end
     end
     PlayerData[player].inventory = inventory
-    log.debug(GetPlayerName(player) .. " inventory item " .. item .. " quantity set to " .. quantity)
+    log.debug(GetPlayerName(player) .. " inventory item " .. uuid .. " quantity set to " .. quantity)
     -- CallEvent("SyncInventory", player)
 end
 
-function IncrementItemUsed(player, item)
+function IncrementItemUsed(player, uuid)
     local inventory = PlayerData[player].inventory
 
-    for i, _item in ipairs(inventory) do
-        if _item['item'] == item then
+    for i, inventory_item in ipairs(inventory) do
+        if inventory_item.uuid == uuid then
+            local item = GetItemInstance(uuid)
             -- delete if this is the last use
-            if (ItemConfig[item]['max_use'] - _item['used'] == 1) then
+            if (ItemConfig[item]['max_use'] - inventory_item['used'] == 1) then
                 log.debug "all used up!"
-                UnequipItem(player, item)
-                RemoveFromInventory(player, item)
+                UnequipItem(player, uuid)
+                RemoveFromInventory(player, uuid)
             else
                 log.debug('increment used by 1')
-                inventory[i]['used'] = _item['used'] + 1
+                inventory[i]['used'] = inventory_item['used'] + 1
                 PlayerData[player].inventory = inventory
                 CallEvent("SyncInventory", player)
             end
@@ -128,7 +133,13 @@ end
 
 -- deletes item from inventory
 -- deduces by quantity if carrying more than 1
-function RemoveFromInventory(player, item, amount)
+function RemoveFromInventory(player, uuid, amount)
+    local item = GetItemInstance(uuid)
+    if not item then
+        log.error("No such item: ".. uuid)
+        return
+    end
+
     if not ItemConfig[item] then
         log.error("Invalid item: " .. item)
         return
@@ -137,16 +148,16 @@ function RemoveFromInventory(player, item, amount)
     local inventory = PlayerData[player].inventory
 
     local amount = amount or 1
-    local curr_qty = GetInventoryCount(player, item)
+    local curr_qty = GetInventoryCount(player, uuid)
 
     local new_qty = curr_qty - amount
-    SetItemQuantity(player, item, new_qty)
+    SetItemQuantity(player, uuid, new_qty)
 
     if new_qty == 0 then
         log.debug("items:" .. item .. ":drop")
 
         if ItemConfig[item].type == 'equipable' or ItemConfig[item].type == 'weapon' then
-            UnequipItem(player, item)
+            UnequipItem(player, uuid)
         end
     end
 
@@ -163,19 +174,23 @@ AddRemoteEvent("DropItemFromInventory", function(player, uuid)
     -- SetPlayerAnimation(player, "CARRY_SETDOWN")
 
     Delay(1000, function()
-        RemoveFromInventory(player, item)
+        UnequipItem(player, uuid)
+
+        RemoveFromInventory(player, uuid)
 
         -- spawn object near player
         CreatePickupNearPlayer(player, item)
+
+        CallRemoteEvent(player, "ShowMessage", ItemConfig[item].name .. " has been dropped.")
     end)
 end)
 
 -- get carry count for given item
-function GetInventoryCount(player, item)
+function GetInventoryCount(player, uuid)
     local inventory = PlayerData[player].inventory
-    for _, _item in pairs(inventory) do
-        if _item['item'] == item then
-            return _item['quantity']
+    for _, inventory_item in pairs(inventory) do
+        if inventory_item.uuid == uuid then
+            return inventory_item.quantity
         end
     end
     return 0
@@ -185,8 +200,8 @@ end
 function GetInventoryCountByType(player, type)
     local inventory = PlayerData[player].inventory
     local n = 0
-    for _, _item in pairs(inventory) do
-        if _item['type'] == type then
+    for _, inventory_item in pairs(inventory) do
+        if inventory_item.type == type then
             n = n + 1
         end
     end
@@ -204,25 +219,36 @@ function GetInventoryAvailableSlots(player)
 end
 
 -- use object from inventory
-function UseItemFromInventory(player, item, options)
-    local _item = GetItemFromInventory(player, item)
+function UseItemFromInventory(player, uuid, options)
+    local item = GetItemInstance(uuid)
+    if not item then
+        log.error("Invalid item" .. uuid)
+        return
+    end
+
+    local inventory_item = GetItemFromInventory(player, uuid)
+    if not inventory_item then
+        log.error("Cannot use item not in inventory!")
+        return
+    end
+
     log.debug(GetPlayerName(player) .. " uses item " .. item .. " from inventory")
 
-    local equipped_object = GetEquippedObject(player, item)
+    local equipped_object = GetEquippedObject(player, uuid)
     if not equipped_object then
         log.error "Cannot use unequipped item!"
         return
     end
 
-    if ItemConfig[item].max_use and _item['used'] > ItemConfig[item].max_use then
+    if ItemConfig[item].max_use and inventory_item['used'] > ItemConfig[item].max_use then
         log.error "Max use exceeded!"
         return
     end
 
-    PlayInteraction(player, item, function()
+    PlayInteraction(player, uuid, function()
         -- increment used
         if ItemConfig[item].max_use then
-            IncrementItemUsed(player, item)
+            IncrementItemUsed(player, uuid)
         end
 
         -- call USE event on object
@@ -231,19 +257,27 @@ function UseItemFromInventory(player, item, options)
 end
 AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
 
-function GetItemFromInventory(player, item)
+function GetItemFromInventory(player, uuid)
     local inventory = PlayerData[player].inventory
-    for i, _item in ipairs(inventory) do
-        if _item['item'] == item then
-            return _item
+    for i, inventory_item in ipairs(inventory) do
+        if inventory_item.uuid == uuid then
+            return inventory_item
+        end
+    end
+end
+
+function GetItemFromInventoryByName(player, item)
+    local inventory = PlayerData[player].inventory
+    for i, inventory_item in ipairs(inventory) do
+        if inventory_item.item == item then
+            return inventory_item
         end
     end
 end
 
 -- equip from inventory
 AddRemoteEvent("EquipItemFromInventory", function(player, uuid)
-    local item = GetItemInstance(uuid)
-    EquipItem(player, item)
+    EquipItem(player, uuid)
     CallEvent("SyncInventory", player)
 end)
 
@@ -279,8 +313,7 @@ end)
 
 -- unequip from inventory
 AddRemoteEvent("UnequipItemFromInventory", function(player, uuid)
-    local item = GetItemInstance(uuid)
-    UnequipItem(player, item)
+    UnequipItem(player, uuid)
     CallEvent("SyncInventory", player)
 end)
 
@@ -304,10 +337,10 @@ AddRemoteEvent("UseWeaponSlot", function(player, key)
     for i, item in ipairs(inventory) do
         if tostring(item['slot']) == "1" or tostring(item['slot']) == "2" or tostring(item['slot']) == "3" then
             if tostring(item['slot']) == tostring(key) then
-                PlayerData[player].equipped[item.item] = true
-                EquipWeaponToSlot(player, item.item, item['slot'], true)
+                PlayerData[player].equipped[item.uuid] = true
+                EquipWeaponToSlot(player, item.uuid, item['slot'], true)
             else
-                PlayerData[player].equipped[item.item] = nil
+                PlayerData[player].equipped[item.uuid] = nil
             end
         end
     end
@@ -323,7 +356,7 @@ AddRemoteEvent("UseItemHotkey", function(player, key)
     local inventory = PlayerData[player].inventory
     for i, item in ipairs(inventory) do
         if tostring(item['slot']) == key then
-            EquipItem(player, item['item'])
+            EquipItem(player, item.uuid)
         end
     end
 end)

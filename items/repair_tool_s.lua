@@ -26,15 +26,6 @@ ItemConfig["repair_tool"] = {
     price = 50
 }
 
-AddEvent("items:repair_tool:use", function(player, options)
-    if options and options.vehicle then
-        SetVehicleHealth(options.vehicle, GetVehicleHealth(options.vehicle) + 250)
-
-        local health_percentage = GetVehicleHealthPercentage(options.vehicle)
-        CallRemoteEvent(player, "ShowMessage", "Vehicle health is now " .. health_percentage .. "%%")
-    end
-end)
-
 AddRemoteEvent("RepairVehicle", function(player, vehicle)
     log.info(GetPlayerName(player) .. " inspects vehicle " .. vehicle)
 
@@ -48,7 +39,11 @@ AddRemoteEvent("RepairVehicle", function(player, vehicle)
     elseif health_percentage <= 75 then
         -- repairable
         CallRemoteEvent(player, "ShowMessage", "You begin to repair the vehicle...")
-        UseItemFromInventory(player, "toolbox", { vehicle = vehicle })
+
+        SetVehicleHealth(options.vehicle, GetVehicleHealth(options.vehicle) + 250)
+
+        local health_percentage = GetVehicleHealthPercentage(options.vehicle)
+        CallRemoteEvent(player, "ShowMessage", "Vehicle health is now " .. health_percentage .. "%%")
     else
         AddPlayerChat(player, "Vehicle can not be repaired any further.")
         CallRemoteEvent(player, "PlayErrorSound")

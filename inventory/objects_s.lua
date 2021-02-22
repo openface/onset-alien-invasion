@@ -44,8 +44,10 @@ function GetItemAttachmentBone(item)
 end
 
 -- 
-function PlayInteraction(player, item, after_use_callback)
-    log.debug("Playing interaction for item " .. item)
+function PlayInteraction(player, uuid, after_use_callback)
+    local item = GetItemInstance(uuid)
+    log.debug("Playing interaction for item " .. item .. " uuid ".. uuid)
+
     if not ItemConfig[item].interaction then
         if after_use_callback then
             after_use_callback()

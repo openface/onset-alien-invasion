@@ -75,7 +75,6 @@ function AddLightComponentToObject(object, component_cfg)
     end
 
     if LightComponents[object] ~= nil then
-        AddPlayerChat "Object already has a component"
         return
     end
 

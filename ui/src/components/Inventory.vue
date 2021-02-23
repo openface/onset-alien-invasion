@@ -59,88 +59,32 @@
             </div>
             <div id="hotbar" v-if="inventory_visible">
                 <!-- weapon slots -->
-
-                <drop class="square" @drop="onEquipWeapon(1, $event)" :accepts-data="CanEquipToWeaponSlot">
-                    <drag v-if="weapon_1" :data="weapon_1" :key="weapon_1.uuid">
-                        <inventory-item :item="weapon_1" :keybind="weapon_1.slot" />
-                    </drag>
-                </drop>
-                <drop class="square" @drop="onEquipWeapon(2, $event)" :accepts-data="CanEquipToWeaponSlot">
-                    <drag v-if="weapon_2" :data="weapon_2" :key="weapon_2.uuid">
-                        <inventory-item :item="weapon_2" :keybind="weapon_2.slot" />
-                    </drag>
-                </drop>
-                <drop class="square" @drop="onEquipWeapon(3, $event)" :accepts-data="CanEquipToWeaponSlot">
-                    <drag v-if="weapon_3" :data="weapon_3" :key="weapon_3.uuid">
-                        <inventory-item :item="weapon_3" :keybind="weapon_3.slot" />
+                <drop class="square" v-for="slot in 3" :key="slot" @drop="onEquipWeapon(1, $event)" :accepts-data="CanEquipToWeaponSlot">
+                    <drag v-if="getItemBySlot(slot)" :data="getItemBySlot(slot)" :key="getItemBySlot(slot).uuid">
+                        <inventory-item :item="getItemBySlot(slot)" :keybind="slot" />
                     </drag>
                 </drop>
 
                 <div class="spacer" />
 
                 <!-- hotbar slots -->
-
-                <drop class="square" @drop="onEquipHotbar(4, $event)" :accepts-data="CanEquipToHotbarSlot">
-                    <drag v-if="hotbar_4" :data="hotbar_4" :key="hotbar_4.uuid">
-                        <inventory-item :item="hotbar_4" :keybind="hotbar_4.slot" />
-                    </drag>
-                </drop>
-                <drop class="square" @drop="onEquipHotbar(5, $event)" :accepts-data="CanEquipToHotbarSlot">
-                    <drag v-if="hotbar_5" :data="hotbar_5" :key="hotbar_5.uuid">
-                        <inventory-item :item="hotbar_5" :keybind="hotbar_5.slot" />
-                    </drag>
-                </drop>
-                <drop class="square" @drop="onEquipHotbar(6, $event)" :accepts-data="CanEquipToHotbarSlot">
-                    <drag v-if="hotbar_6" :data="hotbar_6" :key="hotbar_6.uuid">
-                        <inventory-item :item="hotbar_6" :keybind="hotbar_6.slot" />
-                    </drag>
-                </drop>
-                <drop class="square" @drop="onEquipHotbar(7, $event)" :accepts-data="CanEquipToHotbarSlot">
-                    <drag v-if="hotbar_7" :data="hotbar_7" :key="hotbar_7.uuid">
-                        <inventory-item :item="hotbar_7" :keybind="hotbar_7.slot" />
-                    </drag>
-                </drop>
-                <drop class="square" @drop="onEquipHotbar(8, $event)" :accepts-data="CanEquipToHotbarSlot">
-                    <drag v-if="hotbar_8" :data="hotbar_8" :key="hotbar_8.uuid">
-                        <inventory-item :item="hotbar_8" :keybind="hotbar_8.slot" />
-                    </drag>
-                </drop>
-                <drop class="square" @drop="onEquipHotbar(9, $event)" :accepts-data="CanEquipToHotbarSlot">
-                    <drag v-if="hotbar_9" :data="hotbar_9" :key="hotbar_9.uuid">
-                        <inventory-item :item="hotbar_9" :keybind="hotbar_9.slot" />
+                <drop class="square" v-for="slot in 6" :key="slot+3" @drop="onEquipHotbar(slot+3, $event)" :accepts-data="CanEquipToHotbarSlot">
+                    <drag v-if="getItemBySlot(slot+3)" :data="getItemBySlot(slot+3)" :key="getItemBySlot(slot+3).uuid">
+                        <inventory-item :item="getItemBySlot(slot+3)" :keybind="slot+3" />
                     </drag>
                 </drop>
             </div>
             <div v-else id="hotbar">
-                <div class="square">
-                    <inventory-item :item="weapon_1" :keybind="weapon_1.slot" v-if="weapon_1" />
-                </div>
-                <div class="square">
-                    <inventory-item :item="weapon_2" :keybind="weapon_2.slot" v-if="weapon_2" />
-                </div>                
-                <div class="square">
-                    <inventory-item :item="weapon_3" :keybind="weapon_3.slot" v-if="weapon_3" />
+                <!-- weapon slots -->
+                <div class="square" v-for="slot in 3" :key="slot">
+                    <inventory-item :item="getItemBySlot(slot)" :keybind="slot" v-if="getItemBySlot(slot)" />
                 </div>
 
                 <div class="spacer" />
 
-                <div class="square">
-                    <inventory-item :item="hotbar_4" :keybind="hotbar_4.slot" v-if="hotbar_4" />
-                </div>
-                <div class="square">
-                    <inventory-item :item="hotbar_5" :keybind="hotbar_5.slot" v-if="hotbar_5" />
-                </div>
-                <div class="square">
-                    <inventory-item :item="hotbar_6" :keybind="hotbar_6.slot" v-if="hotbar_6" />
-                </div>
-                <div class="square">
-                    <inventory-item :item="hotbar_7" :keybind="hotbar_7.slot" v-if="hotbar_7" />
-                </div>
-                <div class="square">
-                    <inventory-item :item="hotbar_8" :keybind="hotbar_8.slot" v-if="hotbar_8" />
-                </div>
-                <div class="square">
-                    <inventory-item :item="hotbar_9" :keybind="hotbar_9.slot" v-if="hotbar_9" />
+                <!-- hotbar slots -->
+                <div class="square" v-for="slot in 6" :key="slot+3">
+                    <inventory-item :item="getItemBySlot(slot+3)" :keybind="slot+3" v-if="getItemBySlot(slot+3)" />
                 </div>
             </div>
         </drop-mask>
@@ -186,33 +130,6 @@ export default {
         },
         equipped_body: function() {
             return this.inventory_items.find((item) => item.equipped && item.bone == "spine_02");
-        },
-        weapon_1: function() {
-            return this.inventory_items.find((item) => item.type == "weapon" && item.slot == 1);
-        },
-        weapon_2: function() {
-            return this.inventory_items.find((item) => item.type == "weapon" && item.slot == 2);
-        },
-        weapon_3: function() {
-            return this.inventory_items.find((item) => item.type == "weapon" && item.slot == 3);
-        },
-        hotbar_4: function() {
-            return this.inventory_items.find((item) => item.slot == 4);
-        },
-        hotbar_5: function() {
-            return this.inventory_items.find((item) => item.slot == 5);
-        },
-        hotbar_6: function() {
-            return this.inventory_items.find((item) => item.slot == 6);
-        },
-        hotbar_7: function() {
-            return this.inventory_items.find((item) => item.slot == 7);
-        },
-        hotbar_8: function() {
-            return this.inventory_items.find((item) => item.slot == 8);
-        },
-        hotbar_9: function() {
-            return this.inventory_items.find((item) => item.slot == 9);
         },
     },
     methods: {
@@ -339,6 +256,9 @@ export default {
                 this.inventory_items[idx].equipped = false;
                 this.CallEvent("UnequipItem", this.inventory_items[idx].uuid);
             }
+        },
+        getItemBySlot: function(slot) {
+            return this.inventory_items.find(item => item.slot == slot);
         },
     },
     mounted() {

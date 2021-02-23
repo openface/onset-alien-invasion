@@ -101,7 +101,7 @@ function AttachItemToPlayer(player, uuid)
         ItemConfig[item].attachment['ry'], ItemConfig[item].attachment['rz'], ItemConfig[item].attachment['bone'])
 
     -- set lighting component config to object
-    if ItemConfig[item]['light_component'] ~= nil then
+    if ItemConfig[item].light_component then
         SetObjectPropertyValue(attached_object, "light_component", ItemConfig[item].light_component)
 
         -- allow item to not have light enabled by default

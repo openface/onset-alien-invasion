@@ -98,7 +98,7 @@ end
 
 -- equips weapon by item and adds to weapon slot
 function EquipWeaponFromInventory(player, uuid, equip)
-    log.trace("EquipWeaponFromInventory",uuid,equip)
+    log.trace("EquipWeaponFromInventory", uuid, equip)
     local inventory = PlayerData[player].inventory
     local slot
     for i, inventory_item in ipairs(inventory) do
@@ -179,14 +179,18 @@ end
 
 AddRemoteEvent("ReloadWeapon", function(player)
     local weapon_id = GetCurrentWeaponID(player)
-    if weapon_id then
-        local item, item_cfg = GetItemConfigByWeaponID(weapon_id)
-        if GetItemFromInventoryByName(player, item_cfg['mag_item']) then
-            log.debug("Reloading player weapon " .. item .. " from magazine")
-
-            RemoveFromInventory(player, item_cfg['mag_item'], 1)
-            local slot = GetPlayerEquippedWeaponSlot(player)
-            WeaponPatch.SetWeapon(player, weapon_id, item_cfg.mag_size, true, slot, true)
-        end
+    if not weapon_id then
+        return
     end
+    local item, item_cfg = GetItemConfigByWeaponID(weapon_id)
+    local inventory_item = GetItemFromInventoryByName(player, item_cfg['mag_item'])
+    if not inventory_item then
+        return
+    end
+    log.debug("Reloading player weapon " .. item .. " from mag item "..item_cfg['mag_item'])
+    log.debug(dump(inventory_item))
+
+    local slot = GetPlayerEquippedWeaponSlot(player)
+    WeaponPatch.SetWeapon(player, weapon_id, item_cfg.mag_size, true, slot, true)
+    RemoveFromInventory(player, inventory_item.uuid, 1)
 end)

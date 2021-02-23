@@ -31,7 +31,7 @@ end
 
 AddRemoteEvent("GetMerchantData", function(player)
     local item_data = {}
-    for key, item in pairs(GetItemConfig) do
+    for key, item in pairs(ItemConfig) do
         if item['price'] ~= nil then
             table.insert(item_data, {
                 item = key,

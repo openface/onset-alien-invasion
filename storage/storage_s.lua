@@ -20,19 +20,18 @@ AddRemoteEvent("OpenStorage", function(player, object, options)
 
     -- inventory
     local inventory = PlayerData[player].inventory
-    for index, item in ipairs(inventory) do
-        -- usable, equipable, resource
-        if ItemConfig[item.item] then
+    for index, inventory_item in ipairs(inventory) do
+        if ItemConfig[inventory_item.item] then
             table.insert(_send.inventory_items, {
                 ['index'] = index,
-                ['item'] = item['item'],
-                ['uuid'] = item['uuid'],
-                ['quantity'] = item['quantity'],
+                ['item'] = inventory_item.item,
+                ['uuid'] = inventory_item.uuid,
+                ['quantity'] = inventory_item.quantity,
 
-                ['name'] = ItemConfig[item].name,
-                ['modelid'] = ItemConfig[item].modelid,
-                ['image'] = ItemConfig[item].image,
-                ['type'] = ItemConfig[item].type
+                ['name'] = ItemConfig[inventory_item.item].name,
+                ['modelid'] = ItemConfig[inventory_item.item].modelid,
+                ['image'] = ItemConfig[inventory_item.item].image,
+                ['type'] = ItemConfig[inventory_item.item].type
             })
         end
     end

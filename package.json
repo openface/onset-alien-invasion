@@ -35,7 +35,9 @@
         "placement/placement_s.lua",
         "doors/doors_s.lua",
         "world/world_s.lua",
-        "world/garbage_s.lua",
+        "world/world_garbage_s.lua",
+        "world/world_lighting_s.lua",
+        "world/world_storage_s.lua",
         "items/*_s.lua"
     ],
     "client_scripts": [
@@ -58,8 +60,7 @@
         "inventory/weapons_c.lua",
         "storage/storage_c.lua",
         "vehicles/vehicles_c.lua",
-        "placement/placement_c.lua",
-        "world/garbage_c.lua"
+        "placement/placement_c.lua"
     ],
     "files": [
         "client/pak/Mothership.pak",

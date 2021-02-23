@@ -55,7 +55,7 @@ AddRemoteEvent("SearchForScrap", function(player, object, options)
 
     if SearchCooldown[player][object] then
         if os.time() < SearchCooldown[player][object] then
-            CallRemoteEvent(player, "ShowError", "Already searched here!")
+            CallRemoteEvent(player, "ShowError", "You have already searched here!")
             return
         end
     end
@@ -77,7 +77,7 @@ AddRemoteEvent("SearchForScrap", function(player, object, options)
         else
             -- not found
             SearchCooldown[player][object] = nil
-            AddPlayerChat(player, "You were unable to find anything useful.")
+            CallRemoteEvent(player, "ShowMessage", "You were unable to find anything useful.")
             log.debug("Player " .. GetPlayerName(player) .. " searched but found nothing.")
         end
     end)
@@ -95,7 +95,7 @@ function PickupScrap(player)
 
     local item = _resources[math.random(#_resources)]
     if ItemConfig[item] then
-        AddPlayerChat(player, "Some " .. item .. " has been added to your inventory.")
+        CallRemoteEvent(player, "ShowMessage", ItemConfig[item].name .. " has been added to your inventory.")
 
         local uuid = RegisterNewItem(item)
         AddToInventory(player, uuid)

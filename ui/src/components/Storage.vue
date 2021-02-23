@@ -27,34 +27,19 @@
 
         <div class="section">
             <div id="title">INVENTORY</div>
-
-            <drop-list
-                :items="inventory_items"
-                class="inventory_items"
-                :accepts-data="CanDropToInventory"
-                @insert="onInsertInventory"
-                @reorder="onReorderInventory"
-                mode="cut"
-            >
-                <template v-slot:item="{ item }">
-                    <drag class="square" :data="item" @cut="onCutInventory" :key="item.uuid">
-                        <inventory-item :item="item" />
+            <div class="inventory_items">
+                <drop class="square" v-for="slot in 14" :key="slot" mode="cut" @drop="onDropToInventorySlot(slot, $event)" :accepts-data="CanDropToInventory">
+                    <drag v-if="getItemByInventorySlot(slot)" @cut="onCutInventory" :data="getItemByInventorySlot(slot)" :key="getItemByInventorySlot(slot).uuid">
+                        <inventory-item :item="getItemByInventorySlot(slot)" />
                     </drag>
-                </template>
-
-                <template v-slot:feedback="{ data }">
-                    <div class="square" :key="'i_' + data.index">
-                        <inventory-item :item="data" />
-                    </div>
-                </template>
-
-            </drop-list>
+                </drop>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-import { Drag, DropList } from "vue-easy-dnd";
+import { Drag, Drop, DropList } from "vue-easy-dnd";
 import InventoryItem from "./InventoryItem.vue";
 
 // TODO
@@ -65,6 +50,7 @@ export default {
     components: {
         InventoryItem,
         Drag,
+        Drop,
         DropList,
     },
     data() {
@@ -92,7 +78,6 @@ export default {
                 return false;
             }
             // todo: check inventory limits
-
         },
         SetStorageData: function(data) {
             this.storage_name = data.storage_name;
@@ -110,7 +95,7 @@ export default {
                     index: index + 1,
                 };
             });
-            this.CallEvent("UpdateStorage", this.object, this.type, JSON.stringify(data));         
+            this.CallEvent("UpdateStorage", this.object, this.type, JSON.stringify(data));
         },
         onInsertStorage: function(e) {
             window.console.log("onInsertStorage:", e);
@@ -122,6 +107,12 @@ export default {
 
             this.storage_items.splice(this.storage_items.indexOf(e.data), 1);
             this.SaveStorageData();
+        },
+        onCutInventory: function(e) {
+            window.console.log("onCutInventory:", e.data);
+            this.inventory_items.splice(this.inventory_items.indexOf(e.data), 1);
+
+            this.SaveInventoryData();
         },
         onReorderStorage: function(e) {
             window.console.log("onReorderStorage:", e);
@@ -135,26 +126,24 @@ export default {
                     uuid: item.uuid,
                     quantity: item.quantity,
                     index: index + 1,
+                    slot: item.slot,
                 };
             });
 
             this.CallEvent("UpdateInventory", JSON.stringify(data));
         },
-        onInsertInventory: function(e) {
-            window.console.log("onInsertInventory:", e);
+        onDropToInventorySlot: function(slot, e) {
+            window.console.log("onDropToInventorySlot", e);
             this.inventory_items.splice(e.index, 0, e.data);
-            this.SaveInventoryData();
-        },
-        onCutInventory: function(e) {
-            window.console.log("onCutInventory:", e.data);
 
-            this.inventory_items.splice(this.inventory_items.indexOf(e.data), 1);
+            let idx = this.inventory_items.indexOf(e.data);
+            if (idx == -1) return;
+
+            this.inventory_items[idx].slot = slot;
             this.SaveInventoryData();
         },
-        onReorderInventory: function(e) {
-            window.console.log("onReorderInventory:", e);
-            e.apply(this.inventory_items);
-            this.SaveInventoryData();
+        getItemByInventorySlot: function(slot) {
+            return this.inventory_items.find((item) => item.slot == slot);
         },
     },
     mounted() {
@@ -166,7 +155,7 @@ export default {
                 type: "object",
                 storage_name: "Crate",
                 storage_items: [
-                     {
+                    {
                         index: 1,
                         item: "lighter",
                         uuid: "68c6486c-10b0-4a64-8b94-08befa079323",
@@ -186,7 +175,7 @@ export default {
                     },
                 ],
                 inventory_items: [
-                     {
+                    {
                         index: 1,
                         item: "metal",
                         uuid: "bdf427f4-76a7-431c-916b-7e96252d0c6f",
@@ -194,7 +183,7 @@ export default {
                         modelid: 694,
                         quantity: 2,
                         type: "resource",
-                        equipped: false,
+                        slot: 3,
                     },
                     {
                         index: 2,
@@ -204,7 +193,7 @@ export default {
                         modelid: 627,
                         quantity: 1,
                         type: "resource",
-                        equipped: false,
+                        slot: 4,
                     },
                     {
                         index: 3,
@@ -214,8 +203,8 @@ export default {
                         modelid: 627,
                         quantity: 1,
                         type: "equipable",
-                        equipped: true,
-                    }, 
+                        slot: 9,
+                    },
                 ],
             });
         }
@@ -225,6 +214,7 @@ export default {
 
 <style scoped>
 #container {
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -237,15 +227,14 @@ export default {
     order: 0;
     flex: 0 1 auto;
     align-self: auto;
-    width: 610px;
     background: rgba(0, 0, 0, 0.6);
     font-family: helvetica;
     font-size: 16px;
     color: #ccc;
     text-shadow: 3px black;
     padding: 10px;
-    margin-bottom: 25px;
-    min-height:146px;
+    margin-bottom: 50px;
+    min-height: 146px;
 }
 
 #title {
@@ -257,16 +246,16 @@ export default {
     font-family: impact;
     background: rgba(0, 0, 0, 0.1);
     text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
-    margin-bottom:10px;
-    text-transform:uppercase;
+    margin-bottom: 10px;
+    text-transform: uppercase;
 }
-.inventory_items, .storage_items {
+.inventory_items,
+.storage_items {
     display: grid;
     grid-auto-flow: dense;
     grid-column-gap: 1px;
     grid-row-gap: 1px;
     grid-template-columns: repeat(7, 90px);
-    height: 100%;
 }
 .square {
     background: rgba(255, 255, 255, 0.1);
@@ -274,5 +263,8 @@ export default {
     height: 80px;
     border: 1px solid rgba(0, 0, 0, 0.4);
     padding: 5px;
+}
+.drop-allowed {
+    background-color: rgba(0, 255, 0, 0.2);
 }
 </style>

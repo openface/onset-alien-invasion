@@ -329,7 +329,7 @@ AddRemoteEvent("GetInventory", function(player)
     CallEvent("SyncInventory", player)
 end)
 
--- updates inventory from inventory UI sorting
+-- updates inventory from inventory UI 
 -- recreates the inventory with new indexes
 AddRemoteEvent("UpdateInventory", function(player, data)
     local items = json_decode(data)
@@ -345,7 +345,7 @@ AddRemoteEvent("UpdateInventory", function(player, data)
             quantity = item.quantity,
             slot = item.slot,
             hotbar_slot = item.hotbar_slot,
-            used = 0
+            used = item.used,
         })
     end
     log.trace("NEW INVENTORY", dump(new_inventory))

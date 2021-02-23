@@ -18,13 +18,13 @@
                 </template>
 
                 <template v-slot:feedback="{ data }">
-                    <div class="square" :key="'s_' + data.uuid">
+                    <div class="square" :key="'feedback_storage_' + data.uuid">
                         <inventory-item :item="data" />
                     </div>
                 </template>
             </drop-list>
         </div>
-
+        <div class="spacer" />
         <div class="section">
             <div id="title">INVENTORY</div>
             <div class="inventory_items">
@@ -155,24 +155,6 @@ export default {
                 type: "object",
                 storage_name: "Crate",
                 storage_items: [
-                    {
-                        index: 1,
-                        item: "lighter",
-                        uuid: "68c6486c-10b0-4a64-8b94-08befa079323",
-                        name: "Lighter",
-                        modelid: 2,
-                        quantity: 1,
-                        type: "usable",
-                    },
-                    {
-                        index: 2,
-                        item: "boxhead",
-                        uuid: "72491e7d-8e4f-46cc-9df6-e46c5df64c1c",
-                        name: "Boxhead",
-                        modelid: 2,
-                        quantity: 1,
-                        type: "equipable",
-                    },
                 ],
                 inventory_items: [
                     {
@@ -232,11 +214,11 @@ export default {
     font-size: 16px;
     color: #ccc;
     text-shadow: 3px black;
-    padding: 10px;
-    margin-bottom: 50px;
-    min-height: 146px;
+    padding:10px;
 }
-
+.spacer {
+    height:50px;
+}
 #title {
     color: #fff;
     font-size: 36px;
@@ -249,20 +231,28 @@ export default {
     margin-bottom: 10px;
     text-transform: uppercase;
 }
-.inventory_items,
-.storage_items {
+.inventory_items {
     display: grid;
     grid-auto-flow: dense;
     grid-column-gap: 1px;
     grid-row-gap: 1px;
     grid-template-columns: repeat(7, 90px);
 }
+.storage_items {
+    display: grid;
+    grid-auto-flow: dense;
+    grid-column-gap: 1px;
+    grid-row-gap: 1px;
+    grid-template-columns: repeat(7, 90px);
+    height:90px;
+}
+
 .square {
     background: rgba(255, 255, 255, 0.1);
     width: 80px;
     height: 80px;
     border: 1px solid rgba(0, 0, 0, 0.4);
-    padding: 5px;
+    padding:5px;
 }
 .drop-allowed {
     background-color: rgba(0, 255, 0, 0.2);

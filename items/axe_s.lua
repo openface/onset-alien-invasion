@@ -37,6 +37,6 @@ AddRemoteEvent("HarvestTree", function(player, object, options)
 
     Delay(5000, function()
         CallRemoteEvent(player, "ShowMessage", "You collect some wood and put it in your inventory")
-        AddToInventory(player, RegisterNewItem("wood"), 10)
+        AddToInventoryByName(player, "wood", 10)
     end)
 end)

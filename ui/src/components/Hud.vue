@@ -145,11 +145,10 @@ export default {
 
 .toast-message {
     background: rgba(0, 0, 0, 0.4) !important;
-    text-shadow: 2px 2px rgba(0, 0, 0, 0.5);
+    text-shadow: 2px 2px rgba(0, 0, 0, 0.7);
     color: #fff;
-    font-size: 22px;
     font-weight: normal;
-    font-family: Helvetica !important;
+    font: 18px Helvetica !important;
     z-index:1001;
 }
 
@@ -179,19 +178,16 @@ export default {
     transition: all 3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-#progress {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-#progress >>> .vue-progress-path path {
+/*
+ * Spinner
+ */
+.vue-progress-path path {
     stroke-width: 16;
 }
-#progress >>> .vue-progress-path .progress {
+.vue-progress-path .progress {
     stroke: rgba(255, 255, 255, 0.6);
 }
-#progress >>> .vue-progress-path .background {
+.vue-progress-path .background {
     stroke: rgba(0, 0, 0, 0.4);
 }
 </style>

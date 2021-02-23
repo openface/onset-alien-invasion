@@ -38,6 +38,6 @@ AddRemoteEvent("GoFishing", function(player, object, options)
 
     Delay(10000, function()
         CallRemoteEvent(player, "ShowMessage", "You caught a fish and put it in your inventory!")
-        AddToInventory(player, RegisterNewItem("wood"))
+        AddToInventoryByName(player, "wood")
     end)
 end)

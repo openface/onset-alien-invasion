@@ -18,7 +18,7 @@ WorldGarbageConfig = {
     [499] = true,
     [660] = true,
     [653] = true,
-    [661] = true,
+    [661] = true
 }
 
 local SearchCooldownSeconds = 60 * 5 -- can only search a scrap point every 5 minutes
@@ -97,11 +97,13 @@ function PickupScrap(player)
     if ItemConfig[item] then
         CallRemoteEvent(player, "ShowMessage", ItemConfig[item].name .. " has been added to your inventory.")
 
-        local uuid = RegisterNewItem(item)
-        AddToInventory(player, uuid)
+        AddToInventoryByName(player, item)
     end
 end
 
 function AddGarbageProp(object)
-    SetObjectPropertyValue(object, "prop", { message = "Search", remote_event = "SearchForScrap"})
+    SetObjectPropertyValue(object, "prop", {
+        message = "Search",
+        remote_event = "SearchForScrap"
+    })
 end

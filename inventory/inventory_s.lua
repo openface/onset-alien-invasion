@@ -49,7 +49,19 @@ end
 AddRemoteEvent("SyncInventory", SyncInventory)
 AddEvent("SyncInventory", SyncInventory)
 
--- add object to inventory
+-- add item to inventory by item name (stacks)
+function AddToInventoryByName(player, item, amount)
+    local inventory_item = GetItemFromInventoryByName(player, item)
+    if inventory_item then
+        -- add to existing item stack
+        AddToInventory(player, inventory_item.uuid, amount)
+    else
+        -- add new item
+        AddToInventory(player, RegisterNewItem(item), amount)
+    end
+end
+
+-- add unique item to inventory
 function AddToInventory(player, uuid, amount)
     local item = GetItemInstance(uuid)
     if not ItemConfig[item] then
@@ -63,9 +75,10 @@ function AddToInventory(player, uuid, amount)
     local curr_qty = GetInventoryCount(player, uuid)
 
     if curr_qty > 0 then
-        SetItemQuantity(player, item, curr_qty + amount)
+        -- update quantity of existing item stack
+        SetItemQuantity(player, uuid, curr_qty + amount)
     else
-        -- add new item to store
+        -- add new item
         table.insert(inventory, {
             item = item,
             uuid = uuid,
@@ -203,6 +216,18 @@ function GetInventoryCountByType(player, type)
     local n = 0
     for _, inventory_item in pairs(inventory) do
         if inventory_item.type == type then
+            n = n + 1
+        end
+    end
+    return n
+end
+
+-- get carry count for given item name
+function GetInventoryCountByName(player, item)
+    local inventory = PlayerData[player].inventory
+    local n = 0
+    for _, inventory_item in pairs(inventory) do
+        if inventory_item.item == item then
             n = n + 1
         end
     end

@@ -72,8 +72,7 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
     CallRemoteEvent(player, "ShowMessage", "You have picked up a "..ItemConfig[item].name)
 
     -- adds to player inventory and syncs
-    local uuid = RegisterNewItem(item)
-    AddToInventory(player, uuid)
+    AddToInventoryByName(player, item)
 
     DestroyText3D(GetPickupPropertyValue(pickup, '_text'))
     DestroyPickup(pickup)

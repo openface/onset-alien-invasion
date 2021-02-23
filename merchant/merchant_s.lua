@@ -86,7 +86,6 @@ AddRemoteEvent("BuyItem", function(player, item)
             }))
 
         PlaySoundSync(player, "sounds/purchase.mp3")
-        local uuid = RegisterNewItem(item)
-        AddToInventory(player, uuid)
+        AddToInventoryByName(player, item)
     end)
 end)

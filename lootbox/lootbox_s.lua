@@ -127,8 +127,7 @@ end)
 
 function AddLootItem(player, item)
     if ItemConfig[item] then
-        local uuid = RegisterNewItem(item)
-        AddToInventory(player, uuid)
+        AddToInventoryByName(player, item)
         CallRemoteEvent(player, "ShowMessage", "You picked up a "..ItemConfig[item].name)
     end
 end

@@ -91,8 +91,7 @@ AddRemoteEvent("BuildItem", function(player, item)
 
         CallRemoteEvent(player, "ShowMessage", ItemConfig[item].name .. " has been added to your inventory.")
 
-        local uuid = RegisterNewItem(item)
-        AddToInventory(player, uuid)
+        AddToInventoryByName(player, item)
     end)
 end)
 

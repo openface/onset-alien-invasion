@@ -216,15 +216,15 @@ export default {
 }
 #inner {
     margin: auto;
-    width: 780px;
+    width: 910px;
     background: rgba(0, 0, 0, 0.9);
     font-family: helvetica;
-    font-size: 16px;
-    color: #ccc;
     text-shadow: 1px 1px black;
     padding: 10px;
 }
-
+#inner:not(.blurred) .item:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
 #title {
     color: #fff;
     font-size: 36px;
@@ -234,25 +234,21 @@ export default {
     font-family: impact;
     text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
 }
-#progress {
-    position: fixed;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-#progress >>> .vue-progress-path path {
+.vue-progress-path path {
     stroke-width: 16;
 }
-#progress >>> .vue-progress-path .progress {
+.vue-progress-path .progress {
     stroke: rgba(255, 255, 255, 0.6);
 }
-#progress >>> .vue-progress-path .background {
+.vue-progress-path .background {
     stroke: rgba(0, 0, 0, 0.4);
 }
 .category {
     margin-top: 10px;
     text-transform: uppercase;
     font-size: 12px;
+    color:#ccc;
+    text-shadow: 2px 2px rgba(0, 0, 0, 0.2);
 }
 .grid {
     display: flex;
@@ -263,32 +259,30 @@ export default {
     filter: blur(3px) grayscale(100%);
 }
 .item {
-    padding: 10px;
-    width: 225px;
+    padding: 8px;
+    width: 200px;
     margin: 5px;
-    height: 60px;
+    height: 50px;
     background: rgba(255, 255, 255, 0.1);
-}
-#inner:not(.blurred) .item:hover {
-    background: rgba(255, 255, 255, 0.2);
 }
 .item .pic {
     float: left;
-    width: 70px;
+    width: 50px;
+    margin-right:5px;
 }
 .item .pic img {
     border-radius: 3px;
-    width: 60px;
+    width: 50px;
     border: 1px solid rgba(0, 0, 0, 0.1);
 }
 .item .details {
     float: left;
-    width: 150px;
+    width: 140px;
 }
 .item .details .name {
-    font-size: 18px;
+    font-size: 16px;
     color: #fff;
-    margin-bottom: 18px;
+    margin-bottom: 10px;
 }
 .item .details .info {
     font-size: 11px;

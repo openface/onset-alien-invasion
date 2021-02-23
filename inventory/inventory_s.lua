@@ -23,6 +23,7 @@ function SyncInventory(player)
                 ['equipped'] = equipped,
                 ['used'] = item.used,
                 ['slot'] = item.slot,
+                ['hotbar_slot'] = item.hotbar_slot,
                 ['bone'] = bone,
 
                 ['type'] = ItemConfig[item.item].type,
@@ -34,7 +35,7 @@ function SyncInventory(player)
             if equipped and (bone == 'hand_l' or bone == 'hand_r') then
                 current_inhand = {
                     ['item'] = item['item'],
-                    ['uuid'] = item['uuid'],
+                    ['uuid'] = item['uuid']
                 }
                 if ItemConfig[item.item].interaction then
                     current_inhand['prop'] = ItemConfig[item.item].interaction['prop']
@@ -42,8 +43,8 @@ function SyncInventory(player)
             end
         end
     end
-    --log.trace("INVENTORY SYNC (" .. GetPlayerName(player) .. "): " .. json_encode(_send))
-    log.trace("CURRENT INHAND: "..dump(current_inhand))
+    log.trace("INVENTORY SYNC (" .. GetPlayerName(player) .. "): " .. json_encode(_send))
+    log.trace("CURRENT INHAND: " .. dump(current_inhand))
     CallRemoteEvent(player, "SetInventory", json_encode(_send), current_inhand)
 end
 AddRemoteEvent("SyncInventory", SyncInventory)
@@ -77,14 +78,21 @@ function AddToInventory(player, uuid, amount)
     if curr_qty > 0 then
         -- update quantity of existing item stack
         SetItemQuantity(player, uuid, curr_qty + amount)
+    elseif #inventory >= 14 then
+        log.error(GetPlayerName(player) .. " inventory exceeded!")
+        return
     else
+        local next_slot = GetNextAvailableInventorySlot(player)
+        log.debug("Next available inventory slot: " .. next_slot)
+
         -- add new item
         table.insert(inventory, {
             item = item,
             uuid = uuid,
             quantity = amount,
             used = 0,
-            slot = nil
+            slot = next_slot,
+            hotbar_slot = nil
         })
         PlayerData[player].inventory = inventory
     end
@@ -150,7 +158,7 @@ end
 function RemoveFromInventory(player, uuid, amount)
     local item = GetItemInstance(uuid)
     if not item then
-        log.error("No such item: ".. uuid)
+        log.error("No such item: " .. uuid)
         return
     end
 
@@ -240,8 +248,18 @@ function GetInventoryAvailableSlots(player)
     for _ in pairs(inventory) do
         count = count + 1
     end
-    -- max slots is hardcoded at 20
-    return (20 - count)
+    -- max slots is hardcoded at 14
+    return (14 - count)
+end
+
+-- iterate over possible slots and return the first available
+function GetNextAvailableInventorySlot(player)
+    local inventory = PlayerData[player].inventory
+    for index=1,14 do
+        if not table.findByKeyValue(inventory, "slot", index) then
+            return index
+        end            
+    end
 end
 
 -- use object from inventory
@@ -326,6 +344,7 @@ AddRemoteEvent("UpdateInventory", function(player, data)
             uuid = item.uuid,
             quantity = item.quantity,
             slot = item.slot,
+            hotbar_slot = item.hotbar_slot,
             used = 0
         })
     end
@@ -361,10 +380,10 @@ AddRemoteEvent("UseWeaponSlot", function(player, key)
 
     local inventory = PlayerData[player].inventory
     for i, item in ipairs(inventory) do
-        if tostring(item['slot']) == "1" or tostring(item['slot']) == "2" or tostring(item['slot']) == "3" then
-            if tostring(item['slot']) == tostring(key) then
+        if tostring(item.hotbar_slot) == "1" or tostring(item.hotbar_slot) == "2" or tostring(item.hotbar_slot) == "3" then
+            if tostring(item.hotbar_slot) == tostring(key) then
                 PlayerData[player].equipped[item.uuid] = true
-                EquipWeaponToSlot(player, item.uuid, item['slot'], true)
+                EquipWeaponToSlot(player, item.uuid, item.hotbar_slot, true)
             else
                 PlayerData[player].equipped[item.uuid] = nil
             end
@@ -381,7 +400,7 @@ AddRemoteEvent("UseItemHotkey", function(player, key)
 
     local inventory = PlayerData[player].inventory
     for i, item in ipairs(inventory) do
-        if tostring(item['slot']) == key then
+        if tostring(item.hotbar_slot) == key then
             EquipItem(player, item.uuid)
         end
     end

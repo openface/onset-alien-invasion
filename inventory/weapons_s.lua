@@ -100,22 +100,22 @@ end
 function EquipWeaponFromInventory(player, uuid, equip)
     log.trace("EquipWeaponFromInventory", uuid, equip)
     local inventory = PlayerData[player].inventory
-    local slot
+    local weapon_slot
     for i, inventory_item in ipairs(inventory) do
         log.debug(dump(inventory_item))
         if inventory_item.uuid == uuid and ItemConfig[inventory_item.item].type == 'weapon' then
-            if inventory_item.slot then
+            if inventory_item.hotbar_slot then
                 -- if we already know which weapon slot is used, use it
-                slot = inventory_item.slot
+                weapon_slot = inventory_item.hotbar_slot
             else
                 -- pick a new weapon slot
-                slot = GetNextAvailableWeaponSlot(player)
-                PlayerData[player].inventory[i].slot = slot
+                weapon_slot = GetNextAvailableWeaponSlot(player)
+                PlayerData[player].inventory[i].hotbar_slot = weapon_slot
                 CallEvent("SyncInventory", player)
             end
 
-            log.debug("Equipping weapon from inventory to slot", player, uuid, slot)
-            EquipWeaponToSlot(player, uuid, slot, equip)
+            log.debug("Equipping weapon from inventory to slot", player, uuid, weapon_slot)
+            EquipWeaponToSlot(player, uuid, weapon_slot, equip)
             return
         end
     end

@@ -9,11 +9,11 @@ end
 -- random sample of table
 function getRandomSample(tab, amount)
     local shuffled = {}
-    for i,pos in ipairs(tab) do
-        local p = math.random(1, #shuffled+1)
+    for i, pos in ipairs(tab) do
+        local p = math.random(1, #shuffled + 1)
         table.insert(shuffled, p, pos)
     end
-    return { table.unpack(shuffled, 1, amount) }
+    return {table.unpack(shuffled, 1, amount)}
 end
 
 function getTableKeys(tab)
@@ -24,9 +24,21 @@ function getTableKeys(tab)
     return keyset
 end
 
+function table.findByKeyValue(tab, key, value)
+    if type(tab) ~= "table" then
+        error("table expected, got " .. type(t), 2)
+    end
+
+    for _, v in pairs(tab) do
+        if v[key] == value then
+            return v
+        end
+    end
+end
+
 function uuid()
-    local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
-    return string.gsub(template, '[xy]', function (c)
+    local template = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+    return string.gsub(template, '[xy]', function(c)
         local v = (c == 'x') and math.random(0, 0xf) or math.random(8, 0xb)
         return string.format('%x', v)
     end)

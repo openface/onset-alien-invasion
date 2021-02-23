@@ -121,7 +121,10 @@ function EquipWeaponFromInventory(player, uuid, equip)
     end
 end
 
+-- equips weapon item to given slot
 function EquipWeaponToSlot(player, uuid, slot, equip)
+    UnequipWeaponSlot(player, slot)
+
     local item = GetItemInstance(uuid)
     WeaponPatch.SetWeapon(player, ItemConfig[item].weapon_id, ItemConfig[item].mag_size, equip, slot, true)
 end
@@ -145,17 +148,17 @@ function UnequipWeapon(player, uuid)
     for slot = 1, 3 do
         local weapon_id, ammo = GetPlayerWeapon(player, slot)
         if ItemConfig[item].weapon_id == weapon_id then
-            WeaponPatch.SetWeapon(player, 1, 0, true, slot, true)
+            UnequipWeaponSlot(player, slot)
         end
     end
 end
 
--- if weapon is not 1, set weapon 1 to slot 1 (fists)
-function SwitchToFists(player)
-    log.debug("SwitchToFist")
+-- if weapon is not 1, set weapon 1 (fists) to current slot
+function UnequipWeaponSlot(player, slot)
+    log.trace("UnequipWeaponSlot", slot)
     local wep = GetPlayerEquippedWeapon(player)
     if wep ~= 1 then
-        WeaponPatch.SetWeapon(player, 1, 0, true, 1, true)
+        WeaponPatch.SetWeapon(player, 1, 0, true, slot, true)
     end
 end
 

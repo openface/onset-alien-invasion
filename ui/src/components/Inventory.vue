@@ -58,7 +58,7 @@
             </div>
             <div id="hotbar" v-if="inventory_visible">
                 <!-- weapon slots -->
-                <drop class="square" v-for="slot in 3" :key="slot" @drop="onDropToWeaponSlot(1, $event)" :accepts-data="CanEquipToWeaponSlot">
+                <drop class="square" v-for="slot in 3" :key="slot" @drop="onDropToWeaponSlot(slot, $event)" :accepts-data="CanEquipToWeaponSlot">
                     <drag v-if="getItemByHotbarSlot(slot)" :data="getItemByHotbarSlot(slot)" :key="getItemByHotbarSlot(slot).uuid">
                         <inventory-item :item="getItemByHotbarSlot(slot)" :keybind="slot" />
                     </drag>
@@ -67,7 +67,13 @@
                 <div class="spacer" />
 
                 <!-- hotbar slots -->
-                <drop class="square" v-for="slot in 6" :key="slot + 3" @drop="onDropToHotbarSlot(slot + 3, $event)" :accepts-data="CanEquipToHotbarSlot">
+                <drop
+                    class="square"
+                    v-for="slot in 6"
+                    :key="slot + 3"
+                    @drop="onDropToHotbarSlot(slot + 3, $event)"
+                    :accepts-data="CanEquipToHotbarSlot"
+                >
                     <drag v-if="getItemByHotbarSlot(slot + 3)" :data="getItemByHotbarSlot(slot + 3)" :key="getItemByHotbarSlot(slot + 3).uuid">
                         <inventory-item :item="getItemByHotbarSlot(slot + 3)" :keybind="slot + 3" />
                     </drag>
@@ -165,25 +171,36 @@ export default {
             window.console.log("Drop item to inventory slot", slot, e.data);
 
             let idx = this.inventory_items.findIndex((item) => item.uuid == e.data.uuid);
-            if (idx > -1) {
-                this.inventory_items[idx].slot = slot;
+            if (idx == -1) return;
 
-                if (this.inventory_items[idx].equipped) {
-                    this.inventory_items[idx].equipped = false;
-                    this.CallEvent("UnequipItem", this.inventory_items[idx].uuid);
-                }
-
-                this.CallEvent("UpdateInventory", JSON.stringify(this.inventory_items));
+            // find item currently on slot, and assign it the item's old slot
+            let sidx = this.inventory_items.findIndex((item) => item.slot == slot);
+            if (sidx > -1) {
+                this.inventory_items[sidx].slot = this.inventory_items[idx].slot;
             }
+
+            // if item was previously hotbarred, unhotbar it
+            if (this.inventory_items[idx].hotbar_slot) {
+                this.inventory_items[idx].hotbar_slot = null;
+            }
+
+            this.inventory_items[idx].slot = slot;
+
+            if (this.inventory_items[idx].equipped) {
+                this.inventory_items[idx].equipped = false;
+                this.CallEvent("UnequipItem", this.inventory_items[idx].uuid);
+            }
+
+            this.CallEvent("UpdateInventory", JSON.stringify(this.inventory_items));
         },
         onDropFromInventory: function(e) {
             window.console.log("Drop item from inventory", e.data);
 
             let idx = this.inventory_items.findIndex((item) => item.uuid == e.data.uuid);
-            if (idx > -1) {
-                this.CallEvent("DropItem", this.inventory_items[idx].uuid);
-                this.inventory_items.splice(idx, 1);
-            }
+            if (idx == -1) return;
+
+            this.CallEvent("DropItem", this.inventory_items[idx].uuid);
+            this.inventory_items.splice(idx, 1);
         },
         onEquipHands: function(e) {
             window.console.log("Equip item to hands", e.data);
@@ -227,33 +244,35 @@ export default {
                 this.CallEvent("EquipItem", this.inventory_items[idx].uuid);
             }
         },
-        onDropToWeaponSlot: function(slot, e) {
-            window.console.log("Drop item to weapon slot " + slot, e.data);
-
-            this.clearInventorySlot(slot);
+        onDropToWeaponSlot: function(hotbar_slot, e) {
+            window.console.log("Drop item to weapon slot " + hotbar_slot, e.data);
 
             let idx = this.inventory_items.findIndex((item) => item.uuid == e.data.uuid);
-            if (idx > -1) {
-                this.inventory_items[idx].slot = slot;
-                this.CallEvent("UpdateInventory", JSON.stringify(this.inventory_items));
-            }
-        },
-        onDropToHotbarSlot: function(slot, e) {
-            window.console.log("Drop item to hotbar slot " + slot, e);
+            if (idx == -1) return;
 
-            this.clearInventorySlot(slot);
+            // if hotbar_slot is in use, swap the slots
+            let sidx = this.inventory_items.findIndex((item) => item.hotbar_slot == hotbar_slot);
+            if (sidx > -1) {
+                this.inventory_items[sidx].hotbar_slot = this.inventory_items[idx].hotbar_slot;
+            }
+
+            this.inventory_items[idx].hotbar_slot = hotbar_slot;
+            this.CallEvent("UpdateInventory", JSON.stringify(this.inventory_items));
+        },
+        onDropToHotbarSlot: function(hotbar_slot, e) {
+            window.console.log("Drop item to hotbar slot " + hotbar_slot, e);
 
             let idx = this.inventory_items.findIndex((item) => item.uuid == e.data.uuid);
-            if (idx > -1) {
-                this.inventory_items[idx].slot = slot;
-                this.CallEvent("UpdateInventory", JSON.stringify(this.inventory_items));
+            if (idx == -1) return;
+
+            // if hotbar_slot is in use, swap the slots
+            let sidx = this.inventory_items.findIndex((item) => item.hotbar_slot == hotbar_slot);
+            if (sidx > -1) {
+                this.inventory_items[sidx].hotbar_slot = this.inventory_items[idx].hotbar_slot;
             }
-        },
-        clearInventorySlot: function(slot) {
-            let idx = this.inventory_items.findIndex((item) => item.slot == slot);
-            if (idx > -1) {
-                this.inventory_items[idx].slot = null;
-            }
+
+            this.inventory_items[idx].hotbar_slot = hotbar_slot;
+            this.CallEvent("UpdateInventory", JSON.stringify(this.inventory_items));
         },
         getItemByInventorySlot: function(slot) {
             return this.inventory_items.find((item) => item.slot == slot);

@@ -382,6 +382,7 @@ AddRemoteEvent("UseWeaponSlot", function(player, key)
     for i, item in ipairs(inventory) do
         if tostring(item.hotbar_slot) == "1" or tostring(item.hotbar_slot) == "2" or tostring(item.hotbar_slot) == "3" then
             if tostring(item.hotbar_slot) == tostring(key) then
+                -- unequip weapon if needed
                 PlayerData[player].equipped[item.uuid] = true
                 EquipWeaponToSlot(player, item.uuid, item.hotbar_slot, true)
             else

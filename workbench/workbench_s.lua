@@ -89,7 +89,7 @@ AddRemoteEvent("BuildItem", function(player, item)
         }
         CallRemoteEvent(player, "CompleteBuild", json_encode(_send))
 
-        CallRemoteEvent(player, "ShowMessage", ItemConfig[item].name .. " has been added to your inventory.")
+        CallRemoteEvent(player, "ShowMessage", ItemConfig[item].name .. " has been added to your inventory")
 
         AddToInventoryByName(player, item)
     end)

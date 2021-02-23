@@ -114,7 +114,6 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
     DestroyPickup(pickup)
 
     BumpPlayerStat(player, "loot_collected")
-    AddPlayerChatAll(GetPlayerName(player)..' has picked up a lootbox!')
     log.debug(GetPlayerName(player)..' has picked up a lootbox')
 
     CallRemoteEvent(player, "LootPickedup")

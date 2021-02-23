@@ -34,7 +34,7 @@ AddRemoteEvent("RepairVehicle", function(player, vehicle)
 
     if GetVehicleDamage(vehicle, 1) == 1 then
         -- unrepairable
-        AddPlayerChat(player, "The vehicle is unrepairable.")
+        CallRemoteEvent(player, "ShowMessage", "The vehicle is unrepairable")
         CallRemoteEvent(player, "PlayErrorSound")
     elseif health_percentage <= 75 then
         -- repairable
@@ -45,7 +45,7 @@ AddRemoteEvent("RepairVehicle", function(player, vehicle)
         local health_percentage = GetVehicleHealthPercentage(options.vehicle)
         CallRemoteEvent(player, "ShowMessage", "Vehicle health is now " .. health_percentage .. "%%")
     else
-        AddPlayerChat(player, "Vehicle can not be repaired any further.")
+        CallRemoteEvent(player, "ShowMessage", "Vehicle can not be repaired any further")
         CallRemoteEvent(player, "PlayErrorSound")
     end
 end)

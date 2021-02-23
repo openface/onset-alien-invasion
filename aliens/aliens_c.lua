@@ -66,7 +66,7 @@ function SetSafeAmbience()
 end
 
 AddRemoteEvent('AlienNoLongerAttacking', function()
-    ShowMessage("You are safe for now.")
+    ShowMessage("You are safe for now")
     SetSafeAmbience()
 end)
 

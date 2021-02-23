@@ -195,7 +195,7 @@ AddRemoteEvent("DropItemFromInventory", function(player, uuid)
         -- spawn object near player
         CreatePickupNearPlayer(player, item)
 
-        CallRemoteEvent(player, "ShowMessage", ItemConfig[item].name .. " has been dropped.")
+        CallRemoteEvent(player, "ShowMessage", ItemConfig[item].name .. " has been dropped")
     end)
 end)
 

@@ -77,8 +77,8 @@ AddRemoteEvent("SearchForScrap", function(player, object, options)
         else
             -- not found
             SearchCooldown[player][object] = nil
-            CallRemoteEvent(player, "ShowMessage", "You were unable to find anything useful.")
-            log.debug("Player " .. GetPlayerName(player) .. " searched but found nothing.")
+            CallRemoteEvent(player, "ShowMessage", "You were unable to find anything useful")
+            log.debug("Player " .. GetPlayerName(player) .. " searched but found nothing")
         end
     end)
 end)
@@ -95,7 +95,7 @@ function PickupScrap(player)
 
     local item = _resources[math.random(#_resources)]
     if ItemConfig[item] then
-        CallRemoteEvent(player, "ShowMessage", ItemConfig[item].name .. " has been added to your inventory.")
+        CallRemoteEvent(player, "ShowMessage", ItemConfig[item].name .. " has been added to your inventory")
 
         AddToInventoryByName(player, item)
     end

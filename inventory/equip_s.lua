@@ -75,7 +75,7 @@ function EquipItem(player, uuid)
         local weapon_id = AttachWeaponToPlayer(player, uuid)
         equipped[uuid] = 'weapon'
     else
-        local attached_object = AttachItemToPlayer(player, uuid)
+        local attached_object = AttachObjectToPlayer(player, uuid)
         equipped[uuid] = attached_object
     end
     PlayerData[player].equipped = equipped
@@ -100,7 +100,7 @@ function AttachWeaponToPlayer(player, uuid)
 end
 
 -- attaches object or weapon to player
-function AttachItemToPlayer(player, uuid)
+function AttachObjectToPlayer(player, uuid)
     local item = GetItemInstance(uuid)
 
     if ItemConfig[item].type == 'weapon' then
@@ -110,6 +110,10 @@ function AttachItemToPlayer(player, uuid)
 
     local x, y, z = GetPlayerLocation(player)
     local attached_object = CreateObject(ItemConfig[item].modelid, x, y, z)
+
+    if ItemConfig[item].scale then
+        SetObjectScale(attached_object, ItemConfig[item].scale.x, ItemConfig[item].scale.y, ItemConfig[item].scale.z)
+    end
 
     SetObjectPropertyValue(attached_object, "_name", item)
     SetObjectAttached(attached_object, ATTACH_PLAYER, player, ItemConfig[item].attachment['x'],

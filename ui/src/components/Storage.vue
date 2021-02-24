@@ -72,6 +72,7 @@ export default {
                     uuid: item.uuid,
                     quantity: item.quantity,
                     index: index + 1,
+                    slot: item.slot,
                 };
             });
             this.CallEvent("UpdateStorage", this.object, this.type, JSON.stringify(data));

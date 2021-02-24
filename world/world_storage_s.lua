@@ -55,10 +55,11 @@ function SpawnStorageLoot(object)
     local random_items = getRandomSample(items, math.random(0, 2))
 
     local random_content = {}
-    for _, item in pairs(random_items) do
+    for index, item in pairs(random_items) do
         table.insert(random_content, {
             item = item,
             uuid = RegisterNewItem(item),
+            slot = index,
             quantity = 1
         })
     end

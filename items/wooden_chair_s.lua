@@ -8,6 +8,15 @@ ItemConfig["wooden_chair"] = {
         wood = 10
     },
     price = 25,
+    attachment = {
+        x = -15.8,
+        y = 37.3,
+        z = 5.5,
+        rx = -84.8,
+        ry = 0,
+        rz = 0,
+        bone = "hand_r"
+    },
     prop_options = {
         message = "Sit",
         client_event = "SitInChair",
@@ -17,6 +26,10 @@ ItemConfig["wooden_chair"] = {
         }
     }
 }
+
+AddEvent("items:wooden_chair:equip", function(player)
+    SetPlayerAnimation(player, "CARRY_IDLE")    
+end)
 
 --
 -- Sitting (TODO)

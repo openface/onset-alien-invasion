@@ -302,6 +302,43 @@ function UseItemFromInventory(player, uuid, options)
 end
 AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
 
+function PlayInteraction(player, uuid, after_callback)
+    local item = GetItemInstance(uuid)
+    log.debug("Playing interaction for item " .. item .. " uuid ".. uuid)
+
+    if not ItemConfig[item].interaction then
+        if after_callback then
+            after_callback()
+        end
+        return
+    end
+    if ItemConfig[item].interaction['animation'] then
+        SetPlayerAnimation(player, ItemConfig[item].interaction['animation']['name'])
+
+        local duration = ItemConfig[item].interaction['animation']['duration'] or 2000 -- default animation delay
+
+        CallRemoteEvent(player, "StartInteraction", {
+            ['duration'] = duration,
+            ['show_spinner'] = ItemConfig[item].interaction['animation']['spinner']
+        })
+
+        Delay(duration, function()
+            SetPlayerAnimation(player, "STOP")
+
+            if after_callback then
+                after_callback()
+            end
+        end)
+    else
+        if after_callback then
+            after_callback()
+        end
+    end
+    if ItemConfig[item].interaction['sound'] then
+        PlaySoundSync(player, ItemConfig[item].interaction['sound'])
+    end
+end
+
 function GetItemFromInventory(player, uuid)
     local inventory = PlayerData[player].inventory
     for i, inventory_item in ipairs(inventory) do

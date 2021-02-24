@@ -5,24 +5,23 @@
                 <div v-if="HasInventory">
                     <div class="inventory-area">
                         <div id="title">INVENTORY</div>
-
-                        <drop-list
-                            :items="inventory_items"
-                            class="inventory_items"
-                            :accepts-data="CanDropToInventory"
-                            @drop="onDropToInventory"
-                            @reorder="onReorderInventory"
-                        >
-                            <template v-slot:item="{ item }">
-                                <drag class="square" :data="item" :key="item.uuid">
-                                    <inventory-item :item="item" />
+                        <div class="inventory_items">
+                            <drop
+                                class="square"
+                                v-for="slot in MAX_INVENTORY_SLOTS"
+                                :key="slot"
+                                @drop="onDropToInventorySlot(slot, $event)"
+                                :accepts-data="CanDropToInventory"
+                            >
+                                <drag
+                                    v-if="getItemByInventorySlot(slot)"
+                                    :data="getItemByInventorySlot(slot)"
+                                    :key="getItemByInventorySlot(slot).uuid"
+                                >
+                                    <inventory-item :item="getItemByInventorySlot(slot)" />
                                 </drag>
-                            </template>
-
-                            <template v-slot:feedback="{ data }">
-                                <div class="feedback" :key="'feedback_' + data.uuid"></div>
-                            </template>
-                        </drop-list>
+                            </drop>
+                        </div>
                     </div>
                     <div class="equipment-area">
                         <div id="title">EQUIPMENT</div>
@@ -59,48 +58,54 @@
             </div>
             <div id="hotbar" v-if="inventory_visible">
                 <!-- weapon slots -->
-                <drop class="square" v-for="slot in 3" :key="slot" @drop="onEquipWeapon(1, $event)" :accepts-data="CanEquipToWeaponSlot">
-                    <drag v-if="getItemBySlot(slot)" :data="getItemBySlot(slot)" :key="getItemBySlot(slot).uuid">
-                        <inventory-item :item="getItemBySlot(slot)" :keybind="slot" />
+                <drop class="square" v-for="slot in 3" :key="slot" @drop="onDropToWeaponSlot(slot, $event)" :accepts-data="CanEquipToWeaponSlot">
+                    <drag v-if="getItemByHotbarSlot(slot)" :data="getItemByHotbarSlot(slot)" :key="getItemByHotbarSlot(slot).uuid">
+                        <inventory-item :item="getItemByHotbarSlot(slot)" :keybind="slot" />
                     </drag>
                 </drop>
 
                 <div class="spacer" />
 
                 <!-- hotbar slots -->
-                <drop class="square" v-for="slot in 6" :key="slot+3" @drop="onEquipHotbar(slot+3, $event)" :accepts-data="CanEquipToHotbarSlot">
-                    <drag v-if="getItemBySlot(slot+3)" :data="getItemBySlot(slot+3)" :key="getItemBySlot(slot+3).uuid">
-                        <inventory-item :item="getItemBySlot(slot+3)" :keybind="slot+3" />
+                <drop
+                    class="square"
+                    v-for="slot in 6"
+                    :key="slot + 3"
+                    @drop="onDropToHotbarSlot(slot + 3, $event)"
+                    :accepts-data="CanEquipToHotbarSlot"
+                >
+                    <drag v-if="getItemByHotbarSlot(slot + 3)" :data="getItemByHotbarSlot(slot + 3)" :key="getItemByHotbarSlot(slot + 3).uuid">
+                        <inventory-item :item="getItemByHotbarSlot(slot + 3)" :keybind="slot + 3" />
                     </drag>
                 </drop>
             </div>
             <div v-else id="hotbar">
                 <!-- weapon slots -->
                 <div class="square" v-for="slot in 3" :key="slot">
-                    <inventory-item :item="getItemBySlot(slot)" :keybind="slot" v-if="getItemBySlot(slot)" />
+                    <inventory-item :item="getItemByHotbarSlot(slot)" :keybind="slot" v-if="getItemByHotbarSlot(slot)" />
                 </div>
 
                 <div class="spacer" />
 
                 <!-- hotbar slots -->
-                <div class="square" v-for="slot in 6" :key="slot+3">
-                    <inventory-item :item="getItemBySlot(slot+3)" :keybind="slot+3" v-if="getItemBySlot(slot+3)" />
+                <div class="square" v-for="slot in 6" :key="slot + 3">
+                    <inventory-item :item="getItemByHotbarSlot(slot + 3)" :keybind="slot + 3" v-if="getItemByHotbarSlot(slot + 3)" />
                 </div>
             </div>
         </drop-mask>
 
         <div id="inhand" v-if="!inventory_visible && equipped_hands">
-            <div class="name">{{equipped_hands.name}}</div>
+            <div class="name">{{ equipped_hands.name }}</div>
             <div class="use" v-if="equipped_hands.use_label">
                 <img width="25" height="25" :src="require('@/assets/images/icons/lmb.png')" />
-                {{equipped_hands.use_label}}
+                {{ equipped_hands.use_label }}
             </div>
         </div>
     </drop>
 </template>
 
 <script>
-import { Drag, Drop, DropList, DropMask } from "vue-easy-dnd";
+import { Drag, Drop, DropMask } from "vue-easy-dnd";
 import InventoryItem from "./InventoryItem.vue";
 
 export default {
@@ -109,8 +114,10 @@ export default {
         InventoryItem,
         Drag,
         Drop,
-        DropList,
         DropMask,
+    },
+    created: function() {
+        this.MAX_INVENTORY_SLOTS = 14
     },
     data: function() {
         return {
@@ -123,7 +130,7 @@ export default {
             return this.inventory_items.length > 0;
         },
         equipped_hands: function() {
-            return this.inventory_items.find((item) => item.equipped && (item.type == "weapon" || (item.bone == "hand_l" || item.bone == "hand_r")));
+            return this.inventory_items.find((item) => item.equipped && (item.type == "weapon" || item.bone == "hand_l" || item.bone == "hand_r"));
         },
         equipped_head: function() {
             return this.inventory_items.find((item) => item.equipped && item.bone == "head");
@@ -143,7 +150,7 @@ export default {
             this.inventory_visible = false;
         },
         CanEquipToHands: function(item) {
-            return item.type == 'weapon' || (item.bone == "hand_l" || item.bone == "hand_r");
+            return item.type == "weapon" || item.bone == "hand_l" || item.bone == "hand_r";
         },
         CanEquipToHead: function(item) {
             return item.bone == "head";
@@ -163,9 +170,29 @@ export default {
         CanDropFromInventory: function() {
             return true;
         },
-        onReorderInventory: function(e) {
-            window.console.log("Reorder inventory");
-            e.apply(this.inventory_items);
+        onDropToInventorySlot: function(slot, e) {
+            window.console.log("Drop item to inventory slot", slot, e.data);
+
+            let idx = this.inventory_items.findIndex((item) => item.uuid == e.data.uuid);
+            if (idx == -1) return;
+
+            // find item currently on slot, and assign it the item's old slot
+            let sidx = this.inventory_items.findIndex((item) => item.slot == slot);
+            if (sidx > -1) {
+                this.inventory_items[sidx].slot = this.inventory_items[idx].slot;
+            }
+
+            // if item was previously hotbarred, unhotbar it
+            if (this.inventory_items[idx].hotbar_slot) {
+                this.inventory_items[idx].hotbar_slot = null;
+            }
+
+            this.inventory_items[idx].slot = slot;
+
+            if (this.inventory_items[idx].equipped) {
+                this.inventory_items[idx].equipped = false;
+                this.CallEvent("UnequipItem", this.inventory_items[idx].uuid);
+            }
 
             this.CallEvent("UpdateInventory", JSON.stringify(this.inventory_items));
         },
@@ -173,10 +200,10 @@ export default {
             window.console.log("Drop item from inventory", e.data);
 
             let idx = this.inventory_items.findIndex((item) => item.uuid == e.data.uuid);
-            if (idx > -1) {
-                this.CallEvent("DropItem", this.inventory_items[idx].uuid);
-                this.inventory_items.splice(idx, 1);
-            }
+            if (idx == -1) return;
+
+            this.CallEvent("DropItem", this.inventory_items[idx].uuid);
+            this.inventory_items.splice(idx, 1);
         },
         onEquipHands: function(e) {
             window.console.log("Equip item to hands", e.data);
@@ -220,45 +247,41 @@ export default {
                 this.CallEvent("EquipItem", this.inventory_items[idx].uuid);
             }
         },
-        onEquipWeapon: function(slot, e) {
-            window.console.log("Equip item to weapon slot " + slot, e.data);
-
-            this.clearInventorySlot(slot);
+        onDropToWeaponSlot: function(hotbar_slot, e) {
+            window.console.log("Drop item to weapon slot " + hotbar_slot, e.data);
 
             let idx = this.inventory_items.findIndex((item) => item.uuid == e.data.uuid);
-            if (idx > -1) {
-                this.inventory_items[idx].slot = slot;
-                this.CallEvent("UpdateInventory", JSON.stringify(this.inventory_items));
-            }
-        },
-        onEquipHotbar: function(slot, e) {
-            window.console.log("Equip item to hotbar slot " + slot, e.data);
+            if (idx == -1) return;
 
-            this.clearInventorySlot(slot);
+            // if hotbar_slot is in use, swap the slots
+            let sidx = this.inventory_items.findIndex((item) => item.hotbar_slot == hotbar_slot);
+            if (sidx > -1) {
+                this.inventory_items[sidx].hotbar_slot = this.inventory_items[idx].hotbar_slot;
+            }
 
-            let idx = this.inventory_items.findIndex((item) => item.uuid == e.data.uuid);
-            if (idx > -1) {
-                this.inventory_items[idx].slot = slot;
-                this.CallEvent("UpdateInventory", JSON.stringify(this.inventory_items));
-            }
+            this.inventory_items[idx].hotbar_slot = hotbar_slot;
+            this.CallEvent("UpdateInventory", JSON.stringify(this.inventory_items));
         },
-        clearInventorySlot: function(slot) {
-            let idx = this.inventory_items.findIndex((item) => item.slot == slot);
-            if (idx > -1) {
-                this.inventory_items[idx].slot = null;
-            }
-        },
-        onDropToInventory: function(e) {
-            window.console.log("Drop item back to inventory", e.data);
+        onDropToHotbarSlot: function(hotbar_slot, e) {
+            window.console.log("Drop item to hotbar slot " + hotbar_slot, e);
 
             let idx = this.inventory_items.findIndex((item) => item.uuid == e.data.uuid);
-            if (idx > -1) {
-                this.inventory_items[idx].equipped = false;
-                this.CallEvent("UnequipItem", this.inventory_items[idx].uuid);
+            if (idx == -1) return;
+
+            // if hotbar_slot is in use, swap the slots
+            let sidx = this.inventory_items.findIndex((item) => item.hotbar_slot == hotbar_slot);
+            if (sidx > -1) {
+                this.inventory_items[sidx].hotbar_slot = this.inventory_items[idx].hotbar_slot;
             }
+
+            this.inventory_items[idx].hotbar_slot = hotbar_slot;
+            this.CallEvent("UpdateInventory", JSON.stringify(this.inventory_items));
         },
-        getItemBySlot: function(slot) {
-            return this.inventory_items.find(item => item.slot == slot);
+        getItemByInventorySlot: function(slot) {
+            return this.inventory_items.find((item) => item.slot == slot);
+        },
+        getItemByHotbarSlot: function(slot) {
+            return this.inventory_items.find((item) => item.hotbar_slot == slot);
         },
     },
     mounted() {
@@ -278,6 +301,7 @@ export default {
                         quantity: 1,
                         type: "weapon",
                         equipped: false,
+                        hotbar_slot: 1,
                         slot: 1,
                     },
                     {
@@ -289,7 +313,8 @@ export default {
                         quantity: 1,
                         type: "weapon",
                         equipped: false,
-                        slot: null,
+                        hotbar_slot: null,
+                        slot: 2,
                     },
                     {
                         index: 5,
@@ -300,7 +325,8 @@ export default {
                         quantity: 2,
                         type: "resource",
                         equipped: false,
-                        slot: null,
+                        hotbar_slot: null,
+                        slot: 3,
                     },
                     {
                         index: 6,
@@ -311,7 +337,8 @@ export default {
                         quantity: 1,
                         type: "resource",
                         equipped: false,
-                        slot: null,
+                        hotbar_slot: null,
+                        slot: 5,
                     },
                     {
                         index: 7,
@@ -323,7 +350,8 @@ export default {
                         type: "equipable",
                         bone: "spine_02",
                         equipped: false,
-                        slot: null,
+                        hotbar_slot: null,
+                        slot: 6,
                     },
                     {
                         index: 18,
@@ -335,7 +363,8 @@ export default {
                         type: "equipable",
                         bone: "head",
                         equipped: false,
-                        slot: null,
+                        hotbar_slot: null,
+                        slot: 7,
                     },
                     {
                         index: 9,
@@ -347,7 +376,8 @@ export default {
                         type: "equipable",
                         bone: "hand_r",
                         equipped: false,
-                        slot: 6,
+                        hotbar_slot: 6,
+                        slot: 9,
                     },
                     {
                         index: 8,
@@ -360,7 +390,8 @@ export default {
                         use_label: "Drink",
                         bone: "hand_r",
                         equipped: true,
-                        slot: null,
+                        hotbar_slot: 4,
+                        slot: 10,
                     },
                     {
                         index: 10,
@@ -372,7 +403,8 @@ export default {
                         type: "prop",
                         bone: null,
                         equipped: false,
-                        slot: null,
+                        hotbar_slot: null,
+                        slot: 12,
                     },
                     {
                         index: 11,
@@ -384,20 +416,22 @@ export default {
                         type: "usable",
                         bone: "hand_r",
                         equipped: false,
-                        slot: null,
+                        hotbar_slot: null,
+                        slot: 13,
                     },
                     {
                         index: 12,
                         item: "headphones",
                         uuid: "67b377c8-818a-464e-b7eb-b685d42d8caa",
                         name: "Headphones",
-                        modelid:15,
+                        modelid: 15,
                         quantity: 1,
                         type: "equipable",
                         bone: "head",
                         equipped: false,
-                        slot: null
-                    }
+                        hotbar_slot: null,
+                        slot: 14,
+                    },
                 ],
             });
 
@@ -446,7 +480,7 @@ export default {
     font-family: impact;
     background: rgba(0, 0, 0, 0.1);
     text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
-    margin-bottom:10px;
+    margin-bottom: 10px;
 }
 .inventory_items {
     display: grid;
@@ -480,25 +514,25 @@ export default {
 }
 
 #inhand {
-    position:fixed;
-    bottom:1vh;
-    right:1vh;
-    width:250px;
-    background: rgba(255,255,255, 0.4);
-    font-family:helvetica;
-    font-weight:bold;
-    padding:5px 10px;
+    position: fixed;
+    bottom: 1vh;
+    right: 1vh;
+    width: 250px;
+    background: rgba(255, 255, 255, 0.4);
+    font-family: helvetica;
+    font-weight: bold;
+    padding: 5px 10px;
 }
 #inhand .name {
-    font-size:22px;
-    float:left;
+    font-size: 22px;
+    float: left;
 }
 #inhand .use {
-    float:right;
-    text-transform:uppercase;
-    font-size:18px;
+    float: right;
+    text-transform: uppercase;
+    font-size: 18px;
 }
 #inhand .use img {
-    vertical-align:middle;
+    vertical-align: middle;
 }
 </style>

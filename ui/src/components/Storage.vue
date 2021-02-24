@@ -2,70 +2,42 @@
     <div id="container">
         <div class="section">
             <div id="title">{{ storage_name }}</div>
-
-            <drop-list
-                :items="storage_items"
-                class="storage_items"
-                :accepts-data="CanDropToStorage"
-                @insert="onInsertStorage"
-                @reorder="onReorderStorage"
-                mode="cut"
-            >
-                <template v-slot:item="{ item }">
-                    <drag class="square" :data="item" @cut="onCutStorage" :key="item.uuid">
-                        <inventory-item :item="item" />
+            <div class="storage_items">
+                <drop class="square" v-for="slot in MAX_STORAGE_SLOTS" :key="slot" mode="cut" @drop="onDropToStorageSlot(slot, $event)" :accepts-data="CanDropToStorage">
+                    <drag v-if="getItemByStorageSlot(slot)" @cut="onCutStorage" :data="getItemByStorageSlot(slot)" :key="getItemByStorageSlot(slot).uuid">
+                        <inventory-item :item="getItemByStorageSlot(slot)" />
                     </drag>
-                </template>
-
-                <template v-slot:feedback="{ data }">
-                    <div class="square" :key="'s_' + data.uuid">
-                        <inventory-item :item="data" />
-                    </div>
-                </template>
-            </drop-list>
+                </drop>
+            </div>
         </div>
-
+        <div class="spacer" />
         <div class="section">
             <div id="title">INVENTORY</div>
-
-            <drop-list
-                :items="inventory_items"
-                class="inventory_items"
-                :accepts-data="CanDropToInventory"
-                @insert="onInsertInventory"
-                @reorder="onReorderInventory"
-                mode="cut"
-            >
-                <template v-slot:item="{ item }">
-                    <drag class="square" :data="item" @cut="onCutInventory" :key="item.uuid">
-                        <inventory-item :item="item" />
+            <div class="inventory_items">
+                <drop class="square" v-for="slot in MAX_INVENTORY_SLOTS" :key="slot" mode="cut" @drop="onDropToInventorySlot(slot, $event)" :accepts-data="CanDropToInventory">
+                    <drag v-if="getItemByInventorySlot(slot)" @cut="onCutInventory" :data="getItemByInventorySlot(slot)" :key="getItemByInventorySlot(slot).uuid">
+                        <inventory-item :item="getItemByInventorySlot(slot)" />
                     </drag>
-                </template>
-
-                <template v-slot:feedback="{ data }">
-                    <div class="square" :key="'i_' + data.index">
-                        <inventory-item :item="data" />
-                    </div>
-                </template>
-
-            </drop-list>
+                </drop>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-import { Drag, DropList } from "vue-easy-dnd";
+import { Drag, Drop } from "vue-easy-dnd";
 import InventoryItem from "./InventoryItem.vue";
 
-// TODO
-//const MAX_STORAGE_SLOTS = 7;
-//const MAX_INVENTORY_SLOTS = 14;
 export default {
     name: "Storage",
     components: {
         InventoryItem,
         Drag,
-        DropList,
+        Drop,
+    },
+    created() {
+        this.MAX_STORAGE_SLOTS = 7;
+        this.MAX_INVENTORY_SLOTS = 14;
     },
     data() {
         return {
@@ -77,6 +49,7 @@ export default {
         };
     },
     methods: {
+        // storage
         CanDropToStorage: function(data) {
             if (this.inventory_items.findIndex((item) => item.uuid == data.uuid) > -1) {
                 return true;
@@ -84,15 +57,6 @@ export default {
                 return false;
             }
             // todo: check storage limits
-        },
-        CanDropToInventory: function(data) {
-            if (this.storage_items.findIndex((item) => item.uuid == data.uuid) > -1) {
-                return true;
-            } else {
-                return false;
-            }
-            // todo: check inventory limits
-
         },
         SetStorageData: function(data) {
             this.storage_name = data.storage_name;
@@ -110,12 +74,7 @@ export default {
                     index: index + 1,
                 };
             });
-            this.CallEvent("UpdateStorage", this.object, this.type, JSON.stringify(data));         
-        },
-        onInsertStorage: function(e) {
-            window.console.log("onInsertStorage:", e);
-            this.storage_items.splice(e.index, 0, e.data);
-            this.SaveStorageData();
+            this.CallEvent("UpdateStorage", this.object, this.type, JSON.stringify(data));
         },
         onCutStorage: function(e) {
             window.console.log("onCutStorage:", e.data);
@@ -123,10 +82,27 @@ export default {
             this.storage_items.splice(this.storage_items.indexOf(e.data), 1);
             this.SaveStorageData();
         },
-        onReorderStorage: function(e) {
-            window.console.log("onReorderStorage:", e);
-            e.apply(this.storage_items);
+        onDropToStorageSlot: function(slot, e) {
+            window.console.log("onDropToStorageSlot", e);
+            this.storage_items.splice(e.index, 0, e.data);
+
+            let idx = this.storage_items.indexOf(e.data);
+            if (idx == -1) return;
+
+            this.storage_items[idx].slot = slot;
             this.SaveStorageData();
+        },
+        getItemByStorageSlot: function(slot) {
+            return this.storage_items.find((item) => item.slot == slot);
+        },
+        // inventory
+        CanDropToInventory: function(data) {
+            if (this.storage_items.findIndex((item) => item.uuid == data.uuid) > -1) {
+                return true;
+            } else {
+                return false;
+            }
+            // todo: check inventory limits
         },
         SaveInventoryData: function() {
             const data = this.inventory_items.map(function(item, index) {
@@ -135,26 +111,30 @@ export default {
                     uuid: item.uuid,
                     quantity: item.quantity,
                     index: index + 1,
+                    slot: item.slot,
                 };
             });
 
             this.CallEvent("UpdateInventory", JSON.stringify(data));
         },
-        onInsertInventory: function(e) {
-            window.console.log("onInsertInventory:", e);
-            this.inventory_items.splice(e.index, 0, e.data);
-            this.SaveInventoryData();
-        },
         onCutInventory: function(e) {
             window.console.log("onCutInventory:", e.data);
-
             this.inventory_items.splice(this.inventory_items.indexOf(e.data), 1);
+
             this.SaveInventoryData();
         },
-        onReorderInventory: function(e) {
-            window.console.log("onReorderInventory:", e);
-            e.apply(this.inventory_items);
+        onDropToInventorySlot: function(slot, e) {
+            window.console.log("onDropToInventorySlot", e);
+            this.inventory_items.splice(e.index, 0, e.data);
+
+            let idx = this.inventory_items.indexOf(e.data);
+            if (idx == -1) return;
+
+            this.inventory_items[idx].slot = slot;
             this.SaveInventoryData();
+        },
+        getItemByInventorySlot: function(slot) {
+            return this.inventory_items.find((item) => item.slot == slot);
         },
     },
     mounted() {
@@ -166,27 +146,9 @@ export default {
                 type: "object",
                 storage_name: "Crate",
                 storage_items: [
-                     {
-                        index: 1,
-                        item: "lighter",
-                        uuid: "68c6486c-10b0-4a64-8b94-08befa079323",
-                        name: "Lighter",
-                        modelid: 2,
-                        quantity: 1,
-                        type: "usable",
-                    },
-                    {
-                        index: 2,
-                        item: "boxhead",
-                        uuid: "72491e7d-8e4f-46cc-9df6-e46c5df64c1c",
-                        name: "Boxhead",
-                        modelid: 2,
-                        quantity: 1,
-                        type: "equipable",
-                    },
                 ],
                 inventory_items: [
-                     {
+                    {
                         index: 1,
                         item: "metal",
                         uuid: "bdf427f4-76a7-431c-916b-7e96252d0c6f",
@@ -194,7 +156,7 @@ export default {
                         modelid: 694,
                         quantity: 2,
                         type: "resource",
-                        equipped: false,
+                        slot: 3,
                     },
                     {
                         index: 2,
@@ -204,7 +166,7 @@ export default {
                         modelid: 627,
                         quantity: 1,
                         type: "resource",
-                        equipped: false,
+                        slot: 4,
                     },
                     {
                         index: 3,
@@ -214,8 +176,8 @@ export default {
                         modelid: 627,
                         quantity: 1,
                         type: "equipable",
-                        equipped: true,
-                    }, 
+                        slot: 9,
+                    },
                 ],
             });
         }
@@ -225,6 +187,7 @@ export default {
 
 <style scoped>
 #container {
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -237,17 +200,16 @@ export default {
     order: 0;
     flex: 0 1 auto;
     align-self: auto;
-    width: 610px;
     background: rgba(0, 0, 0, 0.6);
     font-family: helvetica;
     font-size: 16px;
     color: #ccc;
     text-shadow: 3px black;
-    padding: 10px;
-    margin-bottom: 25px;
-    min-height:146px;
+    padding:10px;
 }
-
+.spacer {
+    height:50px;
+}
 #title {
     color: #fff;
     font-size: 36px;
@@ -257,22 +219,32 @@ export default {
     font-family: impact;
     background: rgba(0, 0, 0, 0.1);
     text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
-    margin-bottom:10px;
-    text-transform:uppercase;
+    margin-bottom: 10px;
+    text-transform: uppercase;
 }
-.inventory_items, .storage_items {
+.inventory_items {
     display: grid;
     grid-auto-flow: dense;
     grid-column-gap: 1px;
     grid-row-gap: 1px;
     grid-template-columns: repeat(7, 90px);
-    height: 100%;
 }
+.storage_items {
+    display: grid;
+    grid-auto-flow: dense;
+    grid-column-gap: 1px;
+    grid-row-gap: 1px;
+    grid-template-columns: repeat(7, 90px);
+}
+
 .square {
     background: rgba(255, 255, 255, 0.1);
     width: 80px;
     height: 80px;
     border: 1px solid rgba(0, 0, 0, 0.4);
-    padding: 5px;
+    padding:5px;
+}
+.drop-allowed {
+    background-color: rgba(0, 255, 0, 0.2);
 }
 </style>

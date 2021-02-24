@@ -54,8 +54,9 @@ function EquipItem(player, uuid)
     elseif ItemConfig[item].attachment['bone'] == 'hand_r' or ItemConfig[item].attachment['bone'] == 'hand_l' then
         -- switch to fists when equipping an object
         -- and currently holding a weapon
-        if GetCurrentWeaponID(player) then
-            SwitchToFists(player)
+        local slot = GetPlayerEquippedWeaponSlot(player)
+        if slot then
+            UnequipWeaponSlot(player, slot)
         end
 
         -- unequip hands

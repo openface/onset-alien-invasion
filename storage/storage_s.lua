@@ -54,12 +54,13 @@ end)
 -- type is either 'object' or 'vehicle'
 function ReplaceStorageContents(object, type, data)
     local new_storage = {}
-    for i, item in ipairs(data) do
+    for index, item in ipairs(data) do
         -- lookup item configuration before storing it to ensure they are still valid
         if ItemConfig[item.item] then
-            new_storage[i] = {
+            new_storage[index] = {
                 item = item.item,
                 uuid = item.uuid,
+                slot = index,
                 quantity = item.quantity,
                 name = ItemConfig[item.item].name,
                 modelid = ItemConfig[item.item].modelid,

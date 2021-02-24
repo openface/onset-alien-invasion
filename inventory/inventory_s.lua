@@ -1,3 +1,5 @@
+local MAX_INVENTORY_SLOTS = 14
+
 -- get inventory data and send to UI
 function SyncInventory(player)
     log.trace('SyncInventory')
@@ -78,7 +80,7 @@ function AddToInventory(player, uuid, amount)
     if curr_qty > 0 then
         -- update quantity of existing item stack
         SetItemQuantity(player, uuid, curr_qty + amount)
-    elseif #inventory >= 14 then
+    elseif #inventory >= MAX_INVENTORY_SLOTS then
         log.error(GetPlayerName(player) .. " inventory exceeded!")
         return
     else
@@ -248,14 +250,13 @@ function GetInventoryAvailableSlots(player)
     for _ in pairs(inventory) do
         count = count + 1
     end
-    -- max slots is hardcoded at 14
-    return (14 - count)
+    return (MAX_INVENTORY_SLOTS - count)
 end
 
 -- iterate over possible slots and return the first available
 function GetNextAvailableInventorySlot(player)
     local inventory = PlayerData[player].inventory
-    for index=1,14 do
+    for index=1,MAX_INVENTORY_SLOTS do
         if not table.findByKeyValue(inventory, "slot", index) then
             return index
         end            

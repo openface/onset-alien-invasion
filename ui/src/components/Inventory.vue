@@ -8,7 +8,7 @@
                         <div class="inventory_items">
                             <drop
                                 class="square"
-                                v-for="slot in 14"
+                                v-for="slot in MAX_INVENTORY_SLOTS"
                                 :key="slot"
                                 @drop="onDropToInventorySlot(slot, $event)"
                                 :accepts-data="CanDropToInventory"
@@ -115,6 +115,9 @@ export default {
         Drag,
         Drop,
         DropMask,
+    },
+    created: function() {
+        this.MAX_INVENTORY_SLOTS = 14
     },
     data: function() {
         return {

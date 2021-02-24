@@ -2,33 +2,19 @@
     <div id="container">
         <div class="section">
             <div id="title">{{ storage_name }}</div>
-
-            <drop-list
-                :items="storage_items"
-                class="storage_items"
-                :accepts-data="CanDropToStorage"
-                @insert="onInsertStorage"
-                @reorder="onReorderStorage"
-                mode="cut"
-            >
-                <template v-slot:item="{ item }">
-                    <drag class="square" :data="item" @cut="onCutStorage" :key="item.uuid">
-                        <inventory-item :item="item" />
+            <div class="storage_items">
+                <drop class="square" v-for="slot in MAX_STORAGE_SLOTS" :key="slot" mode="cut" @drop="onDropToStorageSlot(slot, $event)" :accepts-data="CanDropToStorage">
+                    <drag v-if="getItemByStorageSlot(slot)" @cut="onCutStorage" :data="getItemByStorageSlot(slot)" :key="getItemByStorageSlot(slot).uuid">
+                        <inventory-item :item="getItemByStorageSlot(slot)" />
                     </drag>
-                </template>
-
-                <template v-slot:feedback="{ data }">
-                    <div class="square" :key="'feedback_storage_' + data.uuid">
-                        <inventory-item :item="data" />
-                    </div>
-                </template>
-            </drop-list>
+                </drop>
+            </div>
         </div>
         <div class="spacer" />
         <div class="section">
             <div id="title">INVENTORY</div>
             <div class="inventory_items">
-                <drop class="square" v-for="slot in 14" :key="slot" mode="cut" @drop="onDropToInventorySlot(slot, $event)" :accepts-data="CanDropToInventory">
+                <drop class="square" v-for="slot in MAX_INVENTORY_SLOTS" :key="slot" mode="cut" @drop="onDropToInventorySlot(slot, $event)" :accepts-data="CanDropToInventory">
                     <drag v-if="getItemByInventorySlot(slot)" @cut="onCutInventory" :data="getItemByInventorySlot(slot)" :key="getItemByInventorySlot(slot).uuid">
                         <inventory-item :item="getItemByInventorySlot(slot)" />
                     </drag>
@@ -39,19 +25,19 @@
 </template>
 
 <script>
-import { Drag, Drop, DropList } from "vue-easy-dnd";
+import { Drag, Drop } from "vue-easy-dnd";
 import InventoryItem from "./InventoryItem.vue";
 
-// TODO
-//const MAX_STORAGE_SLOTS = 7;
-//const MAX_INVENTORY_SLOTS = 14;
 export default {
     name: "Storage",
     components: {
         InventoryItem,
         Drag,
         Drop,
-        DropList,
+    },
+    created() {
+        this.MAX_STORAGE_SLOTS = 7;
+        this.MAX_INVENTORY_SLOTS = 14;
     },
     data() {
         return {
@@ -63,6 +49,7 @@ export default {
         };
     },
     methods: {
+        // storage
         CanDropToStorage: function(data) {
             if (this.inventory_items.findIndex((item) => item.uuid == data.uuid) > -1) {
                 return true;
@@ -70,14 +57,6 @@ export default {
                 return false;
             }
             // todo: check storage limits
-        },
-        CanDropToInventory: function(data) {
-            if (this.storage_items.findIndex((item) => item.uuid == data.uuid) > -1) {
-                return true;
-            } else {
-                return false;
-            }
-            // todo: check inventory limits
         },
         SetStorageData: function(data) {
             this.storage_name = data.storage_name;
@@ -97,27 +76,33 @@ export default {
             });
             this.CallEvent("UpdateStorage", this.object, this.type, JSON.stringify(data));
         },
-        onInsertStorage: function(e) {
-            window.console.log("onInsertStorage:", e);
-            this.storage_items.splice(e.index, 0, e.data);
-            this.SaveStorageData();
-        },
         onCutStorage: function(e) {
             window.console.log("onCutStorage:", e.data);
 
             this.storage_items.splice(this.storage_items.indexOf(e.data), 1);
             this.SaveStorageData();
         },
-        onCutInventory: function(e) {
-            window.console.log("onCutInventory:", e.data);
-            this.inventory_items.splice(this.inventory_items.indexOf(e.data), 1);
+        onDropToStorageSlot: function(slot, e) {
+            window.console.log("onDropToStorageSlot", e);
+            this.storage_items.splice(e.index, 0, e.data);
 
-            this.SaveInventoryData();
-        },
-        onReorderStorage: function(e) {
-            window.console.log("onReorderStorage:", e);
-            e.apply(this.storage_items);
+            let idx = this.storage_items.indexOf(e.data);
+            if (idx == -1) return;
+
+            this.storage_items[idx].slot = slot;
             this.SaveStorageData();
+        },
+        getItemByStorageSlot: function(slot) {
+            return this.storage_items.find((item) => item.slot == slot);
+        },
+        // inventory
+        CanDropToInventory: function(data) {
+            if (this.storage_items.findIndex((item) => item.uuid == data.uuid) > -1) {
+                return true;
+            } else {
+                return false;
+            }
+            // todo: check inventory limits
         },
         SaveInventoryData: function() {
             const data = this.inventory_items.map(function(item, index) {
@@ -131,6 +116,12 @@ export default {
             });
 
             this.CallEvent("UpdateInventory", JSON.stringify(data));
+        },
+        onCutInventory: function(e) {
+            window.console.log("onCutInventory:", e.data);
+            this.inventory_items.splice(this.inventory_items.indexOf(e.data), 1);
+
+            this.SaveInventoryData();
         },
         onDropToInventorySlot: function(slot, e) {
             window.console.log("onDropToInventorySlot", e);
@@ -244,7 +235,6 @@ export default {
     grid-column-gap: 1px;
     grid-row-gap: 1px;
     grid-template-columns: repeat(7, 90px);
-    height:90px;
 }
 
 .square {

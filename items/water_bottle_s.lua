@@ -27,5 +27,5 @@ ItemConfig["water_bottle"] = {
 AddEvent("items:water_bottle:use", function(player)
     local health = GetPlayerHealth(player)
     SetPlayerHealth(player, math.min(100, health + 5))
-    AddPlayerChat(player, "Your health has increased by 5")
+    CallRemoteEvent(player, "ShowMessage", "Your health has increased")
 end)

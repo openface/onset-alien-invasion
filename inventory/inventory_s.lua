@@ -45,8 +45,8 @@ function SyncInventory(player)
             end
         end
     end
-    log.trace("INVENTORY SYNC (" .. GetPlayerName(player) .. "): " .. json_encode(_send))
-    log.trace("CURRENT INHAND: " .. dump(current_inhand))
+    --log.trace("INVENTORY SYNC (" .. GetPlayerName(player) .. "): " .. json_encode(_send))
+    --log.trace("CURRENT INHAND: " .. dump(current_inhand))
     CallRemoteEvent(player, "SetInventory", json_encode(_send), current_inhand)
 end
 AddRemoteEvent("SyncInventory", SyncInventory)
@@ -100,11 +100,10 @@ function AddToInventory(player, uuid, amount)
     end
 
     -- auto-equip when added
-    if ItemConfig[item].auto_equip == true and
-        (ItemConfig[item].type == 'equipable' or ItemConfig[item].type == 'weapon') then
-        if GetEquippedObject(player, item) ~= nil then
-            log.debug("Auto-equipping item", item)
-            EquipItem(player, item)
+    if ItemConfig[item].auto_equip == true then
+        if ItemConfig[item].type == 'equipable' or ItemConfig[item].type == 'weapon' then
+            log.debug("Auto-equipping item", item, uuid)
+            EquipItem(player, uuid)
         end
     end
 
@@ -410,38 +409,18 @@ end)
 
 -- when weapon switching occurs, unequip hands, update PlayerData
 -- and force equip weapon to designated slot
-AddRemoteEvent("UseWeaponSlot", function(player, key)
-    log.trace("UseWeaponSlot", key)
-
-    UnequipFromBone(player, 'hand_l')
-    UnequipFromBone(player, 'hand_r')
+function UseItemFromHotbarSlot(player, hotbar_slot)
+    log.trace("UseItemFromHotbarSlot", hotbar_slot)
 
     local inventory = PlayerData[player].inventory
     for i, item in ipairs(inventory) do
-        if tostring(item.hotbar_slot) == "1" or tostring(item.hotbar_slot) == "2" or tostring(item.hotbar_slot) == "3" then
-            if tostring(item.hotbar_slot) == tostring(key) then
-                -- unequip weapon if needed
-                PlayerData[player].equipped[item.uuid] = true
-                EquipWeaponToSlot(player, item.uuid, item.hotbar_slot, true)
-            else
-                PlayerData[player].equipped[item.uuid] = nil
-            end
-        end
-    end
-
-    log.debug("equipped:", dump(PlayerData[player].equipped))
-    CallEvent("SyncInventory", player)
-end)
-
--- item hotkeys
-AddRemoteEvent("UseItemHotkey", function(player, key)
-    log.trace("UseItemHotkey", key)
-
-    local inventory = PlayerData[player].inventory
-    for i, item in ipairs(inventory) do
-        if tostring(item.hotbar_slot) == key then
+        if tostring(item.hotbar_slot) == hotbar_slot then
             EquipItem(player, item.uuid)
+            return
         end
     end
-end)
+end
+
+AddRemoteEvent("UseWeaponSlot", UseItemFromHotbarSlot)
+AddRemoteEvent("UseItemHotkey", UseItemFromHotbarSlot)
 

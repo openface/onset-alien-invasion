@@ -15,11 +15,23 @@ function ClearEquippedObjects(player)
     SetPlayerAnimation(player, "STOP")
 end
 
+-- sets weapons slots from inventory data
+-- if we find a weapon in inventory that is supposed to be equipped, equip it
+function SyncWeaponSlotsFromInventory(player)
+    local inventory = PlayerData[player].inventory
+    for i, inventory_item in ipairs(inventory) do
+        if inventory_item.type == 'weapon' and GetEquippedObject(player, inventory_item.uuid) then
+            EquipWeaponFromInventory(player, inventory_item.uuid, false)
+            return
+        end
+    end
+end
+
 function EquipItem(player, uuid)
     log.trace("EquipItem", uuid)
     local item = GetItemInstance(uuid)
     if not item then
-        log.error("Cannot equip unknown item "..uuid)
+        log.error("Cannot equip unknown item " .. uuid)
         return
     end
 
@@ -33,33 +45,13 @@ function EquipItem(player, uuid)
         return
     end
 
-    if GetEquippedObject(player, uuid) ~= nil then
-        log.debug "already equipped; unequipping..."
-        UnequipItem(player, uuid)
-        return
-    end
-
     -- start equipping
-    log.debug(GetPlayerName(player) .. " equips item " .. item .." uuid: " .. uuid)
+    log.debug(GetPlayerName(player) .. " equips item " .. item .. " uuid: " .. uuid)
 
-    -- unequip whatever is in hands if equipping to hands
-    if ItemConfig[item].type == 'weapon' then
-        -- unequip hands when switching to a weapon
-        -- and not currently holding a weapon
-        if not GetCurrentWeaponID(player) then
-            log.debug("Unequipping object before equipping weapon")
-            UnequipFromBone(player, 'hand_r')
-            UnequipFromBone(player, 'hand_l')
-        end
-    elseif ItemConfig[item].attachment['bone'] == 'hand_r' or ItemConfig[item].attachment['bone'] == 'hand_l' then
-        -- switch to fists when equipping an object
-        -- and currently holding a weapon
-        local slot = GetPlayerEquippedWeaponSlot(player)
-        if slot then
-            UnequipWeaponSlot(player, slot)
-        end
+    -- if equipping to hands, unequip whatever is in hands
+    if ItemConfig[item].type == 'weapon' or
+        (ItemConfig[item].attachment['bone'] == 'hand_r' or ItemConfig[item].attachment['bone'] == 'hand_l') then
 
-        -- unequip hands
         UnequipFromBone(player, 'hand_r')
         UnequipFromBone(player, 'hand_l')
     end
@@ -69,11 +61,23 @@ function EquipItem(player, uuid)
         PlayInteraction(player, uuid)
     end
 
-    attached_object = AttachItemToPlayer(player, uuid)
-
-    -- update equipped store
+    -- update equipment list
     local equipped = PlayerData[player].equipped
-    equipped[uuid] = attached_object
+
+    -- clear all weapons from equipped list
+    for uuid, v in pairs(equipped) do
+        if v == 'weapon' then
+            equipped[uuid] = nil
+        end
+    end
+
+    if ItemConfig[item].type == 'weapon' then
+        local weapon_id = AttachWeaponToPlayer(player, uuid)
+        equipped[uuid] = 'weapon'
+    else
+        local attached_object = AttachItemToPlayer(player, uuid)
+        equipped[uuid] = attached_object
+    end
     PlayerData[player].equipped = equipped
     log.trace("EQUIPPED: ", dump(equipped))
 
@@ -84,13 +88,24 @@ function EquipItem(player, uuid)
     CallEvent("SyncInventory", player)
 end
 
+function AttachWeaponToPlayer(player, uuid)
+    local item = GetItemInstance(uuid)
+    if ItemConfig[item].type ~= 'weapon' then
+        log.error("Cannot attach non-weapon")
+        return
+    end
+    ClearAllWeaponSlots(player)
+    EquipWeaponFromInventory(player, uuid, true)
+    return item.weapon_id
+end
+
 -- attaches object or weapon to player
 function AttachItemToPlayer(player, uuid)
     local item = GetItemInstance(uuid)
 
     if ItemConfig[item].type == 'weapon' then
-        EquipWeaponFromInventory(player, uuid, false)
-        return true
+        log.error("Cannot attach weapon")
+        return
     end
 
     local x, y, z = GetPlayerLocation(player)
@@ -122,6 +137,15 @@ function AttachItemToPlayer(player, uuid)
     return attached_object
 end
 
+-- equips weapon by item, updates equipped list, and adds to weapon slot
+function EquipWeaponFromInventory(player, uuid, equip)
+    log.trace("EquipWeaponFromInventory", uuid, equip)
+
+    local inventory_item = GetItemFromInventory(player, uuid)
+    log.debug("Equipping weapon from inventory to slot", player, uuid, inventory_item.hotbar_slot)
+    EquipWeaponToSlot(player, uuid, inventory_item.hotbar_slot, equip)
+end
+
 -- unequip whatever is equipped on given bone
 -- returns unequipped item or nil
 function UnequipFromBone(player, bone)
@@ -141,11 +165,16 @@ function UnequipItem(player, uuid)
     if not ItemConfig[item] then
         return
     end
+--[[ 
+    if ItemConfig[item].type == 'weapon' then
+        log.error("Cannot UnequipItem on weapons.  Use UnequipWeapon instead!")
+        return
+    end ]]
 
     -- item is attached object to player
     local object = GetEquippedObject(player, uuid)
     if not object then
-        log.warn("item "..uuid.."not equipped")
+        log.warn("item " .. uuid .. "not equipped")
         return
     end
 
@@ -166,7 +195,7 @@ function UnequipItem(player, uuid)
         DestroyObject(object)
     end
 
-    log.debug(GetPlayerName(player) .. " unequipped item " .. item .." uuid: ".. uuid)
+    log.debug(GetPlayerName(player) .. " unequipped item " .. item .. " uuid: " .. uuid)
 
     -- call UNEQUIP event on object
     CallEvent("items:" .. item .. ":unequip", player, object)
@@ -189,6 +218,10 @@ function IsItemEquipped(player, uuid)
     else
         return false
     end
+end
+
+function IsWeaponEquipped(player, uuid)
+    return PlayerData[player].equipped[uuid] == 'weapon' or nil
 end
 
 function GetEquippedItemFromBone(player, bone)

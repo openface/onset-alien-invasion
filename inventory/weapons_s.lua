@@ -78,53 +78,14 @@ AddEvent("OnPackageStop", function()
     end
 end)
 
--- sets weapons slots from inventory data
--- if we find a weapon in inventory that is supposed to be equipped, equip it
-function SyncWeaponSlotsFromInventory(player)
-    local inventory = PlayerData[player].inventory
-    for i, inventory_item in ipairs(inventory) do
-        if inventory_item.type == 'weapon' and GetEquippedObject(player, inventory_item.uuid) then
-            EquipWeaponFromInventory(player, inventory_item.uuid, false)
-            return
-        end
-    end
-end
-
 function ClearAllWeaponSlots(player)
     for i = 1, 3 do
         WeaponPatch.SetWeapon(player, 1, 0, true, i, true)
     end
 end
 
--- equips weapon by item and adds to weapon slot
-function EquipWeaponFromInventory(player, uuid, equip)
-    log.trace("EquipWeaponFromInventory", uuid, equip)
-    local inventory = PlayerData[player].inventory
-    local weapon_slot
-    for i, inventory_item in ipairs(inventory) do
-        log.debug(dump(inventory_item))
-        if inventory_item.uuid == uuid and ItemConfig[inventory_item.item].type == 'weapon' then
-            if inventory_item.hotbar_slot then
-                -- if we already know which weapon slot is used, use it
-                weapon_slot = inventory_item.hotbar_slot
-            else
-                -- pick a new weapon slot
-                weapon_slot = GetNextAvailableWeaponSlot(player)
-                PlayerData[player].inventory[i].hotbar_slot = weapon_slot
-                CallEvent("SyncInventory", player)
-            end
-
-            log.debug("Equipping weapon from inventory to slot", player, uuid, weapon_slot)
-            EquipWeaponToSlot(player, uuid, weapon_slot, equip)
-            return
-        end
-    end
-end
-
 -- equips weapon item to given slot
 function EquipWeaponToSlot(player, uuid, slot, equip)
-    UnequipWeaponSlot(player, slot)
-
     local item = GetItemInstance(uuid)
     WeaponPatch.SetWeapon(player, ItemConfig[item].weapon_id, ItemConfig[item].mag_size, equip, slot, true)
 end
@@ -136,10 +97,6 @@ function GetNextAvailableWeaponSlot(player)
             return i
         end
     end
-end
-
-function IsWeaponEquipped(player, uuid)
-    return PlayerData[player].equipped[uuid] or nil
 end
 
 -- switch to fists if weapon is equipped for given weapon/item

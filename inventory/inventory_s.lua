@@ -157,6 +157,8 @@ end
 -- deletes item from inventory
 -- deduces by quantity if carrying more than 1
 function RemoveFromInventory(player, uuid, amount)
+    log.trace("RemoveFromInventory",uuid,amount)
+    
     local item = GetItemInstance(uuid)
     if not item then
         log.error("No such item: " .. uuid)

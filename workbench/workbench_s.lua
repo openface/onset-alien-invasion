@@ -72,8 +72,9 @@ AddRemoteEvent("BuildItem", function(player, item)
     end
 
     -- remove scrap from inventory
-    for resource, amount in pairs(ItemConfig[item].recipe) do
-        RemoveFromInventory(player, resource, amount)
+    for resource_item, amount in pairs(ItemConfig[item].recipe) do
+        local inventory_item = GetItemFromInventoryByName(player, resource_item)
+        RemoveFromInventory(player, inventory_item.uuid, amount)
     end
 
     PlaySoundSync(player, "sounds/workbench.mp3")
@@ -99,11 +100,10 @@ function GetPlayerResources(player)
     local inventory = PlayerData[player].inventory
     local resources = {}
     for _, item in pairs(inventory) do
-        if item['type'] == 'resource' then
+        if ItemConfig[item.item].type == 'resource' then
             resources[item.item] = item.quantity
         end
     end
-    -- log.debug(dump(resources))
     return resources
 end
 

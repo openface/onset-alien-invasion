@@ -152,5 +152,6 @@ AddRemoteEvent("ReloadWeapon", function(player)
 
     local slot = GetPlayerEquippedWeaponSlot(player)
     WeaponPatch.SetWeapon(player, weapon_id, item_cfg.mag_size, true, slot, true)
+
     RemoveFromInventory(player, inventory_item.uuid, 1)
 end)

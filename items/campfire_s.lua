@@ -5,16 +5,28 @@ ItemConfig["campfire"] = {
     image = "survival/SM_Campfire.png",
     max_carry = 1,
     max_use = 1,
-    use_label = "Build",
-    attachment = nil,
+    use_label = "Place",
+    attachment = {
+        x = -15.8,
+        y = 37.3,
+        z = 10.8,
+        rx = -90.1,
+        ry = 0.2,
+        rz = 0,
+        bone = "hand_r"
+    },
     recipe = {
         wood = 3
     },
     price = nil,
-    interaction = nil -- animation sequence is done in event
+    interaction = nil
 }
 
 local Campfires = {}
+
+AddEvent("items:campfire:equip", function(player)
+    SetPlayerAnimation(player, "CARRY_IDLE")    
+end)
 
 AddEvent("items:campfire:use", function(player)
     local x, y, z = GetPlayerLocation(player)

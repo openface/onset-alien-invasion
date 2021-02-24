@@ -60,7 +60,7 @@ AddEvent("OnObjectNetworkUpdatePropertyValue", function(object, PropertyName, Pr
             RemoveLightComponent(object)
         end
     elseif PropertyName == "particle" then
-        if PropertyValue ~= false then
+        if PropertyValue then
             AddParticleToObject(object, PropertyValue)
         else
             RemoveParticle(object)

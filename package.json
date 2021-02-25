@@ -28,11 +28,11 @@
         "inventory/equip_s.lua",
         "inventory/weapons_s.lua",
         "inventory/objects_s.lua",
+        "inventory/placement_s.lua",
 
         "scoreboard/scoreboard_s.lua",
         "pickups/pickups_s.lua",
         "storage/storage_s.lua",
-        "placement/placement_s.lua",
         "doors/doors_s.lua",
         "world/world_s.lua",
         "world/world_garbage_s.lua",
@@ -58,9 +58,9 @@
         "inventory/inventory_c.lua",
         "inventory/props_c.lua",
         "inventory/weapons_c.lua",
+        "inventory/placement_c.lua",
         "storage/storage_c.lua",
-        "vehicles/vehicles_c.lua",
-        "placement/placement_c.lua"
+        "vehicles/vehicles_c.lua"
     ],
     "files": [
         "client/pak/Mothership.pak",

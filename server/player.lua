@@ -208,8 +208,8 @@ function InitializePlayer(player)
 
     -- equip items
     local equipped = json_decode(account['equipped'])
-    for item, object in pairs(equipped) do
-        EquipItem(player, item)
+    for uuid, object in pairs(equipped) do
+        EquipItem(player, uuid)
     end
 
     SyncWeaponSlotsFromInventory(player)

@@ -45,6 +45,15 @@ end
 AddRemoteEvent("SetBossHealth", SetBossHealth)
 AddEvent("SetBossHealth", SetBossHealth)
 
+-- spinner
+AddEvent("ShowSpinner", function()
+    ExecuteWebJS(HudUI, "EmitEvent('ShowSpinner')")
+end)
+
+AddEvent("HideSpinner", function()
+    ExecuteWebJS(HudUI, "EmitEvent('HideSpinner')")
+end)
+
 -- interactions
 AddRemoteEvent("StartInteraction", function(data)
     if data['show_spinner'] then

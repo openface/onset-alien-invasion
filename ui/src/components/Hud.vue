@@ -54,8 +54,13 @@ export default {
         },
         ShowSpinner: function(ms) {
             this.show_spinner = true;
-            setTimeout(() => (this.show_spinner = false), ms);
+            if (typeof ms !== 'undefined') {
+                setTimeout(() => (this.show_spinner = false), ms);
+            }
         },
+        HideSpinner: function() {
+            this.show_spinner = false;
+        }
     },
     mounted() {
         this.EventBus.$on("ShowMessage", this.ShowMessage);
@@ -64,6 +69,7 @@ export default {
         this.EventBus.$on("ShowInteractionMessage", this.ShowInteractionMessage);
         this.EventBus.$on("HideInteractionMessage", this.HideInteractionMessage);
         this.EventBus.$on("ShowSpinner", this.ShowSpinner);
+        this.EventBus.$on("HideSpinner", this.HideSpinner);
 
         if (!this.InGame) {
             this.EventBus.$emit("ShowMessage", "You have found an important piece! Take this to the satellite!");
@@ -72,8 +78,7 @@ export default {
             this.EventBus.$emit("ShowInteractionMessage", "Search");
             setTimeout(() => this.EventBus.$emit("HideInteractionMessage"), 1000);
 
-            this.EventBus.$emit("ShowSpinner", 5000);
-            setTimeout(() => this.EventBus.$emit("ShowSpinner", 2000), 7000);
+            this.EventBus.$emit("ShowSpinner");
 
             this.EventBus.$emit("SetBossHealth", 100);
             setTimeout(() => this.EventBus.$emit("SetBossHealth", 80), 1000);

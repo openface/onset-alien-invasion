@@ -36,8 +36,9 @@ function SyncInventory(player)
             })
             if equipped and (bone == 'hand_l' or bone == 'hand_r') then
                 current_inhand = {
-                    ['item'] = item['item'],
-                    ['uuid'] = item['uuid']
+                    ['item'] = item.item,
+                    ['uuid'] = item.uuid,
+                    ['type'] = ItemConfig[item.item].type
                 }
                 if ItemConfig[item.item].interaction then
                     current_inhand['prop'] = ItemConfig[item.item].interaction['prop']

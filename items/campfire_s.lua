@@ -1,11 +1,11 @@
 ItemConfig["campfire"] = {
     name = "Campfire",
-    type = 'usable',
+    type = 'placeable',
     modelid = 20007,
     image = "survival/SM_Campfire.png",
     max_carry = 1,
     max_use = 1,
-    use_label = "Place",
+    use_label = 'Place',
     attachment = {
         x = -15.8,
         y = 37.3,
@@ -20,12 +20,18 @@ ItemConfig["campfire"] = {
     },
     price = nil,
     interaction = nil,
+    prop_options = {
+        message = "Ignite",
+        remote_event = "IgniteCampfire",
+        options = {
+            type = 'object',
+        }
+    }
 }
 
-local Campfires = {}
 local CampfireTimer
 
-AddEvent("OnPackageStart", function()
+--[[ AddEvent("OnPackageStart", function()
     CampfireTimer = CreateTimer(function()
         for _, object in pairs(Campfires) do
             -- heal if campfire is lit
@@ -38,33 +44,10 @@ AddEvent("OnPackageStart", function()
             end
         end
     end, 5000)
-end)
-
-AddEvent("OnPackageStop", function()
-    for _, o in pairs(Campfires) do
-        DestroyObject(o)
-    end
-    DestroyTimer(CampfireTimer)
-    Campfires = {}
-end)
+end) ]]
 
 AddEvent("items:campfire:equip", function(player)
     SetPlayerAnimation(player, "CARRY_IDLE")    
-end)
-
-AddEvent("items:campfire:use", function(player)
-    local x, y, z = GetPlayerLocation(player)
-    local object = CreateObject(20007, x + 50, y, z - 100)
-
-    -- todo: can the above be part of the framework somehow??
-    SetObjectPropertyValue(object, "prop", {
-        message = "Ignite",
-        remote_event = "IgniteCampfire",
-        options = {
-            type = 'object',
-        }
-    })
-    Campfires[object] = object
 end)
 
 AddRemoteEvent("IgniteCampfire", function(player, object, options)

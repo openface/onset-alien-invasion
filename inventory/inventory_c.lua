@@ -43,7 +43,11 @@ AddEvent('OnKeyPress', function(key)
             CallRemoteEvent("UseItemHotkey", key)
         elseif key == 'Left Mouse Button' and CurrentInHand and not CurrentlyInteracting then
             -- use item currently in hands
-            CallRemoteEvent("UseItemFromInventory", CurrentInHand['uuid'])
+            if CurrentInHand.type == 'placeable' then
+                CallEvent("PlaceItemFromInventory", CurrentInHand.uuid)
+            else
+                CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid)
+            end
         end
     end
 end)

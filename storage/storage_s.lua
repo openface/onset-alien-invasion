@@ -28,6 +28,7 @@ AddRemoteEvent("OpenStorage", function(player, object, options)
                 ['uuid'] = inventory_item.uuid,
                 ['slot'] = inventory_item.slot,
                 ['quantity'] = inventory_item.quantity,
+                ['used'] = inventory_item.used,
 
                 ['name'] = ItemConfig[inventory_item.item].name,
                 ['modelid'] = ItemConfig[inventory_item.item].modelid,

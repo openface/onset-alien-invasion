@@ -31,20 +31,25 @@ ItemConfig["campfire"] = {
 
 local CampfireTimer
 
---[[ AddEvent("OnPackageStart", function()
+AddEvent("OnPackageStart", function()
     CampfireTimer = CreateTimer(function()
-        for _, object in pairs(Campfires) do
+        local campfire_objects = GetPlacedObjectsByName('campfire')
+        for _, object in pairs(campfire_objects) do
             -- heal if campfire is lit
             if GetObjectPropertyValue(object, "particle") then
                 local x, y, z = GetObjectLocation(object)
                 local players_in_range = GetPlayersInRange2D(x, y, 500)
                 for player in pairs(players_in_range) do
-                    AddPlayerChat(player, "heal +1")
+                    SetPlayerHealth(player, GetPlayerHealth(player) + 2)
                 end
             end
         end
     end, 5000)
-end) ]]
+end)
+
+AddEvent("OnPackageStop", function()
+    DestroyTimer(CampfireTimer)
+end)
 
 AddEvent("items:campfire:equip", function(player)
     SetPlayerAnimation(player, "CARRY_IDLE")    

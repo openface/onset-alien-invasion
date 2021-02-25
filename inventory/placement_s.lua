@@ -37,7 +37,7 @@ AddRemoteEvent("PlaceItem", function(player, uuid, loc)
         SetObjectPropertyValue(object, "prop", ItemConfig[item].prop_options)
     end
 
-    PlacedObjects[object] = true
+    PlacedObjects[object] = item
 
     CallRemoteEvent(player, "ObjectPlaced", object)
 
@@ -66,3 +66,13 @@ AddRemoteEvent("UnplaceItem", function(player, object)
     AddPlayerChat(player, ItemConfig[item].name .. " has been added to your inventory.")
     log.debug(GetPlayerName(player) .. " unplaced object " .. object .. " item " .. item)
 end)
+
+function GetPlacedObjectsByName(item)
+    local placed_objects = {}
+    for object,name in pairs(PlacedObjects) do
+        if name == item then
+            table.insert(placed_objects, object)
+        end
+    end
+    return placed_objects
+end

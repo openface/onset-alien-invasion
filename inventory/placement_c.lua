@@ -68,9 +68,10 @@ AddEvent("OnKeyPress", function(key)
     if PlacementPendingItem and key == 'Left Mouse Button' then
 
         PlacementCooldown = GetTimeSeconds()
-        PlacementTimer = CreateTimer(function()
-            AddPlayerChat("placement timer", PlacementCooldown)
-            local secs = GetTimeSeconds() - (PlacementCooldown or 0)
+        PlacementTimer = CreateTimer(function(starttime)
+            local secs = GetTimeSeconds() - starttime
+            AddPlayerChat("placement timer: "..starttime.." "..secs)
+
             if secs > 3 then
                 CallEvent("HideSpinner")
 
@@ -88,7 +89,7 @@ AddEvent("OnKeyPress", function(key)
             elseif secs > 0 then
                 CallEvent("ShowSpinner")
             end
-        end, 200)
+        end, 200, PlacementCooldown)
 
     elseif IsCtrlPressed() and key == 'Left Mouse Button' then
         -- select object to edit

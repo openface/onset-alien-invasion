@@ -16,10 +16,6 @@ AddEvent("OnGameTick", function()
 
         ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
 
-        if LastHitStruct.type == 'object' then
-            SetObjectOutline(LastHitObject, false)
-        end
-
         LastHitObject = nil
         LastHitStruct = nil
         ActiveProp = nil
@@ -41,7 +37,6 @@ AddEvent("OnGameTick", function()
             -- world object
             local prop_options = GetObjectPropertyValue(hitObject, "prop")
             if prop_options ~= nil then
-                SetObjectOutline(hitObject, true)
                 ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop_options['message'] .. "')")
                 ActiveProp = {
                     object = hitObject,
@@ -153,9 +148,8 @@ AddEvent("OnKeyPress", function(key)
             AddPlayerChat("calling remote event: "..ActiveProp['remote_event'])
             CallRemoteEvent(ActiveProp['remote_event'], ActiveProp['object'], ActiveProp['options'])
         end
-        ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
-        SetObjectOutline(ActiveProp['object'], false)
-        ActiveProp = nil
+--        ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
+--        ActiveProp = nil
     elseif StandingPlayerLocation and key == 'Space Bar' then
         -- unsitting
         local actor = GetPlayerActor(GetPlayerId())

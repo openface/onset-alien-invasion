@@ -32,7 +32,7 @@ AddEvent("items:wooden_chair:equip", function(player)
 end)
 
 --
--- Sitting (TODO)
+-- Sitting
 --
 
 AddRemoteEvent("SitInChair", function(player, object, options)

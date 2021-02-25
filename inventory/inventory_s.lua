@@ -287,7 +287,7 @@ function UseItemFromInventory(player, uuid, options)
         return
     end
 
-    if ItemConfig[item].max_use and inventory_item['used'] > ItemConfig[item].max_use then
+    if ItemConfig[item].max_use and inventory_item.used > ItemConfig[item].max_use then
         log.error "Max use exceeded!"
         return
     end

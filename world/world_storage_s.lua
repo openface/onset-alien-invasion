@@ -60,7 +60,8 @@ function SpawnStorageLoot(object)
             item = item,
             uuid = RegisterNewItem(item),
             slot = index,
-            quantity = 1
+            quantity = 1,
+            used = 0
         })
     end
     --log.trace(dump(random_content))

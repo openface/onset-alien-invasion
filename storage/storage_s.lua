@@ -60,8 +60,10 @@ function ReplaceStorageContents(object, type, data)
             new_storage[index] = {
                 item = item.item,
                 uuid = item.uuid,
-                slot = item.slot,
+                slot = item.slot, -- storage slot
                 quantity = item.quantity,
+                used = item.used,
+
                 name = ItemConfig[item.item].name,
                 modelid = ItemConfig[item.item].modelid,
                 image = ItemConfig[item.item].image,

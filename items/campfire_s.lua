@@ -61,7 +61,7 @@ AddRemoteEvent("IgniteCampfire", function(player, object, options)
         return
     end
 
-    SetPlayerAnimation(player, "REVIVE")
+    SetPlayerAnimation(player, 164) -- startfire
 
     Delay(10 * 1000, function()
         SetPlayerAnimation(player, "STOP")

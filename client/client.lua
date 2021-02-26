@@ -26,6 +26,16 @@ ReplaceObjectModelMesh(20030, "/AlienInvasion/Meshes/SM_SleepingBag-RolledUp-Gre
 ReplaceObjectModelMesh(20029, "/AlienInvasion/Meshes/SM_SleepingBag-Open-Brown")
 ReplaceObjectModelMesh(20030, "/AlienInvasion/Meshes/SM_SleepingBag-Open-Green")
 
+
+-- Animations
+LoadPak("SurvivalAnimations", "/SurvivalAnimations/", "../../../OnsetModding/Plugins/SurvivalAnimations/Content/")
+
+ReplaceAnimationLibrarySequence(160, "/AlienInvasion/Animations/ChopDownTree", 4)
+ReplaceAnimationLibrarySequence(161, "/AlienInvasion/Animations/GatheringItems")
+ReplaceAnimationLibrarySequence(162, "/AlienInvasion/Animations/Rock_Throw")
+ReplaceAnimationLibrarySequence(163, "/AlienInvasion/Animations/Stand_DrinkWater")
+ReplaceAnimationLibrarySequence(164, "/AlienInvasion/Animations/StartFire", 6)
+
 AddEvent("OnPlayerSpawn", function()
     local player = GetPlayerId()
     local clothing = GetPlayerPropertyValue(player, "clothing")

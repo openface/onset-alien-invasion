@@ -18,7 +18,12 @@ end)
 AddCommand("anim", function(player, anim)
     log.debug("Animation:", anim)
     SetPlayerAnimation(player, "STOP")
-    if anim ~= nil then
+    if not anim then
+        return
+    end
+    if tonumber(anim) ~= nil then
+        SetPlayerAnimation(player, tonumber(anim))
+    else
         SetPlayerAnimation(player, string.upper(anim))
     end
 end)
@@ -46,5 +51,4 @@ AddEvent("OnConsoleInput", function(input)
     -- run lua
     load(input)()
 end)
-
 

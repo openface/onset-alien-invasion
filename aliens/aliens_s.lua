@@ -6,7 +6,7 @@ end
 
 local AlienHealth = 100
 local AlienAttackRange = 5000
-local AlienAttackDamage = 20
+local AlienAttackDamage = 50
 local SafeRange = 6000
 local AlienRetargetCooldown = {} -- aliens re-target on every weapon hit w/ cooldown period
 local AlienSpawnsEnabled = true
@@ -128,17 +128,6 @@ function SpawnAlienNearPlayer(player)
     log.info("NPC (ID " .. npc .. ") spawned near player " .. GetPlayerName(player))
 end
 
---[[ AddEvent("OnNPCSpawn", function(npc)
-    if GetNPCPropertyValue(npc, 'type') == 'alien' then
-        -- add a buffer to the health so that we can handle death
-        -- in script instead of the game (our own animation, etc)
-        SetNPCHealth(npc, AlienHealth+1000)
-
-        local x, y, z = GetNPCLocation(npc)
-        SetNPCPropertyValue(npc, 'location', {x, y, z})
-    end
-end) ]]
-
 -- damage aliens
 AddEvent("OnPlayerWeaponShot",
     function(player, weapon, hittype, hitid, hitx, hity, hitz, startx, starty, startz, normalx, normaly, normalz)
@@ -155,14 +144,6 @@ AddEvent("OnPlayerWeaponShot",
                 SetNPCHealth(hitid, health - 35)
             end
 
-            -- chance that the alien runs away
-            if math.random(1, 5) == 1 then
-                VNPCS.StopVNPC(npc)
-                SetNPCAnimation(hitid, 154, false)
-                log.debug("Alien stunned")
-                return
-            end
-
             -- retarget w/ cooldown
             if (os.time() - (AlienRetargetCooldown[hitid] or 0) > 10) then
                 SetAlienTarget(hitid, player)
@@ -172,8 +153,6 @@ AddEvent("OnPlayerWeaponShot",
     end)
 
 AddEvent("OnNPCDamage", function(npc, damagetype, amount)
-    --log.debug("actual health: " .. GetNPCHealth(npc))
-
     local health = GetNPCHealth(npc) - 1000
     log.debug("alien health: " .. health)
 
@@ -221,6 +200,11 @@ function SetAlienTarget(npc, player)
 
     SetNPCPropertyValue(npc, 'returning', nil)
 
+    local previous_target = GetNPCPropertyValue(npc, 'target')
+    if previous_target ~= player then
+        CallRemoteEvent(player, 'AlienAttacking', npc)
+    end
+
     local vehicle = GetPlayerVehicle(player)
     if vehicle == 0 then
         -- target is on foot
@@ -230,8 +214,6 @@ function SetAlienTarget(npc, player)
         -- alien has a new target
         -- SetNPCFollowPlayer(npc, player, math.random(325, 360)) -- random speed
         VNPCS.SetVNPCFollowPlayer(npc, player, 50)
-
-        CallRemoteEvent(player, 'AlienAttacking', npc)
     else
         -- target is in a vehicle
         log.debug("NPC (ID " .. npc .. ") targets player in vehicle: " .. GetPlayerName(player))
@@ -250,7 +232,6 @@ function SetAlienTarget(npc, player)
             CreateExplosion(1, vx, vy, vz, true, 1500, 100000)
             SetVehicleDamage(vehicle, math.random(1, 8), 1.0)
         end
-        CallRemoteEvent(player, 'AlienAttacking', npc)
     end
 end
 
@@ -261,9 +242,12 @@ function ResetAlien(npc)
         return
     end
 
-    local player, nearest_dist = GetNearestPlayer(npc)
+    local player = GetNearestPlayer(npc)
+    if not player then
+        return
+    end
 
-    if IsPlayerAttackable(player) and nearest_dist < AlienAttackRange then
+    if IsPlayerAttackable(player) then
         -- we found a nearby target
         SetAlienTarget(npc, player)
     elseif (GetNPCPropertyValue(npc, 'target') == player) then
@@ -362,16 +346,30 @@ AddEvent("OnVNPCReachTarget", function(npc)
         VNPCS.StopVNPC(npc)
         SetNPCAnimation(npc, 153, false)
         Delay(2000, function()
-            HitPlayer(npc, target)
+            AttemptHitPlayer(npc, target)
         end)
     else
+        -- player too far away
         SetAlienTarget(npc, target)
     end
 end)
 
-function HitPlayer(npc, player)
+function AttemptHitPlayer(npc, player)
+    local x, y, z = GetNPCLocation(npc)
+    local px, py, pz = GetPlayerLocation(player)
+    local dist = GetDistance3D(x, y, z, px, py, pz)
+    if dist > 300 then
+        log.debug("alien missed")
+        SetAlienTarget(npc, player)
+        return
+    end
+
     log.debug("NPC (ID " .. npc .. ") hits player " .. GetPlayerName(player))
-    
+    SetPlayerAnimation(player, 150, false)
+    Delay(500, function()
+        SetPlayerAnimation(player, "STOP")
+    end)
+
     local armor = GetPlayerArmor(player)
     local health = GetPlayerHealth(player)
 
@@ -403,11 +401,10 @@ function AlienReturn(npc)
     VNPCS.SetVNPCTargetLocation(npc, location[1], location[2], location[3], 300)
 end
 
--- get nearest player to npc
 function GetNearestPlayer(npc)
     local plys = GetAllPlayers()
     local found = 0
-    local nearest_dist = 999999.9
+    local nearest_dist = AlienAttackRange
     local x, y, z = GetNPCLocation(npc)
 
     for _, v in pairs(plys) do

@@ -39,7 +39,7 @@ end)
 
 function ApplyAlienSkin(npc)
     SetNPCClothingPreset(npc, Random(23, 24))
-    SetNPCOutline(npc, true)
+    --SetNPCOutline(npc, true)
 end
 
 AddRemoteEvent("AlienAttacking", function(npc)

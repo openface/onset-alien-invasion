@@ -315,7 +315,11 @@ function PlayInteraction(player, uuid, after_callback)
         return
     end
     if ItemConfig[item].interaction['animation'] then
-        SetPlayerAnimation(player, ItemConfig[item].interaction['animation']['name'])
+        if ItemConfig[item].interaction['animation'].name then
+            SetPlayerAnimation(player, ItemConfig[item].interaction['animation'].name)
+        elseif ItemConfig[item].interaction['animation'].id then
+            SetPlayerAnimation(player, tonumber(ItemConfig[item].interaction['animation'].id))
+        end
         local duration = ItemConfig[item].interaction['animation']['duration'] or 2000 -- default animation delay
 
         CallRemoteEvent(player, "StartInteraction", {

@@ -4,9 +4,9 @@ if VNPCS == nil then
     ServerExit()
 end
 
-local AlienHealth = 300
+local AlienHealth = 100
 local AlienAttackRange = 5000
-local AlienAttackDamage = 50
+local AlienAttackDamage = 20
 local SafeRange = 6000
 local AlienRetargetCooldown = {} -- aliens re-target on every weapon hit w/ cooldown period
 local AlienSpawnsEnabled = true
@@ -63,6 +63,8 @@ function SpawnAliens()
             -- chance to spawn
             if math.random(1, 2) == 1 then
                 SpawnAlienNearPlayer(ply)
+                SpawnAlienNearPlayer(ply)
+                SpawnAlienNearPlayer(ply)
             end
         end
     end
@@ -114,7 +116,11 @@ function SpawnAlienNearPlayer(player)
     -- CreateObject(303, x, y, z+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
     local npc = CreateNPC(x, y, z + 100, 90)
 
-    SetNPCHealth(npc, AlienHealth)
+    -- add a buffer to the health so that we can handle death
+    -- in script instead of the game (our own animation, etc)
+    -- If aliens health drops below 900, it's considered dead.
+    SetNPCHealth(npc, AlienHealth+1000)
+
     SetNPCRespawnTime(npc, 99999999) -- disable respawns
     SetNPCPropertyValue(npc, 'type', 'alien')
     SetNPCPropertyValue(npc, 'location', {x, y, z})
@@ -122,15 +128,16 @@ function SpawnAlienNearPlayer(player)
     log.info("NPC (ID " .. npc .. ") spawned near player " .. GetPlayerName(player))
 end
 
-AddEvent("OnNPCSpawn", function(npc)
+--[[ AddEvent("OnNPCSpawn", function(npc)
     if GetNPCPropertyValue(npc, 'type') == 'alien' then
-        -- log.debug("OnNPCSpawn alien " .. npc)
-        SetNPCHealth(npc, AlienHealth)
+        -- add a buffer to the health so that we can handle death
+        -- in script instead of the game (our own animation, etc)
+        SetNPCHealth(npc, AlienHealth+1000)
 
         local x, y, z = GetNPCLocation(npc)
         SetNPCPropertyValue(npc, 'location', {x, y, z})
     end
-end)
+end) ]]
 
 -- damage aliens
 AddEvent("OnPlayerWeaponShot",
@@ -150,8 +157,9 @@ AddEvent("OnPlayerWeaponShot",
 
             -- chance that the alien runs away
             if math.random(1, 5) == 1 then
-                AlienReturn(hitid)
-                log.debug("Alien retreated " .. hitid)
+                VNPCS.StopVNPC(npc)
+                SetNPCAnimation(hitid, 154, false)
+                log.debug("Alien stunned")
                 return
             end
 
@@ -162,6 +170,28 @@ AddEvent("OnPlayerWeaponShot",
             end
         end
     end)
+
+AddEvent("OnNPCDamage", function(npc, damagetype, amount)
+    --log.debug("actual health: " .. GetNPCHealth(npc))
+
+    local health = GetNPCHealth(npc) - 1000
+    log.debug("alien health: " .. health)
+
+    local dead = GetNPCPropertyValue(npc, "dead")
+    if not dead and (health < 0) then
+        KillAlien(npc)
+    end
+end)
+
+function KillAlien(npc)
+    VNPCS.StopVNPC(npc)
+    SetNPCPropertyValue(npc, "dead", true)
+    SetNPCAnimation(npc,  math.random(151,152), false)
+    Delay(800, function()
+        SetNPCHealth(npc, 0)
+    end)
+    log.debug("NPC "..npc.." is now fake dead.")
+end
 
 AddEvent("OnNPCDeath", function(npc, killer)
     local shotby = GetNPCPropertyValue(npc, "shotby")
@@ -178,8 +208,6 @@ AddEvent("OnNPCDeath", function(npc, killer)
         log.info("NPC (ID " .. npc .. ") killed by player " .. GetPlayerName(adjusted_killer))
         BumpPlayerStat(adjusted_killer, 'alien_kills')
     end
-    SetNPCRagdoll(npc, true)
-    VNPCS.StopVNPC(npc)
     Delay(120 * 1000, function()
         log.debug("NPC (ID " .. npc .. ") is dead.. despawning")
         DestroyNPC(npc)
@@ -243,7 +271,10 @@ function ResetAlien(npc)
         -- target is out of range, stop following
         SetNPCPropertyValue(npc, 'target', nil, true)
         VNPCS.StopVNPC(npc)
-        CallRemoteEvent(player, 'AlienNoLongerAttacking')
+
+        if not IsPlayerDead(player) then
+            CallRemoteEvent(player, 'AlienNoLongerAttacking')
+        end
 
         -- wait a bit then walk back home, little alien
         Delay(15 * 1000, function()
@@ -284,8 +315,8 @@ AddEvent("OnVNPCReachTargetFailed", function(npc)
         end)
     else
         -- alien is stuck, summon an alien friend and go away
-        --log.debug("Stuck alien.. spawning a friend")
-        --SpawnAlienNearPlayer(target)
+        -- log.debug("Stuck alien.. spawning a friend")
+        -- SpawnAlienNearPlayer(target)
         AlienReturn(npc)
     end
 end)
@@ -328,24 +359,19 @@ AddEvent("OnVNPCReachTarget", function(npc)
     local dist = GetDistance3D(x, y, z, px, py, pz)
 
     if dist < 200 then
-        -- we're in close range, attack player
-        -- TODO: this attack through walls, needs a line of sight check
-        log.debug("NPC (ID " .. npc .. ") hit player " .. GetPlayerName(target))
-
-        SetNPCAnimation(npc, "SHOUT01", false)
-
-        ApplyPlayerDamage(target)
-    elseif dist < 500 then
-        -- occurs when player is behind an unreachable boundary
-        log.debug("Player out of boundary")
-        SetNPCAnimation(npc, "SHOUT01", false)
-        return
+        VNPCS.StopVNPC(npc)
+        SetNPCAnimation(npc, 153, false)
+        Delay(2000, function()
+            HitPlayer(npc, target)
+        end)
+    else
+        SetAlienTarget(npc, target)
     end
-
-    SetAlienTarget(npc, target)
 end)
 
-function ApplyPlayerDamage(player)
+function HitPlayer(npc, player)
+    log.debug("NPC (ID " .. npc .. ") hits player " .. GetPlayerName(player))
+    
     local armor = GetPlayerArmor(player)
     local health = GetPlayerHealth(player)
 

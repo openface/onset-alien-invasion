@@ -43,8 +43,8 @@ AddEvent('OnKeyPress', function(key)
             CallRemoteEvent("UseItemHotkey", key)
         elseif key == 'Left Mouse Button' and not CurrentlyInteracting then
             if ActiveProp then
-                -- object interaction
-                if CurrentInHand then
+                -- object/prop interaction
+                if CurrentInHand and ItemInHandInteractsWithActiveProp() then
                     -- use item in hand on object
                     CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid, ActiveProp)
                 else
@@ -71,6 +71,16 @@ AddEvent('OnKeyPress', function(key)
         end
     end
 end)
+
+function ItemInHandInteractsWithActiveProp()
+    --AddPlayerChat("CurrentInHand: " .. dump(CurrentInHand))
+    --AddPlayerChat("ActiveProp: " .. dump(prop))
+    if CurrentInHand and ActiveProp and CurrentInHand.hittype == ActiveProp.hit_type then
+        return true
+    else
+        return false
+    end
+end
 
 AddEvent('OnKeyRelease', function(key)
     if GetWebVisibility(InventoryUI) == WEB_HIDDEN then

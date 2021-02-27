@@ -21,7 +21,8 @@ AddCommand("alien", function(player)
     SpawnAlienNearPlayer(player)
 end)
 
-AddCommand("togaliens", function(player)
+-- togaliens
+AddCommand("ta", function(player)
     if not IsAdmin(GetPlayerSteamId(player)) then
         return
     end

@@ -27,13 +27,13 @@ ItemConfig["crowbar"] = {
 }
 
 --
--- Chopping
+-- Opening crate
 --
-AddEvent("items:axe:use", function(player, object, prop)
+AddEvent("items:crowbar:use", function(player, object, prop)
     if prop then
-        log.debug(GetPlayerName(player) .. " is chopping a tree")
+        log.debug(GetPlayerName(player) .. " is opening a crate")
 
-        CallRemoteEvent(player, "ShowMessage", "You collect some wood and put it in your inventory")
-        AddToInventoryByName(player, "wood", 10)
+        --CallRemoteEvent(player, "ShowMessage", "You collect some wood and put it in your inventory")
+        --AddToInventoryByName(player, "wood", 10)
     end
 end)

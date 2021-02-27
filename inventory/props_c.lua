@@ -34,16 +34,15 @@ AddEvent("OnGameTick", function()
             AddPlayerChat("-> now looking at " .. hitObject .. " -> " .. dump(hitStruct))
         end
 
-        if CurrentInHand then
-            -- if item is in hand, check for matching hittype
-            -- When used, it calls UseItemFromInventory with prop option
-            if CurrentInHand.hittype and CurrentInHand.hittype == hitStruct.type then
-                ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. CurrentInHand.use_label .. "')")
-                ActiveProp = {
-                    hit_object = hitObject,
-                    hit_type = hitStruct.type,
-                }
-            end
+        -- if item is in hand, check for matching hittype
+        -- When used, it calls UseItemFromInventory with prop option
+        if CurrentInHand and CurrentInHand.hittype and CurrentInHand.hittype == hitStruct.type then
+            ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. CurrentInHand.use_label .. "')")
+            ActiveProp = {
+                hit_object = hitObject,
+                hit_type = hitStruct.type,
+            }
+            --AddPlayerChat("ActiveProp: "..dump(ActiveProp))
         elseif hitStruct.type == 'object' then
             -- world object interaction
             local prop = GetObjectPropertyValue(hitObject, "prop")
@@ -56,7 +55,7 @@ AddEvent("OnGameTick", function()
                     remote_event = prop['remote_event'] or nil,
                     options = prop['options']
                 }
-                --AddPlayerChat(dump(ActiveProp))
+                --AddPlayerChat("ActiveProp: "..dump(ActiveProp))
             end
         end
 

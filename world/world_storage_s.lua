@@ -50,7 +50,7 @@ function SpawnStorageLoot(object)
     if not IsValidObject(object) then return end
 
     log.debug("Spawning new loot for storage "..GetObjectModel(object).. " object ".. object)
-    local items = getTableKeys(ItemConfig)
+    local items = table.keys(ItemConfig)
     local random_items = getRandomSample(items, math.random(0, 2))
 
     local random_content = {}

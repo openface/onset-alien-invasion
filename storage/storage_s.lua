@@ -66,7 +66,7 @@ function ReplaceStorageContents(object, storage_type, data)
     if old_storage then
         for _, item in pairs(old_storage) do
             debug.log("Unregistering item instance", item.uuid)
-            ItemInstances[item.uuid] = nil
+            UnregisterItemInstance(item.uuid)
         end
     end
 

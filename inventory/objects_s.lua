@@ -12,8 +12,8 @@ function GetItemConfigsByType(type)
 end
 
 -- item world instances
--- for now, we store just the item key
-ItemInstances = {}
+-- for now, we store just the item name/key
+local ItemInstances = {}
 
 function RegisterNewItem(item)
     local uuid = uuid()
@@ -22,8 +22,20 @@ function RegisterNewItem(item)
     return uuid
 end
 
+function SetItemInstance(uuid, item)
+    ItemInstances[uuid] = item
+end
+
+function UnregisterItemInstance(uuid)
+    ItemInstances[uuid] = nil
+end
+
 function GetItemInstance(uuid)
     return ItemInstances[uuid]
+end
+
+function GetAllItemInstances()
+    return ItemInstances
 end
 
 AddEvent("OnPackageStop", function()

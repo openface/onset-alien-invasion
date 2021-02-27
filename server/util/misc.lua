@@ -16,13 +16,19 @@ function getRandomSample(tab, amount)
     return {table.unpack(shuffled, 1, amount)}
 end
 
-function getTableKeys(tab)
+function table.keys(tab)
     local keyset = {}
     for k, v in pairs(tab) do
         keyset[#keyset + 1] = k
     end
     return keyset
 end
+
+function table.length(tab)
+    local count = 0
+    for _ in pairs(tab) do count = count + 1 end
+    return count
+  end
 
 function table.findByKeyValue(tab, key, value)
     if type(tab) ~= "table" then

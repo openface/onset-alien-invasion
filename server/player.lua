@@ -25,8 +25,8 @@ AddEvent("OnPackageStart", function()
                 SavePlayer(player)
             end
         end
-
-        log.info("*** Objects: ".. #GetAllObjects() .." Items: " .. #ItemInstances .. " Timers: ".. #GetAllTimers())
+log.debug(dump(GetAllItemInstances()))
+        log.info("*** Objects: ".. #GetAllObjects() .." Items: " .. table.length(GetAllItemInstances()) .. " Timers: ".. #GetAllTimers())
     end, PlayerSaveTime)
 
     for _, player in pairs(GetAllPlayers()) do
@@ -202,7 +202,7 @@ function InitializePlayer(player)
     -- setup inventory
     PlayerData[player].inventory = json_decode(account['inventory'])
     for i,item in ipairs(PlayerData[player].inventory) do
-        ItemInstances[item.uuid] = item.item
+        SetItemInstance(item.uuid, item.item)
     end
 
     -- equip items

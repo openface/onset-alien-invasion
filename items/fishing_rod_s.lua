@@ -5,7 +5,7 @@ ItemConfig["fishing_rod"] = {
     interaction = {
         sound = "sounds/fishing.mp3",
         animation = { name = "FISHING", duration = 10000 },
-        prop = { target = "water", desc = "Go Fishing", remote_event = "GoFishing" }
+        prop = { hittype = "water", use_label = "Go Fishing" }
     },
     modelid = 20011,
     image = "survival/SM_FishingRod.png",
@@ -27,17 +27,10 @@ ItemConfig["fishing_rod"] = {
     }
 }
 
-AddRemoteEvent("GoFishing", function(player, object, options)
-    if GetInventoryCount(player, "fishing_rod") == 0 then
-        CallRemoteEvent(player, "ShowError", "You need a fishing rod to do this right!")
-        return
-    end
-
-    log.debug(GetPlayerName(player) .. " is fishing")
-    --UseItemFromInventory(player, "fishing_rod")
-
-    Delay(10000, function()
+AddEvent("items:fishing_rod:use", function(player, options, object)
+    if options.prop then
+        log.debug(GetPlayerName(player) .. " is fishing")
         CallRemoteEvent(player, "ShowMessage", "You caught a fish and put it in your inventory")
         AddToInventoryByName(player, "wood")
-    end)
+    end
 end)

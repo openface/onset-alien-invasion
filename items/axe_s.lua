@@ -9,7 +9,7 @@ ItemConfig["axe"] = {
     interaction = {
         sound = "sounds/chopping_wood.mp3",
         animation = { id = 160, duration = 5000 },
-        prop = { target = "tree", desc = "Chop Tree", remote_event = "HarvestTree" }
+        prop = { hittype = "tree", use_label = "Chop Tree" }
     },
     modelid = 20002,
     max_use = 20,
@@ -31,12 +31,11 @@ ItemConfig["axe"] = {
 --
 -- Chopping
 --
+AddEvent("items:axe:use", function(player, options, object)
+    if options and options.prop then
+        log.debug(GetPlayerName(player) .. " is chopping a tree")
 
-AddRemoteEvent("HarvestTree", function(player, object, options)
-    log.debug(GetPlayerName(player) .. " is chopping a tree")
-
-    Delay(5000, function()
         CallRemoteEvent(player, "ShowMessage", "You collect some wood and put it in your inventory")
         AddToInventoryByName(player, "wood", 10)
-    end)
+    end
 end)

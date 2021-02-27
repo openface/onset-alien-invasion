@@ -369,7 +369,7 @@ function AttemptHitPlayer(npc, player)
 
     log.debug("NPC (ID " .. npc .. ") hits player " .. GetPlayerName(player))
     SetPlayerAnimation(player, 150, false)
-    Delay(500, function()
+    Delay(800, function()
         SetPlayerAnimation(player, "STOP")
     end)
 

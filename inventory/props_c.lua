@@ -33,13 +33,14 @@ AddEvent("OnGameTick", function()
             AddPlayerChat("-> now looking at " .. hitObject .. " -> " .. dump(hitStruct))
         end
 
-        if hitStruct.type == 'object' then
+        if hitStruct.type == 'object' and not CurrentInHand then
             -- world object
             local prop_options = GetObjectPropertyValue(hitObject, "prop")
             if prop_options then
                 ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop_options['message'] .. "')")
                 ActiveProp = {
                     object = hitObject,
+                    type = hitStruct.type,
                     client_event = prop_options['client_event'] or nil,
                     remote_event = prop_options['remote_event'] or nil,
                     options = prop_options['options']
@@ -47,18 +48,17 @@ AddEvent("OnGameTick", function()
                 --AddPlayerChat(dump(ActiveProp))
             end
         elseif CurrentInHand and CurrentInHand['prop'] ~= nil then
-            -- if item is in hand, check for matching target
-            if CurrentInHand['prop']['target'] == hitStruct.type then
+            -- if item is in hand, check for matching hittype
+            if CurrentInHand['prop'].hittype == hitStruct.type then
                 AddPlayerChat("item: " .. CurrentInHand['item'])
                 AddPlayerChat("uuid: " .. CurrentInHand['uuid'])
-                AddPlayerChat("target: " .. CurrentInHand['prop']['target'])
-                AddPlayerChat("desc: " .. CurrentInHand['prop']['desc'])
-                AddPlayerChat("remote_event: " .. CurrentInHand['prop']['remote_event'])
+                AddPlayerChat("hittype: " .. CurrentInHand['prop']['hittype'])
+                AddPlayerChat("use_label: " .. CurrentInHand['prop']['use_label'])
 
-                ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. CurrentInHand['prop']['desc'] .. "')")
+                ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. CurrentInHand['prop'].use_label .. "')")
                 ActiveProp = {
                     object = hitObject,
-                    remote_event = CurrentInHand['prop']['remote_event']
+                    type = hitStruct.type
                 }
             end
         end
@@ -138,18 +138,19 @@ function ProcessHitResult(HitResult)
 end
 
 AddEvent("OnKeyPress", function(key)
-    if ActiveProp ~= nil and key == "E" then
-        -- call prop events
-        if ActiveProp['client_event'] then
-            -- AddPlayerChat("calling client event: "..ActiveProp['event'])
-            CallEvent(ActiveProp['client_event'], ActiveProp['object'], ActiveProp['options'])
+    if ActiveProp ~= nil and key == "Left Mouse Button" then
+        if ActiveProp.type == 'object' and not CurrentlyInteracting then
+            -- call prop events
+            if ActiveProp['client_event'] then
+                -- AddPlayerChat("calling client event: "..ActiveProp['event'])
+                CallEvent(ActiveProp['client_event'], ActiveProp['object'], ActiveProp['options'])
+            end
+            if ActiveProp['remote_event'] then
+                AddPlayerChat("calling remote event: "..ActiveProp['remote_event'])
+                CallRemoteEvent(ActiveProp['remote_event'], ActiveProp['object'], ActiveProp['options'])
+            end
+            ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
         end
-        if ActiveProp['remote_event'] then
-            AddPlayerChat("calling remote event: "..ActiveProp['remote_event'])
-            CallRemoteEvent(ActiveProp['remote_event'], ActiveProp['object'], ActiveProp['options'])
-        end
---        ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
---        ActiveProp = nil
     end
 end)
 

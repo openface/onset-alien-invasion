@@ -139,13 +139,13 @@ function IncrementItemUsed(player, uuid)
         if inventory_item.uuid == uuid then
             local item = GetItemInstance(uuid)
             -- delete if this is the last use
-            if (ItemConfig[item]['max_use'] - inventory_item['used'] == 1) then
+            if (ItemConfig[item].max_use - inventory_item.used == 1) then
                 log.debug "all used up!"
                 UnequipItem(player, uuid)
                 RemoveFromInventory(player, uuid)
             else
                 log.debug('increment used by 1')
-                inventory[i]['used'] = inventory_item['used'] + 1
+                inventory[i].used = inventory_item.used + 1
                 PlayerData[player].inventory = inventory
                 CallEvent("SyncInventory", player)
             end
@@ -266,7 +266,10 @@ function GetNextAvailableInventorySlot(player)
 end
 
 -- use object from inventory
+-- options.prop true means to interact with object using item in hand
 function UseItemFromInventory(player, uuid, options)
+    local options = options or {}
+
     local item = GetItemInstance(uuid)
     if not item then
         log.error("Invalid item" .. uuid)
@@ -303,6 +306,7 @@ function UseItemFromInventory(player, uuid, options)
     end)
 end
 AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
+
 
 function PlayInteraction(player, uuid, after_callback)
     local item = GetItemInstance(uuid)

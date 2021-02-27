@@ -4,10 +4,11 @@ if VNPCS == nil then
     ServerExit()
 end
 
+local Aliens = {}
 local AlienHealth = 100
 local AlienAttackRange = 5000
 local AlienAttackDamage = 50
-local SafeRange = 6000
+local SafeRange = 5000
 local AlienRetargetCooldown = {} -- aliens re-target on every weapon hit w/ cooldown period
 local AlienSpawnsEnabled = true
 local AlienSpawnTimer
@@ -71,10 +72,8 @@ function SpawnAliens()
 end
 
 function ClearAliens()
-    for _, npc in pairs(GetAllNPC()) do
-        if (GetNPCPropertyValue(npc, 'type') == 'alien') then
-            DestroyNPC(npc)
-        end
+    for _, npc in pairs(Aliens) do
+        DestroyNPC(npc)
     end
 end
 
@@ -115,6 +114,7 @@ function SpawnAlienNearPlayer(player)
     local x, y = randomPointInCircle(x, y, AlienAttackRange + 500) -- some buffer
     -- CreateObject(303, x, y, z+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
     local npc = CreateNPC(x, y, z + 100, 90)
+    Aliens[npc] = true
 
     -- add a buffer to the health so that we can handle death
     -- in script instead of the game (our own animation, etc)
@@ -190,6 +190,7 @@ AddEvent("OnNPCDeath", function(npc, killer)
     Delay(120 * 1000, function()
         log.debug("NPC (ID " .. npc .. ") is dead.. despawning")
         DestroyNPC(npc)
+        Aliens[npc] = nil
     end)
 end)
 
@@ -274,6 +275,7 @@ AddEvent("OnNPCDestroyed", function(npc)
 
     log.info("Despawned alien " .. npc)
     AlienRetargetCooldown[npc] = nil
+    Aliens[npc] = nil
 end)
 
 AddEvent("OnVNPCReachTargetFailed", function(npc)
@@ -290,6 +292,7 @@ AddEvent("OnVNPCReachTargetFailed", function(npc)
     if target == nil then
         log.error("Alien is confused.  Despawning.")
         DestroyNPC(npc)
+        Aliens[npc] = nil
         return
     end
 

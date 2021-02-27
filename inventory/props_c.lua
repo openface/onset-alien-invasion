@@ -36,7 +36,7 @@ AddEvent("OnGameTick", function()
         if hitStruct.type == 'object' then
             -- world object
             local prop_options = GetObjectPropertyValue(hitObject, "prop")
-            if prop_options ~= nil then
+            if prop_options then
                 ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop_options['message'] .. "')")
                 ActiveProp = {
                     object = hitObject,
@@ -44,7 +44,7 @@ AddEvent("OnGameTick", function()
                     remote_event = prop_options['remote_event'] or nil,
                     options = prop_options['options']
                 }
-                -- AddPlayerChat(dump(ActiveProp))
+                --AddPlayerChat(dump(ActiveProp))
             end
         elseif CurrentInHand and CurrentInHand['prop'] ~= nil then
             -- if item is in hand, check for matching target
@@ -96,7 +96,7 @@ function ProcessHitResult(HitResult)
         return
     end
 
-    -- AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName() .." id:"..Comp:GetUniqueID())
+    --AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName() .." id:"..Comp:GetUniqueID())
 
     -- environment
     if string.find(Comp:GetName(), "FoliageInstancedStaticMeshComponent") then

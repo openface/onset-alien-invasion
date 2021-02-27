@@ -154,7 +154,7 @@ AddEvent("OnPlayerWeaponShot",
 
 AddEvent("OnNPCDamage", function(npc, damagetype, amount)
     if not GetNPCPropertyValue(npc, 'target') then
-        SetNPCAnimation(npc, 150, false)
+        SetNPCAnimation(npc, 900, false) -- hit
     end    
 
     local health = GetNPCHealth(npc) - 1000
@@ -169,7 +169,7 @@ end)
 function KillAlien(npc)
     VNPCS.StopVNPC(npc)
     SetNPCPropertyValue(npc, "dead", true)
-    SetNPCAnimation(npc,  math.random(151,152), false)
+    SetNPCAnimation(npc,  math.random(901,902), false)
     Delay(800, function()
         SetNPCHealth(npc, 0)
     end)
@@ -351,7 +351,7 @@ AddEvent("OnVNPCReachTarget", function(npc)
 
     if dist < 200 then
         VNPCS.StopVNPC(npc)
-        SetNPCAnimation(npc, 153, false)
+        SetNPCAnimation(npc, 903, false)
         Delay(2000, function()
             AttemptHitPlayer(npc, target)
         end)
@@ -372,10 +372,6 @@ function AttemptHitPlayer(npc, player)
     end
 
     log.debug("NPC (ID " .. npc .. ") hits player " .. GetPlayerName(player))
-    SetPlayerAnimation(player, 150, false)
-    Delay(800, function()
-        SetPlayerAnimation(player, "STOP")
-    end)
 
     local armor = GetPlayerArmor(player)
     local health = GetPlayerHealth(player)

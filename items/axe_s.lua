@@ -8,7 +8,7 @@ ItemConfig["axe"] = {
     },
     interaction = {
         sound = "sounds/chopping_wood.mp3",
-        animation = { id = 160, duration = 5000 },
+        animation = { id = 920, duration = 5000 },
         prop = { hittype = "tree", use_label = "Chop Tree" }
     },
     modelid = 20002,

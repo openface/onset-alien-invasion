@@ -30,18 +30,18 @@ ReplaceObjectModelMesh(20030, "/AlienInvasion/Meshes/SM_SleepingBag-Open-Green")
 -- Animations
 LoadPak("SurvivalAnimations", "/SurvivalAnimations/", "../../../OnsetModding/Plugins/SurvivalAnimations/Content/")
 
-ReplaceAnimationLibrarySequence(150, "/AlienInvasion/Animations/Anim_Regular_hit")
-ReplaceAnimationLibrarySequence(151, "/AlienInvasion/Animations/Anim_Regular_death1")
-ReplaceAnimationLibrarySequence(152, "/AlienInvasion/Animations/Anim_Regular_death2")
-ReplaceAnimationLibrarySequence(153, "/AlienInvasion/Animations/Anim_Regular_punch")
-ReplaceAnimationLibrarySequence(154, "/AlienInvasion/Animations/Anim_Regular_stunned")
+ReplaceAnimationLibrarySequence(900, "/AlienInvasion/Animations/Anim_Regular_hit")
+ReplaceAnimationLibrarySequence(901, "/AlienInvasion/Animations/Anim_Regular_death1")
+ReplaceAnimationLibrarySequence(902, "/AlienInvasion/Animations/Anim_Regular_death2")
+ReplaceAnimationLibrarySequence(903, "/AlienInvasion/Animations/Anim_Regular_punch")
+ReplaceAnimationLibrarySequence(904, "/AlienInvasion/Animations/Anim_Regular_stunned")
 
 
-ReplaceAnimationLibrarySequence(160, "/AlienInvasion/Animations/ChopDownTree", 4)
-ReplaceAnimationLibrarySequence(161, "/AlienInvasion/Animations/GatheringItems")
-ReplaceAnimationLibrarySequence(162, "/AlienInvasion/Animations/Rock_Throw")
-ReplaceAnimationLibrarySequence(163, "/AlienInvasion/Animations/Stand_DrinkWater")
-ReplaceAnimationLibrarySequence(164, "/AlienInvasion/Animations/StartFire", 6)
+ReplaceAnimationLibrarySequence(920, "/AlienInvasion/Animations/ChopDownTree", 4)
+ReplaceAnimationLibrarySequence(921, "/AlienInvasion/Animations/GatheringItems")
+ReplaceAnimationLibrarySequence(922, "/AlienInvasion/Animations/Rock_Throw")
+ReplaceAnimationLibrarySequence(923, "/AlienInvasion/Animations/Stand_DrinkWater")
+ReplaceAnimationLibrarySequence(924, "/AlienInvasion/Animations/StartFire", 6)
 
 AddEvent("OnPlayerSpawn", function()
     local player = GetPlayerId()

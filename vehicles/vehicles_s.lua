@@ -1,23 +1,50 @@
-local VehicleLocations = {}
 local Vehicles = {}
-local VehicleRespawnTime = 5 * 60 * 1000 -- 5 mins
+local VehicleRespawnTime = 10 * 60 * 1000 -- 10 mins
 local VehicleMaxHealth = 1000
 
-AddCommand("vpos", function(player)
-    if not IsAdmin(GetPlayerSteamId(player)) then
-        return
-    end
-    local x, y, z = GetPlayerLocation(player)
-    string = "Location: " .. x .. " " .. y .. " " .. z
-    AddPlayerChat(player, string)
-    log.debug(string)
-    table.insert(VehicleLocations, {x, y, z})
-
-    File_SaveJSONTable("packages/" .. GetPackageName() .. "/vehicles/vehicles.json", VehicleLocations)
-end)
+VehiclesConfig = {{
+    uuid = "2b2a609b-8618-4776-b84a-a7e60602c411",
+    modelid = 23,
+    location = {
+        x = -95885.109375,
+        y = 174622.578125,
+        z = 404.29016113281
+    }
+}, {
+    uuid = "2e1222e6-a29d-4e04-92ea-0d804ae76a8e",
+    modelid = 23,
+    location = {
+        x = -119527.0703125,
+        y = 220396.09375,
+        z = 164.50358581543
+    }
+}, {
+    uuid = "c3637a21-dcec-4298-92cb-0cfe4b49b9a2",
+    modelid = 23,
+    location = {
+        x = -121231.3046875,
+        y = 180339.890625,
+        z = 626.68872070313
+    }
+}, {
+    uuid = "4eadd776-b6d5-47ea-88d1-2a9f6d70b46d",
+    modelid = 23,
+    location = {
+        x = -99434.703125,
+        y = 198331.09375,
+        z = 1310.1840820313
+    }
+}, {
+    uuid = "fa3047e3-e457-4385-9ae8-e973b9091618",
+    modelid = 23,
+    location = {
+        x = -111261.5234375,
+        y = 191991.234375,
+        z = 1310.3996582031
+    }
+}}
 
 AddEvent("OnPackageStart", function()
-    VehicleLocations = File_LoadJSONTable("packages/" .. GetPackageName() .. "/vehicles/vehicles.json")
     SpawnVehicles()
 end)
 
@@ -35,11 +62,11 @@ function DespawnVehicles()
 end
 
 function SpawnVehicles()
-    log.debug "Spawning vehicles..."
     DespawnVehicles()
 
-    for _, pos in pairs(VehicleLocations) do
-        local veh = CreateVehicle(23, pos[1], pos[2], pos[3])
+    for _, cfg in pairs(VehiclesConfig) do
+        log.debug("Spawning vehicle modelid", cfg.modelid)
+        local veh = CreateVehicle(cfg.modelid, cfg.location.x, cfg.location.y, cfg.location.z)
         SetVehicleRespawnParams(veh, false, VehicleRespawnTime, true)
         SetVehicleHealth(veh, VehicleMaxHealth)
         Vehicles[veh] = true

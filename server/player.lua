@@ -41,8 +41,8 @@ AddEvent("OnPackageStart", function()
                 SavePlayer(player)
             end
         end
-        log.info("===== Objects: " .. #GetAllObjects() .. " Items: " .. table.length(GetAllItemInstances()) ..
-                     " Pickups: " .. #GetAllPickups() .. " Timers: " .. #GetAllTimers())
+        log.info("===== Objects: " .. #GetAllObjects() .. " Pickups: " .. #GetAllPickups() .. " Vehicles: " ..
+                     #GetAllVehicles() .. " Timers: " .. #GetAllTimers())
     end, PlayerSaveTime)
 
     for _, player in pairs(GetAllPlayers()) do

@@ -153,13 +153,17 @@ AddEvent("OnPlayerWeaponShot",
     end)
 
 AddEvent("OnNPCDamage", function(npc, damagetype, amount)
+    if not GetNPCPropertyValue(npc, 'target') then
+        SetNPCAnimation(npc, 150, false)
+    end    
+
     local health = GetNPCHealth(npc) - 1000
     log.debug("alien health: " .. health)
 
     local dead = GetNPCPropertyValue(npc, "dead")
     if not dead and (health < 0) then
         KillAlien(npc)
-    end
+    end 
 end)
 
 function KillAlien(npc)

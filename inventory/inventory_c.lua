@@ -15,12 +15,12 @@ AddEvent("OnPackageStop", function()
 end)
 
 AddRemoteEvent("Play3DSound", function(sound, x, y, z)
-    SetSoundVolume(CreateSound3D("client/"..sound, x, y, z, 1000), 1.0)
+    SetSoundVolume(CreateSound3D("client/" .. sound, x, y, z, 1000), 1.0)
 end)
 
 AddEvent("OnWebLoadComplete", function(ui)
     if ui == InventoryUI then
-	    CallRemoteEvent("GetInventory")
+        CallRemoteEvent("GetInventory")
     end
 end)
 
@@ -41,12 +41,32 @@ AddEvent('OnKeyPress', function(key)
         elseif key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' then
             -- item hotkeys
             CallRemoteEvent("UseItemHotkey", key)
-        elseif key == 'Left Mouse Button' and CurrentInHand and not CurrentlyInteracting then
-            -- use item currently in hands
-            if CurrentInHand.type == 'placeable' then
-                CallEvent("PlaceItemFromInventory", CurrentInHand.uuid)
-            else
-                CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid)
+        elseif key == 'Left Mouse Button' and not CurrentlyInteracting then
+            if ActiveProp then
+                -- object interaction
+                if CurrentInHand then
+                    -- use item in hand on object
+                    CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid, ActiveProp)
+                else
+                    -- interact with object directly
+                    -- todo remove client_event if possible to keep it simple
+                    if ActiveProp['client_event'] then
+                        -- AddPlayerChat("calling client event: "..ActiveProp['event'])
+                        CallEvent(ActiveProp['client_event'], ActiveProp['hit_object'], ActiveProp['options'])
+                    end
+                    if ActiveProp['remote_event'] then
+                        AddPlayerChat("calling remote event: " .. ActiveProp['remote_event'])
+                        CallRemoteEvent(ActiveProp['remote_event'], ActiveProp)
+                    end
+                end
+                ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
+            elseif CurrentInHand then
+                -- use item currently in hands freely
+                if CurrentInHand.type == 'placeable' then
+                    CallEvent("PlaceItemFromInventory", CurrentInHand.uuid)
+                else
+                    CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid)
+                end
             end
         end
     end

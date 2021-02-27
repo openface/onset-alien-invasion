@@ -21,11 +21,8 @@ ItemConfig["campfire"] = {
     price = nil,
     interaction = nil,
     prop_options = {
-        message = "Ignite",
+        use_label = "Ignite",
         remote_event = "IgniteCampfire",
-        options = {
-            type = 'object',
-        }
     }
 }
 
@@ -55,8 +52,8 @@ AddEvent("items:campfire:equip", function(player)
     SetPlayerAnimation(player, "CARRY_IDLE")    
 end)
 
-AddRemoteEvent("IgniteCampfire", function(player, object, options)
-    if GetObjectPropertyValue(object, "particle") then
+AddRemoteEvent("IgniteCampfire", function(player, prop)
+    if GetObjectPropertyValue(prop.hit_object, "particle") then
         CallRemoteEvent(player, "ShowError", "Campfire is already lit!")
         return
     end
@@ -65,7 +62,7 @@ AddRemoteEvent("IgniteCampfire", function(player, object, options)
 
     Delay(10 * 1000, function()
         SetPlayerAnimation(player, "STOP")
-        SetObjectPropertyValue(object, "particle", {
+        SetObjectPropertyValue(prop.hit_object, "particle", {
             path = "/AlienInvasion/Particles/P_Campfire",
             position = {
                 x = 0,
@@ -80,7 +77,7 @@ AddRemoteEvent("IgniteCampfire", function(player, object, options)
 
     -- fire goes out
     Delay(60 * 1000, function()
-        SetObjectPropertyValue(object, "particle", nil)
+        SetObjectPropertyValue(prop.hit_object, "particle", nil)
     end)
 end)
 

@@ -23,6 +23,6 @@ ItemConfig["beer"] = {
     }
 }
 
-AddEvent("items:beer:use", function(player)
+AddEvent("items:beer:use", function(player, object, prop)
 
 end)

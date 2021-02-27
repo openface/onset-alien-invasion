@@ -72,10 +72,10 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
         },
     },
     prop_options = {                    -- creates interactive props
-        message = "Sit",
+        use_label = "Sit",
         client_event = "SitInChair",
         remote_event = "SitInChair",
-        options = {
+        options = {                     -- options passed into the event
             type = 'object',
         }
     }
@@ -118,14 +118,9 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
 WIP
 
 ```
-SetObjectPropertyValue(object, "prop", { message = "Interact", remote_event = "GetWorkbenchData", options = { id = config['id'] } })
+SetObjectPropertyValue(object, "prop", { use_label = "Interact", remote_event = "GetWorkbenchData", options = { id = config['id'] } })
 ```
 
-```
-AddRemoteEvent("GetWorkbenchData", function(player, object, options)
-```
-
-### Built-in Interactive Props
 
 #### Sitting in chairs
 #### Fishing in water
@@ -139,7 +134,7 @@ AddRemoteEvent("GetWorkbenchData", function(player, object, options)
 #### After Use
 
 ```
-AddEvent("items:beer:use", function(player, options, object)
+AddEvent("items:beer:use", function(player, object, options)
     -- drunk effect
 end)
 ```

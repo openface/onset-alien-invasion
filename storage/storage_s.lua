@@ -1,19 +1,19 @@
-AddRemoteEvent("OpenStorage", function(player, object, options)
-    log.info(GetPlayerName(player) .. " opens storage " .. object .. " type " .. options['type'])
+AddRemoteEvent("OpenStorage", function(player, prop)
+    log.info(GetPlayerName(player) .. " opens storage " .. prop.hit_object .. " type " .. prop.options['storage_type'])
 
     PlaySoundSync(player, "sounds/storage_open.wav")
 
     local storage_items
-    if options['type'] == 'vehicle' then
-        storage_items = GetVehiclePropertyValue(object, "storage") or {}
+    if prop.options['storage_type'] == 'vehicle' then
+        storage_items = GetVehiclePropertyValue(prop.hit_object, "storage") or {}
     else
-        storage_items = GetObjectPropertyValue(object, "storage") or {}
+        storage_items = GetObjectPropertyValue(prop.hit_object, "storage") or {}
     end
 
     local _send = {
-        object = object,
-        type = options['type'],
-        storage_name = options['name'],
+        object = prop.hit_object,
+        type = prop.options['storage_type'],
+        storage_name = prop.options['storage_name'],
         storage_items = storage_items,
         inventory_items = {}
     }

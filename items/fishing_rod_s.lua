@@ -27,8 +27,8 @@ ItemConfig["fishing_rod"] = {
     }
 }
 
-AddEvent("items:fishing_rod:use", function(player, options, object)
-    if options.prop then
+AddEvent("items:fishing_rod:use", function(player, object, prop)
+    if prop then
         log.debug(GetPlayerName(player) .. " is fishing")
         CallRemoteEvent(player, "ShowMessage", "You caught a fish and put it in your inventory")
         AddToInventoryByName(player, "wood")

@@ -22,7 +22,7 @@ function CreateWorkbench(config)
     local object = CreateObject(config.modelID, config.x, config.y, config.z, config.rx, config.ry, config.rz,
                        config.sx, config.sy, config.sz)
     SetObjectPropertyValue(object, "prop", {
-        message = "Interact",
+        use_label = "Interact",
         remote_event = "GetWorkbenchData",
         options = {
             id = config.id,

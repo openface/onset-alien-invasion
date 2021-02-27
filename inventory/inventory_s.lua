@@ -35,13 +35,13 @@ function SyncInventory(player)
                 ['use_label'] = ItemConfig[item.item].use_label
             })
             if equipped and (bone == 'hand_l' or bone == 'hand_r') then
-                current_inhand = {
-                    ['item'] = item.item,
-                    ['uuid'] = item.uuid,
-                    ['type'] = ItemConfig[item.item].type
-                }
-                if ItemConfig[item.item].interaction then
-                    current_inhand['prop'] = ItemConfig[item.item].interaction['prop']
+                current_inhand = {}
+                current_inhand['item'] = item.item
+                current_inhand['uuid'] = item.uuid
+                current_inhand['type'] = ItemConfig[item.item].type
+                if ItemConfig[item.item].interaction and ItemConfig[item.item].interaction['prop'] then
+                    current_inhand['use_label'] = ItemConfig[item.item].interaction['prop'].use_label
+                    current_inhand['hittype'] = ItemConfig[item.item].interaction['prop'].hittype
                 end
             end
         end
@@ -267,9 +267,7 @@ end
 
 -- use object from inventory
 -- options.prop true means to interact with object using item in hand
-function UseItemFromInventory(player, uuid, options)
-    local options = options or {}
-
+function UseItemFromInventory(player, uuid, prop)
     local item = GetItemInstance(uuid)
     if not item then
         log.error("Invalid item" .. uuid)
@@ -295,6 +293,10 @@ function UseItemFromInventory(player, uuid, options)
         return
     end
 
+    if prop then
+        log.debug(GetPlayerName(player) .. " interacting with object:".. prop.hit_object .. " type:".. prop.hit_type .." using object:"..equipped_object)
+    end
+
     PlayInteraction(player, uuid, function()
         -- increment used
         if ItemConfig[item].max_use then
@@ -302,7 +304,7 @@ function UseItemFromInventory(player, uuid, options)
         end
 
         -- call USE event on object
-        CallEvent("items:" .. item .. ":use", player, options, equipped_object)
+        CallEvent("items:" .. item .. ":use", player, equipped_object, prop)
     end)
 end
 AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)

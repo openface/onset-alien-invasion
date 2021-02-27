@@ -7,11 +7,11 @@ ItemConfig["supply_container"] = {
     recipe = nil,
     price = 100,
     prop_options = {
-        message = "Open",
+        use_label = "Open",
         remote_event = "OpenStorage",
         options = {
-            type = 'object',
-            name = "Supply Container"
+            storage_type = 'object',
+            storage_name = "Supply Container"
         }
     }
 }

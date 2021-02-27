@@ -38,11 +38,11 @@ end)
 function AddStorageProp(object)
     WorldStorageObjects[object] = true
     SetObjectPropertyValue(object, "prop", {
-        message = "Open",
+        use_label = "Open",
         remote_event = "OpenStorage",
         options = {
-            type = 'object',
-            name = "Storage Container"
+            storage_type = 'object',
+            storage_name = "Storage Container"
         }
     })
 end

@@ -12,7 +12,7 @@ ItemConfig["repair_tool"] = {
             name = "BARCLEAN01",
             duration = 10000,
         },
-        prop = { target = "vehicle_hood", desc = "Repair Vehicle", remote_event = "RepairVehicle" }
+        prop = { hittype = "vehicle_hood", use_label = "Repair Vehicle" }
     },
     attachment = {
         x = -10.5,
@@ -26,7 +26,11 @@ ItemConfig["repair_tool"] = {
     price = 50
 }
 
-AddRemoteEvent("RepairVehicle", function(player, vehicle)
+AddEvent("items:repair_tool:use", function(player, object, prop)
+    if not prop then
+        return
+    end
+
     log.info(GetPlayerName(player) .. " inspects vehicle " .. vehicle)
 
     local health_percentage = GetVehicleHealthPercentage(vehicle)

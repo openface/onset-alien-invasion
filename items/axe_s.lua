@@ -31,8 +31,8 @@ ItemConfig["axe"] = {
 --
 -- Chopping
 --
-AddEvent("items:axe:use", function(player, options, object)
-    if options and options.prop then
+AddEvent("items:axe:use", function(player, object, prop)
+    if prop then
         log.debug(GetPlayerName(player) .. " is chopping a tree")
 
         CallRemoteEvent(player, "ShowMessage", "You collect some wood and put it in your inventory")

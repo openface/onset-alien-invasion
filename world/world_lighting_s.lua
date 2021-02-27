@@ -60,11 +60,8 @@ function AddLightingProp(object, component_config)
     SetObjectPropertyValue(object, "light_enabled", true)
 
     SetObjectPropertyValue(object, "prop", {
-        message = "Enable/Disable",
+        use_label = "Enable/Disable",
         remote_event = "ToggleLight",
-        options = {
-            type = 'object',
-        }
     })
 end
 

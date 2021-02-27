@@ -1,5 +1,6 @@
 AddRemoteEvent("OpenStorage", function(player, prop)
-    log.info(GetPlayerName(player) .. " opens storage object " .. prop.hit_object .. " type " .. prop.options['storage_type'])
+    log.info(GetPlayerName(player) .. " opens storage object " .. prop.hit_object .. " type " ..
+                 prop.options['storage_type'])
 
     PlaySoundSync(player, "sounds/storage_open.wav")
 
@@ -54,6 +55,21 @@ end)
 
 -- type is either 'object' or 'vehicle'
 function ReplaceStorageContents(object, storage_type, data)
+    local old_storage
+    if storage_type == 'vehicle' then
+        old_storage = GetVehiclePropertyValue(object, "storage")
+    else
+        old_storage = GetObjectPropertyValue(object, "storage")
+    end
+
+    -- unregister item instances in storage
+    if old_storage then
+        for _, item in pairs(old_storage) do
+            debug.log("Unregistering item instance", item.uuid)
+            ItemInstances[item.uuid] = nil
+        end
+    end
+
     local new_storage = {}
     for index, item in ipairs(data) do
         -- lookup item configuration before storing it to ensure they are still valid

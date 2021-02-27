@@ -26,7 +26,7 @@ AddEvent("OnPackageStart", function()
             end
         end
 
-        log.info("*** Objects: ".. #GetAllObjects() .." Timers: ".. #GetAllTimers())
+        log.info("*** Objects: ".. #GetAllObjects() .." Items: " .. #ItemInstances .. " Timers: ".. #GetAllTimers())
     end, PlayerSaveTime)
 
     for _, player in pairs(GetAllPlayers()) do

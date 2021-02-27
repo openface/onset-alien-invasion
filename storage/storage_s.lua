@@ -1,5 +1,5 @@
 AddRemoteEvent("OpenStorage", function(player, prop)
-    log.info(GetPlayerName(player) .. " opens storage " .. prop.hit_object .. " type " .. prop.options['storage_type'])
+    log.info(GetPlayerName(player) .. " opens storage object " .. prop.hit_object .. " type " .. prop.options['storage_type'])
 
     PlaySoundSync(player, "sounds/storage_open.wav")
 
@@ -44,16 +44,16 @@ end)
 
 -- updates storage from storage UI sorting
 -- [1] = { ["quantity"] = 1,["index"] = 1,["item"] = axe,}
-AddRemoteEvent("UpdateStorage", function(player, object, type, data)
+AddRemoteEvent("UpdateStorage", function(player, object, storage_type, data)
     local storage_items = json_decode(data)
-    log.debug(GetPlayerName(player) .. " updates storage:" .. object .. " type:" .. type .. dump(data))
+    log.debug(GetPlayerName(player) .. " updates storage:" .. object .. " type:" .. storage_type .. dump(data))
     local storage_items = json_decode(data)
     log.debug(dump(storage_items))
-    ReplaceStorageContents(object, type, storage_items)
+    ReplaceStorageContents(object, storage_type, storage_items)
 end)
 
 -- type is either 'object' or 'vehicle'
-function ReplaceStorageContents(object, type, data)
+function ReplaceStorageContents(object, storage_type, data)
     local new_storage = {}
     for index, item in ipairs(data) do
         -- lookup item configuration before storing it to ensure they are still valid
@@ -73,7 +73,7 @@ function ReplaceStorageContents(object, type, data)
         end
     end
 
-    if type == 'vehicle' then
+    if storage_type == 'vehicle' then
         SetVehiclePropertyValue(object, "storage", new_storage)
     else
         SetObjectPropertyValue(object, "storage", new_storage)

@@ -24,7 +24,13 @@ AddEvent('OnKeyPress', function(key)
         SetWebVisibility(StorageUI, WEB_VISIBLE)
         SetWebVisibility(InventoryUI, WEB_HIDDEN)
 
-        CallRemoteEvent("OpenStorage", GetPlayerVehicle(), { type = 'vehicle' })
+        CallRemoteEvent("OpenStorage", {
+            hit_object = GetPlayerVehicle(),
+            options = {
+                storage_name = "Glovebox",
+                storage_type = 'vehicle' 
+            }
+        })
     end
 end)
 
@@ -46,13 +52,14 @@ AddRemoteEvent("LoadStorageData", function(data)
     SetWebVisibility(InventoryUI, WEB_HIDDEN)
 
     ExecuteWebJS(StorageUI, "EmitEvent('SetStorageData'," .. data .. ")")
-    -- AddPlayerChat("data:"..dump(data))
-    local x, y, z = GetPlayerLocation(GetPlayerId())
-    storage_timer = CreateTimer(OpenStorageTimer, 400, {
-        x = x,
-        y = y,
-        z = z
-    })
+    if not IsPlayerInVehicle() then
+        local x, y, z = GetPlayerLocation(GetPlayerId())
+        storage_timer = CreateTimer(OpenStorageTimer, 400, {
+            x = x,
+            y = y,
+            z = z
+        })
+    end
 end)
 
 -- timer used to hide storage screen once player walks away
@@ -68,7 +75,7 @@ function OpenStorageTimer(loc)
     end
 end
 
--- sort inventory
-AddEvent("UpdateStorage", function(object, type, data)
-    CallRemoteEvent("UpdateStorage", object, type, data)
+--
+AddEvent("UpdateStorage", function(object, storage_type, data)
+    CallRemoteEvent("UpdateStorage", object, storage_type, data)
 end)

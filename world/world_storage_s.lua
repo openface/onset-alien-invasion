@@ -18,7 +18,6 @@ local WorldStorageObjects = {}
 local StorageLootSpawnTimer
 local StorageLootSpawnInterval = 1000 * 60 * 15 -- 15 minutes
 
-
 AddEvent("OnPackageStart", function()
     StorageLootSpawnTimer = CreateTimer(function()
         for object in pairs(WorldStorageObjects) do

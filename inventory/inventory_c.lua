@@ -55,7 +55,7 @@ AddEvent('OnKeyPress', function(key)
                         CallEvent(ActiveProp['client_event'], ActiveProp['hit_object'], ActiveProp['options'])
                     end
                     if ActiveProp['remote_event'] then
-                        AddPlayerChat("calling remote event: " .. ActiveProp['remote_event'])
+                        --AddPlayerChat("calling remote event: " .. ActiveProp['remote_event'])
                         CallRemoteEvent(ActiveProp['remote_event'], ActiveProp)
                     end
                 end

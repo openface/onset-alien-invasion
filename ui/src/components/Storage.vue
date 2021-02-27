@@ -146,7 +146,7 @@ export default {
         if (!this.InGame) {
             this.EventBus.$emit("SetStorageData", {
                 object: 666,
-                type: "object",
+                storage_type: "object",
                 storage_name: "Crate",
                 storage_items: [
                 ],

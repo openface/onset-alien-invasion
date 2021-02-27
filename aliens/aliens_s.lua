@@ -63,9 +63,7 @@ function SpawnAliens()
         if IsPlayerAttackable(ply) then
             -- chance to spawn
             if math.random(1, 2) == 1 then
-                SpawnAlienNearPlayer(ply)
-                SpawnAlienNearPlayer(ply)
-                SpawnAlienNearPlayer(ply)
+                SpawnAlienNearPlayer(ply, math.random(1, 2))
             end
         end
     end
@@ -109,23 +107,27 @@ function IsPlayerAttackable(player)
     return true
 end
 
-function SpawnAlienNearPlayer(player)
-    local x, y, z = GetPlayerLocation(player)
-    local x, y = randomPointInCircle(x, y, AlienAttackRange + 500) -- some buffer
-    -- CreateObject(303, x, y, z+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
-    local npc = CreateNPC(x, y, z + 100, 90)
-    Aliens[npc] = true
+function SpawnAlienNearPlayer(player, number_to_spawn)
+    local number_to_spawn = number_to_spawn or 1
 
-    -- add a buffer to the health so that we can handle death
-    -- in script instead of the game (our own animation, etc)
-    -- If aliens health drops below 900, it's considered dead.
-    SetNPCHealth(npc, AlienHealth+1000)
+    local px, py, pz = GetPlayerLocation(player)
+    for i=1,number_to_spawn do
+        local x, y = randomPointInCircle(px, py, AlienAttackRange + 500) -- some buffer
+        -- CreateObject(303, x, y, z+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
+        local npc = CreateNPC(x, y, pz + 100, 90)
+        Aliens[npc] = true
 
-    SetNPCRespawnTime(npc, 99999999) -- disable respawns
-    SetNPCPropertyValue(npc, 'type', 'alien')
-    SetNPCPropertyValue(npc, 'location', {x, y, z})
+        -- add a buffer to the health so that we can handle death
+        -- in script instead of the game (our own animation, etc)
+        -- If aliens health drops below 900, it's considered dead.
+        SetNPCHealth(npc, AlienHealth+1000)
 
-    log.info("NPC (ID " .. npc .. ") spawned near player " .. GetPlayerName(player))
+        SetNPCRespawnTime(npc, 99999999) -- disable respawns
+        SetNPCPropertyValue(npc, 'type', 'alien')
+        SetNPCPropertyValue(npc, 'location', {x, y, z})
+
+        log.info("NPC (ID " .. npc .. ") spawned near player " .. GetPlayerName(player))
+    end
 end
 
 -- damage aliens
@@ -218,7 +220,7 @@ function SetAlienTarget(npc, player)
 
         -- alien has a new target
         -- SetNPCFollowPlayer(npc, player, math.random(325, 360)) -- random speed
-        VNPCS.SetVNPCFollowPlayer(npc, player, 50)
+        VNPCS.SetVNPCFollowPlayer(npc, player, 35)
     else
         -- target is in a vehicle
         log.debug("NPC (ID " .. npc .. ") targets player in vehicle: " .. GetPlayerName(player))
@@ -226,7 +228,7 @@ function SetAlienTarget(npc, player)
 
         -- alien has a new target vehicle
         -- SetNPCFollowVehicle(npc, vehicle, 400)
-        VNPCS.SetVNPCFollowVehicle(npc, vehicle, 50)
+        VNPCS.SetVNPCFollowVehicle(npc, vehicle, 35)
 
         local x, y, z = GetNPCLocation(npc)
         local vx, vy, vz = GetVehicleLocation(vehicle)
@@ -357,7 +359,8 @@ AddEvent("OnVNPCReachTarget", function(npc)
         end)
     else
         -- player too far away
-        SetAlienTarget(npc, target)
+        -- todo: can get stuck here
+        --SetAlienTarget(npc, target)
     end
 end)
 

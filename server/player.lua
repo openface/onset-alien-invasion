@@ -8,25 +8,41 @@ local SavePlayerTimer
 local PlayerSaveTime = 1000 * 60 -- 60 secs
 
 InitTable("accounts", {
-    steamid = { type = 'char', length = 17, unique = true },
-    is_admin = { type = 'bool', default = false },
-    clothing = { type = 'number', length = 11 },
-    location = { type = 'json' },
-    equipped = { type = 'json' },
-    inventory = { type = 'json' }
+    steamid = {
+        type = 'char',
+        length = 17,
+        unique = true
+    },
+    is_admin = {
+        type = 'bool',
+        default = false
+    },
+    clothing = {
+        type = 'number',
+        length = 11
+    },
+    location = {
+        type = 'json'
+    },
+    equipped = {
+        type = 'json'
+    },
+    inventory = {
+        type = 'json'
+    }
 }, false) -- true to recreate table
 
 PlayerData = {}
 
 AddEvent("OnPackageStart", function()
     SavePlayerTimer = CreateTimer(function()
-        for player,_ in pairs(PlayerData) do
+        for player, _ in pairs(PlayerData) do
             if IsValidPlayer(player) and GetPlayerDimension(player) == 0 and not IsPlayerDead(player) then
                 SavePlayer(player)
             end
         end
-log.debug(dump(GetAllItemInstances()))
-        log.info("*** Objects: ".. #GetAllObjects() .." Items: " .. table.length(GetAllItemInstances()) .. " Timers: ".. #GetAllTimers())
+        log.info("===== Objects: " .. #GetAllObjects() .. " Items: " .. table.length(GetAllItemInstances()) ..
+                     " Pickups: " .. #GetAllPickups() .. " Timers: " .. #GetAllTimers())
     end, PlayerSaveTime)
 
     for _, player in pairs(GetAllPlayers()) do
@@ -46,8 +62,10 @@ end)
 AddEvent("OnPlayerQuit", function(player)
     log.trace("OnPlayerQuit")
 
-    if PlayerData[player] == nil then return end
-    
+    if PlayerData[player] == nil then
+        return
+    end
+
     SavePlayer(player)
     ClearEquippedObjects(player)
 
@@ -114,7 +132,9 @@ AddEvent("OnPlayerDeath", function(player, killer)
     UpdateRows("accounts", {
         inventory = {},
         equipped = {}
-    }, { steamid = GetPlayerSteamId(player) })
+    }, {
+        steamid = GetPlayerSteamId(player)
+    })
 
     -- stats
     BumpPlayerStat(player, 'deaths')
@@ -128,7 +148,9 @@ AddEvent("OnPlayerSteamAuth", function(player)
     local steamid = GetPlayerSteamId(player)
     log.info("Player " .. GetPlayerName(player) .. " (ID " .. player .. ") authenticated with steam ID " .. steamid)
 
-    local account = SelectFirst("accounts", { steamid = steamid })
+    local account = SelectFirst("accounts", {
+        steamid = steamid
+    })
     if not account then
         log.info("New account starting...")
 
@@ -159,7 +181,11 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
     InsertRow("accounts", {
         steamid = GetPlayerSteamId(player),
         clothing = preset,
-        location = json_encode({ x = x, y = y, z = z })
+        location = json_encode({
+            x = x,
+            y = y,
+            z = z
+        })
     }, function()
         -- join the others as a new character
         SetPlayerDimension(player, 0)
@@ -187,7 +213,9 @@ function InitializePlayer(player)
     end
 
     -- existing player logging on
-    local account = SelectFirst("accounts", { steamid = GetPlayerSteamId(player) })
+    local account = SelectFirst("accounts", {
+        steamid = GetPlayerSteamId(player)
+    })
     if not account then
         log.error("Error initializing player from database!")
         KickPlayer(player, "Error initializing player!")
@@ -201,7 +229,7 @@ function InitializePlayer(player)
 
     -- setup inventory
     PlayerData[player].inventory = json_decode(account['inventory'])
-    for i,item in ipairs(PlayerData[player].inventory) do
+    for i, item in ipairs(PlayerData[player].inventory) do
         SetItemInstance(item.uuid, item.item)
     end
 
@@ -225,19 +253,29 @@ AddRemoteEvent("DropParachute", function(player)
 end)
 
 function SavePlayer(player)
-    if PlayerData[player] == nil then return end
-    log.info("Saving player: "..GetPlayerName(player))
+    if PlayerData[player] == nil then
+        return
+    end
+    log.info("Saving player: " .. GetPlayerName(player))
     local x, y, z = GetPlayerLocation(player)
 
     UpdateRows("accounts", {
-        location = { x = x, y = y, z =z },
+        location = {
+            x = x,
+            y = y,
+            z = z
+        },
         inventory = PlayerData[player].inventory,
         equipped = PlayerData[player].equipped
-    }, { steamid = GetPlayerSteamId(player) })
+    }, {
+        steamid = GetPlayerSteamId(player)
+    })
 end
 
 function IsAdmin(steamid)
-    account = SelectFirst("accounts", { steamid = steamid })
+    account = SelectFirst("accounts", {
+        steamid = steamid
+    })
     if account and account["is_admin"] == "1" then
         return true
     else

@@ -45,7 +45,7 @@ AddCommand("scrap", function(player, amt)
 end)
 
 -- search for scrap
-AddRemoteEvent("SearchForScrap", function(player, options, object)
+AddRemoteEvent("SearchForScrap", function(player, prop)
     if CurrentlySearching[player] ~= nil then
         return
     end
@@ -53,8 +53,8 @@ AddRemoteEvent("SearchForScrap", function(player, options, object)
         SearchCooldown[player] = {}
     end
 
-    if SearchCooldown[player][object] then
-        if os.time() < SearchCooldown[player][object] then
+    if SearchCooldown[player][prop.hit_object] then
+        if os.time() < SearchCooldown[player][prop.hit_object] then
             CallRemoteEvent(player, "ShowError", "You have already searched here!")
             return
         end
@@ -73,10 +73,10 @@ AddRemoteEvent("SearchForScrap", function(player, options, object)
             -- found something
             PickupScrap(player)
             -- track time of last search for this player for cooldown period
-            SearchCooldown[player][object] = (os.time() + SearchCooldownSeconds)
+            SearchCooldown[player][prop.hit_object] = (os.time() + SearchCooldownSeconds)
         else
             -- not found
-            SearchCooldown[player][object] = nil
+            SearchCooldown[player][prop.hit_object] = nil
             CallRemoteEvent(player, "ShowMessage", "You were unable to find anything useful")
             log.debug("Player " .. GetPlayerName(player) .. " searched but found nothing")
         end

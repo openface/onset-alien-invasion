@@ -38,8 +38,8 @@ ItemConfig["flashlight"] = {
     }
 }
 
-AddEvent("items:flashlight:use", function(player, options, object)
-    log.trace("items:flashlight:use", player, options, object)
+AddEvent("items:flashlight:use", function(player, object)
+    log.trace("items:flashlight:use", player, object)
 
     log.info(GetPlayerName(player) .. " toggles light object " .. object)
 

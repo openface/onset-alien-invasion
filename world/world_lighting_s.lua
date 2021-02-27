@@ -65,9 +65,9 @@ function AddLightingProp(object, component_config)
     })
 end
 
-AddRemoteEvent("ToggleLight", function(player, object, options)
-    log.info(GetPlayerName(player) .. " toggles light object " .. object)
-    local light_enabled = GetObjectPropertyValue(object, "light_enabled")
-    SetObjectPropertyValue(object, "light_enabled", not light_enabled)
+AddRemoteEvent("ToggleLight", function(player, prop)
+    log.info(GetPlayerName(player) .. " toggles light object " .. prop.hit_object)
+    local light_enabled = GetObjectPropertyValue(prop.hit_object, "light_enabled")
+    SetObjectPropertyValue(prop.hit_object, "light_enabled", not light_enabled)
     PlaySoundSync(player, "sounds/switch.mp3")
 end)

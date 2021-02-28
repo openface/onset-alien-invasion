@@ -1,37 +1,37 @@
 local Computers = {}
 
 local GarageComputerConfig = {
-  rz = -0.0069580078125,
-  sz = 1,
-  y = 193889.953125,
-  x = -106377.1640625,
-  sx = 1,
-  z = 1386.6390380859,
-  modelID = 1027,
-  sy = 1,
-  ry = -91.021797180176,
-  rx = -0.0069599621929228
+    modelID = 1027,
+    x = -106377.1640625,
+    y = 193889.953125,
+    z = 1386.6390380859,
+    rx = -0.0069599621929228,
+    ry = -91.021797180176,
+    rz = -0.0069580078125
 }
 local SatelliteTerminalConfig = {
-  rz = -0.002716064453125,
-  sz = 1,
-  y = 201182.859375,
-  x = -102958.1484375,
-  sx = 1,
-  z = 2202.7407226563,
-  modelID = 1027,
-  sy = 1,
-  ry = 177.91160583496,
-  rx = -0.0027184151113033
+    modelID = 1027,
+    x = -102958.1484375,
+    y = 201182.859375,
+    z = 2202.7407226563,
+    rx = -0.0027184151113033,
+    ry = 177.91160583496,
+    rz = -0.002716064453125
 }
 
 AddEvent("OnPackageStart", function()
     log.info "Creating computer props..."
     -- garage computer
-    CreateComputer("Garage Computer", GarageComputerConfig, { use_label = "Interact", client_event = "InteractComputer" })
+    CreateComputer("Garage Computer", GarageComputerConfig, {
+        use_label = "Interact",
+        remote_event = "InteractComputer"
+    })
 
     -- satellite terminal
-    CreateComputer("Satellite Terminal", SatelliteTerminalConfig, { use_label = "Interact", client_event = "InteractComputer" })
+    CreateComputer("Satellite Terminal", SatelliteTerminalConfig, {
+        use_label = "Interact",
+        remote_event = "InteractComputer"
+    })
 end)
 
 AddEvent("OnPackageStop", function()
@@ -44,30 +44,25 @@ end)
 
 function CreateComputer(name, config, prop_options)
     log.debug("Creating computer: " .. name)
-    local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'],
-                           config['ry'], config['rz'], config['sx'], config['sy'], config['sz'])
+    local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'], config['ry'],
+                       config['rz'])
     SetObjectPropertyValue(object, "prop", prop_options)
     Computers[object] = true
 end
 
-AddRemoteEvent("InteractComputer", function(player, object)
-    SetPlayerLocation(player, -102988.40625, 201117.9375, 2200.3193359375)
-    SetPlayerHeading(player, 77.734954833984)   
-    SetPlayerAnimation(player, "COMBINE")
-
-    AddPlayerChatAll("Satellite communications are now commencing!")
-
-    CallRemoteEvent(player, "ShowSatelliteComputer")
+-- interacting with computer
+AddRemoteEvent("InteractComputer", function(player, prop)
+    CallRemoteEvent(player, "ShowComputer", prop.hit_object)
 end)
 
-AddRemoteEvent("ActivateSatellite", function(player, object)
-    -- spawn the mothership
-    log.info(GetPlayerName(player).." completed the satellite transmission")
+-- spawn the mothership
+AddRemoteEvent("ActivateSatellite", function(player)
+    log.info(GetPlayerName(player) .. " activated the satellite")
 
-    CallRemoteEvent(player, "BeginSatelliteTransmission", object)
+    CallRemoteEvent(player, "BeginSatelliteTransmission", SatelliteTerminalConfig)
 
-    Delay(7000, function()
-        PlaySoundSync(player, "sounds/alert.mp3", 10000)
+    Delay(4000, function()
+        PlaySoundSync("sounds/alert.mp3", SatelliteTerminalConfig.x, SatelliteTerminalConfig.y, SatelliteTerminalConfig.z, 15000)
     end)
 
     -- call mothership

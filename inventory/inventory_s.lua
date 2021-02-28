@@ -346,7 +346,8 @@ function PlayInteraction(player, uuid, after_callback)
         end
     end
     if ItemConfig[item].interaction['sound'] then
-        PlaySoundSync(player, ItemConfig[item].interaction['sound'])
+        local x, y, z = GetPlayerLocation(player)
+        PlaySoundSync(ItemConfig[item].interaction['sound'], x, y, z)
     end
 end
 

@@ -14,8 +14,9 @@ AddEvent("OnPackageStop", function()
     DestroyWebUI(InventoryUI)
 end)
 
-AddRemoteEvent("Play3DSound", function(sound, x, y, z)
-    SetSoundVolume(CreateSound3D("client/" .. sound, x, y, z, 1000), 1.0)
+AddRemoteEvent("Play3DSound", function(sound, x, y, z, radius)
+    local radius = radius or 1000
+    SetSoundVolume(CreateSound3D("client/" .. sound, x, y, z, radius), 1.0)
 end)
 
 AddEvent("OnWebLoadComplete", function(ui)

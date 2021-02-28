@@ -32,8 +32,8 @@ function CreateWorkbench(config)
     Workbenches[object] = true
 end
 
-AddRemoteEvent("GetWorkbenchData", function(player, object, options)
-    log.debug("Workbench: " .. options['id'])
+AddRemoteEvent("GetWorkbenchData", function(player, prop)
+    log.debug("Workbench: " .. prop.options['id'])
     local item_data = {}
     for key, item in pairs(ItemConfig) do
         if item.recipe then
@@ -48,7 +48,7 @@ AddRemoteEvent("GetWorkbenchData", function(player, object, options)
     end
 
     local _send = {
-        ["workbench_name"] = options['name'],
+        ["workbench_name"] = prop.options['name'],
         ["item_data"] = item_data,
         ["player_resources"] = GetPlayerResources(player)
     }
@@ -77,7 +77,9 @@ AddRemoteEvent("BuildItem", function(player, item)
         RemoveFromInventory(player, inventory_item.uuid, amount)
     end
 
-    PlaySoundSync(player, "sounds/workbench.mp3")
+    -- todo: would be better if workbench made the sound, not player
+    local x,y,z = GetPlayerLocation(player)
+    PlaySoundSync("sounds/workbench.mp3", x, y, z)
 
     SetPlayerLocation(player, -105738.5859375, 193734.59375, 1396.1424560547)
     SetPlayerHeading(player, -92.786437988281)

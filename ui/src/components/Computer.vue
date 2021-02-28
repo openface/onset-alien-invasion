@@ -147,6 +147,10 @@ export default {
 
                     <p>Good luck!</p>`)
                     break;
+                case "exit":
+                    this.CallEvent("ExitComputer");
+                    this.sendOutput('Logging out...');
+                    break;
                 default:
                     this.sendOutput(`${cmd}: Command not found.  Type 'help' for commands.`);
             }

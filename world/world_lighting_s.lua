@@ -69,5 +69,7 @@ AddRemoteEvent("ToggleLight", function(player, prop)
     log.info(GetPlayerName(player) .. " toggles light object " .. prop.hit_object)
     local light_enabled = GetObjectPropertyValue(prop.hit_object, "light_enabled")
     SetObjectPropertyValue(prop.hit_object, "light_enabled", not light_enabled)
-    PlaySoundSync(player, "sounds/switch.mp3")
+
+    local x,y,z = GetObjectLocation(prop.hit_object)
+    PlaySoundSync("sounds/switch.mp3", x, y, z)
 end)

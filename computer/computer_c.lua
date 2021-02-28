@@ -1,5 +1,4 @@
-local ComputerUI
-
+ComputerUI
 local computer_timer
 
 AddEvent("OnPackageStart", function()
@@ -19,31 +18,25 @@ function ShowComputerTimer(object_location)
     local x, y, z = GetPlayerLocation(GetPlayerId())
     if GetDistance3D(x, y, z, object_location.x, object_location.y, object_location.z) > 200 then
         SetWebVisibility(ComputerUI, WEB_HIDDEN)
+        ShowMouseCursor(false)
+        SetIgnoreMoveInput(false)
+--        SetIgnoreLookInput(false)
+        SetInputMode(INPUT_GAME)
         DestroyTimer(computer_timer)
     end
 end
 
--- interacting with garage computer
-AddEvent("InteractGarageComputer", function(object)
+-- interacting with computer
+AddEvent("InteractComputer", function(object)
     local x, y, z = GetObjectLocation(object)
     SetSoundVolume(CreateSound3D("client/sounds/modem.mp3", x, y, z, 1500), 0.7)
-    SetWebVisibility(ComputerUI, WEB_HITINVISIBLE)
-    ExecuteWebJS(ComputerUI, "EmitEvent('SetComputerScreen','garage')")
-    computer_timer = CreateTimer(ShowComputerTimer, 1000, {
-        x = x,
-        y = y,
-        z = z
-    })
-end)
 
--- interacting with satellite computer
-AddEvent("InteractSatelliteTerminal", function(object)
-    local x, y, z = GetObjectLocation(object)
-
-    SetSoundVolume(CreateSound3D("client/sounds/modem.mp3", x, y, z, 1500), 0.7)
-    CallRemoteEvent("InteractSatelliteComputer", object)
-
-    local x, y, z = GetObjectLocation(object)
+    ShowMouseCursor(true)
+    SetIgnoreMoveInput(true)
+--    SetIgnoreLookInput(true)
+    SetInputMode(INPUT_GAMEANDUI)
+    SetWebVisibility(ComputerUI, WEB_VISIBLE)
+    SetWebFocus(ComputerUI)
     computer_timer = CreateTimer(ShowComputerTimer, 1000, {
         x = x,
         y = y,
@@ -54,13 +47,12 @@ end)
 -- shows the satellite UI
 AddRemoteEvent("ShowSatelliteComputer", function()
     SetWebVisibility(ComputerUI, WEB_HITINVISIBLE)
-    ExecuteWebJS(ComputerUI, "EmitEvent('SetComputerScreen','satellite-transmission')")
 end)
 
 -- occurs just before boss arrives
 AddRemoteEvent("BeginSatelliteTransmission", function(object)
-    local x,y,z = GetObjectLocation(object)
-    
+    local x, y, z = GetObjectLocation(object)
+
     SetSoundVolume(CreateSound3D("client/sounds/transmission.mp3", x, y, z, 10000), 1)
     Delay(7000, function()
         SetSoundVolume(CreateSound3D("client/sounds/alert.mp3", x, y, z, 10000), 1)

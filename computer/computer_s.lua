@@ -28,10 +28,10 @@ local SatelliteTerminalConfig = {
 AddEvent("OnPackageStart", function()
     log.info "Creating computer props..."
     -- garage computer
-    CreateComputer("Garage Computer", GarageComputerConfig, { use_label = "Interact", client_event = "InteractGarageComputer" })
+    CreateComputer("Garage Computer", GarageComputerConfig, { use_label = "Interact", client_event = "InteractComputer" })
 
     -- satellite terminal
-    CreateComputer("Satellite Terminal", SatelliteTerminalConfig, { use_label = "Interact", client_event = "InteractSatelliteTerminal" })
+    CreateComputer("Satellite Terminal", SatelliteTerminalConfig, { use_label = "Interact", client_event = "InteractComputer" })
 end)
 
 AddEvent("OnPackageStop", function()
@@ -50,8 +50,7 @@ function CreateComputer(name, config, prop_options)
     Computers[object] = true
 end
 
--- called when interacting with satellite with a computer_part in your inventory
-AddRemoteEvent("InteractSatelliteComputer", function(player, object)
+AddRemoteEvent("InteractComputer", function(player, object)
     SetPlayerLocation(player, -102988.40625, 201117.9375, 2200.3193359375)
     SetPlayerHeading(player, 77.734954833984)   
     SetPlayerAnimation(player, "COMBINE")
@@ -59,8 +58,10 @@ AddRemoteEvent("InteractSatelliteComputer", function(player, object)
     AddPlayerChatAll("Satellite communications are now commencing!")
 
     CallRemoteEvent(player, "ShowSatelliteComputer")
+end)
 
-    -- part collection complete; spawn the mothership
+AddRemoteEvent("ActivateSatellite", function(player, object)
+    -- spawn the mothership
     log.info(GetPlayerName(player).." completed the satellite transmission")
 
     CallRemoteEvent(player, "BeginSatelliteTransmission", object)

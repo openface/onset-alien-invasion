@@ -99,7 +99,8 @@ export default {
                         Waiting for signal acknowledgement... OK
                     </p>
 
-                    <p>Signal received. Standby for response...</p>`)
+                    <p>Signal received. Standby for response...</p>
+                    <p>Logging out...</p>`)
                     break;
                 case "info":
                     this.sendOutput(`

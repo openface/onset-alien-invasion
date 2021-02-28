@@ -33,13 +33,7 @@ end)
 -- command: activate
 AddEvent("ActivateSatellite", function()
     CallRemoteEvent("ActivateSatellite")
-end)
-
--- cue boss fight
-AddRemoteEvent("BeginSatelliteTranmission", function()
-    local sat_loc = { x = -102988.40625, y = 201117.9375, z = 2200.3193359375 }
-    SetSoundVolume(CreateSound3D("client/sounds/transmission.mp3", sat_loc.x, sat_loc.y, sat_loc.z, 10000), 1)
-    Delay(7000, function()
-        SetSoundVolume(CreateSound3D("client/sounds/alert.mp3", sat_loc.x, sat_loc.y, sat_loc.z, 10000), 1)
+    Delay(4000, function()
+        CallEvent("ExitComputer")
     end)
 end)

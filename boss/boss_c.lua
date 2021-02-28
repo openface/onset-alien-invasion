@@ -19,27 +19,25 @@ AddEvent("OnObjectStreamIn", function(object)
         return
     end
 
-    AddPlayerChat("The mothership has invaded your area!")
-
     EnableObjectHitEvents(object, true)
 
     local x, y, z = GetObjectLocation(object)
     BossLocation = { x = x, y = y, z = z }
 
-    SetSoundVolume(CreateSound3D("client/sounds/mothership_enter.mp3", x, y, z, 50000.0), 1.0)
+    SetCloudDensity(4)
+    SetPostEffect("ImageEffects", "VignetteIntensity", 1)
 
-    Delay(6000, function()
-        if MothershipSpawnSound ~= nil then
-            DestroySound(MothershipSpawnSound)
-        end
+    if MothershipSpawnSound ~= nil then
+        DestroySound(MothershipSpawnSound)
+    end
 
-        SetCloudDensity(4)
-        SetPostEffect("ImageEffects", "VignetteIntensity", 1)
+    if BossLocation ~= nil then
+        MothershipSpawnSound = CreateSound3D("client/sounds/mothership.mp3", BossLocation.x, BossLocation.y, BossLocation.z, 50000.0, true)
+        SetSoundVolume(MothershipSpawnSound, 1)
+    end
 
-        if BossLocation ~= nil then
-            MothershipSpawnSound = CreateSound3D("client/sounds/mothership.mp3", BossLocation.x, BossLocation.y, BossLocation.z, 50000.0, true)
-            SetSoundVolume(MothershipSpawnSound, 1)
-        end
+    Delay(1000, function()
+        SetSoundVolume(CreateSound3D("client/sounds/mothership_enter.mp3", x, y, z, 50000.0), 1.0)
     end)
 end)
 

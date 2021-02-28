@@ -59,7 +59,7 @@ end)
 AddRemoteEvent("ActivateSatellite", function(player)
     log.info(GetPlayerName(player) .. " activated the satellite")
 
-    CallRemoteEvent(player, "BeginSatelliteTransmission", SatelliteTerminalConfig)
+    PlaySoundSync("sounds/transmission.mp3", SatelliteTerminalConfig.x, SatelliteTerminalConfig.y, SatelliteTerminalConfig.z, 15000)
 
     Delay(4000, function()
         PlaySoundSync("sounds/alert.mp3", SatelliteTerminalConfig.x, SatelliteTerminalConfig.y, SatelliteTerminalConfig.z, 15000)

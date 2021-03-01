@@ -24,7 +24,8 @@
         "vue-easy-dnd": "^1.10.2",
         "vue-progress-path": "0.0.2",
         "vue-router": "^3.4.7",
-        "vue-toasted": "^1.1.28"
+        "vue-toasted": "^1.1.28",
+        "highlight.js": ">=10.4.1"
     },
     "eslintConfig": {
         "root": true,

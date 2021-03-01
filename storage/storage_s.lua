@@ -66,14 +66,6 @@ function ReplaceStorageContents(object, storage_type, data)
         old_storage = GetObjectPropertyValue(object, "storage")
     end
 
-    -- unregister item instances in storage
-    if old_storage then
-        for _, item in pairs(old_storage) do
-            log.debug("Unregistering item instance", item.uuid)
-            UnregisterItemInstance(item.uuid)
-        end
-    end
-
     local new_storage = {}
     for index, item in ipairs(data) do
         -- lookup item configuration before storing it to ensure they are still valid

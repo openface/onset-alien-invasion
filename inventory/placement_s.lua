@@ -21,7 +21,7 @@ InitTable("placed_items", {
 }, false) -- true to recreate table
 
 AddEvent("OnPackageStart", function()
-    log.debug("Creating placed items....")
+    log.info("Creating placed items....")
     SelectRows("placed_items", "*", nil, onLoadPlacedItems)
 end)
 
@@ -49,8 +49,9 @@ function onLoadPlacedItems()
 end
 
 AddEvent("OnPackageStop", function()
+    log.info("Destroying all placed objects...")
     for object in pairs(PlacedObjects) do
-        log.debug("Destroying placed object " .. object)
+        --log.debug("Destroying placed object " .. object)
         PlacedObjects[object] = nil
         DestroyObject(object)
     end

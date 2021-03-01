@@ -24,14 +24,14 @@ The satellite computer has enough power to communicate with the mothership. Sear
 * Character selection at spawn, skydive with parachute into the island.
 * The garage computer terminal will provide instructions/clues about the mission.
 * Supply drops at random locations every few minutes provide health, armor, and a weapon. (uses waypoints)
-* Computer parts hidden around the island that can be picked up and taken to the main satellite computer.
+* Interactive computer terminal.
 * Satellite will send a signal to the mothership to engage. (cue the boss fight)
 * Mothership attacks players until everyone is dead or defeated.
 * Scrap heaps provide resources such as metal shards, plastic tarps, and computer parts.
 * Workbench system for building items with resources that you find at the scrap heaps.
 * Inventory system with interactive objects and hotbar selection.
 * Merchant system for purchasing items with cash.
-* Interactive world props (tree, water, certain items)
+* Interactive world props (tree, water, vehicle hoods, etc)
 * Storage containers that spawn random items.
 
 ### Direction

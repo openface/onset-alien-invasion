@@ -1,3 +1,10 @@
+SafeZoneLocation = {
+    x = -103250.671875,
+    y = 195288.359375,
+    z = 1307.6508789062
+}
+SafeZoneRange = 5000
+
 AddCommand("pos", function(player)
     if not IsAdmin(GetPlayerSteamId(player)) then
         return

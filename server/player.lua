@@ -1,9 +1,4 @@
 local PlayerRespawnSecs = 20 -- 20 secs
-SpawnLocation = {
-    x = -106884.28125,
-    y = 197996.78125,
-    z = 1298.3040771484
-}
 local SavePlayerTimer
 local PlayerSaveTime = 1000 * 60 -- 60 secs
 
@@ -83,8 +78,8 @@ AddEvent("OnPlayerJoin", function(player)
     }
 
     -- randomized spawn location
-    x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 6000)
-    SetPlayerSpawnLocation(player, x, y, SpawnLocation.z, 180)
+    x, y = randomPointInCircle(SafeZoneLocation.x, SafeZoneLocation.y, 6000)
+    SetPlayerSpawnLocation(player, x, y, SafeZoneLocation.z, 180)
     SetPlayerRespawnTime(player, PlayerRespawnSecs * 1000)
 
     -- welcome messages
@@ -174,8 +169,8 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
     log.info("Creating new account for player " .. GetPlayerName(player))
 
     -- new player spawn location
-    local x, y = randomPointInCircle(SpawnLocation.x, SpawnLocation.y, 6000)
-    local z = SpawnLocation.z
+    local x, y = randomPointInCircle(SafeZoneLocation.x, SafeZoneLocation.y, 6000)
+    local z = SafeZoneLocation.z
     SetPlayerSpawnLocation(player, x, y, z, 180)
 
     InsertRow("accounts", {
@@ -194,10 +189,10 @@ AddRemoteEvent("SelectCharacter", function(player, preset)
         InitializePlayer(player)
 
         -- spawn a new character up in the sky
-        SetPlayerLocation(player, x, y, SpawnLocation.z + 30000)
+        SetPlayerLocation(player, x, y, SafeZoneLocation.z + 30000)
         AttachPlayerParachute(player, true)
 
-        local chopper = CreateObject(1847, x, y, SpawnLocation.z + 31000)
+        local chopper = CreateObject(1847, x, y, SafeZoneLocation.z + 31000)
         Delay(1000 * 25, function(chopper)
             DestroyObject(chopper)
         end, chopper)

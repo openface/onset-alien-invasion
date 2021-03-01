@@ -12,7 +12,9 @@ ItemConfig["repair_tool"] = {
             name = "BARCLEAN01",
             duration = 10000,
         },
-        prop = { hittype = "vehicle_hood", use_label = "Repair Vehicle" }
+        interacts_on = {
+            { hittype = "vehicle_hood", use_label = "Repair Vehicle" }
+        },
     },
     attachment = {
         x = -10.5,

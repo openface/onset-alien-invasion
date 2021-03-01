@@ -34,28 +34,34 @@ AddEvent("OnGameTick", function()
             AddPlayerChat("-> now looking at " .. hitObject .. " -> " .. dump(hitStruct))
         end
 
-        -- if item is in hand, check for matching hittype
-        -- When used, it calls UseItemFromInventory with prop option
-        if CurrentInHand and CurrentInHand.hittype and CurrentInHand.hittype == hitStruct.type then
-            ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. CurrentInHand.use_label .. "')")
-            ActiveProp = {
-                hit_object = hitObject,
-                hit_type = hitStruct.type,
-            }
-            --AddPlayerChat("ActiveProp: "..dump(ActiveProp))
-        elseif hitStruct.type == 'object' then
-            -- world object interaction
+        if CurrentlyInteracting then
+            return
+        end
+
+        if hitStruct.type == 'object' then
+            -- object interaction
             local prop = GetObjectPropertyValue(hitObject, "prop")
             if prop then
-                ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop['use_label'] .. "')")
+                ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop.use_label .. "')")
                 ActiveProp = {
-                    hit_object = hitObject,
                     hit_type = hitStruct.type,
+                    hit_object = hitObject,
                     client_event = prop['client_event'] or nil,
                     remote_event = prop['remote_event'] or nil,
                     options = prop['options']
                 }
-                --AddPlayerChat("ActiveProp: "..dump(ActiveProp))
+                AddPlayerChat("OBJECT ActiveProp: " .. dump(ActiveProp))
+            end
+        elseif CurrentInHand then
+            local prop = CurrentInHandInteractsOnType(hitStruct.type)
+            if prop then
+                -- equipped item interacts with environment
+                ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop.use_label .. "')")
+                ActiveProp = {
+                    hit_type = hitStruct.type,
+                    hit_object = hitObject
+                }
+                AddPlayerChat("ENV ActiveProp: " .. dump(ActiveProp))
             end
         end
 
@@ -92,7 +98,7 @@ function ProcessHitResult(HitResult)
         return
     end
 
-    --AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName() .." id:"..Comp:GetUniqueID())
+    -- AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName() .." id:"..Comp:GetUniqueID())
 
     -- environment
     if string.find(Comp:GetName(), "FoliageInstancedStaticMeshComponent") then
@@ -132,5 +138,4 @@ function ProcessHitResult(HitResult)
         end
     end
 end
-
 

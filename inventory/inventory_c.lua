@@ -45,7 +45,7 @@ AddEvent('OnKeyPress', function(key)
         elseif key == 'Left Mouse Button' and not CurrentlyInteracting then
             if ActiveProp then
                 -- object/prop interaction
-                if CurrentInHand and ItemInHandInteractsWithActiveProp() then
+                if CurrentInHand and CurrentInHandInteractsOnType(ActiveProp.hit_type) then
                     -- use item in hand on object
                     CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid, ActiveProp)
                 else
@@ -73,14 +73,17 @@ AddEvent('OnKeyPress', function(key)
     end
 end)
 
-function ItemInHandInteractsWithActiveProp()
-    --AddPlayerChat("CurrentInHand: " .. dump(CurrentInHand))
-    --AddPlayerChat("ActiveProp: " .. dump(prop))
-    if CurrentInHand and ActiveProp and CurrentInHand.hittype == ActiveProp.hit_type then
-        return true
-    else
-        return false
+-- given an environment type (tree, water, etc), returns the prop
+-- definition compatible with what is currently equipped in hands
+function CurrentInHandInteractsOnType(hittype)
+    if CurrentInHand then
+        for _,p in pairs(CurrentInHand.interacts_on) do
+            if p.hittype == hittype then
+                return p -- { hittype = "tree", use_label = "Chop Tree" }
+            end
+        end
     end
+    return false
 end
 
 AddEvent('OnKeyRelease', function(key)

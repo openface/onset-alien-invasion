@@ -8,7 +8,9 @@ ItemConfig["crowbar"] = {
     interaction = {
         sound = "sounds/chopping_wood.mp3",
         animation = { name = "PICKAXE_SWING", duration = 5000 },
-        prop = { hittype = "storage", use_label = "Pry Open" }
+        interacts_on = {
+            { hittype = "tree", use_label = "Open Crate" } -- todo
+        },
     },
     modelid = 1432,
     max_use = 20,

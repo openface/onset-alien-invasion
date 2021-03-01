@@ -19,7 +19,6 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
         prop = {
             target = "tree",            -- for interacting with world objects (Eg. tree, water, vehicle_hood)
             desc = "Chop Tree",         -- label for "Use" when interacting
-            remote_event = "HarvestTree" -- event called when [E] is pressed to interact with world object
         }
     },
     modelid = 1262,                     -- [required] object modelid

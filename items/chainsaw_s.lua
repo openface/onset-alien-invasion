@@ -9,7 +9,9 @@ ItemConfig["chainsaw"] = {
     interaction = {
         sound = "sounds/chainsaw.wav",
         animation = { name = "FISHING", duration = 4000 },
-        prop = { target = "tree", desc = "Murder Tree", remote_event = "HarvestTree" }
+        interacts_on = {
+            { hittype = "tree", use_label = "Murder Tree" }
+        },
     },
     modelid = 1047,
     max_carry = 1,
@@ -24,3 +26,15 @@ ItemConfig["chainsaw"] = {
         bone = "hand_r" 
     }
 }
+
+--
+-- Chopping
+--
+AddEvent("items:chainsaw:use", function(player, object, prop)
+    if prop then
+        log.debug(GetPlayerName(player) .. " is chainsawing a tree")
+
+        CallRemoteEvent(player, "ShowMessage", "You collect some wood and put it in your inventory")
+        AddToInventoryByName(player, "wood", 10)
+    end
+end)

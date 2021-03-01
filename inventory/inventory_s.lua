@@ -39,9 +39,8 @@ function SyncInventory(player)
                 current_inhand['item'] = item.item
                 current_inhand['uuid'] = item.uuid
                 current_inhand['type'] = ItemConfig[item.item].type
-                if ItemConfig[item.item].interaction and ItemConfig[item.item].interaction['prop'] then
-                    current_inhand['use_label'] = ItemConfig[item.item].interaction['prop'].use_label
-                    current_inhand['hittype'] = ItemConfig[item.item].interaction['prop'].hittype
+                if ItemConfig[item.item].interaction and ItemConfig[item.item].interaction['interacts_on'] then
+                    current_inhand['interacts_on'] = ItemConfig[item.item].interaction['interacts_on']
                 end
             end
         end

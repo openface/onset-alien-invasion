@@ -5,7 +5,9 @@ ItemConfig["fishing_rod"] = {
     interaction = {
         sound = "sounds/fishing.mp3",
         animation = { name = "FISHING", duration = 10000 },
-        prop = { hittype = "water", use_label = "Go Fishing" }
+        interacts_on = {
+            { hittype = "water", use_label = "Go Fishing" }
+        },
     },
     modelid = 20011,
     image = "survival/SM_FishingRod.png",

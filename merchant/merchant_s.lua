@@ -85,7 +85,8 @@ AddRemoteEvent("BuyItem", function(player, item)
                 player_cash = 10
             }))
 
-        PlaySoundSync(player, "sounds/purchase.mp3")
+        local x,y,z = GetPlayerLocation(player)
+        PlaySoundSync("sounds/purchase.mp3", x, y, z)
         AddToInventoryByName(player, item)
     end)
 end)

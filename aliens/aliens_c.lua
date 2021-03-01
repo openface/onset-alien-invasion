@@ -1,6 +1,7 @@
 local AmbientSound
 local AttackSound
 local AmbientSoundTimer
+local Spotted = false
 
 AddEvent("OnPackageStop", function()
     DestroySound(AmbientSound)
@@ -44,7 +45,12 @@ end
 
 AddRemoteEvent("AlienAttacking", function(npc)
     SetSoundVolume(AmbientSound, 0.5)
-    ShowMessage("You have been spotted!")
+
+    if not Spotted then
+        ShowMessage("You have been spotted!")
+    end
+
+    Spotted = true
 
     -- alien attack sound
     if AttackSound == nil then
@@ -66,7 +72,11 @@ function SetSafeAmbience()
 end
 
 AddRemoteEvent('AlienNoLongerAttacking', function()
-    ShowMessage("You are safe for now")
+    if Spotted then
+        ShowMessage("You are safe for now")
+    end
+
+    Spotted = nil
     SetSafeAmbience()
 end)
 

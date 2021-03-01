@@ -2,14 +2,18 @@ AddRemoteEvent("OpenStorage", function(player, prop)
     log.info(GetPlayerName(player) .. " opens storage object " .. prop.hit_object .. " type " ..
                  prop.options['storage_type'])
 
-    PlaySoundSync(player, "sounds/storage_open.wav")
-
+    local x, y, z
     local storage_items
+
     if prop.options['storage_type'] == 'vehicle' then
+        x, y, z = GetVehicleLocation(prop.hit_object)
         storage_items = GetVehiclePropertyValue(prop.hit_object, "storage") or {}
     else
+        x, y, z = GetObjectLocation(prop.hit_object)
         storage_items = GetObjectPropertyValue(prop.hit_object, "storage") or {}
     end
+
+    PlaySoundSync("sounds/storage_open.wav", x, y, z)
 
     local _send = {
         object = prop.hit_object,

@@ -46,6 +46,7 @@ ReplaceAnimationLibrarySequence(924, "/AlienInvasion/Animations/StartFire", 6)
 AddEvent("OnPlayerSpawn", function()
     local player = GetPlayerId()
     local clothing = GetPlayerPropertyValue(player, "clothing") or 25
+    AddPlayerChat("clothing:"..clothing)
     SetPlayerClothingPreset(player, clothing)
 
     SetPostEffect("ImageEffects", "VignetteIntensity", 0.0)

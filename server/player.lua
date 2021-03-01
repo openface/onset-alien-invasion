@@ -1,6 +1,4 @@
 local PlayerRespawnSecs = 20 -- 20 secs
-local SavePlayerTimer
-local PlayerSaveTime = 1000 * 60 -- 60 secs
 
 InitTable("accounts", {
     steamid = {
@@ -30,16 +28,7 @@ InitTable("accounts", {
 PlayerData = {}
 
 AddEvent("OnPackageStart", function()
-    SavePlayerTimer = CreateTimer(function()
-        for player, _ in pairs(PlayerData) do
-            if IsValidPlayer(player) and GetPlayerDimension(player) == 0 and not IsPlayerDead(player) then
-                SavePlayer(player)
-            end
-        end
-        log.info("===== Objects: " .. #GetAllObjects() .. " Pickups: " .. #GetAllPickups() .. " Vehicles: " ..
-                     #GetAllVehicles() .. " Timers: " .. #GetAllTimers())
-    end, PlayerSaveTime)
-
+    -- for restarting package on a live server with players
     for _, player in pairs(GetAllPlayers()) do
         InitializePlayer(player)
     end
@@ -49,8 +38,6 @@ AddEvent("OnPackageStop", function()
     for _, player in pairs(GetAllPlayers()) do
         ClearEquippedObjects(player)
     end
-
-    DestroyTimer(SavePlayerTimer)
 end)
 
 -- player disconnected

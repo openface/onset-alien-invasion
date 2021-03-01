@@ -23,7 +23,7 @@ AddEvent("OnPackageStart", function()
             end
 
             WorldObjects[object] = true
-            log.debug("Creating object " .. object .." modelid " .. v.modelID)
+            --log.debug("Creating object " .. object .." modelid " .. v.modelID)
         end
     end
     log.info("Alien Invasion world loaded!")

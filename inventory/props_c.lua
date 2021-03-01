@@ -2,7 +2,7 @@ ActiveProp = nil
 
 local LastHitObject
 local LastHitStruct
-local TraceRange = 600.0
+local TraceRange = 600.0 -- todo: this needs to adjust depending on 1st/3rd camera view
 local Debug = false
 
 AddEvent("OnGameTick", function()

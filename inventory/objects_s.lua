@@ -16,7 +16,7 @@ end
 local ItemInstances = {}
 
 function RegisterNewItem(item)
-    local uuid = uuid()
+    local uuid = generate_uuid()
     ItemInstances[uuid] = item
     log.debug("Registering item instance ("..item..") uuid: "..uuid)
     return uuid

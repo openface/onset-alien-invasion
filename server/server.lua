@@ -4,6 +4,27 @@ SafeZoneLocation = {
     z = 1307.6508789062
 }
 SafeZoneRange = 5000
+local GameSaveTimer
+local GameSaveTime = 1000 * 60 -- 60 secs
+
+AddEvent("OnPackageStart", function()
+    GameSaveTimer = CreateTimer(function()
+        for player, _ in pairs(PlayerData) do
+            if IsValidPlayer(player) and GetPlayerDimension(player) == 0 and not IsPlayerDead(player) then
+                SavePlayer(player)
+            end
+        end
+
+        SavePlacedObjects()
+
+        log.info("===== Objects: " .. #GetAllObjects() .. " Pickups: " .. #GetAllPickups() .. " Vehicles: " ..
+                     #GetAllVehicles() .. " Timers: " .. #GetAllTimers() .. " Players: " .. #GetAllPlayers())
+    end, GameSaveTime)
+end)
+
+AddEvent("OnPackageStop", function()
+    DestroyTimer(GameSaveTimer)
+end)
 
 AddCommand("pos", function(player)
     if not IsAdmin(GetPlayerSteamId(player)) then

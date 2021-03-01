@@ -107,9 +107,10 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
 - Interactive props that can be stored in inventory
 - Can be placed into the world from inventory (cannot become a pickup again)
 - When dropped instead of placed, they are pickups
-- Can be interacted with using `prop_options` (Eg. Press [E] to sit in a chair)
+- Can be interacted with using `prop_options` (Eg. Press LMB to sit in a chair)
 - Placeable objects are editable (rotation and location)
 - Player can hold Left Ctrl to see all placeable objects and click to edit objects nearby
+- Placeable objects persist to the database and are respawn when server starts.
 
 ## Interactive World Props
 

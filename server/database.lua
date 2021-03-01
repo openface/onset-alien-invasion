@@ -58,6 +58,10 @@ function UpdateRows(name, params, where)
     return Tables[name].update(params, where)
 end
 
+function TruncateTable(name)
+    return Tables[name].truncate()
+end
+
 function SelectRows(name, fields, where, callback)
     return Tables[name].select(fields, where, callback)
 end

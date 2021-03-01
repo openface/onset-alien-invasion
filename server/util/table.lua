@@ -19,7 +19,7 @@ function Table.new(conn, name, fields)
     -- DROP 
     --
     self.drop_schema = function()
-        log.debug("Dropping schema "..self.name)
+        log.trace("Dropping schema "..self.name)
         local query = mariadb_prepare(self.conn, "DROP TABLE ?", self.name)
         mariadb_query(self.conn, query)
     end
@@ -72,7 +72,7 @@ function Table.new(conn, name, fields)
         create_query = create_query .. "\n`updated_at` TIMESTAMP NOT NULL DEFAULT NOW() ON UPDATE NOW(),"
         create_query = create_query .. "\nPRIMARY KEY (`id`)\n)"
 
-        log.debug("Creating schema: " .. create_query)
+        log.trace("Creating schema: " .. create_query)
 
         local query = mariadb_prepare(self.conn, create_query)
         local result = mariadb_query(self.conn, query)
@@ -112,7 +112,7 @@ function Table.new(conn, name, fields)
 
         insert_query = insert_query .. ") VALUES (" .. values_string .. ")"
 
-        log.debug(insert_query)
+        log.trace(insert_query)
         if callback then
             local result = mariadb_query(self.conn, insert_query, callback)
         else
@@ -146,9 +146,16 @@ function Table.new(conn, name, fields)
 
         -- append where clause
         update_query = update_query .. " " .. self._where(where)
-        log.debug(update_query)
+        log.trace(update_query)
 
         local result = mariadb_async_query(self.conn, update_query)
+        return result
+    end
+
+    self.truncate = function()
+        local truncate_query = "TRUNCATE TABLE "..self.name
+        log.trace(truncate_query)
+        local result = mariadb_async_query(self.conn, truncate_query)
         return result
     end
 
@@ -156,13 +163,15 @@ function Table.new(conn, name, fields)
     -- @param fields    "id,name,dob"
     -- @param where     { age = 25 }
     -- @param callback  function
-    self.select = function(fields, where)
+    self.select = function(fields, where, callback)
         local select_query = "SELECT "..fields.." FROM "..self.name
 
         -- append where clause
-        select_query = select_query .. " " .. self._where(where)
-        log.debug(select_query)
+        if where then
+            select_query = select_query .. " " .. self._where(where)
+        end
 
+        log.debug(select_query)
         local query = mariadb_prepare(self.conn, select_query)
         local result = mariadb_query(self.conn, query, callback)
         return true
@@ -175,7 +184,7 @@ function Table.new(conn, name, fields)
 
         -- append where clause
         select_query = select_query .. " " .. self._where(where) .. " LIMIT 1"
-        log.debug(select_query)
+        log.trace(select_query)
 
         local query = mariadb_prepare(self.conn, select_query)
         local result = mariadb_await_query(self.conn, query)

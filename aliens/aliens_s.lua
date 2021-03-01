@@ -34,7 +34,7 @@ AddEvent("OnPackageStart", function()
     -- re-spawn on a timer
     AlienSpawnTimer = CreateTimer(function()
         SpawnAliens()
-    end, 60000) -- alien spawn tick every minute
+    end, 120 * 1000) -- alien spawn every 2 mins
 
     -- process timer for all aliens
     AlienAttackTimer = CreateTimer(function()
@@ -43,7 +43,7 @@ AddEvent("OnPackageStart", function()
                 ResetAlien(npc)
             end
         end
-    end, 10000) -- alien attack tick every 10 seconds
+    end, 3000) -- alien attack tick every 10 seconds
 end)
 
 AddEvent("OnPackageStop", function()
@@ -74,6 +74,7 @@ function ClearAliens()
     for _, npc in pairs(Aliens) do
         DestroyNPC(npc)
     end
+    Aliens = {}
 end
 
 function IsPlayerAttackable(player)
@@ -174,9 +175,9 @@ function KillAlien(npc)
     SetNPCPropertyValue(npc, "dead", true)
     SetNPCAnimation(npc,  math.random(901,902), false)
     Delay(800, function()
+        log.debug("NPC "..npc.." is now fake dead.")
         SetNPCHealth(npc, 0)
     end)
-    log.debug("NPC "..npc.." is now fake dead.")
 end
 
 AddEvent("OnNPCDeath", function(npc, killer)
@@ -245,11 +246,16 @@ end
 
 -- alien tick
 function ResetAlien(npc)
+    if GetNPCPropertyValue(npc, "dead") then
+        return
+    end
+
     local health = GetNPCHealth(npc)
     if (health == false or health <= 0) then
         return
     end
 
+    -- alien can attack, let's go
     local player = GetNearestPlayer(npc)
     if not player then
         return

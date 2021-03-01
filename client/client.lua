@@ -45,12 +45,9 @@ ReplaceAnimationLibrarySequence(924, "/AlienInvasion/Animations/StartFire", 6)
 
 AddEvent("OnPlayerSpawn", function()
     local player = GetPlayerId()
-    local clothing = GetPlayerPropertyValue(player, "clothing")
-    if clothing == nil then
-        clothing = 25
-    end
-
+    local clothing = GetPlayerPropertyValue(player, "clothing") or 25
     SetPlayerClothingPreset(player, clothing)
+
     SetPostEffect("ImageEffects", "VignetteIntensity", 0.0)
     StopCameraShake(false)
 

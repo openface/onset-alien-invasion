@@ -23,7 +23,7 @@ AddRemoteEvent("LoadWorkbenchData", function(data)
     ExecuteWebJS(WorkbenchUI, "EmitEvent('LoadWorkbenchData',"..data..")")
 
     local x,y,z = GetPlayerLocation(GetPlayerId())
-    workbench_timer = CreateTimer(ShowWorkbenchTimer, 1000, { x = x, y = y, z = z })
+    workbench_timer = CreateTimer(ShowWorkbenchTimer, 500, { x = x, y = y, z = z })
 end)
 
 -- timer used to hide workbench screen once player walks away

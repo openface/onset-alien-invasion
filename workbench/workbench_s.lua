@@ -103,7 +103,7 @@ function GetPlayerResources(player)
     local resources = {}
     for _, item in pairs(inventory) do
         if ItemConfig[item.item].type == 'resource' then
-            resources[item.item] = item.quantity
+            resources[item.item] = GetInventoryCountByName(player, item.item)
         end
     end
     return resources
@@ -121,7 +121,7 @@ function CanBuildItem(player, item)
 
     local canBuild = true
     for required_item, required_amount in pairs(ItemConfig[item].recipe) do
-        if not resources[required_item] or resources[required_item] <= required_amount then
+        if not resources[required_item] or resources[required_item] < required_amount then
             canBuild = false
             break
         end

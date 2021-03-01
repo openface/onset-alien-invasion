@@ -3,6 +3,10 @@
         <div id="terminal" ref="terminal">
             <div id="inner">
                 <output ref="output"></output>
+                <div v-if="!connected">
+                    <div class="prompt">% ATH1</div>
+                    Connecting...
+                </div>
                 <div id="input-line" class="input-line">
                     <div class="prompt">
                         <div>&gt;</div>
@@ -35,11 +39,12 @@ export default {
             history_pos: 0,
             history_temp: 0,
             commands: [
-                { name: "info", desc: "Important survival instructions. READ THIS!!"},
-                { name: "activate", desc: "Activate satellite communications.  DON'T DO THIS!!"},
+                { name: "info", desc: "Important survival instructions. READ THIS!!" },
+                { name: "activate", desc: "Activate satellite communications.  DON'T DO THIS!!" },
                 { name: "clear", desc: "Clear the terminal of all output" },
                 { name: "exit", desc: "Exit this terminal" },
             ],
+            connected: false
         };
     },
     methods: {
@@ -100,7 +105,7 @@ export default {
                     </p>
 
                     <p>Signal received. Standby for response...</p>
-                    <p>Logging out...</p>`)
+                    <p>Logging out...</p>`);
                     break;
                 case "info":
                     this.sendOutput(`
@@ -146,11 +151,11 @@ export default {
                         </li>
                     </ul>
 
-                    <p>Good luck!</p>`)
+                    <p>Good luck!</p>`);
                     break;
                 case "exit":
                     this.CallEvent("ExitComputer");
-                    this.sendOutput('Logging out...');
+                    this.sendOutput("Logging out...");
                     break;
                 default:
                     this.sendOutput(`${cmd}: Command not found.  Type 'help' for commands.`);
@@ -190,26 +195,30 @@ export default {
             }
             this.value = this.history[this.history_pos] ? this.history[this.history_pos] : this.history_temp;
         },
-        scrollToEnd: function() {    	
+        scrollToEnd: function() {
             var container = this.$el.querySelector("#inner");
             container.scrollTop = container.scrollHeight;
         },
     },
     mounted: function() {
+        this.$el.querySelector(".input-line").style.display = "none";
         this.$refs.cmd.focus();
-        this.sendOutput(`
+
+        setTimeout(() => {
+            this.connected = true;
+            this.$el.querySelector(".input-line").style.display = "flex";
+
+            this.sendOutput(`
             %DECW-W-NODEVICE, No graphics device found on this system<br />
             %SET-I-INTSET, login interactive limit = 64<br /><br />
             %%%%%%%%% OPCOM ${new Date().toDateString()} %%%%%%%%%<br />
-            <b>Message from user DECNET:</b><br />
+            ***************************** AUTHORIZED USE ONLY ******************************<br />`);
+            this.sendOutput(`Message from user DECNET:</><br />
             <em>Greetings survivor, we've left instruction documents in this terminal.
-            Type 'info' command to access them or 'help' for other options.</em>
-            <br /><br />
-            ********************** IMPORTANT EMERGENCY INFORMATION
-            *************************<br />
-            ***************************** AUTHORIZED USE ONLY
-            ******************************<br /><br />
-            Login successful.`)
+            Type 'info' command to access them or 'help' for other options.</em>`);
+            this.$refs.cmd.focus();
+        }, 7500);
+
     },
 };
 </script>
@@ -228,16 +237,16 @@ export default {
     border-radius: 25px;
     border: 2px solid #73ad21;
     box-shadow: 5px 5px 15px #000;
-    color: white;
+    color: #fff;
     font: 1.1rem Inconsolata, monospace;
-    text-shadow: 0 0 5px #304b0c;
+    text-shadow: 0 0 5px #c8c8c8;
     padding: 20px 20px;
     margin-top: 50px;
 }
 #inner {
-    height:500px;
-    overflow-x:hidden;
-    overflow-y:auto;
+    height: 500px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 .input-line {
     display: flex;
@@ -268,17 +277,17 @@ export default {
 }
 
 *::-webkit-scrollbar {
-  width: 16px;
+    width: 16px;
 }
 
 *::-webkit-scrollbar-track {
-  background: #1d4d09;
-  border-radius: 20px;
+    background: #1d4d09;
+    border-radius: 20px;
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: #ffffff;
-  border-radius: 20px;
-  border: 1px solid #1d4d09;
+    background-color: #ffffff;
+    border-radius: 20px;
+    border: 1px solid #1d4d09;
 }
 </style>

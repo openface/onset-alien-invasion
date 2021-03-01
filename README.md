@@ -43,11 +43,11 @@ is OK.  This code will continue to morph and shift into something more general a
 
 ### Dependencies
 
-This package has dependencies upon the following packages, which should be defined prior in the server_config.json file:
+This package has dependencies upon the following packages, which should be defined above this package in the server_config.json file:
 
-* Onset_Weapon_Patch
-* bpevents
-* vnpcs
+* Onset_Weapon_Patch (https://github.com/Origin-OnSet/Onset_Weapon_Patch)
+* Onset-BPEvents (https://github.com/vugi99/onset-BPEvents)
+* onset-vnpcs (https://github.com/vugi99/onset-vnpcs)
 
 ### Thanks
 

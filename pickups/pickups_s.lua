@@ -15,9 +15,15 @@ AddCommand("item", function(player, item)
 end)
 
 -- creates a new object or weapon near given player
-function CreatePickupNearPlayer(player, item)
+function CreatePickupNearPlayer(player, item, forward_vector)
     local x, y, z = GetPlayerLocation(player)
-    local x, y = randomPointInCircle(x, y, 150)
+    if forward_vector then
+        x = x + (forward_vector.vx * 150)
+        y = y + (forward_vector.vy * 150)
+    else
+        -- random location around player
+        x, y = randomPointInCircle(x, y, 150)
+    end
     CreateObjectPickup(item, x, y, z - 75)
 end
 

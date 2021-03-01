@@ -191,7 +191,7 @@ function RemoveFromInventory(player, uuid, amount)
 end
 
 -- unequips item, removes from inventory, and places on ground
-AddRemoteEvent("DropItemFromInventory", function(player, uuid)
+AddRemoteEvent("DropItemFromInventory", function(player, uuid, forward_vector)
     local item = GetItemInstance(uuid)
 
     log.info("Player " .. GetPlayerName(player) .. " drops item " .. item)
@@ -204,7 +204,7 @@ AddRemoteEvent("DropItemFromInventory", function(player, uuid)
         RemoveFromInventory(player, uuid)
 
         -- spawn object near player
-        CreatePickupNearPlayer(player, item)
+        CreatePickupNearPlayer(player, item, forward_vector)
 
         CallRemoteEvent(player, "ShowMessage", ItemConfig[item].name .. " has been dropped")
     end)

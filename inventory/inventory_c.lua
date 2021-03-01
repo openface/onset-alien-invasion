@@ -115,7 +115,9 @@ end)
 
 -- drop item
 AddEvent("DropItem", function(uuid)
-    CallRemoteEvent("DropItemFromInventory", uuid)
+    local vx, vy, vz = GetPlayerForwardVector(GetPlayerId())
+    local forward_vector = { vx = vx, vy = vy, vz = vz }
+    CallRemoteEvent("DropItemFromInventory", uuid, forward_vector)
 end)
 
 -- equip item

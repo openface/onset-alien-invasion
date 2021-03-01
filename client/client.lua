@@ -44,11 +44,11 @@ ReplaceAnimationLibrarySequence(923, "/AlienInvasion/Animations/Stand_DrinkWater
 ReplaceAnimationLibrarySequence(924, "/AlienInvasion/Animations/StartFire", 6)
 
 AddEvent("OnPlayerSpawn", function()
-    local player = GetPlayerId()
-    local clothing = GetPlayerPropertyValue(player, "clothing") or 25
+--[[     local player = GetPlayerId()
+    local clothing = GetPlayerPropertyValue(player, "clothing")
     AddPlayerChat("clothing:"..clothing)
     SetPlayerClothingPreset(player, clothing)
-
+ ]]
     SetPostEffect("ImageEffects", "VignetteIntensity", 0.0)
     StopCameraShake(false)
 
@@ -86,6 +86,7 @@ end)
 
 AddEvent("OnPlayerNetworkUpdatePropertyValue", function(player, PropertyName, PropertyValue)
     if PropertyName == "clothing" and PropertyValue ~= nil then
+        AddPlayerChat("clothing change:"..player.." to "..PropertyValue)
         SetPlayerClothingPreset(player, PropertyValue)
     end    
 end)

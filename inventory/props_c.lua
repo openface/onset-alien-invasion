@@ -46,7 +46,6 @@ AddEvent("OnGameTick", function()
                 ActiveProp = {
                     hit_type = hitStruct.type,
                     hit_object = hitObject,
-                    client_event = prop['client_event'] or nil,
                     remote_event = prop['remote_event'] or nil,
                     options = prop['options']
                 }

@@ -12,7 +12,7 @@ AddEvent("OnKeyPress", function(key)
     end
 end)
 
-AddEvent("SitInChair", function(object, options)
+AddRemoteEvent("SitInChair", function(object)
     -- save previous location
     local x, y, z = GetPlayerLocation()
     StandingPlayerLocation = {
@@ -38,11 +38,16 @@ AddEvent("SitInChair", function(object, options)
     local magnitude = 30 -- Magnitude of vector for placing player (bigger = further away, smaller = closer)
     forwardVector = forwardVector * FVector(magnitude, magnitude, magnitude)
     locationVector = locationVector + forwardVector
-    locationVector.Z = locationVector.Z + 100
+    locationVector.Z = locationVector.Z + 92
 
     local actor = GetPlayerActor(GetPlayerId())
     actor:SetActorEnableCollision(false) -- Disable player collision so that the player will not be pushed off the chair
 
-    actor:SetActorLocation(locationVector)
-    actor:SetActorRotation(FRotator(rX, rY + actorYAdjustment + chairYAdjustment, rZ))
+    --actor:SetActorLocation(locationVector)
+    --actor:SetActorRotation(FRotator(rX, rY + actorYAdjustment + chairYAdjustment, rZ))
+    local position = { 
+        location = { x = locationVector.X, y = locationVector.Y, z = locationVector.Z },
+        rotation = { x = rX, y = rY + actorYAdjustment + chairYAdjustment }
+    }
+    CallRemoteEvent("SitPlayerInChair", position)
 end)

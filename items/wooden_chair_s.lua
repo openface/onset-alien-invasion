@@ -18,12 +18,8 @@ ItemConfig["wooden_chair"] = {
         bone = "hand_r"
     },
     prop_options = {
-        message = "Sit",
-        client_event = "SitInChair",
+        use_label = "Sit",
         remote_event = "SitInChair",
-        options = {
-            type = 'object',
-        }
     }
 }
 
@@ -35,9 +31,17 @@ end)
 -- Sitting
 --
 
-AddRemoteEvent("SitInChair", function(player, object, options)
-    SetPlayerAnimation(player, "SIT04")
+AddRemoteEvent("SitInChair", function(player, prop)
     log.debug(GetPlayerName(player).." sitting...")
+    SetPlayerAnimation(player, "SIT04")
+    CallRemoteEvent(player, "SitInChair", prop.hit_object)
+end)
+
+AddRemoteEvent("SitPlayerInChair", function(player, position)
+    SetPlayerLocation(player, position.location.x, position.location.y, position.location.z)
+
+    local h = math.atan(position.rotation.y, position.rotation.x)*180/math.pi
+    SetPlayerHeading(player, h)
 end)
 
 AddRemoteEvent("StopSitting", function(player, loc)

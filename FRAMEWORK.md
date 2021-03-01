@@ -72,7 +72,6 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
     },
     prop_options = {                    -- creates interactive props
         use_label = "Sit",
-        client_event = "SitInChair",
         remote_event = "SitInChair",
         options = {                     -- options passed into the event
             type = 'object',

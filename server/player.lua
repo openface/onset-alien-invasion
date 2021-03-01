@@ -99,11 +99,13 @@ AddEvent("OnPlayerSpawn", function(player)
     -- cleansing
     SetPlayerArmor(player, 0)
 
-    -- initialize PlayerData
-    PlayerData[player] = {
-        inventory = {},
-        equipped = {}
-    }
+    -- reset PlayerData
+    if PlayerData[player] then
+        PlayerData[player] = {
+            inventory = {},
+            equipped = {}
+        }
+    end
 
     SyncInventory(player)
 end)

@@ -50,11 +50,6 @@ AddEvent('OnKeyPress', function(key)
                     CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid, ActiveProp)
                 else
                     -- interact with object directly
-                    -- todo remove client_event if possible to keep it simple
-                    if ActiveProp['client_event'] then
-                        -- AddPlayerChat("calling client event: "..ActiveProp['event'])
-                        CallEvent(ActiveProp['client_event'], ActiveProp['hit_object'], ActiveProp['options'])
-                    end
                     if ActiveProp['remote_event'] then
                         --AddPlayerChat("calling remote event: " .. ActiveProp['remote_event'])
                         CallRemoteEvent(ActiveProp['remote_event'], ActiveProp)

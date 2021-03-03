@@ -19,13 +19,14 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "gsap": "^3.6.0",
+        "highlight.js": ">=10.4.1",
         "lodash": "^4.17.20",
         "vue": "^2.6.12",
         "vue-easy-dnd": "^1.10.2",
         "vue-progress-path": "0.0.2",
         "vue-router": "^3.4.7",
-        "vue-toasted": "^1.1.28",
-        "highlight.js": ">=10.4.1"
+        "vue-toasted": "^1.1.28"
     },
     "eslintConfig": {
         "root": true,

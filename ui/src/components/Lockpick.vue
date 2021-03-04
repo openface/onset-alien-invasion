@@ -2,7 +2,7 @@
     <div id="container" @mousemove="onMouseMove" @mouseleave="onMouseLeave" @mousedown="onMouseDown" @mouseup="onMouseUp">
         <div id="inner">
             <div id="wrap">
-                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/95637/collar.png" alt="" id="collar" />
+                <img :src="require('@/assets/images/lockpick/collar.png')" alt="" id="collar" />
                 <div id="cylinder" ref="cylinder"></div>
                 <div id="driver" ref="driver"></div>
                 <div id="pin" ref="pin">
@@ -10,7 +10,7 @@
                     <div class="bott"></div>
                 </div>
             </div>
-            <p><span ref="pins_remaining">5</span> Bobby Pins Remaining</p>
+            <p><span ref="pins_remaining">{{ numPins }}</span> Bobby Pins Remaining</p>
         </div>
     </div>
 </template>
@@ -35,7 +35,7 @@ export default {
             pinDamage: 20,
             pinHealth: 100,
             pinDamageInterval: 150,
-            numPins: 5,
+            numPins: 0,
             userPushingCyl: false,
             gameOver: false,
             gamePaused: false,
@@ -46,6 +46,8 @@ export default {
     computed: {},
     methods: {
         pushCyl: function() {
+            this.CallEvent("StartTurn")
+
             var distFromSolve, cylRotationAllowance;
             clearInterval(this.cylRotationInterval);
             this.userPushingCyl = true;
@@ -121,7 +123,6 @@ export default {
             this.gamePaused = true;
             clearInterval(this.cylRotationInterval);
             this.numPins--;
-            this.$refs.pins_remaining.innerHTML = this.numPins;
             pinTop = this.$refs.pin.querySelector(".top");
             pinBott = this.$refs.pin.querySelector(".bott");
             let that = this;
@@ -152,8 +153,14 @@ export default {
                 0
             );
             tl.play();
+            this.CallEvent("BreakPin");
         },
-
+        start: function(numPins) {
+            this.numPins = numPins;
+            this.gameOver = false;
+            this.gamePaused = false;
+            this.reset();
+        },
         reset: function() {
             window.console.log("reset");
             //solveDeg = ( Math.random() * 180 ) - 90;
@@ -179,12 +186,12 @@ export default {
 
         outOfPins: function() {
             this.gameOver = true;
-            window.console.log("outofpins");
+            this.CallEvent("OutOfPins");
         },
 
         unlock: function() {
             this.gameOver = true;
-            window.console.log("unlock");
+            this.CallEvent("Unlock");
         },
         // UTIL
         clamp: function(val, max, min) {
@@ -219,17 +226,26 @@ export default {
             }
         },
     },
-    mounted: function() {},
+    mounted: function() {
+        this.EventBus.$on("StartLockpick", this.start);
+
+        if (!this.InGame) {
+            this.EventBus.$emit("StartLockpick", 5);
+
+            setTimeout(() => this.EventBus.$emit("StartLockpick", 10), 10000);
+
+        }
+    },
 };
 </script>
 
-<style>
+<style scoped>
 #container {
     font-family: helvetica, arial;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 75vh;
+    height: 100vh;
 }
 #inner {
     width: 100%;
@@ -267,7 +283,7 @@ p {
 }
 #cylinder {
     display: block;
-    background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/95637/cylinder.png");
+    background: url('~@/assets/images/lockpick/cylinder.png');
     background-size: cover;
     width: 69.914%;
     height: 69.914%;
@@ -279,7 +295,7 @@ p {
     display: block;
     width: 172.1739%;
     height: 84%;
-    background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/95637/driver.png");
+    background: url('~@/assets/images/lockpick/driver.png');
     background-size: cover;
     position: absolute;
     top: 57%;
@@ -303,7 +319,7 @@ p {
     position: absolute;
     top: 0;
     left: 0;
-    background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/95637/pinTop.png");
+    background: url('~@/assets/images/lockpick/pinTop.png');
     background-size: cover;
 }
 #pin .bott {
@@ -313,7 +329,7 @@ p {
     position: absolute;
     top: 50%;
     left: 0;
-    background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/95637/pinBott.png");
+    background: url('~@/assets/images/lockpick/pinBott.png');
     background-size: cover;
 }
 </style>

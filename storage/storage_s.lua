@@ -1,4 +1,12 @@
 AddRemoteEvent("OpenStorage", function(player, prop)
+    log.trace("OpenStorage")
+    
+    if true then
+        log.debug "ShowLockpick"
+        CallRemoteEvent(player, "ShowLockpick")
+        return
+    end
+
     log.info(GetPlayerName(player) .. " opens storage object " .. prop.hit_object .. " type " ..
                  prop.options['storage_type'])
 

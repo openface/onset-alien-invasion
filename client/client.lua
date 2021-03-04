@@ -98,10 +98,14 @@ AddEvent("OnHideMainMenu", function ()
     -- hide any visible UIs
     for _,ui in pairs(GetAllWebUI()) do
       if GetWebVisibility(ui) == WEB_VISIBLE then
-        print("Hiding UI: "..ui)
+        AddPlayerChat("Hiding UI: "..ui)
         SetWebVisibility(ui, WEB_HIDDEN)
       end
     end
+    SetInputMode(INPUT_GAME)
+    SetIgnoreMoveInput(false)
+    SetIgnoreLookInput(false)
+    ShowMouseCursor(false)
 end)
 
 -- skydive

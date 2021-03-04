@@ -36,14 +36,16 @@ AddEvent("OnPackageStop", function()
     WorldStorageObjects = {}
 end)
 
-function AddStorageProp(object)
+function AddStorageProp(object, locked)
+    local locked = locked or false
     WorldStorageObjects[object] = true
     SetObjectPropertyValue(object, "prop", {
         use_label = "Open",
         remote_event = "OpenStorage",
         options = {
             storage_type = 'object',
-            storage_name = "Storage Container"
+            storage_name = "Storage Container",
+            locked = true
         }
     })
 end

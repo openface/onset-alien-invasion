@@ -1,9 +1,22 @@
+AddRemoteEvent("UnlockStorage", function(player, object)
+    log.trace("UnlockStorage", object)
+
+    local prop = GetObjectPropertyValue(object, "prop")
+    if not prop then
+        log.error("No storage object to unlock!", object)
+        return
+    end
+    prop.options['locked'] = false
+    SetObjectPropertyValue(object, "prop", prop)
+    log.debug(GetPlayerName(player) .. " unlocked storage",object)
+    CallRemoteEvent(player, "ShowMessage", "Storage is now unlocked!")
+end)
+
 AddRemoteEvent("OpenStorage", function(player, prop)
     log.trace("OpenStorage")
-    
-    if true then
-        log.debug "ShowLockpick"
-        CallRemoteEvent(player, "ShowLockpick")
+
+    if prop.options['locked'] then
+        CallRemoteEvent(player, "ShowLockpick", prop.hit_object)
         return
     end
 

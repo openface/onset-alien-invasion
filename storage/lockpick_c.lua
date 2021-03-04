@@ -1,4 +1,5 @@
 local LockpickUI
+local LockPickingStorageObject
 
 AddEvent("OnPackageStart", function()
     LockpickUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
@@ -12,7 +13,10 @@ AddEvent("OnPackageStop", function()
     DestroyWebUI(LockpickUI)
 end)
 
-AddRemoteEvent("ShowLockpick", function()
+AddRemoteEvent("ShowLockpick", function(storage_object)
+    LockPickingStorageObject = storage_object
+    AddPlayerChat(LockPickingStorageObject)
+
     ShowMouseCursor(true)
     SetInputMode(INPUT_GAMEANDUI)
     SetIgnoreMoveInput(true)
@@ -22,6 +26,8 @@ AddRemoteEvent("ShowLockpick", function()
 end)
 
 function HideLockpickUI()
+    LockPickingStorageObject = nil
+
     ShowMouseCursor(false)
     SetInputMode(INPUT_GAME)
     SetIgnoreMoveInput(false)
@@ -45,5 +51,7 @@ end)
 AddEvent("Unlock", function()
     ShowMessage("Unlocked success!")
     SetSoundVolume(CreateSound("client/sounds/lockpick_open.wav"), 1)
+    CallRemoteEvent("UnlockStorage", LockPickingStorageObject)
+
     HideLockpickUI()
 end)

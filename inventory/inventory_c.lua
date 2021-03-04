@@ -71,7 +71,7 @@ end)
 -- given an environment type (tree, water, etc), returns the prop
 -- definition compatible with what is currently equipped in hands
 function CurrentInHandInteractsOnType(hittype)
-    if CurrentInHand then
+    if CurrentInHand and CurrentInHand.interacts_on then
         for _,p in pairs(CurrentInHand.interacts_on) do
             if p.hittype == hittype then
                 return p -- { hittype = "tree", use_label = "Chop Tree" }

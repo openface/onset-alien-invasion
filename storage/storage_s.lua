@@ -16,7 +16,11 @@ AddRemoteEvent("OpenStorage", function(player, prop)
     log.trace("OpenStorage")
 
     if prop.options['locked'] then
-        CallRemoteEvent(player, "ShowLockpick", prop.hit_object)
+        if GetInventoryCountByName(player, "screwdriver") > 0 then
+            CallRemoteEvent(player, "ShowLockpick", prop.hit_object)
+        else
+            CallRemoteEvent(player, "ShowError", "Locked")
+        end
         return
     end
 

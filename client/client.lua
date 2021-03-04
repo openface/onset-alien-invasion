@@ -25,6 +25,8 @@ ReplaceObjectModelMesh(20029, "/AlienInvasion/Meshes/SM_SleepingBag-RolledUp-Bro
 ReplaceObjectModelMesh(20030, "/AlienInvasion/Meshes/SM_SleepingBag-RolledUp-Green")
 ReplaceObjectModelMesh(20029, "/AlienInvasion/Meshes/SM_SleepingBag-Open-Brown")
 ReplaceObjectModelMesh(20030, "/AlienInvasion/Meshes/SM_SleepingBag-Open-Green")
+-- Lockpick
+ReplaceObjectModelMesh(20100, "/AlienInvasion/Meshes/MSH_Screwdriver_01")
 
 
 -- Animations

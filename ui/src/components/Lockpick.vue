@@ -1,31 +1,16 @@
 <template>
     <div id="container" @mousemove="onMouseMove" @mouseleave="onMouseLeave" @mousedown="onMouseDown" @mouseup="onMouseUp">
-        <div id="wrap">
-            <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/95637/collar.png" alt="" id="collar" />
-            <div id="cylinder" ref="cylinder"></div>
-            <div id="driver" ref="driver"></div>
-            <div id="pin" ref="pin">
-                <div class="top"></div>
-                <div class="bott"></div>
+        <div id="inner">
+            <div id="wrap">
+                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/95637/collar.png" alt="" id="collar" />
+                <div id="cylinder" ref="cylinder"></div>
+                <div id="driver" ref="driver"></div>
+                <div id="pin" ref="pin">
+                    <div class="top"></div>
+                    <div class="bott"></div>
+                </div>
             </div>
-        </div>
-        <p>EXPERT LOCK</p>
-        <p><span ref="pins_remaining">5</span> Bobby Pins Remaining</p>
-        <div id="modal">
-            <div id="win">
-                <h1>Congratulations!</h1>
-                <h2>By Jove, you've done it!</h2>
-                <h3>You win: Nothing! Absolutely Nothing!</h3>
-                <h4>Looks like you'll die alone and unfulfilled in the wasteland!</h4>
-                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/95637/success.png" alt="" />
-            </div>
-            <div id="lose">
-                <h1>Oh Dear</h1>
-                <h2>It seems you've run out of bobby pins.</h2>
-                <h3>Looks like you'll die alone and unfulfilled in the wasteland.</h3>
-                <h4>Better luck next time.</h4>
-                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/95637/failure.png" alt="" />
-            </div>
+            <p><span ref="pins_remaining">5</span> Bobby Pins Remaining</p>
         </div>
     </div>
 </template>
@@ -87,9 +72,8 @@ export default {
                     this.damagePin();
                 }
 
-                //this.$refs.cylinder.style.transform = "rotateZ(" + this.cylRot + "deg)";
+                this.$refs.cylinder.style.transform = "rotateZ(" + this.cylRot + "deg)";
                 this.$refs.driver.style.transform = "rotateZ(" + this.cylRot + "deg)";
-
             }, this.keyRepeatRate);
         },
 
@@ -101,7 +85,7 @@ export default {
                 this.cylRot -= this.cylRotSpeed;
                 this.cylRot = Math.max(this.cylRot, 0);
 
-                //this.$refs.cylinder.style.transform = "rotateZ(" + this.cylRot + "deg)";
+                this.$refs.cylinder.style.transform = "rotateZ(" + this.cylRot + "deg)";
                 this.$refs.driver.style.transform = "rotateZ(" + this.cylRot + "deg)";
 
                 if (this.cylRot <= 0) {
@@ -171,13 +155,14 @@ export default {
         },
 
         reset: function() {
+            window.console.log("reset");
             //solveDeg = ( Math.random() * 180 ) - 90;
             this.cylRot = 0;
             this.pinHealth = 100;
             this.pinRot = 0;
-            //this.pin.style.transform = "rotateZ(" + this.pinRot + "deg)";
-            //this.cyl.style.transform = "rotateZ(" + this.cylRot + "deg)";
-            //this.driver.style.transform = "rotateZ(" + this.cylRot + "deg)";
+            this.$refs.pin.style.transform = "rotateZ(" + this.pinRot + "deg)";
+            this.$refs.cylinder.style.transform = "rotateZ(" + this.cylRot + "deg)";
+            this.$refs.driver.style.transform = "rotateZ(" + this.cylRot + "deg)";
             gsap.to(this.$refs.pin.querySelector(".top"), 0, {
                 rotationZ: 0,
                 x: 0,
@@ -195,15 +180,11 @@ export default {
         outOfPins: function() {
             this.gameOver = true;
             window.console.log("outofpins");
-            //$("#lose").css("display", "inline-block");
-            //$("#modal").fadeIn();
         },
 
         unlock: function() {
             this.gameOver = true;
             window.console.log("unlock");
-            //$("#win").css("display", "inline-block");
-            //$("#modal").fadeIn();
         },
         // UTIL
         clamp: function(val, max, min) {
@@ -224,6 +205,7 @@ export default {
             this.lastMousePos = e.clientX;
         },
         onMouseLeave: function() {
+            window.console.log("mouseleave");
             this.lastMousePos = 0;
         },
         onMouseDown: function() {
@@ -237,32 +219,20 @@ export default {
             }
         },
     },
-    mounted: function() {
-        window.console.log('mounted')
-        //this.pin = this.$refs.pin;
-        //this.cyl = this.$refs.cylinder;
-        //this.driver = this.$refs.driver;
-    },
+    mounted: function() {},
 };
 </script>
 
 <style>
-@import url("https://fonts.googleapis.com/css?family=Lato:400,700,300,900");
-
-html,
-body {
-    width: 100%;
-    height: 100%;
-    background: #000;
-    padding: 0;
-    margin: 0;
-    font-family: "Lato", helvetica, arial, sans-serif;
+#container {
+    font-family: helvetica, arial;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 75vh;
 }
-body {
-    background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/95637/safeBG2.jpg");
-    background-size: cover;
-    display: inline-block;
-    overflow: hidden;
+#inner {
+    width: 100%;
 }
 #wrap {
     display: block;
@@ -345,46 +315,5 @@ p {
     left: 0;
     background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/95637/pinBott.png");
     background-size: cover;
-}
-
-#modal {
-    display: none;
-    overflow: auto;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    text-align: center;
-}
-#modal div {
-    margin-top: 5%;
-    display: inline-block;
-    background: #fff;
-    border-radius: 20px;
-    box-sizing: border-box;
-    padding: 1%;
-}
-#modal div h1 {
-    margin-bottom: 0.22em;
-}
-#modal div h2 {
-    margin-top: 0;
-    margin-bottom: 1.5em;
-    font-size: 1.4em;
-}
-
-#modal div h3 {
-    font-size: 1.1em;
-}
-#modal div h4 {
-    font-size: 0.8em;
-}
-#win {
-    display: none;
-}
-#lose {
-    display: none;
 }
 </style>

@@ -1,5 +1,6 @@
 local LockpickUI
 local LockPickingStorageObject
+local lockpick_timer
 
 AddEvent("OnPackageStart", function()
     LockpickUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
@@ -19,10 +20,16 @@ AddRemoteEvent("ShowLockpick", function(storage_object)
 
     ShowMouseCursor(true)
     SetInputMode(INPUT_GAMEANDUI)
-    SetIgnoreMoveInput(true)
     SetIgnoreLookInput(true)
     SetWebVisibility(LockpickUI, WEB_VISIBLE)
     ExecuteWebJS(LockpickUI, "EmitEvent('StartLockpick',5)")
+
+    local x, y, z = GetPlayerLocation(GetPlayerId())
+    lockpick_timer = CreateTimer(ShowLockpickTimer, 1000, {
+        x = x,
+        y = y,
+        z = z
+    })
 end)
 
 function HideLockpickUI()
@@ -30,9 +37,17 @@ function HideLockpickUI()
 
     ShowMouseCursor(false)
     SetInputMode(INPUT_GAME)
-    SetIgnoreMoveInput(false)
     SetIgnoreLookInput(false)
     SetWebVisibility(LockpickUI, WEB_HIDDEN)
+end
+
+-- timer used to hide lockpick screen once player walks away
+function ShowLockpickTimer(loc)
+    local x, y, z = GetPlayerLocation(GetPlayerId())
+    if GetDistance3D(x, y, z, loc.x, loc.y, loc.z) > 100 then
+        HideLockpickUI()
+        DestroyTimer(lockpick_timer)
+    end
 end
 
 AddEvent("StartTurn", function()

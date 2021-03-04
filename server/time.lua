@@ -2,7 +2,7 @@ local CurrentTime
 local TimeTimer
 
 AddEvent("OnPackageStart", function()
-  CurrentTime = 8 -- server start time
+  CurrentTime = 10 -- server start time
 
   TimeTimer = CreateTimer(function()
     CurrentTime = CurrentTime + 0.20

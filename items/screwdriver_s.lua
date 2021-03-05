@@ -7,6 +7,12 @@ ItemConfig["screwdriver"] = {
     max_carry = 2,
     use_label = "Screw",
     price = 20,
+    interaction = {
+        animation = { name = "LOCKDOOR" },
+        interacts_on = {
+            { hittype = "object", use_label = "Pick Lock" }
+        },
+    },
     attachment = { 
       x = -10.5, 
       y = 2, 

@@ -46,7 +46,7 @@ AddEvent("OnGameTick", function()
                 ActiveProp = {
                     hit_type = hitStruct.type,
                     hit_object = hitObject,
-                    remote_event = prop['remote_event'] or nil,
+                    event = prop['event'],
                     options = prop['options']
                 }
                 AddPlayerChat("OBJECT ActiveProp: " .. dump(ActiveProp))

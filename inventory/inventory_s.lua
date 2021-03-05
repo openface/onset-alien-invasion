@@ -308,6 +308,14 @@ function UseItemFromInventory(player, uuid, prop)
 end
 AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
 
+AddRemoteEvent("UseProp", function(player, ActiveProp)
+    -- interact with object directly
+    if ActiveProp['event'] then
+        log.debug("interacting with prop, event: " .. ActiveProp['event'])
+        CallEvent(ActiveProp['event'], player, ActiveProp)
+    end
+end)
+
 
 function PlayInteraction(player, uuid, after_callback)
     local item = GetItemInstance(uuid)

@@ -19,7 +19,7 @@ ItemConfig["wooden_chair"] = {
     },
     prop_options = {
         use_label = "Sit",
-        remote_event = "SitInChair",
+        event = "SitInChair",
     }
 }
 

@@ -25,6 +25,39 @@ AddEvent("OnWebLoadComplete", function(ui)
     end
 end)
 
+local UseCooldown
+
+-- Use Item, Prop, or combination of both
+AddEvent("OnKeyRelease", function(key)
+    if key ~= 'Left Mouse Button' then
+        return
+    end
+    if CurrentlyInteracting then
+        return
+    end
+
+    local hold_button_elapsed = (GetTickCount() - UseCooldown) / 1000
+    --AddPlayerChat(hold_button_elapsed)
+
+    if ActiveProp then
+        -- object/prop interaction
+        if CurrentInHand and hold_button_elapsed > 2 then
+            -- use item in hand on object
+            CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid, ActiveProp)
+        else
+            CallRemoteEvent("UseProp", ActiveProp)
+        end
+        ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
+    elseif CurrentInHand then
+        -- use item currently in hands freely
+        if CurrentInHand.type == 'placeable' then
+            CallEvent("PlaceItemFromInventory", CurrentInHand.uuid)
+        else
+            CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid)
+        end
+    end
+end)
+
 AddEvent('OnKeyPress', function(key)
     if IsShiftPressed() or IsAltPressed() or EditingObject or GetWebVisibility(InventoryUI) == WEB_HIDDEN then
         return
@@ -43,43 +76,31 @@ AddEvent('OnKeyPress', function(key)
             -- item hotkeys
             CallRemoteEvent("UseItemHotkey", key)
         elseif key == 'Left Mouse Button' and not CurrentlyInteracting then
-            if ActiveProp then
-                -- object/prop interaction
-                if CurrentInHand and CurrentInHandInteractsOnType(ActiveProp.hit_type) then
-                    -- use item in hand on object
-                    CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid, ActiveProp)
-                else
-                    -- interact with object directly
-                    if ActiveProp['remote_event'] then
-                        --AddPlayerChat("calling remote event: " .. ActiveProp['remote_event'])
-                        CallRemoteEvent(ActiveProp['remote_event'], ActiveProp)
-                    end
-                end
-                ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
-            elseif CurrentInHand then
-                -- use item currently in hands freely
-                if CurrentInHand.type == 'placeable' then
-                    CallEvent("PlaceItemFromInventory", CurrentInHand.uuid)
-                else
-                    CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid)
-                end
-            end
+            AddPlayerChat("LMB")
+            UseCooldown = GetTickCount()
         end
     end
 end)
 
--- given an environment type (tree, water, etc), returns the prop
+--[[ -- given an environment type (tree, water, etc), returns the prop
 -- definition compatible with what is currently equipped in hands
 function CurrentInHandInteractsOnType(hittype)
     if CurrentInHand and CurrentInHand.interacts_on then
         for _,p in pairs(CurrentInHand.interacts_on) do
-            if p.hittype == hittype then
-                return p -- { hittype = "tree", use_label = "Chop Tree" }
+            -- p { hittype = "tree", use_label = "Chop Tree" }
+            if p.hittype == 'object' and p.client_func then
+                AddPlayerChat("custom: ".. p.client_func)
+                local func = loadstring(p.client_func)
+                AddPlayerChat(func())
+                return func()
+            elseif p.hittype == hittype then
+                AddPlayerChat("can interact with"..hittype)
+                return true
             end
         end
     end
     return false
-end
+end ]]
 
 AddEvent('OnKeyRelease', function(key)
     if GetWebVisibility(InventoryUI) == WEB_HIDDEN then

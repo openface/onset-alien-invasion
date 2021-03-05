@@ -22,7 +22,7 @@ ItemConfig["campfire"] = {
     interaction = nil,
     prop_options = {
         use_label = "Ignite",
-        remote_event = "IgniteCampfire",
+        event = "IgniteCampfire",
     }
 }
 

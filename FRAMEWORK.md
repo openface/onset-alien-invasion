@@ -72,7 +72,7 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
     },
     prop_options = {                    -- creates interactive props
         use_label = "Sit",
-        remote_event = "SitInChair",
+        event = "SitInChair",
         options = {                     -- options passed into the event
             type = 'object',
         }
@@ -117,7 +117,7 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
 WIP
 
 ```
-SetObjectPropertyValue(object, "prop", { use_label = "Interact", remote_event = "GetWorkbenchData", options = { id = config['id'] } })
+SetObjectPropertyValue(object, "prop", { use_label = "Interact", event = "GetWorkbenchData", options = { id = config['id'] } })
 ```
 
 

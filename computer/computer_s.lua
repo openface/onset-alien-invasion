@@ -24,13 +24,13 @@ AddEvent("OnPackageStart", function()
     -- garage computer
     CreateComputer("Garage Computer", GarageComputerConfig, {
         use_label = "Interact",
-        remote_event = "InteractComputer"
+        event = "InteractComputer"
     })
 
     -- satellite terminal
     CreateComputer("Satellite Terminal", SatelliteTerminalConfig, {
         use_label = "Interact",
-        remote_event = "InteractComputer"
+        event = "InteractComputer"
     })
 end)
 

@@ -12,16 +12,18 @@ AddRemoteEvent("UnlockStorage", function(player, object)
     CallRemoteEvent(player, "ShowMessage", "Storage is now unlocked!")
 end)
 
-AddRemoteEvent("OpenStorage", function(player, prop)
+AddEvent("OpenStorage", function(player, prop)
     log.trace("OpenStorage")
 
     if prop.options['locked'] then
-        if GetInventoryCountByName(player, "screwdriver") > 0 then
+        CallRemoteEvent(player, "ShowError", "Locked")
+
+--[[         if GetInventoryCountByName(player, "screwdriver") > 0 then
             CallRemoteEvent(player, "ShowLockpick", prop.hit_object)
         else
             CallRemoteEvent(player, "ShowError", "Locked")
         end
-        return
+ ]]        return
     end
 
     log.info(GetPlayerName(player) .. " opens storage object " .. prop.hit_object .. " type " ..

@@ -48,30 +48,14 @@ AddEvent('OnKeyPress', function(key)
     elseif key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' then
         -- item hotkeys
         CallRemoteEvent("UseItemHotkey", key)
-    elseif key == 'Left Mouse Button' then
-        -- nothing to use
-        if not ActiveProp and not CurrentInHand then
-            return
-        end
-
-        -- use item
-        if CurrentInHand and not ActiveProp then
-            AddPlayerChat("use item")
-
-            if CurrentInHand.type == 'placeable' then
-                CallEvent("PlaceItemFromInventory", CurrentInHand.uuid)
-            else
-                CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid)
-            end
-            ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
-            return
-        end
+    elseif key == 'E' then
+        -- interact with prop
 
         -- use prop
         if ActiveProp and not CurrentInHand then
-            AddPlayerChat("use prop")
+            AddPlayerChat("interact with prop")
 
-            CallRemoteEvent("UseProp", ActiveProp)
+            CallRemoteEvent("InteractWithProp", ActiveProp)
             ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
             return
         end
@@ -95,6 +79,19 @@ AddEvent('OnKeyPress', function(key)
                 ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
             end
         end, 200, ActionCooldown)
+
+    elseif key == 'Left Mouse Button' then
+        -- use item
+        if CurrentInHand then
+            AddPlayerChat("use item")
+
+            if CurrentInHand.type == 'placeable' then
+                CallEvent("PlaceItemFromInventory", CurrentInHand.uuid)
+            else
+                CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid)
+            end
+            return
+        end
     end
 end)
 
@@ -109,7 +106,7 @@ AddEvent('OnKeyRelease', function(key)
         ExecuteWebJS(InventoryUI, "EmitEvent('HideInventory')")
         ShowMouseCursor(false)
         SetInputMode(INPUT_GAME)
-    elseif key == 'Left Mouse Button' and ActionCooldown then
+    elseif key == 'E' and ActionCooldown then
         local hold_button_elapsed = GetTickCount() - ActionCooldown
         CallEvent("HideSpinner")
         ActionCooldown = nil

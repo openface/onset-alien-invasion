@@ -97,7 +97,7 @@
         <div id="inhand" v-if="!inventory_visible && equipped_hands">
             <div class="name">{{ equipped_hands.name }}</div>
             <div class="use" v-if="equipped_hands.use_label">
-                <img width="25" height="25" :src="require('@/assets/images/icons/lmb.png')" />
+                <span class="key">LMB</span>
                 {{ equipped_hands.use_label }}
             </div>
         </div>
@@ -435,14 +435,14 @@ export default {
                 ],
             });
 
-            this.EventBus.$emit("ShowInventory");
-            //this.EventBus.$emit("HideInventory");
+            //this.EventBus.$emit("ShowInventory");
+            this.EventBus.$emit("HideInventory");
         }
     },
 };
 </script>
 
-<style scoped>
+<style>
 .item-drop-zone {
     margin: 0;
     width: 100%;
@@ -515,10 +515,10 @@ export default {
 
 #inhand {
     position: fixed;
-    bottom: 1vh;
+    bottom: 1.2vh;
     right: 1vh;
     width: 250px;
-    background: rgba(255, 255, 255, 0.4);
+    background-image: linear-gradient(to left, rgba(255,255,255,0), rgba(255,255,255,0.4));
     font-family: helvetica;
     font-weight: bold;
     padding: 5px 10px;
@@ -530,9 +530,15 @@ export default {
 #inhand .use {
     float: right;
     text-transform: uppercase;
-    font-size: 18px;
+    font-size: 16px;
 }
-#inhand .use img {
-    vertical-align: middle;
+#inhand .use .key {
+    color: rgba(255, 255, 255, 0.9);;
+    font-size: 16px;
+    padding: 2px 5px;
+    background: rgba(0, 0, 0, 0.9);
+    box-shadow: 3px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 20%;
+    line-height: 1.6em;
 }
 </style>

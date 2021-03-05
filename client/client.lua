@@ -81,6 +81,11 @@ AddEvent("OnPlayerStreamIn", function(player)
     TogglePlayerTag(player, "voice", false)
 end)
 
+AddEvent("OnPlayerSpawn", function()
+    local clothing = GetPlayerPropertyValue(GetPlayerId(), "clothing") or 25 -- default
+    SetPlayerClothingPreset(GetPlayerId(), clothing)
+end)
+
 AddEvent("OnPlayerNetworkUpdatePropertyValue", function(player, PropertyName, PropertyValue)
     if PropertyName == "clothing" and PropertyValue ~= nil then
         AddPlayerChat("clothing change:"..player.." to "..PropertyValue)

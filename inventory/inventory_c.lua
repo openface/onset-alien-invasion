@@ -51,19 +51,14 @@ AddEvent('OnKeyPress', function(key)
     elseif key == 'E' then
         -- interact with prop
 
-        -- todo this needs to consider whether item in hand actually 
-        -- is the appropriate item to be holding.
-
-        -- use prop (nothing in hand)
-        if ActiveProp and not CurrentInHand then
-            AddPlayerChat("interact with prop")
-
+        if ActiveProp and not ActiveProp.interacts_with then
+            AddPlayerChat("interact with prop (no item)")
             CallRemoteEvent("InteractWithProp", ActiveProp)
-            ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
+            -- ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
             return
         end
 
-        -- on prop (with item in hand)
+        -- interact with prop (with item in hand)
         AddPlayerChat("use item on prop - start")
         ActionCooldown = GetTickCount()
         ActionTimer = CreateTimer(function(starttime)

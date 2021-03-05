@@ -1,6 +1,5 @@
 -- global
 HudUI = nil
-CurrentlyInteracting = false
 
 AddEvent("OnPackageStart", function()
     HudUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
@@ -54,16 +53,5 @@ AddEvent("HideSpinner", function()
     ExecuteWebJS(HudUI, "EmitEvent('HideSpinner')")
 end)
 
--- interactions
-AddRemoteEvent("StartInteraction", function(data)
-    if data['show_spinner'] then
-        ExecuteWebJS(HudUI, "EmitEvent('ShowSpinner'," .. data['duration'] .. ")")
-    end
-    CurrentlyInteracting = true
-
-    Delay(data['duration'], function()
-        CurrentlyInteracting = false
-    end)
-end)
 
 

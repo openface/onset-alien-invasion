@@ -335,11 +335,6 @@ function PlayInteraction(player, uuid, after_callback)
         end
         local duration = ItemConfig[item].interaction['animation']['duration'] or 2000 -- default animation delay
 
-        CallRemoteEvent(player, "StartInteraction", {
-            ['duration'] = duration,
-            ['show_spinner'] = ItemConfig[item].interaction['animation']['spinner']
-        })
-
         Delay(duration, function()
             SetPlayerAnimation(player, "STOP")
 

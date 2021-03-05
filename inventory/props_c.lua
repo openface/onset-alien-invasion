@@ -34,10 +34,6 @@ AddEvent("OnGameTick", function()
             AddPlayerChat("-> now looking at " .. hitObject .. " -> " .. dump(hitStruct))
         end
 
-        if CurrentlyInteracting then
-            return
-        end
-
         if hitStruct.type == 'object' then
             -- object interaction
             local prop = GetObjectPropertyValue(hitObject, "prop")
@@ -52,7 +48,7 @@ AddEvent("OnGameTick", function()
                 AddPlayerChat("OBJECT ActiveProp: " .. dump(ActiveProp))
             end
         elseif CurrentInHand then
-            local prop = CurrentInHandInteractsOnType(hitStruct.type)
+            local prop = CurrentInHandInteractsWithHitType(hitStruct.type)
             if prop then
                 -- equipped item interacts with environment
                 ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop.use_label .. "')")
@@ -68,6 +64,17 @@ AddEvent("OnGameTick", function()
         LastHitStruct = hitStruct
     end
 end)
+
+function CurrentInHandInteractsWithHitType(hittype)
+    if CurrentInHand and CurrentInHand.interacts_on then
+        for _, p in pairs(CurrentInHand.interacts_on) do
+            -- p { hittype = "tree", use_label = "Chop Tree" }
+            if p.hittype == hittype then
+                return p
+            end
+        end
+    end
+end
 
 -- returns the object and a structure or nil
 function PlayerLookRaycast()

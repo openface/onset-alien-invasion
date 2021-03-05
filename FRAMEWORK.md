@@ -13,7 +13,6 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
         animation = { 
             name = "SIT",               -- animation to play when equipping/using
             duration = "4000"           -- milliseconds to delay for animation (default 2000)
-            spinner = false             -- shows a spinner for the duration of interaction
         },
         sound = "sounds/squeak.mp3"     -- sound to play during interaction with object
         prop = {

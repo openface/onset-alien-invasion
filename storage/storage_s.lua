@@ -1,4 +1,4 @@
-AddRemoteEvent("UnlockStorage", function(player, object)
+AddEvent("UnlockStorage", function(player, object)
     log.trace("UnlockStorage", object)
 
     local prop = GetObjectPropertyValue(object, "prop")

@@ -48,25 +48,29 @@ AddEvent('OnKeyPress', function(key)
     elseif key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' then
         -- item hotkeys
         CallRemoteEvent("UseItemHotkey", key)
-    elseif key == 'E' then
-        -- interact with prop
+    elseif key == 'Left Mouse Button' then
+        if not ActiveProp then
+            return
+        end
+        local prop_object_name = GetObjectModelName(GetObjectModel(ActiveProp.hit_object))
 
+        -- interact with prop
         if ActiveProp and not ActiveProp.interacts_with then
-            AddPlayerChat("interact with prop (no item)")
+            AddPlayerChat("interact with prop "..prop_object_name.." (no item)")
             CallRemoteEvent("InteractWithProp", ActiveProp)
             -- ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
             return
         end
 
         -- interact with prop (with item in hand)
-        AddPlayerChat("use item on prop - start")
+        AddPlayerChat("use item "..CurrentInHand.item.." on prop "..prop_object_name.." - start")
         ActionCooldown = GetTickCount()
         ActionTimer = CreateTimer(function(starttime)
             local hold_button_elapsed = (GetTickCount() - ActionCooldown) / 1000
             AddPlayerChat("action timer: " .. starttime .. " " .. hold_button_elapsed)
 
             if hold_button_elapsed > 3 then
-                AddPlayerChat("use item on prop - end")
+                AddPlayerChat("use item "..CurrentInHand.item.." on prop "..prop_object_name.." - end")
 
                 CallEvent("HideSpinner")
                 CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid, ActiveProp)
@@ -104,7 +108,7 @@ AddEvent('OnKeyRelease', function(key)
         ExecuteWebJS(InventoryUI, "EmitEvent('HideInventory')")
         ShowMouseCursor(false)
         SetInputMode(INPUT_GAME)
-    elseif key == 'E' and ActionCooldown then
+    elseif key == 'Left Mouse Button' and ActionCooldown then
         local hold_button_elapsed = GetTickCount() - ActionCooldown
         CallEvent("HideSpinner")
         ActionCooldown = nil

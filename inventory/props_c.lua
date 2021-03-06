@@ -50,7 +50,7 @@ AddEvent("OnGameTick", function()
                     hit_object = hitObject,
                     event = prop['event'],
                     options = prop['options'],
-                    interacts_with = interacts_with
+                    interacts_with = interacts_with,
                 }
                 AddPlayerChat("OBJECT ActiveProp: " .. dump(ActiveProp))
             end
@@ -61,7 +61,7 @@ AddEvent("OnGameTick", function()
                 ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop.use_label .. "')")
                 ActiveProp = {
                     hit_type = hitStruct.type,
-                    hit_object = hitObject
+                    hit_object = hitObject,
                 }
                 AddPlayerChat("ENV ActiveProp: " .. dump(ActiveProp))
             end
@@ -85,8 +85,8 @@ end
 
 -- @return { item = "axe", use_label = "Break Open" }
 function PropInteractsWith(prop)
-    if prop.options and prop.options['interacts_with'] and CurrentInHand.item == prop.options['interacts_with'].item then
-        return prop.options['interacts_with']
+    if CurrentInHand and prop.interacts_with and CurrentInHand.item == prop.interacts_with.item then
+        return prop.interacts_with
     end
 end
 

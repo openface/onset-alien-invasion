@@ -52,8 +52,8 @@ function AddStorageProp(object)
             storage_type = 'object',
             storage_name = "Storage Container",
             locked = locked,
-            interacts_with = { item = "axe", use_label = "Break Open" }
-        }
+        },
+        interacts_with = { item = "axe", use_label = "Break Open", event = "UnlockStorage" }
     })
 end
 

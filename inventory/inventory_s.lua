@@ -265,8 +265,8 @@ function GetNextAvailableInventorySlot(player)
 end
 
 -- use object from inventory
--- options.prop true means to interact with object using item in hand
-function UseItemFromInventory(player, uuid, prop)
+-- options.prop means to interact with object using item in hand
+function UseItemFromInventory(player, uuid, ActiveProp)
     local item = GetItemInstance(uuid)
     if not item then
         log.error("Invalid item" .. uuid)
@@ -292,18 +292,20 @@ function UseItemFromInventory(player, uuid, prop)
         return
     end
 
-    if prop then
-        log.debug(GetPlayerName(player) .. " interacting with object:".. prop.hit_object .. " type:".. prop.hit_type .." using object:"..equipped_object)
-    end
-
     PlayInteraction(player, uuid, function()
         -- increment used
         if ItemConfig[item].max_use then
             IncrementItemUsed(player, uuid)
         end
 
-        -- call USE event on object
-        CallEvent("items:" .. item .. ":use", player, equipped_object, prop)
+        -- interacting with object
+        if ActiveProp and ActiveProp.interacts_with then
+            log.debug(GetPlayerName(player) .. " interacting with object:".. ActiveProp.hit_object .. " type:".. ActiveProp.hit_type .." using object:"..equipped_object.." event:"..ActiveProp.interacts_with.event)
+            CallEvent(ActiveProp.interacts_with.event, player, ActiveProp.hit_object)
+        else
+            -- call USE event on object
+            CallEvent("items:" .. item .. ":use", player, equipped_object, ActiveProp)
+        end
     end)
 end
 AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)

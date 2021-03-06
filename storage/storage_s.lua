@@ -1,4 +1,4 @@
-AddEvent("UnlockStorage", function(player, object)
+function UnlockStorage(player, object)
     log.trace("UnlockStorage", object)
 
     local prop = GetObjectPropertyValue(object, "prop")
@@ -10,7 +10,9 @@ AddEvent("UnlockStorage", function(player, object)
     SetObjectPropertyValue(object, "prop", prop)
     log.debug(GetPlayerName(player) .. " unlocked storage", object)
     CallRemoteEvent(player, "ShowMessage", "Storage is now unlocked!")
-end)
+end
+AddEvent("UnlockStorage", UnlockStorage)
+AddRemoteEvent("UnlockStorage", UnlockStorage)
 
 AddEvent("OpenStorage", function(player, prop)
     log.trace("OpenStorage")

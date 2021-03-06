@@ -53,5 +53,28 @@ AddEvent("HideSpinner", function()
     ExecuteWebJS(HudUI, "EmitEvent('HideSpinner')")
 end)
 
+local PreviousIsFirstPerson = nil
 
+-- binoculars
+AddRemoteEvent("ShowBinoculars", function()
+    ExecuteWebJS(HudUI, "EmitEvent('SetBinocularView', true)")
+
+    PreviousIsFirstPerson = IsFirstPersonCamera()
+    if not PreviousIsFirstPerson then
+        SetFirstPerson()
+    end
+    SetNearClipPlane(50)
+
+    SetCameraFoV(25)
+
+end)
+
+AddRemoteEvent("HideBinoculars", function()
+    if not PreviousIsFirstPerson then
+        SetThirdPerson()
+    end
+    SetCameraFoV(90)
+
+    ExecuteWebJS(HudUI, "EmitEvent('SetBinocularView', false)")
+end)
 

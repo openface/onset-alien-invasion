@@ -1,5 +1,5 @@
 <template>
-    <div id="hud">
+    <div id="hud" :class="{ binoculars: binoculars }">
         <div id="banner" v-if="banner">
             <span class="message">{{ banner }}</span>
         </div>
@@ -25,6 +25,7 @@ export default {
             boss_health: null,
             interaction_message: null,
             show_spinner: false,
+            binoculars: false
         };
     },
     methods: {
@@ -60,6 +61,9 @@ export default {
         },
         HideSpinner: function() {
             this.show_spinner = false;
+        },
+        SetBinocularView: function(bool) {
+            this.binoculars = bool;
         }
     },
     mounted() {
@@ -70,6 +74,7 @@ export default {
         this.EventBus.$on("HideInteractionMessage", this.HideInteractionMessage);
         this.EventBus.$on("ShowSpinner", this.ShowSpinner);
         this.EventBus.$on("HideSpinner", this.HideSpinner);
+        this.EventBus.$on("SetBinocularView", this.SetBinocularView);
 
         if (!this.InGame) {
             this.EventBus.$emit("ShowMessage", "You have found an important piece! Take this to the satellite!");
@@ -86,6 +91,9 @@ export default {
             setTimeout(() => this.EventBus.$emit("SetBossHealth", 40), 5000);
             setTimeout(() => this.EventBus.$emit("SetBossHealth", 20), 8000);
             setTimeout(() => this.EventBus.$emit("SetBossHealth", 0), 10000);
+
+            setTimeout(() => this.EventBus.$emit("SetBinocularView", true), 2000);
+
         }
     },
 };
@@ -95,6 +103,15 @@ export default {
 #hud {
     height: 100%;
     position: relative;
+}
+
+#hud.binoculars {
+    margin:0px;
+    width:100%;
+    position: fixed;
+    border:1px solid red;
+    background: url('~@/assets/images/binoculars/overlay.png') no-repeat center center fixed;
+    background-size: cover;
 }
 
 /**

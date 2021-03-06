@@ -9,7 +9,7 @@ export default {
 </script>
 
 <style>
-body { user-select: none; overflow: hidden; height: 100%; }
+body { user-select: none; overflow: hidden; height: 100%; margin:0; }
 
 #progress {
     position: fixed;

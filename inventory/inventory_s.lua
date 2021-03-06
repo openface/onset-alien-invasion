@@ -292,6 +292,8 @@ function UseItemFromInventory(player, uuid, ActiveProp)
         return
     end
 
+    CallEvent("items:" .. item .. ":before_use", player, equipped_object, ActiveProp)
+
     PlayInteraction(player, uuid, function()
         -- increment used
         if ItemConfig[item].max_use then

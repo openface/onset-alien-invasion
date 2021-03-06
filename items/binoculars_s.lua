@@ -7,7 +7,7 @@ ItemConfig["binoculars"] = {
         plastic = 5
     },
     interaction = {
-        animation = { name = "WATCHING", duration = 5000 }
+        animation = { name = "WATCHING", duration = 4000 }
     },
     modelid = 20004,
     image = "survival/SM_Binocular.png",
@@ -24,3 +24,12 @@ ItemConfig["binoculars"] = {
       bone = "hand_r" 
     }
 }
+
+AddEvent("items:binoculars:before_use", function(player, object)
+    Delay(2500, function()
+        CallRemoteEvent(player, "ShowBinoculars")
+    end)
+    Delay(10000, function()
+        CallRemoteEvent(player, "HideBinoculars")
+    end)
+end)

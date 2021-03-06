@@ -14,11 +14,13 @@ ItemConfig["axe"] = {
         },
         interacts_on = {{
             hittype = "tree",
-            use_label = "Chop Tree"
+            use_label = "Chop Tree",
+            event = "HarvestTree"
         }}
     },
     modelid = 20002,
     max_use = 20,
+    use_label = "Chop",
     image = "survival/SM_Axe-Neo.png",
     max_carry = 1,
     price = 150,
@@ -36,10 +38,7 @@ ItemConfig["axe"] = {
 --
 -- Chopping
 --
-AddEvent("items:axe:use", function(player, object, prop)
-    if not prop then
-        return
-    end
+AddEvent("HarvestTree", function(player, object)
     log.debug(GetPlayerName(player) .. " is chopping a tree")
 
     CallRemoteEvent(player, "ShowMessage", "You collect some wood and put it in your inventory")

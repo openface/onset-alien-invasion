@@ -38,7 +38,7 @@ AddEvent("OnGameTick", function()
             -- object interaction
             local prop = GetObjectPropertyValue(hitObject, "prop")
             if prop then
-                local interacts_with = PropInteractsWith(prop)
+                local interacts_with = CurrentInHandInteractsWithObject(prop)
                 if interacts_with then
                     ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. interacts_with.use_label .. "')")
                 else
@@ -55,13 +55,14 @@ AddEvent("OnGameTick", function()
                 AddPlayerChat("OBJECT ActiveProp: " .. dump(ActiveProp))
             end
         elseif CurrentInHand then
-            local prop = CurrentInHandInteractsWithHitType(hitStruct.type)
-            if prop then
-                -- equipped item interacts with environment
-                ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop.use_label .. "')")
+            -- item in hand interacts with environment
+            local interaction = CurrentInHandInteractsWithHitType(hitStruct.type)
+            if interaction then
+                ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. interaction.use_label .. "')")
                 ActiveProp = {
                     hit_type = hitStruct.type,
                     hit_object = hitObject,
+                    interacts_with = { item = interaction.hittype, use_label = interaction.use_label, event = interaction.event }
                 }
                 AddPlayerChat("ENV ActiveProp: " .. dump(ActiveProp))
             end
@@ -72,7 +73,7 @@ AddEvent("OnGameTick", function()
     end
 end)
 
--- @return  { hittype = "tree", use_label = "Chop Tree" }
+-- @return  { hittype = "tree", use_label = "Chop Tree", event = "HarvestTree"}
 function CurrentInHandInteractsWithHitType(hittype)
     if CurrentInHand and CurrentInHand.interacts_on then
         for _, p in pairs(CurrentInHand.interacts_on) do
@@ -83,8 +84,8 @@ function CurrentInHandInteractsWithHitType(hittype)
     end
 end
 
--- @return { item = "axe", use_label = "Break Open" }
-function PropInteractsWith(prop)
+-- @return { item = "axe", use_label = "Break Open", event = "UnlockStorage" }
+function CurrentInHandInteractsWithObject(prop)
     if CurrentInHand and prop.interacts_with and CurrentInHand.item == prop.interacts_with.item then
         return prop.interacts_with
     end

@@ -15,9 +15,11 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
             duration = "4000"           -- milliseconds to delay for animation (default 2000)
         },
         sound = "sounds/squeak.mp3"     -- sound to play during interaction with object
-        prop = {
-            target = "tree",            -- for interacting with world objects (Eg. tree, water, vehicle_hood)
-            desc = "Chop Tree",         -- label for "Use" when interacting
+        interacts_on = {
+            {
+                target = "tree",        -- for interacting with world objects (Eg. tree, water, vehicle_hood)
+                desc = "Chop Tree",     -- label for "Use" when looking at world object
+            }
         }
     },
     modelid = 1262,                     -- [required] object modelid
@@ -132,7 +134,7 @@ SetObjectPropertyValue(object, "prop", { use_label = "Interact", event = "GetWor
 #### After Use
 
 ```
-AddEvent("items:beer:use", function(player, object, options)
+AddEvent("items:beer:use", function(player, object, prop)
     -- drunk effect
 end)
 ```

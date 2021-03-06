@@ -70,6 +70,10 @@ function SelectFirst(name, where)
     return Tables[name].first(where)
 end
 
+function DeleteRow(name, where)
+    return Tables[name].delete(where)
+end
+
 --
 -- Schema table functions
 --

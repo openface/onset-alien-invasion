@@ -13,10 +13,9 @@ InitTable("placed_items", {
     location = {
         type = 'json'
     },
-    placed_by = {
+    steamid = {
         type = 'char',
-        length = 17
-
+        length = 17,
     },
 }, false) -- true to recreate table
 
@@ -73,19 +72,33 @@ AddRemoteEvent("PlaceItem", function(player, uuid, loc)
         return
     end
 
+    local steamid = tostring(GetPlayerSteamId(player))
+
     SetObjectPropertyValue(object, "item", item)
     SetObjectPropertyValue(object, "placeable", true)
-    SetObjectPropertyValue(object, "placed_by", tostring(GetPlayerSteamId(player)))
+    SetObjectPropertyValue(object, "placed_by", steamid)
 
     if ItemConfig[item].prop_options then
         SetObjectPropertyValue(object, "prop", ItemConfig[item].prop_options)
     end
 
     -- generate new uuid for each placed object
-    PlacedObjects[object] = generate_uuid()
+    local object_uuid = generate_uuid()
+    PlacedObjects[object] = object_uuid
 
     log.debug(GetPlayerName(player) .. " placed object " .. object .. " item " .. item)
     CallRemoteEvent(player, "ObjectPlaced", object)
+
+    InsertRow("placed_items", {
+        uuid = object_uuid,
+        item = item,
+        location = {
+            x = loc.x,
+            y = loc.y,
+            z = loc.z
+        },
+        steamid = steamid,
+    })
 end)
 
 AddRemoteEvent("FinalizeObjectPlacement", function(player, object)
@@ -102,6 +115,8 @@ AddRemoteEvent("UnplaceItem", function(player, object)
 
     PlacedObjects[object] = nil
     DestroyObject(object)
+
+
 
     local uuid = RegisterNewItem(item)
     AddToInventory(player, uuid)
@@ -120,35 +135,3 @@ function GetPlacedObjectsByName(item)
     return placed_objects
 end
 
-function SavePlacedObjects()
-    TruncateTable("placed_items")
-    for object, _ in pairs(PlacedObjects) do
-        if IsValidObject(object) then
-            SavePlacedObject(object)
-        end
-    end
-end
-
-function SavePlacedObject(object)
-    local uuid = PlacedObjects[object]
-    if not uuid then
-        return
-    end
-
-    log.info("Saving placed object: " .. object)
-
-    local item = GetObjectPropertyValue(object, "item")
-    local x, y, z = GetObjectLocation(object)
-    local placed_by = GetObjectPropertyValue(object, "placed_by")
-
-    InsertRow("placed_items", {
-        uuid = uuid,
-        item = item,
-        location = {
-            x = x,
-            y = y,
-            z = z
-        },
-        placed_by = placed_by,
-    })
-end

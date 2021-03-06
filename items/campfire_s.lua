@@ -37,6 +37,7 @@ AddEvent("OnPackageStart", function()
                 local x, y, z = GetObjectLocation(object)
                 local players_in_range = GetPlayersInRange2D(x, y, 500)
                 for player in pairs(players_in_range) do
+                    -- todo: player should take damage if too close to fire
                     SetPlayerHealth(player, GetPlayerHealth(player) + 2)
                 end
             end

@@ -171,10 +171,20 @@ function Table.new(conn, name, fields)
             select_query = select_query .. " " .. self._where(where)
         end
 
-        log.debug(select_query)
+        log.trace(select_query)
         local query = mariadb_prepare(self.conn, select_query)
         local result = mariadb_query(self.conn, query, callback)
         return true
+    end
+
+    -- deletes rows
+    -- @param where        
+    self.delete = function(where)
+        local delete_query = "DELETE FROM "..self.name.." "..self._where(where)
+        log.trace(delete_query)
+        local query = mariadb_prepare(self.conn, delete_query)
+        local result = mariadb_async_query(self.conn, delete_query)
+        return result
     end
 
     -- selects first row only

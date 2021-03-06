@@ -394,7 +394,7 @@ function AttemptHitPlayer(npc, player)
         SetPlayerHealth(player, health - AlienAttackDamage)
     end
 
-    CallRemoteEvent(player, "OnAlienHit")
+    CallRemoteEvent(player, "TakeDamage")
 end
 
 -- return alien back to starting position

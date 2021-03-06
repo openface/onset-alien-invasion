@@ -80,11 +80,6 @@ AddRemoteEvent('AlienNoLongerAttacking', function()
     SetSafeAmbience()
 end)
 
-AddRemoteEvent("OnAlienHit", function()
-    SetSoundVolume(CreateSound("client/sounds/pain.mp3"), 1)
-    InvokeDamageFX(1000)
-end)
-
 AddEvent("OnPlayerSpawn", function()
     SetSoundVolume(AmbientSound, 0.0)
 end)

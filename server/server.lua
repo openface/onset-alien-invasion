@@ -15,8 +15,6 @@ AddEvent("OnPackageStart", function()
             end
         end
 
-        SavePlacedObjects()
-
         log.info("===== Objects: " .. #GetAllObjects() .. " Pickups: " .. #GetAllPickups() .. " Vehicles: " ..
                      #GetAllVehicles() .. " Timers: " .. #GetAllTimers() .. " Players: " .. #GetAllPlayers())
     end, GameSaveTime)

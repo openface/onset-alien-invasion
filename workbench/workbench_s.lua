@@ -23,7 +23,7 @@ function CreateWorkbench(config)
                        config.sx, config.sy, config.sz)
     SetObjectPropertyValue(object, "prop", {
         use_label = "Interact",
-        remote_event = "GetWorkbenchData",
+        event = "GetWorkbenchData",
         options = {
             id = config.id,
             name = config.name

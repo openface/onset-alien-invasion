@@ -25,6 +25,8 @@ ReplaceObjectModelMesh(20029, "/AlienInvasion/Meshes/SM_SleepingBag-RolledUp-Bro
 ReplaceObjectModelMesh(20030, "/AlienInvasion/Meshes/SM_SleepingBag-RolledUp-Green")
 ReplaceObjectModelMesh(20029, "/AlienInvasion/Meshes/SM_SleepingBag-Open-Brown")
 ReplaceObjectModelMesh(20030, "/AlienInvasion/Meshes/SM_SleepingBag-Open-Green")
+-- Lockpick
+ReplaceObjectModelMesh(20100, "/AlienInvasion/Meshes/MSH_Screwdriver_01")
 
 
 -- Animations
@@ -79,6 +81,11 @@ AddEvent("OnPlayerStreamIn", function(player)
     TogglePlayerTag(player, "voice", false)
 end)
 
+AddEvent("OnPlayerSpawn", function()
+    local clothing = GetPlayerPropertyValue(GetPlayerId(), "clothing") or 25 -- default
+    SetPlayerClothingPreset(GetPlayerId(), clothing)
+end)
+
 AddEvent("OnPlayerNetworkUpdatePropertyValue", function(player, PropertyName, PropertyValue)
     if PropertyName == "clothing" and PropertyValue ~= nil then
         AddPlayerChat("clothing change:"..player.." to "..PropertyValue)
@@ -98,10 +105,14 @@ AddEvent("OnHideMainMenu", function ()
     -- hide any visible UIs
     for _,ui in pairs(GetAllWebUI()) do
       if GetWebVisibility(ui) == WEB_VISIBLE then
-        print("Hiding UI: "..ui)
+        AddPlayerChat("Hiding UI: "..ui)
         SetWebVisibility(ui, WEB_HIDDEN)
       end
     end
+    SetInputMode(INPUT_GAME)
+    SetIgnoreMoveInput(false)
+    SetIgnoreLookInput(false)
+    ShowMouseCursor(false)
 end)
 
 -- skydive

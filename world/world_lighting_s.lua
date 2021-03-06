@@ -61,11 +61,11 @@ function AddLightingProp(object, component_config)
 
     SetObjectPropertyValue(object, "prop", {
         use_label = "Enable/Disable",
-        remote_event = "ToggleLight",
+        event = "ToggleLight",
     })
 end
 
-AddRemoteEvent("ToggleLight", function(player, prop)
+AddEvent("ToggleLight", function(player, prop)
     log.info(GetPlayerName(player) .. " toggles light object " .. prop.hit_object)
     local light_enabled = GetObjectPropertyValue(prop.hit_object, "light_enabled")
     SetObjectPropertyValue(prop.hit_object, "light_enabled", not light_enabled)

@@ -45,7 +45,7 @@ AddCommand("scrap", function(player, amt)
 end)
 
 -- search for scrap
-AddRemoteEvent("SearchForScrap", function(player, prop)
+AddEvent("SearchForScrap", function(player, prop)
     if CurrentlySearching[player] ~= nil then
         return
     end
@@ -105,6 +105,6 @@ end
 function AddGarbageProp(object)
     SetObjectPropertyValue(object, "prop", {
         use_label = "Search",
-        remote_event = "SearchForScrap"
+        event = "SearchForScrap"
     })
 end

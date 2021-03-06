@@ -24,7 +24,7 @@ function RegisterMerchant(name, config)
                        config.sx, config.sy, config.sz)
     SetObjectPropertyValue(object, "prop", {
         use_label = "Interact",
-        remote_event = "GetMerchantData"
+        event = "GetMerchantData"
     })
     Merchants[object] = true
 end

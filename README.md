@@ -30,8 +30,9 @@ The satellite computer has enough power to communicate with the mothership. Sear
 * Workbench system for building items with resources that you find at the scrap heaps.
 * Inventory system with interactive objects and hotbar selection.
 * Merchant system for purchasing items with cash.
-* Interactive world props (tree, water, vehicle hoods, etc)
+* Interactive world props.  Hold LMB to use interact with item in hands.  (Eg. Chopping tree with axe, etc)
 * Storage containers that spawn random items.
+* Locked storage containers can be lock-picked with screwdriver, and forced opened with crowbar.
 
 ### Project Direction
 

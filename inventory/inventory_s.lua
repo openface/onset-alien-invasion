@@ -265,8 +265,8 @@ function GetNextAvailableInventorySlot(player)
 end
 
 -- use object from inventory
--- options.prop true means to interact with object using item in hand
-function UseItemFromInventory(player, uuid, prop)
+-- options.prop means to interact with object using item in hand
+function UseItemFromInventory(player, uuid, ActiveProp)
     local item = GetItemInstance(uuid)
     if not item then
         log.error("Invalid item" .. uuid)
@@ -292,10 +292,6 @@ function UseItemFromInventory(player, uuid, prop)
         return
     end
 
-    if prop then
-        log.debug(GetPlayerName(player) .. " interacting with object:".. prop.hit_object .. " type:".. prop.hit_type .." using object:"..equipped_object)
-    end
-
     PlayInteraction(player, uuid, function()
         -- increment used
         if ItemConfig[item].max_use then
@@ -303,10 +299,21 @@ function UseItemFromInventory(player, uuid, prop)
         end
 
         -- call USE event on object
-        CallEvent("items:" .. item .. ":use", player, equipped_object, prop)
+        log.debug("USE item:",item)
+        log.debug("object:",equipped_object)
+        log.debug("prop:",dump(ActiveProp))
+        CallEvent("items:" .. item .. ":use", player, equipped_object, ActiveProp)
     end)
 end
 AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
+
+AddRemoteEvent("InteractWithProp", function(player, ActiveProp)
+    -- interact with object directly
+    if ActiveProp['event'] then
+        log.debug("interacting with prop, event: " .. ActiveProp['event'])
+        CallEvent(ActiveProp['event'], player, ActiveProp)
+    end
+end)
 
 
 function PlayInteraction(player, uuid, after_callback)
@@ -326,11 +333,6 @@ function PlayInteraction(player, uuid, after_callback)
             SetPlayerAnimation(player, tonumber(ItemConfig[item].interaction['animation'].id))
         end
         local duration = ItemConfig[item].interaction['animation']['duration'] or 2000 -- default animation delay
-
-        CallRemoteEvent(player, "StartInteraction", {
-            ['duration'] = duration,
-            ['show_spinner'] = ItemConfig[item].interaction['animation']['spinner']
-        })
 
         Delay(duration, function()
             SetPlayerAnimation(player, "STOP")

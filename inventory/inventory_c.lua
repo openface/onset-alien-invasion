@@ -2,6 +2,10 @@
 InventoryUI = nil
 CurrentInHand = nil
 
+local ActionCooldown
+local ActionTimer
+local CurrentlyInteracting
+
 AddEvent("OnPackageStart", function()
     InventoryUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
     SetWebURL(InventoryUI, "http://asset/" .. GetPackageName() .. "/ui/dist/index.html#/inventory/")
@@ -29,57 +33,73 @@ AddEvent('OnKeyPress', function(key)
     if IsShiftPressed() or IsAltPressed() or EditingObject or GetWebVisibility(InventoryUI) == WEB_HIDDEN then
         return
     end
-    if not IsPlayerInVehicle() then
-        if key == 'Tab' then
-            -- inventory
-            ShowMouseCursor(true)
-            SetInputMode(INPUT_GAMEANDUI)
-            SetWebVisibility(InventoryUI, WEB_VISIBLE)
-            ExecuteWebJS(InventoryUI, "EmitEvent('ShowInventory')")
-        elseif key == '1' or key == '2' or key == '3' then
-            -- weapon switching
-            CallRemoteEvent("UseWeaponSlot", key)
-        elseif key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' then
-            -- item hotkeys
-            CallRemoteEvent("UseItemHotkey", key)
-        elseif key == 'Left Mouse Button' and not CurrentlyInteracting then
-            if ActiveProp then
-                -- object/prop interaction
-                if CurrentInHand and CurrentInHandInteractsOnType(ActiveProp.hit_type) then
-                    -- use item in hand on object
-                    CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid, ActiveProp)
-                else
-                    -- interact with object directly
-                    if ActiveProp['remote_event'] then
-                        --AddPlayerChat("calling remote event: " .. ActiveProp['remote_event'])
-                        CallRemoteEvent(ActiveProp['remote_event'], ActiveProp)
-                    end
-                end
-                ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
-            elseif CurrentInHand then
-                -- use item currently in hands freely
-                if CurrentInHand.type == 'placeable' then
-                    CallEvent("PlaceItemFromInventory", CurrentInHand.uuid)
-                else
-                    CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid)
-                end
+    if IsPlayerInVehicle() then
+        return
+    end
+    if key == 'Tab' then
+        -- inventory
+        ShowMouseCursor(true)
+        SetInputMode(INPUT_GAMEANDUI)
+        SetWebVisibility(InventoryUI, WEB_VISIBLE)
+        ExecuteWebJS(InventoryUI, "EmitEvent('ShowInventory')")
+    elseif key == '1' or key == '2' or key == '3' then
+        -- weapon switching
+        CallRemoteEvent("UseWeaponSlot", key)
+    elseif key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' then
+        -- item hotkeys
+        CallRemoteEvent("UseItemHotkey", key)
+    elseif key == 'Left Mouse Button' and ActiveProp then
+        -- interact with prop
+
+        local prop_object_name = GetObjectModelName(GetObjectModel(ActiveProp.hit_object))
+
+        if not CurrentInHand then
+            AddPlayerChat("interact with prop "..prop_object_name.." (no item)")
+            CallRemoteEvent("InteractWithProp", ActiveProp)
+            -- ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
+            return
+        end
+
+        -- interact with prop (with item in hand)
+        AddPlayerChat("use item "..CurrentInHand.item.." on prop "..prop_object_name.." - start")
+        ActionCooldown = GetTickCount()
+        ActionTimer = CreateTimer(function(starttime)
+            if not ActionCooldown then
+                DestroyTimer(ActionTimer)
+                return
             end
+
+            local hold_button_elapsed = (GetTickCount() - ActionCooldown) / 1000
+            AddPlayerChat("action timer: " .. starttime .. " " .. hold_button_elapsed)
+
+            if hold_button_elapsed > 3 then
+                -- LMB held, long interaction with prop and item
+                AddPlayerChat("use item "..CurrentInHand.item.." on prop "..prop_object_name.." - end")
+
+                CallEvent("HideSpinner")
+                CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid, ActiveProp)
+                ActionCooldown = nil
+            elseif hold_button_elapsed > 0.5 then
+                -- show spinner after holding down LMB
+                CallEvent("ShowSpinner")
+                ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
+            end
+        end, 100, ActionCooldown)
+
+    elseif key == 'Left Mouse Button' then
+        -- use item
+        if CurrentInHand then
+            AddPlayerChat("use item")
+
+            if CurrentInHand.type == 'placeable' then
+                CallEvent("PlaceItemFromInventory", CurrentInHand.uuid)
+            else
+                CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid)
+            end
+            return
         end
     end
 end)
-
--- given an environment type (tree, water, etc), returns the prop
--- definition compatible with what is currently equipped in hands
-function CurrentInHandInteractsOnType(hittype)
-    if CurrentInHand then
-        for _,p in pairs(CurrentInHand.interacts_on) do
-            if p.hittype == hittype then
-                return p -- { hittype = "tree", use_label = "Chop Tree" }
-            end
-        end
-    end
-    return false
-end
 
 AddEvent('OnKeyRelease', function(key)
     if GetWebVisibility(InventoryUI) == WEB_HIDDEN then
@@ -92,6 +112,15 @@ AddEvent('OnKeyRelease', function(key)
         ExecuteWebJS(InventoryUI, "EmitEvent('HideInventory')")
         ShowMouseCursor(false)
         SetInputMode(INPUT_GAME)
+    elseif key == 'Left Mouse Button' and ActiveProp and ActionCooldown then
+        -- LMB released quickly, interact with prop
+
+        local hold_button_elapsed = (GetTickCount() - ActionCooldown) / 1000
+        if hold_button_elapsed < 1 then
+            CallRemoteEvent("InteractWithProp", ActiveProp)
+        end
+        CallEvent("HideSpinner")
+        ActionCooldown = nil
     end
 end)
 
@@ -111,7 +140,11 @@ end)
 -- drop item
 AddEvent("DropItem", function(uuid)
     local vx, vy, vz = GetPlayerForwardVector(GetPlayerId())
-    local forward_vector = { vx = vx, vy = vy, vz = vz }
+    local forward_vector = {
+        vx = vx,
+        vy = vy,
+        vz = vz
+    }
     CallRemoteEvent("DropItemFromInventory", uuid, forward_vector)
 end)
 

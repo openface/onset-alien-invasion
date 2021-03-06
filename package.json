@@ -60,6 +60,7 @@
         "inventory/weapons_c.lua",
         "inventory/placement_c.lua",
         "storage/storage_c.lua",
+        "storage/lockpick_c.lua",
         "vehicles/vehicles_c.lua"
     ],
     "files": [

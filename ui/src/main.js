@@ -113,6 +113,8 @@ import Workbench from "./components/Workbench.vue";
 import Merchant from "./components/Merchant.vue";
 import Computer from "./components/Computer.vue";
 import Scoreboard from "./components/Scoreboard.vue";
+import Lockpick from "./components/Lockpick.vue";
+
 
 const routes = [
     { path: "/character", component: Character, name: "Character" },
@@ -123,6 +125,7 @@ const routes = [
     { path: "/merchant", component: Merchant, name: "Merchant" },
     { path: "/computer", component: Computer, name: "Computer" },
     { path: "/scoreboard", component: Scoreboard, name: "Scoreboard" },
+    { path: "/lockpick", component: Lockpick, name: "Lockpick" },
 ];
 const router = new VueRouter({ routes });
 

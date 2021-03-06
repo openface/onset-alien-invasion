@@ -13,12 +13,13 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
         animation = { 
             name = "SIT",               -- animation to play when equipping/using
             duration = "4000"           -- milliseconds to delay for animation (default 2000)
-            spinner = false             -- shows a spinner for the duration of interaction
         },
         sound = "sounds/squeak.mp3"     -- sound to play during interaction with object
-        prop = {
-            target = "tree",            -- for interacting with world objects (Eg. tree, water, vehicle_hood)
-            desc = "Chop Tree",         -- label for "Use" when interacting
+        interacts_on = {
+            {
+                target = "tree",        -- for interacting with world objects (Eg. tree, water, vehicle_hood)
+                desc = "Chop Tree",     -- label for "Use" when looking at world object
+            }
         }
     },
     modelid = 1262,                     -- [required] object modelid
@@ -72,7 +73,7 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
     },
     prop_options = {                    -- creates interactive props
         use_label = "Sit",
-        remote_event = "SitInChair",
+        event = "SitInChair",
         options = {                     -- options passed into the event
             type = 'object',
         }
@@ -107,7 +108,7 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
 - Interactive props that can be stored in inventory
 - Can be placed into the world from inventory (cannot become a pickup again)
 - When dropped instead of placed, they are pickups
-- Can be interacted with using `prop_options` (Eg. Press LMB to sit in a chair)
+- Can be interacted with using `prop_options` (Eg. Press [E] to sit in a chair)
 - Placeable objects are editable (rotation and location)
 - Player can hold Left Ctrl to see all placeable objects and click to edit objects nearby
 - Placeable objects persist to the database and are respawn when server starts.
@@ -117,7 +118,7 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
 WIP
 
 ```
-SetObjectPropertyValue(object, "prop", { use_label = "Interact", remote_event = "GetWorkbenchData", options = { id = config['id'] } })
+SetObjectPropertyValue(object, "prop", { use_label = "Interact", event = "GetWorkbenchData", options = { id = config['id'] } })
 ```
 
 
@@ -133,7 +134,7 @@ SetObjectPropertyValue(object, "prop", { use_label = "Interact", remote_event = 
 #### After Use
 
 ```
-AddEvent("items:beer:use", function(player, object, options)
+AddEvent("items:beer:use", function(player, object, prop)
     -- drunk effect
 end)
 ```

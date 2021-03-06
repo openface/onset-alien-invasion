@@ -34,33 +34,30 @@ AddEvent("OnGameTick", function()
             AddPlayerChat("-> now looking at " .. hitObject .. " -> " .. dump(hitStruct))
         end
 
-        if CurrentlyInteracting then
-            return
-        end
-
         if hitStruct.type == 'object' then
             -- object interaction
             local prop = GetObjectPropertyValue(hitObject, "prop")
             if prop then
                 ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop.use_label .. "')")
+
                 ActiveProp = {
                     hit_type = hitStruct.type,
                     hit_object = hitObject,
-                    remote_event = prop['remote_event'] or nil,
-                    options = prop['options']
+                    event = prop['event'],
+                    options = prop['options'],
                 }
-                AddPlayerChat("OBJECT ActiveProp: " .. dump(ActiveProp))
+                --AddPlayerChat("OBJECT ActiveProp: " .. dump(ActiveProp))
             end
         elseif CurrentInHand then
-            local prop = CurrentInHandInteractsOnType(hitStruct.type)
-            if prop then
-                -- equipped item interacts with environment
-                ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop.use_label .. "')")
+            -- item in hand interacts with environment
+            local interaction = CurrentInHandInteractsWithHitType(hitStruct.type)
+            if interaction then
+                ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. interaction.use_label .. "')")
                 ActiveProp = {
                     hit_type = hitStruct.type,
-                    hit_object = hitObject
+                    hit_object = hitObject,
                 }
-                AddPlayerChat("ENV ActiveProp: " .. dump(ActiveProp))
+                --AddPlayerChat("ENV ActiveProp: " .. dump(ActiveProp))
             end
         end
 
@@ -68,6 +65,18 @@ AddEvent("OnGameTick", function()
         LastHitStruct = hitStruct
     end
 end)
+
+-- @return  { hittype = "tree", use_label = "Chop Tree", event = "HarvestTree"}
+function CurrentInHandInteractsWithHitType(hittype)
+    if CurrentInHand and CurrentInHand.interacts_on then
+        for _, p in pairs(CurrentInHand.interacts_on) do
+            if p.hittype == hittype then
+                AddPlayerChat("item interacts with world: "..dump(p))
+                return p
+            end
+        end
+    end
+end
 
 -- returns the object and a structure or nil
 function PlayerLookRaycast()

@@ -7,7 +7,7 @@
             <div class="health-bar" :style="{ width: boss_health + '%' }"></div>
         </div>
         <div id="interaction-message" v-if="interaction_message && !show_spinner">
-            <div class="key"><img height="25" :src="require('@/assets/images/icons/lmb_white.png')" /></div>
+            <span class="key">LMB</span><br />
             {{ interaction_message }}
         </div>
         <div id="progress" v-if="show_spinner">
@@ -127,17 +127,21 @@ export default {
     transform: translate(-50%, -50%);
     color: rgba(255, 255, 255, 0.9);
     font-size: 14px;
+    font-weight: bold;
     font-family: Helvetica;
-    text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
+    text-shadow: 3px 3px rgba(0, 0, 0, 0.1);
     width: 300px;
     text-align: center;
 }
 
 #interaction-message .key {
-    padding: 0 2px;
-    margin-bottom:1px;
-    margin:0 auto;
-    opacity: 0.6;
+    color: #000;
+    font-size: 18px;
+    padding: 0 5px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 3px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 20%;
+    line-height: 1.5em;
 }
 
 /*

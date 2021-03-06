@@ -22,7 +22,7 @@ ItemConfig["campfire"] = {
     interaction = nil,
     prop_options = {
         use_label = "Ignite",
-        remote_event = "IgniteCampfire",
+        event = "IgniteCampfire",
     }
 }
 
@@ -52,7 +52,7 @@ AddEvent("items:campfire:equip", function(player)
     SetPlayerAnimation(player, "CARRY_IDLE")    
 end)
 
-AddRemoteEvent("IgniteCampfire", function(player, prop)
+AddEvent("IgniteCampfire", function(player, prop)
     if GetObjectPropertyValue(prop.hit_object, "particle") then
         CallRemoteEvent(player, "ShowError", "Campfire is already lit!")
         return

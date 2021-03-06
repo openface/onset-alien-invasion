@@ -31,7 +31,7 @@ end)
 -- Sitting
 --
 
-AddRemoteEvent("SitInChair", function(player, prop)
+AddEvent("SitInChair", function(player, prop)
     log.debug(GetPlayerName(player).." sitting...")
     SetPlayerAnimation(player, "SIT04")
     CallRemoteEvent(player, "SitInChair", prop.hit_object)
@@ -42,6 +42,8 @@ AddRemoteEvent("SitPlayerInChair", function(player, position)
 
     local h = math.atan(position.rotation.y, position.rotation.x)*180/math.pi
     SetPlayerHeading(player, h)
+
+    SetPlayerAnimation(player, "SIT04")
 end)
 
 AddRemoteEvent("StopSitting", function(player, loc)

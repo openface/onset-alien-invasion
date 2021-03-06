@@ -48,14 +48,12 @@ AddEvent('OnKeyPress', function(key)
     elseif key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' then
         -- item hotkeys
         CallRemoteEvent("UseItemHotkey", key)
-    elseif key == 'Left Mouse Button' then
-        if not ActiveProp then
-            return
-        end
+    elseif key == 'Left Mouse Button' and ActiveProp then
+        -- interact with prop
+
         local prop_object_name = GetObjectModelName(GetObjectModel(ActiveProp.hit_object))
 
-        -- interact with prop
-        if ActiveProp and not ActiveProp.interacts_with then
+        if not ActiveProp.interacts_with then
             AddPlayerChat("interact with prop "..prop_object_name.." (no item)")
             CallRemoteEvent("InteractWithProp", ActiveProp)
             -- ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")

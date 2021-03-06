@@ -8,9 +8,6 @@ ItemConfig["crowbar"] = {
     interaction = {
         sound = "sounds/chopping_wood.mp3",
         animation = { name = "PICKAXE_SWING", duration = 5000 },
-        interacts_on = {
-            { hittype = "tree", use_label = "Open Crate" } -- todo
-        },
     },
     modelid = 1432,
     max_use = 20,
@@ -29,13 +26,14 @@ ItemConfig["crowbar"] = {
 }
 
 --
--- Opening crate
+-- Force opens a storage container.  If it was locked, it won't be anymore.
 --
-AddEvent("items:crowbar:use", function(player, object, prop)
-    if prop then
-        log.debug(GetPlayerName(player) .. " is opening a crate")
-
-        --CallRemoteEvent(player, "ShowMessage", "You collect some wood and put it in your inventory")
-        --AddToInventoryByName(player, "wood", 10)
+AddEvent("items:crowbar:use", function(player, object, ActiveProp)
+    local prop = GetObjectPropertyValue(ActiveProp.hit_object, "prop")
+    if prop.event ~= "OpenStorage" then
+        CallRemoteEvent(player, "ShowError", "This cannot be pryed open!")
+        return
     end
+
+    CallEvent("UnlockStorage", player, ActiveProp.hit_object)
 end)

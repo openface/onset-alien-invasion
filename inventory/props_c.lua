@@ -52,7 +52,7 @@ AddEvent("OnGameTick", function()
                     options = prop['options'],
                     interacts_with = interacts_with,
                 }
-                AddPlayerChat("OBJECT ActiveProp: " .. dump(ActiveProp))
+                --AddPlayerChat("OBJECT ActiveProp: " .. dump(ActiveProp))
             end
         elseif CurrentInHand then
             -- item in hand interacts with environment
@@ -64,7 +64,7 @@ AddEvent("OnGameTick", function()
                     hit_object = hitObject,
                     interacts_with = { item = interaction.hittype, use_label = interaction.use_label, event = interaction.event }
                 }
-                AddPlayerChat("ENV ActiveProp: " .. dump(ActiveProp))
+                --AddPlayerChat("ENV ActiveProp: " .. dump(ActiveProp))
             end
         end
 
@@ -78,6 +78,7 @@ function CurrentInHandInteractsWithHitType(hittype)
     if CurrentInHand and CurrentInHand.interacts_on then
         for _, p in pairs(CurrentInHand.interacts_on) do
             if p.hittype == hittype then
+                AddPlayerChat("item interacts with world: "..dump(p))
                 return p
             end
         end
@@ -86,8 +87,13 @@ end
 
 -- @return { item = "axe", use_label = "Break Open", event = "UnlockStorage" }
 function CurrentInHandInteractsWithObject(prop)
-    if CurrentInHand and prop.interacts_with and CurrentInHand.item == prop.interacts_with.item then
-        return prop.interacts_with
+    if CurrentInHand and prop.interacts_with then
+        for _, p in pairs(prop.interacts_with) do
+            if CurrentInHand.item == p.item then
+                AddPlayerChat("item interacts with prop: "..dump(p))
+                return p
+            end
+        end
     end
 end
 

@@ -9,9 +9,6 @@ ItemConfig["screwdriver"] = {
     price = 20,
     interaction = {
         animation = { name = "LOCKDOOR" },
-        interacts_on = {
-            { hittype = "object", use_label = "Pick Lock" }
-        },
     },
     attachment = { 
       x = -10.5, 

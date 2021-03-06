@@ -298,14 +298,11 @@ function UseItemFromInventory(player, uuid, ActiveProp)
             IncrementItemUsed(player, uuid)
         end
 
-        -- interacting with object
-        if ActiveProp and ActiveProp.interacts_with then
-            log.debug(GetPlayerName(player) .. " interacting with object:".. ActiveProp.hit_object .. " type:".. ActiveProp.hit_type .." using object:"..equipped_object.." event:"..ActiveProp.interacts_with.event)
-            CallEvent(ActiveProp.interacts_with.event, player, ActiveProp.hit_object)
-        else
-            -- call USE event on object
-            CallEvent("items:" .. item .. ":use", player, equipped_object, ActiveProp)
-        end
+        -- call USE event on object
+        log.debug("USE item:",item)
+        log.debug("object:",equipped_object)
+        log.debug("prop:",dump(ActiveProp))
+        CallEvent("items:" .. item .. ":use", player, equipped_object, ActiveProp)
     end)
 end
 AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)

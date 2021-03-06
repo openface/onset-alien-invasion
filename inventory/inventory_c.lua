@@ -53,7 +53,7 @@ AddEvent('OnKeyPress', function(key)
 
         local prop_object_name = GetObjectModelName(GetObjectModel(ActiveProp.hit_object))
 
-        if not CurrentInHand or not ActiveProp.interacts_with then
+        if not CurrentInHand then
             AddPlayerChat("interact with prop "..prop_object_name.." (no item)")
             CallRemoteEvent("InteractWithProp", ActiveProp)
             -- ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")

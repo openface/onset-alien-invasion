@@ -15,7 +15,6 @@ ItemConfig["axe"] = {
         interacts_on = {{
             hittype = "tree",
             use_label = "Chop Tree",
-            event = "HarvestTree"
         }}
     },
     modelid = 20002,
@@ -38,7 +37,10 @@ ItemConfig["axe"] = {
 --
 -- Chopping
 --
-AddEvent("HarvestTree", function(player, object)
+AddEvent("items:axe:use", function(player, object, prop)
+    if not prop then
+        return
+    end
     log.debug(GetPlayerName(player) .. " is chopping a tree")
 
     CallRemoteEvent(player, "ShowMessage", "You collect some wood and put it in your inventory")

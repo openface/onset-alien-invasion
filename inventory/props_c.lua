@@ -38,19 +38,13 @@ AddEvent("OnGameTick", function()
             -- object interaction
             local prop = GetObjectPropertyValue(hitObject, "prop")
             if prop then
-                local interacts_with = CurrentInHandInteractsWithObject(prop)
-                if interacts_with then
-                    ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. interacts_with.use_label .. "')")
-                else
-                    ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop.use_label .. "')")
-                end
+                ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop.use_label .. "')")
 
                 ActiveProp = {
                     hit_type = hitStruct.type,
                     hit_object = hitObject,
                     event = prop['event'],
                     options = prop['options'],
-                    interacts_with = interacts_with,
                 }
                 --AddPlayerChat("OBJECT ActiveProp: " .. dump(ActiveProp))
             end
@@ -62,7 +56,6 @@ AddEvent("OnGameTick", function()
                 ActiveProp = {
                     hit_type = hitStruct.type,
                     hit_object = hitObject,
-                    interacts_with = { item = interaction.hittype, use_label = interaction.use_label, event = interaction.event }
                 }
                 --AddPlayerChat("ENV ActiveProp: " .. dump(ActiveProp))
             end
@@ -79,18 +72,6 @@ function CurrentInHandInteractsWithHitType(hittype)
         for _, p in pairs(CurrentInHand.interacts_on) do
             if p.hittype == hittype then
                 AddPlayerChat("item interacts with world: "..dump(p))
-                return p
-            end
-        end
-    end
-end
-
--- @return { item = "axe", use_label = "Break Open", event = "UnlockStorage" }
-function CurrentInHandInteractsWithObject(prop)
-    if CurrentInHand and prop.interacts_with then
-        for _, p in pairs(prop.interacts_with) do
-            if CurrentInHand.item == p.item then
-                AddPlayerChat("item interacts with prop: "..dump(p))
                 return p
             end
         end

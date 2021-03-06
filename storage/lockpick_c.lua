@@ -16,7 +16,7 @@ end)
 
 AddRemoteEvent("ShowLockpick", function(storage_object)
     LockPickingStorageObject = storage_object
-    AddPlayerChat("OK..."..LockPickingStorageObject)
+    AddPlayerChat("lockpicking object"..LockPickingStorageObject)
 
     ShowMouseCursor(true)
     SetInputMode(INPUT_GAMEANDUI)
@@ -64,7 +64,6 @@ AddEvent("OutOfPins", function()
 end)
 
 AddEvent("Unlock", function()
-    ShowMessage("Unlocked success!")
     SetSoundVolume(CreateSound("client/sounds/lockpick_open.wav"), 1)
     CallRemoteEvent("UnlockStorage", LockPickingStorageObject)
 

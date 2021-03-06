@@ -15,7 +15,7 @@ AddEvent("UnlockStorage", UnlockStorage)
 AddRemoteEvent("UnlockStorage", UnlockStorage)
 
 AddEvent("OpenStorage", function(player, prop)
-    log.trace("OpenStorage")
+    log.trace("OpenStorage "..dump(prop))
 
     if prop.options['locked'] then
         CallRemoteEvent(player, "ShowError", "Locked")

@@ -64,21 +64,27 @@ AddEvent('OnKeyPress', function(key)
         AddPlayerChat("use item "..CurrentInHand.item.." on prop "..prop_object_name.." - start")
         ActionCooldown = GetTickCount()
         ActionTimer = CreateTimer(function(starttime)
+            if not ActionCooldown then
+                DestroyTimer(ActionTimer)
+                return
+            end
+
             local hold_button_elapsed = (GetTickCount() - ActionCooldown) / 1000
             AddPlayerChat("action timer: " .. starttime .. " " .. hold_button_elapsed)
 
             if hold_button_elapsed > 3 then
+                -- LMB held, long interaction with prop and item
                 AddPlayerChat("use item "..CurrentInHand.item.." on prop "..prop_object_name.." - end")
 
                 CallEvent("HideSpinner")
                 CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid, ActiveProp)
-                DestroyTimer(ActionTimer)
                 ActionCooldown = nil
-            elseif hold_button_elapsed > 0 then
+            elseif hold_button_elapsed > 0.5 then
+                -- show spinner after holding down LMB
                 CallEvent("ShowSpinner")
                 ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
             end
-        end, 200, ActionCooldown)
+        end, 100, ActionCooldown)
 
     elseif key == 'Left Mouse Button' then
         -- use item
@@ -106,11 +112,15 @@ AddEvent('OnKeyRelease', function(key)
         ExecuteWebJS(InventoryUI, "EmitEvent('HideInventory')")
         ShowMouseCursor(false)
         SetInputMode(INPUT_GAME)
-    elseif key == 'Left Mouse Button' and ActionCooldown then
-        local hold_button_elapsed = GetTickCount() - ActionCooldown
+    elseif key == 'Left Mouse Button' and ActiveProp and ActionCooldown then
+        -- LMB released quickly, interact with prop
+
+        local hold_button_elapsed = (GetTickCount() - ActionCooldown) / 1000
+        if hold_button_elapsed < 1 then
+            CallRemoteEvent("InteractWithProp", ActiveProp)
+        end
         CallEvent("HideSpinner")
         ActionCooldown = nil
-        DestroyTimer(ActionTimer)
     end
 end)
 

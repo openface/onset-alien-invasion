@@ -8,7 +8,7 @@ AddEvent("UnlockStorage", function(player, object)
     end
     prop.options['locked'] = false
     SetObjectPropertyValue(object, "prop", prop)
-    log.debug(GetPlayerName(player) .. " unlocked storage",object)
+    log.debug(GetPlayerName(player) .. " unlocked storage", object)
     CallRemoteEvent(player, "ShowMessage", "Storage is now unlocked!")
 end)
 
@@ -17,13 +17,7 @@ AddEvent("OpenStorage", function(player, prop)
 
     if prop.options['locked'] then
         CallRemoteEvent(player, "ShowError", "Locked")
-
---[[         if GetInventoryCountByName(player, "screwdriver") > 0 then
-            CallRemoteEvent(player, "ShowLockpick", prop.hit_object)
-        else
-            CallRemoteEvent(player, "ShowError", "Locked")
-        end
- ]]        return
+        return
     end
 
     log.info(GetPlayerName(player) .. " opens storage object " .. prop.hit_object .. " type " ..

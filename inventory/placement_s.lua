@@ -38,7 +38,7 @@ function onLoadPlacedItems()
     
         SetObjectPropertyValue(object, "item", item)
         SetObjectPropertyValue(object, "placeable", true)
-        SetObjectPropertyValue(object, "placed_by", row['placed_by'])
+        SetObjectPropertyValue(object, "steamid", row['steamid'])
         SetObjectPropertyValue(object, "prop", ItemConfig[item].prop)
     
         PlacedObjects[object] = row['uuid']
@@ -79,7 +79,7 @@ AddRemoteEvent("PlaceItem", function(player, uuid, loc)
 
     SetObjectPropertyValue(object, "item", item)
     SetObjectPropertyValue(object, "placeable", true)
-    SetObjectPropertyValue(object, "placed_by", steamid)
+    SetObjectPropertyValue(object, "steamid", steamid)
 
     if ItemConfig[item].prop then
         SetObjectPropertyValue(object, "prop", ItemConfig[item].prop)
@@ -105,7 +105,7 @@ AddRemoteEvent("PlaceItem", function(player, uuid, loc)
 end)
 
 AddRemoteEvent("FinalizeObjectPlacement", function(player, object)
-    SetObjectPropertyValue(object, "placed_by", GetPlayerSteamId(player))
+    SetObjectPropertyValue(object, "steamid", GetPlayerSteamId(player))
     log.debug(GetPlayerName(player) .. " placed object " .. object)
 end)
 

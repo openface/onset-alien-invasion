@@ -15,6 +15,13 @@ ItemConfig["campfire"] = {
         rz = 0,
         bone = "hand_r"
     },
+    interaction = {
+        sound = "sounds/zippo.wav",
+        animation = {
+            id = 924,
+            duration = 10000
+        },
+    },
     recipe = {
         wood = 3
     },

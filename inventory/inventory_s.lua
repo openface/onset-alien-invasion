@@ -314,14 +314,18 @@ AddRemoteEvent("InteractWithObjectProp", function(player, ActiveProp, CurrentInH
         return
     end
 
-    -- todo: increment use / max use?
-    -- call prop event on object
-    log.debug("player:", player)
-    log.debug("event:", prop.event)
-    log.debug("ActiveProp:", dump(ActiveProp))
-    log.debug("CurrentInHand:", dump(CurrentInHand))
+    local item = GetObjectPropertyValue(ActiveProp.hit_object, "item")
+    PlayInteraction(player, ItemConfig[item].interaction, function()
+        -- todo: increment use / max use?
 
-    CallEvent(prop.event, player, ActiveProp, CurrentInHand)
+        -- call prop event on object
+        log.debug("player:", player)
+        log.debug("event:", prop.event)
+        log.debug("ActiveProp:", dump(ActiveProp))
+        log.debug("CurrentInHand:", dump(CurrentInHand))
+
+        CallEvent(prop.event, player, ActiveProp, CurrentInHand)
+    end)
 end)
 
 -- interact with world props (via in-hand item)

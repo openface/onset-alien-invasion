@@ -23,7 +23,7 @@ function CreateWorkbench(config)
                        config.sx, config.sy, config.sz)
     SetObjectPropertyValue(object, "prop", {
         use_label = "Interact",
-        event = "GetWorkbenchData",
+        event = "StartWorkbench",
         options = {
             id = config.id,
             name = config.name
@@ -32,7 +32,7 @@ function CreateWorkbench(config)
     Workbenches[object] = true
 end
 
-AddRemoteEvent("GetWorkbenchData", function(player, prop)
+AddEvent("StartWorkbench", function(player, prop)
     log.debug("Workbench: " .. prop.options['id'])
     local item_data = {}
     for key, item in pairs(ItemConfig) do

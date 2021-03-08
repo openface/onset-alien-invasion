@@ -24,12 +24,12 @@ function RegisterMerchant(name, config)
                        config.sx, config.sy, config.sz)
     SetObjectPropertyValue(object, "prop", {
         use_label = "Interact",
-        event = "GetMerchantData"
+        event = "StartMerchant"
     })
     Merchants[object] = true
 end
 
-AddRemoteEvent("GetMerchantData", function(player)
+AddRemoteEvent("StartMerchant", function(player)
     local item_data = {}
     for key, item in pairs(ItemConfig) do
         if item['price'] ~= nil then

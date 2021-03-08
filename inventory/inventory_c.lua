@@ -48,7 +48,7 @@ AddEvent('OnKeyPress', function(key)
     elseif key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' then
         -- item hotkeys
         CallRemoteEvent("UseItemHotkey", key)
-    elseif key == 'Left Mouse Button' and ActiveProp then
+    elseif key == 'F' and ActiveProp then
         -- interact with prop
 
         local prop_object_name = GetObjectModelName(GetObjectModel(ActiveProp.hit_object))
@@ -56,7 +56,7 @@ AddEvent('OnKeyPress', function(key)
         if not CurrentInHand then
             AddPlayerChat("interact with prop "..prop_object_name.." (no item)")
             CallRemoteEvent("InteractWithProp", ActiveProp)
-            -- ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
+            ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
             return
         end
 
@@ -73,7 +73,7 @@ AddEvent('OnKeyPress', function(key)
             AddPlayerChat("action timer: " .. starttime .. " " .. hold_button_elapsed)
 
             if hold_button_elapsed > 3 then
-                -- LMB held, long interaction with prop and item
+                -- F held, long interaction with prop and item
                 AddPlayerChat("use item "..CurrentInHand.item.." on prop "..prop_object_name.." - end")
 
                 CallEvent("HideSpinner")
@@ -112,8 +112,8 @@ AddEvent('OnKeyRelease', function(key)
         ExecuteWebJS(InventoryUI, "EmitEvent('HideInventory')")
         ShowMouseCursor(false)
         SetInputMode(INPUT_GAME)
-    elseif key == 'Left Mouse Button' and ActiveProp and ActionCooldown then
-        -- LMB released quickly, interact with prop
+    elseif key == 'F' and ActiveProp and ActionCooldown then
+        -- F released quickly, interact with prop
 
         local hold_button_elapsed = (GetTickCount() - ActionCooldown) / 1000
         if hold_button_elapsed < 1 then

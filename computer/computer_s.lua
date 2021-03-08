@@ -51,7 +51,7 @@ function CreateComputer(name, config, prop_options)
 end
 
 -- interacting with computer
-AddRemoteEvent("InteractComputer", function(player, prop)
+AddEvent("InteractComputer", function(player, prop)
     CallRemoteEvent(player, "ShowComputer", prop.hit_object)
 end)
 

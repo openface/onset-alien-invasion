@@ -55,10 +55,8 @@ end)
 AddEvent("CheckCampfire", function(player, ActiveProp, CurrentInHand)
     if GetObjectPropertyValue(ActiveProp.hit_object, "particle") then
         CallRemoteEvent(player, "ShowMessage", "This campfire is toasty!")
-    elseif CurrentInHand then
-        if CurrentInHand.item == 'lighter' then
-            CallEvent("IgniteCampfire", player, ActiveProp)
-        end
+    elseif CurrentInHand and CurrentInHand.item == "lighter" then
+        CallEvent("IgniteCampfire", player, ActiveProp)
     else
         CallRemoteEvent(player, "ShowMessage", "This campfire is not lit.  You may need something to light it with.")
     end

@@ -59,6 +59,8 @@ AddEvent("CheckCampfire", function(player, ActiveProp, CurrentInHand)
         if CurrentInHand.item == 'lighter' then
             CallEvent("IgniteCampfire", player, ActiveProp)
         end
+    else
+        CallRemoteEvent(player, "ShowMessage", "This campfire is not lit.  You may need something to light it with.")
     end
 end)
 

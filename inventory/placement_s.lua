@@ -43,6 +43,9 @@ function onLoadPlacedItems()
     
         PlacedObjects[object] = row['uuid']
     
+
+        -- todo: particles, components, etc
+
         log.debug("Spawned placed object " .. object .. " item " .. item)
     end
 end

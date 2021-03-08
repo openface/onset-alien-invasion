@@ -50,18 +50,14 @@ AddEvent('OnKeyPress', function(key)
         CallRemoteEvent("UseItemHotkey", key)
     elseif key == 'F' and ActiveProp then
         -- interact with prop
-
         local prop_object_name = GetObjectModelName(GetObjectModel(ActiveProp.hit_object))
-
-        if not CurrentInHand then
-            AddPlayerChat("interact with prop "..prop_object_name.." (no item)")
-            CallRemoteEvent("InteractWithProp", ActiveProp)
-            ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
-            return
-        end
-
+        AddPlayerChat("interact with prop " .. prop_object_name .. " (no item)")
+        CallRemoteEvent("InteractWithProp", ActiveProp)
+        ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
+    elseif key == 'Left Mouse Button' and ActiveProp and CurrentInHand then
         -- interact with prop (with item in hand)
-        AddPlayerChat("use item "..CurrentInHand.item.." on prop "..prop_object_name.." - start")
+        local prop_object_name = GetObjectModelName(GetObjectModel(ActiveProp.hit_object))
+        AddPlayerChat("use item " .. CurrentInHand.item .. " on prop " .. prop_object_name .. " - start")
         ActionCooldown = GetTickCount()
         ActionTimer = CreateTimer(function(starttime)
             if not ActionCooldown then
@@ -74,7 +70,7 @@ AddEvent('OnKeyPress', function(key)
 
             if hold_button_elapsed > 3 then
                 -- F held, long interaction with prop and item
-                AddPlayerChat("use item "..CurrentInHand.item.." on prop "..prop_object_name.." - end")
+                AddPlayerChat("use item " .. CurrentInHand.item .. " on prop " .. prop_object_name .. " - end")
 
                 CallEvent("HideSpinner")
                 CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid, ActiveProp)
@@ -86,17 +82,14 @@ AddEvent('OnKeyPress', function(key)
             end
         end, 100, ActionCooldown)
 
-    elseif key == 'Left Mouse Button' then
-        -- use item
-        if CurrentInHand then
-            AddPlayerChat("use item")
+    elseif key == 'Left Mouse Button' and CurrentInHand then
+        -- use item in hand
+        AddPlayerChat("use item in hand: "..CurrentInHand.item)
 
-            if CurrentInHand.type == 'placeable' then
-                CallEvent("PlaceItemFromInventory", CurrentInHand.uuid)
-            else
-                CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid)
-            end
-            return
+        if CurrentInHand.type == 'placeable' then
+            CallEvent("PlaceItemFromInventory", CurrentInHand.uuid)
+        else
+            CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid)
         end
     end
 end)
@@ -112,15 +105,6 @@ AddEvent('OnKeyRelease', function(key)
         ExecuteWebJS(InventoryUI, "EmitEvent('HideInventory')")
         ShowMouseCursor(false)
         SetInputMode(INPUT_GAME)
-    elseif key == 'F' and ActiveProp and ActionCooldown then
-        -- F released quickly, interact with prop
-
-        local hold_button_elapsed = (GetTickCount() - ActionCooldown) / 1000
-        if hold_button_elapsed < 1 then
-            CallRemoteEvent("InteractWithProp", ActiveProp)
-        end
-        CallEvent("HideSpinner")
-        ActionCooldown = nil
     end
 end)
 

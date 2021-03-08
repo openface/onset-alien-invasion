@@ -58,33 +58,16 @@ AddEvent('OnKeyPress', function(key)
         -- interact with prop (with item in hand)
         local prop_object_name = GetObjectModelName(GetObjectModel(ActiveProp.hit_object))
         AddPlayerChat("use item " .. CurrentInHand.item .. " on prop " .. prop_object_name .. " - start")
-        ActionCooldown = GetTickCount()
-        ActionTimer = CreateTimer(function(starttime)
-            if not ActionCooldown then
-                DestroyTimer(ActionTimer)
-                return
-            end
 
-            local hold_button_elapsed = (GetTickCount() - ActionCooldown) / 1000
-            AddPlayerChat("action timer: " .. starttime .. " " .. hold_button_elapsed)
+        -- F held, long interaction with prop and item
+        AddPlayerChat("use item " .. CurrentInHand.item .. " on prop " .. prop_object_name .. " - end")
 
-            if hold_button_elapsed > 3 then
-                -- F held, long interaction with prop and item
-                AddPlayerChat("use item " .. CurrentInHand.item .. " on prop " .. prop_object_name .. " - end")
-
-                CallEvent("HideSpinner")
-                CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid, ActiveProp)
-                ActionCooldown = nil
-            elseif hold_button_elapsed > 0.5 then
-                -- show spinner after holding down LMB
-                CallEvent("ShowSpinner")
-                ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
-            end
-        end, 100, ActionCooldown)
+        CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid, ActiveProp)
+        ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
 
     elseif key == 'Left Mouse Button' and CurrentInHand then
         -- use item in hand
-        AddPlayerChat("use item in hand: "..CurrentInHand.item)
+        AddPlayerChat("use item in hand: " .. CurrentInHand.item)
 
         if CurrentInHand.type == 'placeable' then
             CallEvent("PlaceItemFromInventory", CurrentInHand.uuid)

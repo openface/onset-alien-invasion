@@ -45,8 +45,8 @@ function SyncInventory(player)
             end
         end
     end
-    --log.trace("INVENTORY SYNC (" .. GetPlayerName(player) .. "): " .. json_encode(_send))
-    --log.trace("CURRENT INHAND: " .. dump(current_inhand))
+    -- log.trace("INVENTORY SYNC (" .. GetPlayerName(player) .. "): " .. json_encode(_send))
+    -- log.trace("CURRENT INHAND: " .. dump(current_inhand))
     CallRemoteEvent(player, "SetInventory", json_encode(_send), current_inhand)
 end
 AddRemoteEvent("SyncInventory", SyncInventory)
@@ -157,8 +157,8 @@ end
 -- deletes item from inventory
 -- deduces by quantity if carrying more than 1
 function RemoveFromInventory(player, uuid, amount)
-    log.trace("RemoveFromInventory",uuid,amount)
-    
+    log.trace("RemoveFromInventory", uuid, amount)
+
     local item = GetItemInstance(uuid)
     if not item then
         log.error("No such item: " .. uuid)
@@ -257,10 +257,10 @@ end
 -- iterate over possible slots and return the first available
 function GetNextAvailableInventorySlot(player)
     local inventory = PlayerData[player].inventory
-    for index=1,MAX_INVENTORY_SLOTS do
+    for index = 1, MAX_INVENTORY_SLOTS do
         if not table.findByKeyValue(inventory, "slot", index) then
             return index
-        end            
+        end
     end
 end
 
@@ -292,49 +292,58 @@ function UseItemFromInventory(player, uuid, ActiveProp)
         return
     end
 
-    CallEvent("items:" .. item .. ":before_use", player, equipped_object, ActiveProp)
+    CallEvent("BEFORE USE items:" .. item .. ":before_use", player, equipped_object, ActiveProp)
 
-    PlayInteraction(player, uuid, function()
+    PlayInteraction(player, ItemConfig[item].interaction, function()
         -- increment used
         if ItemConfig[item].max_use then
             IncrementItemUsed(player, uuid)
         end
 
         -- call USE event on object
-        log.debug("USE item:",item)
-        log.debug("object:",equipped_object)
-        log.debug("prop:",dump(ActiveProp))
-        CallEvent("items:" .. item .. ":use", player, equipped_object, ActiveProp)
+        log.debug("USE item:", item)
+        log.debug("object:", equipped_object)
+        log.debug("prop:", dump(ActiveProp))
+        CallEvent("USE items:" .. item .. ":use", player, equipped_object, ActiveProp)
     end)
 end
 AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
 
 AddRemoteEvent("InteractWithProp", function(player, ActiveProp)
-    -- interact with object directly
-    if ActiveProp['event'] then
-        log.debug("interacting with prop, event: " .. ActiveProp['event'])
-        CallEvent(ActiveProp['event'], player, ActiveProp)
+    local prop = GetObjectPropertyValue(ActiveProp.hit_object, "prop")
+
+    if not prop.event then
+        return
+    end
+
+    log.debug("interacting with prop:" .. dump(prop))
+
+    if prop.interaction then
+        PlayInteraction(player, prop.interaction, function()
+            CallEvent(prop.event, player, ActiveProp)
+        end)
+    else
+        CallEvent(prop.event, player, ActiveProp)
     end
 end)
 
+-- interaction = { sound = "sounds/chainsaw.wav", animation = { id = 924, duration = 10000 } }
+function PlayInteraction(player, interaction, after_callback)
+    log.debug("Playing interaction:",dump(interaction))
 
-function PlayInteraction(player, uuid, after_callback)
-    local item = GetItemInstance(uuid)
-    log.debug("Playing interaction for item " .. item .. " uuid ".. uuid)
-
-    if not ItemConfig[item].interaction then
+    if not interaction then
         if after_callback then
             after_callback()
         end
         return
     end
-    if ItemConfig[item].interaction['animation'] then
-        if ItemConfig[item].interaction['animation'].name then
-            SetPlayerAnimation(player, ItemConfig[item].interaction['animation'].name)
-        elseif ItemConfig[item].interaction['animation'].id then
-            SetPlayerAnimation(player, tonumber(ItemConfig[item].interaction['animation'].id))
+    if interaction['animation'] then
+        if interaction['animation'].name then
+            SetPlayerAnimation(player, interaction['animation'].name)
+        elseif interaction['animation'].id then
+            SetPlayerAnimation(player, tonumber(interaction['animation'].id))
         end
-        local duration = ItemConfig[item].interaction['animation']['duration'] or 2000 -- default animation delay
+        local duration = interaction['animation']['duration'] or 2000 -- default animation delay
 
         Delay(duration, function()
             SetPlayerAnimation(player, "STOP")
@@ -348,9 +357,9 @@ function PlayInteraction(player, uuid, after_callback)
             after_callback()
         end
     end
-    if ItemConfig[item].interaction['sound'] then
+    if interaction['sound'] then
         local x, y, z = GetPlayerLocation(player)
-        PlaySoundSync(ItemConfig[item].interaction['sound'], x, y, z)
+        PlaySoundSync(interaction['sound'], x, y, z)
     end
 end
 
@@ -398,7 +407,7 @@ AddRemoteEvent("UpdateInventory", function(player, data)
             quantity = item.quantity,
             slot = item.slot,
             hotbar_slot = item.hotbar_slot,
-            used = item.used,
+            used = item.used
         })
     end
     log.trace("NEW INVENTORY", dump(new_inventory))

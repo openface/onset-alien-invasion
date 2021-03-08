@@ -19,11 +19,17 @@ ItemConfig["campfire"] = {
         wood = 3
     },
     price = nil,
-    interaction = nil,
     prop_options = {
         use_label = "Ignite",
         event = "IgniteCampfire",
-    }
+        interaction = {
+            sound = "sounds/chainsaw.wav",
+            animation = {
+                id = 924,
+                duration = 10000
+            }
+        }
+    },
 }
 
 local CampfireTimer
@@ -50,7 +56,7 @@ AddEvent("OnPackageStop", function()
 end)
 
 AddEvent("items:campfire:equip", function(player)
-    SetPlayerAnimation(player, "CARRY_IDLE")    
+    SetPlayerAnimation(player, "CARRY_IDLE")
 end)
 
 AddEvent("IgniteCampfire", function(player, prop)
@@ -58,23 +64,18 @@ AddEvent("IgniteCampfire", function(player, prop)
         CallRemoteEvent(player, "ShowError", "Campfire is already lit!")
         return
     end
-
-    SetPlayerAnimation(player, 924) -- startfire
-
-    Delay(10 * 1000, function()
-        SetPlayerAnimation(player, "STOP")
-        SetObjectPropertyValue(prop.hit_object, "particle", {
-            path = "/AlienInvasion/Particles/P_Campfire",
-            position = {
-                x = 0,
-                y = 0,
-                z = 35,
-                rx = 0,
-                ry = 0,
-                rz = 0
-            }
-        })
-    end)
+    SetPlayerAnimation(player, "STOP")
+    SetObjectPropertyValue(prop.hit_object, "particle", {
+        path = "/AlienInvasion/Particles/P_Campfire",
+        position = {
+            x = 0,
+            y = 0,
+            z = 35,
+            rx = 0,
+            ry = 0,
+            rz = 0
+        }
+    })
 
     -- fire goes out
     Delay(60 * 1000, function()

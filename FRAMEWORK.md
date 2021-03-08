@@ -71,7 +71,7 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
             rz = 0 
         },
     },
-    prop_options = {                    -- creates interactive props
+    prop_options = {                    -- creates interactive props (Hit [F] while looking at it)
         use_label = "Sit",
         event = "SitInChair",
         options = {                     -- options passed into the event

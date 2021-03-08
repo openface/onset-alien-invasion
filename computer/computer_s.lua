@@ -42,11 +42,11 @@ AddEvent("OnPackageStop", function()
     end
 end)
 
-function CreateComputer(name, config, prop_options)
+function CreateComputer(name, config, prop)
     log.debug("Creating computer: " .. name)
     local object = CreateObject(config['modelID'], config['x'], config['y'], config['z'], config['rx'], config['ry'],
                        config['rz'])
-    SetObjectPropertyValue(object, "prop", prop_options)
+    SetObjectPropertyValue(object, "prop", prop)
     Computers[object] = true
 end
 

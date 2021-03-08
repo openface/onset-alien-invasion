@@ -71,11 +71,18 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
             rz = 0 
         },
     },
-    prop_options = {                    -- creates interactive props (Hit [F] while looking at it)
+    prop = {                    -- creates interactive props (Hit [F] while looking at it)
         use_label = "Sit",
         event = "SitInChair",
         options = {                     -- options passed into the event
-            type = 'object',
+            whatever = 'youlike',
+        },
+        interaction = {                 -- animation to play when interacting with prop
+            sound = "sounds/zippo.wav",
+            animation = {
+                id = 924,
+                duration = 10000
+            }
         }
     }
 })
@@ -108,7 +115,7 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
 - Interactive props that can be stored in inventory
 - Can be placed into the world from inventory (cannot become a pickup again)
 - When dropped instead of placed, they are pickups
-- Can be interacted with using `prop_options` (Eg. Press [E] to sit in a chair)
+- Can be interacted with using `prop` interactions (Eg. Press [E] to sit in a chair)
 - Placeable objects are editable (rotation and location)
 - Player can hold Left Ctrl to see all placeable objects and click to edit objects nearby
 - Placeable objects persist to the database and are respawn when server starts.

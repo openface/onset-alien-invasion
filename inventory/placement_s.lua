@@ -39,7 +39,7 @@ function onLoadPlacedItems()
         SetObjectPropertyValue(object, "item", item)
         SetObjectPropertyValue(object, "placeable", true)
         SetObjectPropertyValue(object, "placed_by", row['placed_by'])
-        SetObjectPropertyValue(object, "prop", ItemConfig[item].prop_options)
+        SetObjectPropertyValue(object, "prop", ItemConfig[item].prop)
     
         PlacedObjects[object] = row['uuid']
     
@@ -78,8 +78,8 @@ AddRemoteEvent("PlaceItem", function(player, uuid, loc)
     SetObjectPropertyValue(object, "placeable", true)
     SetObjectPropertyValue(object, "placed_by", steamid)
 
-    if ItemConfig[item].prop_options then
-        SetObjectPropertyValue(object, "prop", ItemConfig[item].prop_options)
+    if ItemConfig[item].prop then
+        SetObjectPropertyValue(object, "prop", ItemConfig[item].prop)
     end
 
     -- generate new uuid for each placed object

@@ -17,7 +17,7 @@ ItemConfig["wooden_chair"] = {
         rz = 0,
         bone = "hand_r"
     },
-    prop_options = {
+    prop = {
         use_label = "Sit",
         event = "SitInChair",
     }

@@ -19,7 +19,7 @@ ItemConfig["campfire"] = {
         wood = 3
     },
     price = nil,
-    prop_options = {
+    prop = {
         use_label = "Ignite",
         event = "IgniteCampfire",
         interaction = {

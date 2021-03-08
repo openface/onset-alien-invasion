@@ -324,6 +324,11 @@ AddRemoteEvent("InteractWithObjectProp", function(player, ActiveProp, CurrentInH
         return
     end
 
+    -- todo:   this plays the item's interaction even when interacting with
+    -- a unrelated prop object, such as a light.   do we really mean to play
+    -- the chopping animation when turning on/off a light??? 
+    
+
     PlayInteraction(player, ItemConfig[CurrentInHand.item].interaction, function()
         -- todo: increment use / max use?
 

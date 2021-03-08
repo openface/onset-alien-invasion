@@ -20,15 +20,8 @@ ItemConfig["campfire"] = {
     },
     price = nil,
     prop = {
-        use_label = "Ignite",
-        event = "IgniteCampfire",
-        interaction = {
-            sound = "sounds/zippo.wav",
-            animation = {
-                id = 924,
-                duration = 10000
-            }
-        }
+        use_label = "Check / Ignite",
+        event = "CheckCampfire",
     },
 }
 
@@ -59,13 +52,23 @@ AddEvent("items:campfire:equip", function(player)
     SetPlayerAnimation(player, "CARRY_IDLE")
 end)
 
-AddEvent("IgniteCampfire", function(player, prop)
-    if GetObjectPropertyValue(prop.hit_object, "particle") then
+AddEvent("CheckCampfire", function(player, ActiveProp, CurrentInHand)
+    if GetObjectPropertyValue(ActiveProp.hit_object, "particle") then
+        CallRemoteEvent(player, "ShowMessage", "This campfire is toasty!")
+    elseif CurrentInHand then
+        if CurrentInHand.item == 'lighter' then
+            CallEvent("IgniteCampfire", player, ActiveProp)
+        end
+    end
+end)
+
+AddEvent("IgniteCampfire", function(player, ActiveProp)
+    if GetObjectPropertyValue(ActiveProp.hit_object, "particle") then
         CallRemoteEvent(player, "ShowError", "Campfire is already lit!")
         return
     end
     SetPlayerAnimation(player, "STOP")
-    SetObjectPropertyValue(prop.hit_object, "particle", {
+    SetObjectPropertyValue(ActiveProp.hit_object, "particle", {
         path = "/AlienInvasion/Particles/P_Campfire",
         position = {
             x = 0,
@@ -79,7 +82,7 @@ AddEvent("IgniteCampfire", function(player, prop)
 
     -- fire goes out
     Delay(60 * 1000, function()
-        SetObjectPropertyValue(prop.hit_object, "particle", nil)
+        SetObjectPropertyValue(ActiveProp.hit_object, "particle", nil)
     end)
 end)
 

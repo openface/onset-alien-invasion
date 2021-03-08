@@ -42,7 +42,8 @@ AddEvent("OnGameTick", function()
                 ActiveProp = {
                     hit_type = 'object',
                     hit_object = hitObject,
-                    options = prop.options
+                    options = prop.options,
+                    modelid = GetObjectModel(hitObject)
                 }
                 --AddPlayerChat("OBJECT ActiveProp: " .. dump(ActiveProp))
             end

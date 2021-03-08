@@ -9,10 +9,6 @@ ItemConfig["lighter"] = {
             id = 924,
             duration = 10000
         },
-        interacts_on = {{
-            hittype = "tree", -- item: campfire?
-            use_label = "Light Fire",
-        }}
     },
     modelid = 20024,
     max_use = 20,
@@ -28,18 +24,15 @@ ItemConfig["lighter"] = {
         ry = 0,
         rz = 0,
         bone = "hand_r"
-    }
+    },
 }
 
---
--- Chopping
---
-AddEvent("items:axe:use", function(player, object, prop)
-    if not prop then
+AddEvent("items:lighter:use", function(player, object, ActiveProp)
+    log.debug("starting fire!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
+    if ActiveProp.modelid ~= "20007" then
         return
     end
-    log.debug(GetPlayerName(player) .. " is chopping a tree")
-
-    CallRemoteEvent(player, "ShowMessage", "You collect some wood and put it in your inventory")
-    AddToInventoryByName(player, "wood", 5)
+    log.debug("starting fire")
+    CallEvent("IgniteCampfire", player, ActiveProp)
 end)

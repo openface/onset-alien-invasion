@@ -265,8 +265,7 @@ function GetNextAvailableInventorySlot(player)
 end
 
 -- use object from inventory
--- options.prop means to interact with object using item in hand
-function UseItemFromInventory(player, uuid, ActiveProp)
+function UseItemFromInventory(player, uuid)
     local item = GetItemInstance(uuid)
     if not item then
         log.error("Invalid item" .. uuid)
@@ -292,7 +291,7 @@ function UseItemFromInventory(player, uuid, ActiveProp)
         return
     end
 
-    CallEvent("BEFORE USE items:" .. item .. ":before_use", player, equipped_object, ActiveProp)
+    CallEvent("BEFORE USE items:" .. item .. ":before_use", player, equipped_object)
 
     PlayInteraction(player, ItemConfig[item].interaction, function()
         -- increment used
@@ -303,12 +302,29 @@ function UseItemFromInventory(player, uuid, ActiveProp)
         -- call USE event on object
         log.debug("USE item:", item)
         log.debug("object:", equipped_object)
-        log.debug("prop:", dump(ActiveProp))
-        CallEvent("USE items:" .. item .. ":use", player, equipped_object, ActiveProp)
+        CallEvent("USE items:" .. item .. ":use", player, equipped_object)
     end)
 end
 AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
 
+-- interact with objects
+AddRemoteEvent("InteractWithObjectProp", function(player, ActiveProp, CurrentInHand)
+    local prop = GetObjectPropertyValue(ActiveProp.hit_object, "prop")
+    if not prop then
+        return
+    end
+
+    -- todo: increment use / max use?
+    -- call prop event on object
+    log.debug("player:", player)
+    log.debug("event:", prop.event)
+    log.debug("ActiveProp:", dump(ActiveProp))
+    log.debug("CurrentInHand:", dump(CurrentInHand))
+
+    CallEvent(prop.event, player, ActiveProp, CurrentInHand)
+end)
+
+-- interact with world props (via in-hand item)
 AddRemoteEvent("InteractWithWorldProp", function(player, ActiveProp, CurrentInHand)
     log.debug("interacting with world prop:" .. dump(ActiveProp))
 
@@ -327,24 +343,6 @@ AddRemoteEvent("InteractWithWorldProp", function(player, ActiveProp, CurrentInHa
     PlayInteraction(player, ItemConfig[CurrentInHand.item].interaction, function()
         CallEvent(interaction.event, player, ActiveProp)
     end)
-end)
-
-AddRemoteEvent("InteractWithObjectProp", function(player, ActiveProp, CurrentInHand)
-    local prop = GetObjectPropertyValue(ActiveProp.hit_object, "prop")
-
-    if not prop.event then
-        return
-    end
-
-    log.debug("interacting with object prop:" .. dump(prop))
-
-    if prop.interaction then
-        PlayInteraction(player, prop.interaction, function()
-            CallEvent(prop.event, player, ActiveProp)
-        end)
-    else
-        CallEvent(prop.event, player, ActiveProp)
-    end
 end)
 
 -- interaction = { sound = "sounds/chainsaw.wav", animation = { id = 924, duration = 10000 } }

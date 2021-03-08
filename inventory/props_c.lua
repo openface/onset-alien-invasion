@@ -40,8 +40,9 @@ AddEvent("OnGameTick", function()
             if prop then
                 ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop.use_label .. "')")
                 ActiveProp = {
-                    hit_type = hitStruct.type,
+                    hit_type = 'object',
                     hit_object = hitObject,
+                    options = prop.options
                 }
                 --AddPlayerChat("OBJECT ActiveProp: " .. dump(ActiveProp))
             end

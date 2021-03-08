@@ -50,21 +50,18 @@ AddEvent('OnKeyPress', function(key)
         CallRemoteEvent("UseItemHotkey", key)
     elseif key == 'F' and ActiveProp then
         -- interact with prop
-        local prop_object_name = GetObjectModelName(GetObjectModel(ActiveProp.hit_object))
-        AddPlayerChat("interact with prop " .. prop_object_name .. " (no item)")
-        CallRemoteEvent("InteractWithProp", ActiveProp)
+
+        if ActiveProp.hit_type == 'object' then
+            -- interact with object prop
+            local prop_object_name = GetObjectModelName(GetObjectModel(ActiveProp.hit_object))
+            AddPlayerChat("interact with object prop " .. prop_object_name)
+            CallRemoteEvent("InteractWithObjectProp", ActiveProp, CurrentInHand)
+        else
+            -- interact with world prop
+            AddPlayerChat("interact with world prop " .. ActiveProp.hit_type)
+            CallRemoteEvent("InteractWithWorldProp", ActiveProp, CurrentInHand)
+        end
         ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
-    elseif key == 'Left Mouse Button' and ActiveProp and CurrentInHand then
-        -- interact with prop (with item in hand)
-        local prop_object_name = GetObjectModelName(GetObjectModel(ActiveProp.hit_object))
-        AddPlayerChat("use item " .. CurrentInHand.item .. " on prop " .. prop_object_name .. " - start")
-
-        -- F held, long interaction with prop and item
-        AddPlayerChat("use item " .. CurrentInHand.item .. " on prop " .. prop_object_name .. " - end")
-
-        CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid, ActiveProp)
-        ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
-
     elseif key == 'Left Mouse Button' and CurrentInHand then
         -- use item in hand
         AddPlayerChat("use item in hand: " .. CurrentInHand.item)

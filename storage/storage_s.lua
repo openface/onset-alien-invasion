@@ -14,34 +14,34 @@ end
 AddEvent("UnlockStorage", UnlockStorage)
 AddRemoteEvent("UnlockStorage", UnlockStorage)
 
-AddEvent("OpenStorage", function(player, prop)
-    log.trace("OpenStorage "..dump(prop))
+AddEvent("OpenStorage", function(player, ActiveProp)
+    log.trace("OpenStorage "..dump(ActiveProp))
 
-    if prop.options['locked'] then
+    if ActiveProp.options['locked'] then
         CallRemoteEvent(player, "ShowError", "Locked")
         return
     end
 
-    log.info(GetPlayerName(player) .. " opens storage object " .. prop.hit_object .. " type " ..
-                 prop.options['storage_type'])
+    log.info(GetPlayerName(player) .. " opens storage object " .. ActiveProp.hit_object .. " type " ..
+    ActiveProp.options['storage_type'])
 
     local x, y, z
     local storage_items
 
-    if prop.options['storage_type'] == 'vehicle' then
-        x, y, z = GetVehicleLocation(prop.hit_object)
-        storage_items = GetVehiclePropertyValue(prop.hit_object, "storage") or {}
+    if ActiveProp.options['storage_type'] == 'vehicle' then
+        x, y, z = GetVehicleLocation(ActiveProp.hit_object)
+        storage_items = GetVehiclePropertyValue(ActiveProp.hit_object, "storage") or {}
     else
-        x, y, z = GetObjectLocation(prop.hit_object)
-        storage_items = GetObjectPropertyValue(prop.hit_object, "storage") or {}
+        x, y, z = GetObjectLocation(ActiveProp.hit_object)
+        storage_items = GetObjectPropertyValue(ActiveProp.hit_object, "storage") or {}
     end
 
     PlaySoundSync("sounds/storage_open.wav", x, y, z)
 
     local _send = {
-        object = prop.hit_object,
-        type = prop.options['storage_type'],
-        storage_name = prop.options['storage_name'],
+        object = ActiveProp.hit_object,
+        type = ActiveProp.options['storage_type'],
+        storage_name = ActiveProp.options['storage_name'],
         storage_items = storage_items,
         inventory_items = {}
     }

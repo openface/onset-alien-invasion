@@ -309,14 +309,34 @@ function UseItemFromInventory(player, uuid, ActiveProp)
 end
 AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
 
-AddRemoteEvent("InteractWithProp", function(player, ActiveProp)
+AddRemoteEvent("InteractWithWorldProp", function(player, ActiveProp, CurrentInHand)
+    log.debug("interacting with world prop:" .. dump(ActiveProp))
+
+    local interaction
+    for _, int in pairs(ItemConfig[CurrentInHand.item].interaction['interacts_on']) do
+        if int.hittype == ActiveProp.hit_type then
+            interaction = int
+            break
+        end
+    end
+    log.debug("interaction:" .. dump(interaction))
+    if not interaction then
+        return
+    end
+
+    PlayInteraction(player, ItemConfig[CurrentInHand.item].interaction, function()
+        CallEvent(interaction.event, player, ActiveProp)
+    end)
+end)
+
+AddRemoteEvent("InteractWithObjectProp", function(player, ActiveProp, CurrentInHand)
     local prop = GetObjectPropertyValue(ActiveProp.hit_object, "prop")
 
     if not prop.event then
         return
     end
 
-    log.debug("interacting with prop:" .. dump(prop))
+    log.debug("interacting with object prop:" .. dump(prop))
 
     if prop.interaction then
         PlayInteraction(player, prop.interaction, function()
@@ -329,7 +349,7 @@ end)
 
 -- interaction = { sound = "sounds/chainsaw.wav", animation = { id = 924, duration = 10000 } }
 function PlayInteraction(player, interaction, after_callback)
-    log.debug("Playing interaction:",dump(interaction))
+    log.debug("Playing interaction:", dump(interaction))
 
     if not interaction then
         if after_callback then

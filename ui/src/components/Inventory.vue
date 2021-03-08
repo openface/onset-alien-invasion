@@ -442,7 +442,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .item-drop-zone {
     margin: 0;
     width: 100%;

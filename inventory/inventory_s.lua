@@ -309,28 +309,33 @@ AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
 
 -- interact with objects
 AddRemoteEvent("InteractWithObjectProp", function(player, ActiveProp, CurrentInHand)
+    log.trace("InteractWithObjectProp",player, dump(ActiveProp), dump(CurrentInHand))
+
     local prop = GetObjectPropertyValue(ActiveProp.hit_object, "prop")
     if not prop then
         return
     end
 
-    local item = GetObjectPropertyValue(ActiveProp.hit_object, "item")
-    PlayInteraction(player, ItemConfig[item].interaction, function()
+    -- 
+    if not CurrentInHand then
+        -- no animation available here
+        log.debug("calling event: "..prop.event)
+        CallEvent(prop.event, player, ActiveProp, CurrentInHand)
+        return
+    end
+
+    PlayInteraction(player, ItemConfig[CurrentInHand.item].interaction, function()
         -- todo: increment use / max use?
 
         -- call prop event on object
-        log.debug("player:", player)
-        log.debug("event:", prop.event)
-        log.debug("ActiveProp:", dump(ActiveProp))
-        log.debug("CurrentInHand:", dump(CurrentInHand))
-
+        log.debug("calling event: "..prop.event)
         CallEvent(prop.event, player, ActiveProp, CurrentInHand)
     end)
 end)
 
 -- interact with world props (via in-hand item)
 AddRemoteEvent("InteractWithWorldProp", function(player, ActiveProp, CurrentInHand)
-    log.debug("interacting with world prop:" .. dump(ActiveProp))
+    log.trace("InteractWithWorldProp", player, dump(ActiveProp), dump(CurrentInHand))
 
     local interaction
     for _, int in pairs(ItemConfig[CurrentInHand.item].interaction['interacts_on']) do
@@ -345,6 +350,7 @@ AddRemoteEvent("InteractWithWorldProp", function(player, ActiveProp, CurrentInHa
     end
 
     PlayInteraction(player, ItemConfig[CurrentInHand.item].interaction, function()
+        log.debug("calling event: "..interaction.event)
         CallEvent(interaction.event, player, ActiveProp)
     end)
 end)

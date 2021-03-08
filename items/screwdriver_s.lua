@@ -27,16 +27,4 @@ ItemConfig["screwdriver"] = {
     },
 }
 
-AddEvent("items:screwdriver:use", function(player, object, ActiveProp)
-    local prop = GetObjectPropertyValue(ActiveProp.hit_object, "prop")
-    if prop.event ~= "OpenStorage" then
-        CallRemoteEvent(player, "ShowError", "This cannot be lockpicked!")
-        return
-    end
-    if not prop.options['locked'] then
-        CallRemoteEvent(player, "ShowError", "Not locked!")
-        CallEvent("OpenStorage", player, ActiveProp)
-        return
-    end
-    CallRemoteEvent(player, "ShowLockpick", ActiveProp.hit_object)
-end)
+

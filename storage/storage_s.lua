@@ -14,8 +14,21 @@ end
 AddEvent("UnlockStorage", UnlockStorage)
 AddRemoteEvent("UnlockStorage", UnlockStorage)
 
+AddEvent("CheckStorage", function(player, ActiveProp, CurrentInHand)
+    log.trace("CheckStorage", player, dump(ActiveProp), dump(CurrentInHand))
+
+    local prop = GetObjectPropertyValue(ActiveProp.hit_object, "prop")
+    if prop.options['locked'] then
+        if CurrentInHand and CurrentInHand.item == "screwdriver" then
+            CallRemoteEvent(player, "ShowLockpick", ActiveProp.hit_object)
+        end
+    else
+        CallEvent("OpenStorage", player, ActiveProp)
+    end
+end)
+
 AddEvent("OpenStorage", function(player, ActiveProp)
-    log.trace("OpenStorage "..dump(ActiveProp))
+    log.trace("OpenStorage " .. dump(ActiveProp))
 
     if ActiveProp.options['locked'] then
         CallRemoteEvent(player, "ShowError", "Locked")
@@ -23,7 +36,7 @@ AddEvent("OpenStorage", function(player, ActiveProp)
     end
 
     log.info(GetPlayerName(player) .. " opens storage object " .. ActiveProp.hit_object .. " type " ..
-    ActiveProp.options['storage_type'])
+                 ActiveProp.options['storage_type'])
 
     local x, y, z
     local storage_items

@@ -7,7 +7,7 @@ ItemConfig["screwdriver"] = {
     max_carry = 2,
     price = 20,
     interaction = {
-        animation = { name = "LOCKDOOR" },
+        animation = { name = "LOCKDOOR", duration = "3500" },
         use_label = "Screw",
     },
     attachment = { 

@@ -316,19 +316,21 @@ AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
 AddRemoteEvent("InteractWithObjectProp", function(player, ActiveProp, CurrentInHand)
     log.trace("InteractWithObjectProp",player, dump(ActiveProp), dump(CurrentInHand))
 
-    if not CurrentInHand then
-        -- no animation available here
-        log.debug("calling event (no item): "..ActiveProp.event)
-        CallEvent(ActiveProp.event, player, ActiveProp, CurrentInHand)
+    local interaction = ActiveProp.interaction
+
+    if not interaction.item then
+        -- no animation here, nothing in hand
+        log.debug("calling event (no interaction): "..interaction.event)
+        CallEvent(interaction.event, player, ActiveProp, CurrentInHand)
         return
     end
 
-    PlayInteraction(player, ItemConfig[CurrentInHand.item].interaction, function()
+    PlayInteraction(player, ItemConfig[interaction.item].interaction, function()
         -- todo: increment use / max use?
 
         -- call prop event on object
-        log.debug("calling event (with item): "..ActiveProp.event)
-        CallEvent(ActiveProp.event, player, ActiveProp, CurrentInHand)
+        log.debug("calling event (with interaction): "..interaction.event)
+        CallEvent(interaction.event, player, ActiveProp, CurrentInHand)
     end)
 end)
 

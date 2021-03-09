@@ -98,6 +98,7 @@ end)
 AddRemoteEvent("SetInventory", function(inventory_data, inhand_data)
     ExecuteWebJS(InventoryUI, "EmitEvent('SetInventory'," .. inventory_data .. ")")
     CurrentInHand = inhand_data
+    ActiveProp = nil
 end)
 
 -- drop item

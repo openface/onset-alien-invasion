@@ -36,17 +36,19 @@ AddEvent("OnGameTick", function()
 
         if hitStruct.type == 'object' then
             -- object interaction
-            local interaction = GetObjectInteraction(hitObject)
-            if interaction then
-                ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. interaction.use_label .. "')")
-                ActiveProp = {
-                    hit_type = 'object',
-                    hit_object = hitObject,
-                    options = interaction.options,
-                    use_label = interaction.use_label,
-                    event = interaction.event
-                }
-                AddPlayerChat("OBJECT ActiveProp: " .. dump(ActiveProp))
+            local prop = GetObjectPropertyValue(hitObject, "prop")
+            if prop then
+                local interaction = GetPropInteraction(prop)
+                if interaction then
+                    ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. interaction.use_label .. "')")
+                    ActiveProp = {
+                        hit_type = 'object',
+                        hit_object = hitObject,
+                        interaction = interaction,
+                        options = prop.options,
+                    }
+                    AddPlayerChat("OBJECT ActiveProp: " .. dump(ActiveProp))
+                end
             end
         elseif CurrentInHand then
             -- item in hand interacts with environment
@@ -66,19 +68,15 @@ AddEvent("OnGameTick", function()
     end
 end)
 
--- @return { use_label = "Start Fire", event = "IgniteCampfire", options = {} }
-function GetObjectInteraction(hitObject)
-    local prop = GetObjectPropertyValue(hitObject, "prop")
-    if not prop then
-        return
-    end
+-- @return { use_label = "Ignite", event = "IgniteCampfire", item = "lighter", options = {} }
+function GetPropInteraction(prop)
     if prop.interacts_with and CurrentInHand then
         for item, o in pairs(prop.interacts_with) do
             if CurrentInHand.item == item then
                 return {
+                    item = item,
                     use_label = o.use_label,
                     event = o.event,
-                    options = prop.options
                 }
             end
         end
@@ -86,7 +84,6 @@ function GetObjectInteraction(hitObject)
     return {
         use_label = prop.use_label,
         event = prop.event,
-        options = prop.options
     }
 end
 

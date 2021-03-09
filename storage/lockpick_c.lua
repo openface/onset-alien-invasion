@@ -16,7 +16,7 @@ end)
 
 AddRemoteEvent("ShowLockpick", function(storage_object)
     LockPickingStorageObject = storage_object
-    AddPlayerChat("lockpicking object"..LockPickingStorageObject)
+    --AddPlayerChat("lockpicking object"..LockPickingStorageObject)
 
     ShowMouseCursor(true)
     SetInputMode(INPUT_GAMEANDUI)
@@ -55,11 +55,11 @@ AddEvent("StartTurn", function()
 end)
 
 AddEvent("BreakPin", function()
-    ShowMessage("You broke a lockpick!")
+    ShowMessage("You broke a bobbypin!")
 end)
 
 AddEvent("OutOfPins", function()
-    ShowMessage("You have run out of lock picks!")
+    ShowMessage("You have run out of bobbypins!")
     HideLockpickUI()
 end)
 

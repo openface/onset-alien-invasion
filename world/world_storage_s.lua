@@ -52,6 +52,10 @@ function AddStorageProp(object)
             ["screwdriver"] = {
                 use_label = "Pick Lock",
                 event = "StartLockpick"
+            },
+            ["crowbar"] = {
+                use_label = "Smash Open",
+                event = "UnlockStorage"
             }
         },
         options = {

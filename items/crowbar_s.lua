@@ -24,16 +24,3 @@ ItemConfig["crowbar"] = {
       bone = "hand_r" 
     }
 }
-
---
--- Force opens a storage container.  If it was locked, it won't be anymore.
---
-AddEvent("items:crowbar:use", function(player, object, ActiveProp)
-    local prop = GetObjectPropertyValue(ActiveProp.hit_object, "prop")
-    if prop.event ~= "OpenStorage" then
-        CallRemoteEvent(player, "ShowError", "This cannot be pryed open!")
-        return
-    end
-
-    CallEvent("UnlockStorage", player, ActiveProp.hit_object)
-end)

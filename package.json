@@ -33,6 +33,7 @@
         "scoreboard/scoreboard_s.lua",
         "pickups/pickups_s.lua",
         "storage/storage_s.lua",
+        "storage/lockpick_s.lua",
         "doors/doors_s.lua",
         "world/world_s.lua",
         "world/world_garbage_s.lua",

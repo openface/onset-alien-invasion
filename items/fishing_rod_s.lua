@@ -6,8 +6,11 @@ ItemConfig["fishing_rod"] = {
         sound = "sounds/fishing.mp3",
         animation = { name = "FISHING", duration = 10000 },
         interacts_on = {
-            { hittype = "water", use_label = "Go Fishing" }
-        },
+            ["water"] = {
+                use_label = "Go Fishing",
+                event = "GoFishing"
+            }
+        }
     },
     modelid = 20011,
     image = "survival/SM_FishingRod.png",
@@ -29,10 +32,17 @@ ItemConfig["fishing_rod"] = {
     }
 }
 
-AddEvent("items:fishing_rod:use", function(player, object, prop)
-    if prop then
-        log.debug(GetPlayerName(player) .. " is fishing")
+AddEvent("GoFishing", function(player, prop)
+    if not prop then
+        return
+    end
+
+    log.debug(GetPlayerName(player) .. " is fishing")
+
+    if math.random(1,3) == 1 then
         CallRemoteEvent(player, "ShowMessage", "You caught a fish and put it in your inventory")
         AddToInventoryByName(player, "wood")
+    else
+        CallRemoteEvent(player, "ShowMessage", "You caught nothing")
     end
 end)

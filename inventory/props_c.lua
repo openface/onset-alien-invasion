@@ -88,12 +88,13 @@ function GetPropInteraction(prop)
 end
 
 -- @return  { hittype = "tree", use_label = "Chop Tree", event = "HarvestTree" }
-function CurrentInHandInteractsWithHitType(hitType)
+function CurrentInHandInteractsWithHitType(hittype)
+    AddPlayerChat("CurrentInHandInteractsWithHitType:"..hittype)
     if CurrentInHand and CurrentInHand.interacts_on then
-        for _, p in pairs(CurrentInHand.interacts_on) do
-            if p.hittype == hitType then
-                AddPlayerChat("item interacts with world: " .. dump(p))
-                return p
+        for type, o in pairs(CurrentInHand.interacts_on) do
+            if type == hittype then
+                AddPlayerChat("item interacts with world: " .. dump(o))
+                return o
             end
         end
     end

@@ -6,6 +6,8 @@ ItemConfig["axe"] = {
         metal = 20,
         plastic = 5
     },
+    max_use = 20,
+    use_label = nil,
     interaction = {
         sound = "sounds/chopping_wood.mp3",
         animation = {
@@ -20,8 +22,6 @@ ItemConfig["axe"] = {
         }
     },
     modelid = 20002,
-    max_use = 20,
-    use_label = "Chop",
     image = "survival/SM_Axe-Neo.png",
     max_carry = 1,
     price = 150,

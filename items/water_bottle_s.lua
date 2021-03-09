@@ -7,7 +7,13 @@ ItemConfig["water_bottle"] = {
         sound = "sounds/drink.wav",
         animation = {
             name = "DRINKING"
-        }
+        },
+--[[         interacts_on = {
+            ["water"] = {
+                use_label = "Fill Bottle",
+                event = "FillBottle"
+            }
+        } ]]
     },
     modelid = 1022,
     max_use = 3,

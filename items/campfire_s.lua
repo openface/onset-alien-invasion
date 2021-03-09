@@ -15,20 +15,20 @@ ItemConfig["campfire"] = {
         rz = 0,
         bone = "hand_r"
     },
-    interaction = {
-        sound = "sounds/zippo.wav",
-        animation = {
-            id = 924,
-            duration = 10000
-        },
-    },
+    interaction = {},
     recipe = {
         wood = 3
     },
     price = nil,
     prop = {
-        use_label = "Check / Ignite",
+        use_label = "Check Campfire",
         event = "CheckCampfire",
+        interacts_with = {
+            ["lighter"] = {
+                use_label = "Ignite",
+                event = "IgniteCampfire"
+            }
+        }
     },
 }
 
@@ -62,8 +62,6 @@ end)
 AddEvent("CheckCampfire", function(player, ActiveProp, CurrentInHand)
     if GetObjectPropertyValue(ActiveProp.hit_object, "particle") then
         CallRemoteEvent(player, "ShowMessage", "This campfire is toasty!")
-    elseif CurrentInHand and CurrentInHand.item == "lighter" then
-        CallEvent("IgniteCampfire", player, ActiveProp)
     else
         CallRemoteEvent(player, "ShowMessage", "This campfire is not lit.  You may need something to light it with.")
     end

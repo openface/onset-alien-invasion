@@ -12,11 +12,12 @@ ItemConfig["axe"] = {
             id = 920,
             duration = 5000
         },
-        interacts_on = {{
-            hittype = "tree",
-            use_label = "Chop Tree",
-            event = "HarvestTree"
-        }}
+        interacts_on = {
+            ["tree"] = {
+                use_label = "Chop Tree",
+                event = "HarvestTree"
+            }
+        }
     },
     modelid = 20002,
     max_use = 20,

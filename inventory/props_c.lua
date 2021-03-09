@@ -36,16 +36,17 @@ AddEvent("OnGameTick", function()
 
         if hitStruct.type == 'object' then
             -- object interaction
-            local prop = GetObjectPropertyValue(hitObject, "prop")
-            if prop then
-                ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. prop.use_label .. "')")
+            local interaction = GetObjectInteraction(hitObject)
+            if interaction then
+                ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. interaction.use_label .. "')")
                 ActiveProp = {
                     hit_type = 'object',
                     hit_object = hitObject,
-                    options = prop.options,
-                    modelid = GetObjectModel(hitObject)
+                    options = interaction.options,
+                    use_label = interaction.use_label,
+                    event = interaction.event
                 }
-                --AddPlayerChat("OBJECT ActiveProp: " .. dump(ActiveProp))
+                AddPlayerChat("OBJECT ActiveProp: " .. dump(ActiveProp))
             end
         elseif CurrentInHand then
             -- item in hand interacts with environment
@@ -54,9 +55,9 @@ AddEvent("OnGameTick", function()
                 ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. interaction.use_label .. "')")
                 ActiveProp = {
                     hit_type = hitStruct.type,
-                    hit_object = hitObject,
+                    hit_object = hitObject
                 }
-                --AddPlayerChat("ENV ActiveProp: " .. dump(ActiveProp))
+                AddPlayerChat("ENV ActiveProp: " .. dump(ActiveProp))
             end
         end
 
@@ -65,12 +66,36 @@ AddEvent("OnGameTick", function()
     end
 end)
 
--- @return  { hittype = "tree", use_label = "Chop Tree", event = "HarvestTree"}
-function CurrentInHandInteractsWithHitType(hittype)
+-- @return { use_label = "Start Fire", event = "IgniteCampfire", options = {} }
+function GetObjectInteraction(hitObject)
+    local prop = GetObjectPropertyValue(hitObject, "prop")
+    if not prop then
+        return
+    end
+    if prop.interacts_with and CurrentInHand then
+        for item, o in pairs(prop.interacts_with) do
+            if CurrentInHand.item == item then
+                return {
+                    use_label = o.use_label,
+                    event = o.event,
+                    options = prop.options
+                }
+            end
+        end
+    end
+    return {
+        use_label = prop.use_label,
+        event = prop.event,
+        options = prop.options
+    }
+end
+
+-- @return  { hittype = "tree", use_label = "Chop Tree", event = "HarvestTree" }
+function CurrentInHandInteractsWithHitType(hitType)
     if CurrentInHand and CurrentInHand.interacts_on then
         for _, p in pairs(CurrentInHand.interacts_on) do
-            if p.hittype == hittype then
-                AddPlayerChat("item interacts with world: "..dump(p))
+            if p.hittype == hitType then
+                AddPlayerChat("item interacts with world: " .. dump(p))
                 return p
             end
         end

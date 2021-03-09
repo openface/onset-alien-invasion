@@ -3,7 +3,13 @@ ItemConfig["lighter"] = {
     type = 'usable',
     category = "Supplies",
     recipe = nil,
-    interaction = nil,
+    interaction = {
+        sound = "sounds/zippo.wav",
+        animation = {
+            id = 924,
+            duration = 10000
+        },
+    },
     modelid = 20024,
     max_use = 20,
     image = "survival/SM_Lighter.png",

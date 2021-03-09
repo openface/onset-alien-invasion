@@ -5,7 +5,6 @@ ItemConfig["screwdriver"] = {
     modelid = 20100,
     image = "lockpick/screwdriver.jpg",
     max_carry = 2,
-    use_label = "Screw",
     price = 20,
     interaction = {
         animation = { name = "LOCKDOOR" },

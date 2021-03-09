@@ -53,8 +53,7 @@ AddEvent('OnKeyPress', function(key)
 
         if ActiveProp.hit_type == 'object' then
             -- interact with object prop
-            local prop_object_name = GetObjectModelName(GetObjectModel(ActiveProp.hit_object))
-            AddPlayerChat("interact with object prop " .. prop_object_name)
+            AddPlayerChat("interact with object prop " .. ActiveProp.hit_object)
             CallRemoteEvent("InteractWithObjectProp", ActiveProp, CurrentInHand)
         else
             -- interact with world prop

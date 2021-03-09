@@ -47,12 +47,18 @@ function AddStorageProp(object)
     WorldStorageObjects[object] = true
     SetObjectPropertyValue(object, "prop", {
         use_label = "Open",
-        event = "CheckStorage",
+        event = "OpenStorage",
+        interacts_with = {
+            ["screwdriver"] = {
+                use_label = "Pick Lock",
+                event = "StartLockpick"
+            }
+        },
         options = {
             storage_type = 'object',
             storage_name = "Storage Container",
             locked = locked,
-        }
+        },
     })
 end
 

@@ -278,6 +278,11 @@ function UseItemFromInventory(player, uuid)
         return
     end
 
+    -- cannot use item if no use_label is defined
+    if not ItemConfig[item].use_label then
+        return
+    end
+
     log.debug(GetPlayerName(player) .. " uses item " .. item .. " from inventory")
 
     local equipped_object = GetEquippedObject(player, uuid)
@@ -311,30 +316,19 @@ AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
 AddRemoteEvent("InteractWithObjectProp", function(player, ActiveProp, CurrentInHand)
     log.trace("InteractWithObjectProp",player, dump(ActiveProp), dump(CurrentInHand))
 
-    local prop = GetObjectPropertyValue(ActiveProp.hit_object, "prop")
-    if not prop then
-        return
-    end
-
-    -- 
     if not CurrentInHand then
         -- no animation available here
-        log.debug("calling event: "..prop.event)
-        CallEvent(prop.event, player, ActiveProp, CurrentInHand)
+        log.debug("calling event (no item): "..ActiveProp.event)
+        CallEvent(ActiveProp.event, player, ActiveProp, CurrentInHand)
         return
     end
-
-    -- todo:   this plays the item's interaction even when interacting with
-    -- a unrelated prop object, such as a light.   do we really mean to play
-    -- the chopping animation when turning on/off a light??? 
-    
 
     PlayInteraction(player, ItemConfig[CurrentInHand.item].interaction, function()
         -- todo: increment use / max use?
 
         -- call prop event on object
-        log.debug("calling event: "..prop.event)
-        CallEvent(prop.event, player, ActiveProp, CurrentInHand)
+        log.debug("calling event (with item): "..ActiveProp.event)
+        CallEvent(ActiveProp.event, player, ActiveProp, CurrentInHand)
     end)
 end)
 
@@ -343,9 +337,9 @@ AddRemoteEvent("InteractWithWorldProp", function(player, ActiveProp, CurrentInHa
     log.trace("InteractWithWorldProp", player, dump(ActiveProp), dump(CurrentInHand))
 
     local interaction
-    for _, int in pairs(ItemConfig[CurrentInHand.item].interaction['interacts_on']) do
-        if int.hittype == ActiveProp.hit_type then
-            interaction = int
+    for hittype, o in pairs(ItemConfig[CurrentInHand.item].interaction['interacts_on']) do
+        if hittype == ActiveProp.hit_type then
+            interaction = o
             break
         end
     end

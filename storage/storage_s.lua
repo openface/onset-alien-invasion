@@ -14,16 +14,14 @@ end
 AddEvent("UnlockStorage", UnlockStorage)
 AddRemoteEvent("UnlockStorage", UnlockStorage)
 
-AddEvent("CheckStorage", function(player, ActiveProp, CurrentInHand)
-    log.trace("CheckStorage", player, dump(ActiveProp), dump(CurrentInHand))
+AddEvent("StartLockpick", function(player, ActiveProp, CurrentInHand)
+    log.trace("StartLockpick", player, dump(ActiveProp), dump(CurrentInHand))
 
     local prop = GetObjectPropertyValue(ActiveProp.hit_object, "prop")
-    if prop.options['locked'] then
-        if CurrentInHand and CurrentInHand.item == "screwdriver" then
-            CallRemoteEvent(player, "ShowLockpick", ActiveProp.hit_object)
-        end
-    else
+    if not prop.options['locked'] then
         CallEvent("OpenStorage", player, ActiveProp)
+    else
+        CallRemoteEvent("ShowLockpick", player, ActiveProp)
     end
 end)
 

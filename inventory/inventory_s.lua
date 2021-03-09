@@ -17,6 +17,10 @@ function SyncInventory(player)
         if ItemConfig[item.item] then
             local equipped = IsItemEquipped(player, item.uuid)
             local bone = GetItemAttachmentBone(item.item)
+            local use_label
+            if ItemConfig[item.item].interactions and ItemConfig[item.item].interactions['use'] then
+                use_label = ItemConfig[item.item].interactions['use'].use_label
+            end
             table.insert(_send.inventory_items, {
                 ['index'] = index,
                 ['item'] = item.item,
@@ -32,16 +36,14 @@ function SyncInventory(player)
                 ['name'] = ItemConfig[item.item].name,
                 ['modelid'] = ItemConfig[item.item].modelid,
                 ['image'] = ItemConfig[item.item].image,
-                ['use_label'] = ItemConfig[item.item].use_label
+                ['use_label'] = use_label
             })
             if equipped and (bone == 'hand_l' or bone == 'hand_r') then
                 current_inhand = {}
                 current_inhand['item'] = item.item
                 current_inhand['uuid'] = item.uuid
                 current_inhand['type'] = ItemConfig[item.item].type
-                if ItemConfig[item.item].interaction and ItemConfig[item.item].interaction['interacts_on'] then
-                    current_inhand['interacts_on'] = ItemConfig[item.item].interaction['interacts_on']
-                end
+                current_inhand['interactions'] = ItemConfig[item.item].interactions
             end
         end
     end
@@ -266,6 +268,8 @@ end
 
 -- use object from inventory
 function UseItemFromInventory(player, uuid)
+    log.trace("UseItemFromInventory",uuid)
+
     local item = GetItemInstance(uuid)
     if not item then
         log.error("Invalid item" .. uuid)
@@ -278,11 +282,6 @@ function UseItemFromInventory(player, uuid)
         return
     end
 
-    -- cannot use item if no use_label is defined
-    if not ItemConfig[item].use_label then
-        return
-    end
-
     log.debug(GetPlayerName(player) .. " uses item " .. item .. " from inventory")
 
     local equipped_object = GetEquippedObject(player, uuid)
@@ -291,23 +290,28 @@ function UseItemFromInventory(player, uuid)
         return
     end
 
+    local interaction = ItemConfig[item].interactions['use']
+    if not interaction then
+        log.error("No USE interaction for this item")
+        return
+    end
+
     if ItemConfig[item].max_use and inventory_item.used > ItemConfig[item].max_use then
         log.error "Max use exceeded!"
         return
     end
 
-    CallEvent("BEFORE USE items:" .. item .. ":before_use", player, equipped_object)
+    -- BEFORE USE callback
+    CallEvent("items:" .. item .. ":before_use", player, equipped_object)
 
-    PlayInteraction(player, ItemConfig[item].interaction, function()
+    PlayInteraction(player, interaction, function()
         -- increment used
         if ItemConfig[item].max_use then
             IncrementItemUsed(player, uuid)
         end
 
         -- call USE event on object
-        log.debug("USE item:", item)
-        log.debug("object:", equipped_object)
-        CallEvent("USE items:" .. item .. ":use", player, equipped_object)
+        CallEvent(interaction.event, player, equipped_object)
     end)
 end
 AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
@@ -316,16 +320,16 @@ AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
 AddRemoteEvent("InteractWithObjectProp", function(player, ActiveProp, CurrentInHand)
     log.trace("InteractWithObjectProp",player, dump(ActiveProp), dump(CurrentInHand))
 
-    local interaction = ActiveProp.interaction
+    local interaction = ItemConfig[ActiveProp.interaction.item].interactions.use
 
-    if not interaction.item then
+    if not ActiveProp.interaction.item then
         -- no animation here, nothing in hand
         log.debug("calling event (no interaction): "..interaction.event)
         CallEvent(interaction.event, player, ActiveProp, CurrentInHand)
         return
     end
 
-    PlayInteraction(player, ItemConfig[interaction.item].interaction, function()
+    PlayInteraction(player, interaction, function()
         -- todo: increment use / max use?
 
         -- call prop event on object
@@ -339,7 +343,7 @@ AddRemoteEvent("InteractWithWorldProp", function(player, ActiveProp, CurrentInHa
     log.trace("InteractWithWorldProp", player, dump(ActiveProp), dump(CurrentInHand))
 
     local interaction
-    for hittype, o in pairs(ItemConfig[CurrentInHand.item].interaction['interacts_on']) do
+    for hittype, o in pairs(ItemConfig[CurrentInHand.item].interactions) do
         if hittype == ActiveProp.hit_type then
             interaction = o
             break
@@ -350,7 +354,7 @@ AddRemoteEvent("InteractWithWorldProp", function(player, ActiveProp, CurrentInHa
         return
     end
 
-    PlayInteraction(player, ItemConfig[CurrentInHand.item].interaction, function()
+    PlayInteraction(player, interaction, function()
         log.debug("calling event: "..interaction.event)
         CallEvent(interaction.event, player, ActiveProp)
     end)

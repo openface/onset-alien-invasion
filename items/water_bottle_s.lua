@@ -3,21 +3,22 @@ ItemConfig["water_bottle"] = {
     type = "usable",
     category = "Grocery",
     price = 5,
-    interaction = {
-        sound = "sounds/drink.wav",
-        animation = {
-            name = "DRINKING"
+    interactions = {
+        use = {
+            use_label = "Drink",
+            sound = "sounds/drink.wav",
+            animation = { name = "DRINKING" },
+            event = "DrinkWater"
         },
---[[         interacts_on = {
-            ["water"] = {
-                use_label = "Fill Bottle",
-                event = "FillBottle"
-            }
-        } ]]
+        water = {
+            use_label = "Fill Bottle",
+            sound = "sounds/fillwater.mp3",
+            animation = { name = "PICKUP_LOWER" },
+            event = "FillBottle"
+        }
     },
     modelid = 1022,
     max_use = 3,
-    use_label = "Drink",
     max_carry = 2,
     attachment = {
         x = -6,
@@ -30,7 +31,7 @@ ItemConfig["water_bottle"] = {
     }
 }
 
-AddEvent("items:water_bottle:use", function(player)
+AddEvent("DrinkWater", function(player, object)
     local health = GetPlayerHealth(player)
     SetPlayerHealth(player, math.min(100, health + 5))
     CallRemoteEvent(player, "ShowMessage", "Your health has increased")

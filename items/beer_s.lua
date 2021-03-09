@@ -4,13 +4,16 @@ ItemConfig["beer"] = {
     category = "Grocery",
     recipe = nil,
     price = 3,
-    interaction = {
-        sound = "sounds/drink.wav",
-        animation = { name = "DRINKING" }
+    interactions = {
+        use = {
+            use_label = "Drink",
+            sound = "sounds/drink.wav",
+            animation = { name = "DRINKING" },
+            event = "DrinkBeer"
+        },
     },
     modelid = 662,
     max_use = 3,
-    use_label = "Drink",
     max_carry = 2,
     attachment = { 
         x = -6, 
@@ -23,6 +26,6 @@ ItemConfig["beer"] = {
     }
 }
 
-AddEvent("items:beer:use", function(player, object, prop)
-
+AddEvent("DrinkBeer", function(player, object)
+    log.debug("drinks beer")
 end)

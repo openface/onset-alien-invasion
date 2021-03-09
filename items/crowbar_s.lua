@@ -5,13 +5,16 @@ ItemConfig["crowbar"] = {
     recipe = {
         metal = 20,
     },
-    interaction = {
-        sound = "sounds/chopping_wood.mp3",
-        animation = { name = "PICKAXE_SWING", duration = 5000 },
+    interactions = {
+        use = {
+            use_label = "Pry",
+            sound = "sounds/chopping_wood.mp3",
+            animation = { name = "PICKAXE_SWING", duration = 5000 },
+            event = "UnlockStorage"
+        },
     },
     modelid = 1432,
     max_use = 20,
-    use_label = "Swing",
     max_carry = 1,
     price = 50,
     attachment = { 

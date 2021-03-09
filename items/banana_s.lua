@@ -3,13 +3,16 @@ ItemConfig["banana"] = {
     type = "usable",
     category = "Grocery",
     price = 3,
-    interaction = {
-        sound = "sounds/eat.wav",
-        animation = { name = "DRINKING" }
+    interactions = {
+        use = {
+            use_label = "Eat",
+            sound = "sounds/eat.wav",
+            animation = { name = "DRINKING" },
+            event = "EatBanana"
+        },
     },
     modelid = 1622,
     max_use = 3,
-    use_label = "Eat",
     max_carry = 2,
     attachment = { 
         x = -6, 

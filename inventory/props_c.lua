@@ -57,7 +57,7 @@ AddEvent("OnGameTick", function()
                 ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. interaction.use_label .. "')")
                 ActiveProp = {
                     hit_type = hitStruct.type,
-                    hit_object = hitObject
+                    hit_object = hitObject,
                 }
                 AddPlayerChat("ENV ActiveProp: " .. dump(ActiveProp))
             end
@@ -87,14 +87,14 @@ function GetPropInteraction(prop)
     }
 end
 
--- @return  { hittype = "tree", use_label = "Chop Tree", event = "HarvestTree" }
+-- @return  { use_label = "Chop Tree", event = "HarvestTree", sound = "sounds/chopping_wood.mp3", animation = { id = 920, duration = 5000 } }
 function CurrentInHandInteractsWithHitType(hittype)
     AddPlayerChat("CurrentInHandInteractsWithHitType:"..hittype)
-    if CurrentInHand and CurrentInHand.interacts_on then
-        for type, o in pairs(CurrentInHand.interacts_on) do
+    if CurrentInHand and CurrentInHand.interactions then
+        for type, int in pairs(CurrentInHand.interactions) do
             if type == hittype then
-                AddPlayerChat("item interacts with world: " .. dump(o))
-                return o
+                AddPlayerChat("item interacts with world: " .. dump(int))
+                return int
             end
         end
     end

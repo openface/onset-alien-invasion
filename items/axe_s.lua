@@ -7,18 +7,12 @@ ItemConfig["axe"] = {
         plastic = 5
     },
     max_use = 20,
-    use_label = nil,
-    interaction = {
-        sound = "sounds/chopping_wood.mp3",
-        animation = {
-            id = 920,
-            duration = 5000
-        },
-        interacts_on = {
-            ["tree"] = {
-                use_label = "Chop Tree",
-                event = "HarvestTree"
-            }
+    interactions = {
+        tree = {
+            use_label = "Chop Tree",
+            event = "HarvestTree",
+            sound = "sounds/chopping_wood.mp3",
+            animation = { id = 920, duration = 5000 },
         }
     },
     modelid = 20002,

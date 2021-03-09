@@ -6,13 +6,16 @@ ItemConfig["binoculars"] = {
         metal = 20,
         plastic = 5
     },
-    interaction = {
-        animation = { name = "WATCHING", duration = 4000 }
+    interactions = {
+        use = {
+            use_label = "Look",
+            animation = { name = "WATCHING", duration = 4000 },
+            event = "UseBinoculars"
+        },
     },
     modelid = 20004,
     image = "survival/SM_Binocular.png",
     max_carry = 1,
-    use_label = "Look",
     price = 75,
     attachment = { 
       x = -10, 

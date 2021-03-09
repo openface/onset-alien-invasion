@@ -19,5 +19,3 @@ ItemConfig["boxhead"] = {
     }
 }
 
-AddEvent("items:boxhead:use", function(player, object, prop)
-end)

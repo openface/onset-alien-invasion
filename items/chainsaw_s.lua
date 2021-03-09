@@ -6,12 +6,19 @@ ItemConfig["chainsaw"] = {
         metal = 20,
         plastic = 5
     },
-    interaction = {
-        sound = "sounds/chainsaw.wav",
-        animation = { name = "FISHING", duration = 4000 },
-        interacts_on = {
-            { hittype = "tree", use_label = "Murder Tree" }
+    interactions = {
+        use = {
+            use_label = "Start",
+            sound = "sounds/chainsaw.wav",
+            animation = { name = "FISHING", duration = 1000 },
+            event = "UseChainsaw"
         },
+        tree = {
+            use_label = "Murder Tree",
+            sound = "sounds/chainsaw.wav",
+            animation = { name = "FISHING", duration = 4000 },
+            event = "UseChainsaw"
+        }
     },
     modelid = 1047,
     max_carry = 1,
@@ -28,10 +35,11 @@ ItemConfig["chainsaw"] = {
 }
 
 --
--- Chopping
+-- 
 --
-AddEvent("items:chainsaw:use", function(player, object, prop)
-    if prop then
+AddEvent("UseChainsaw", function(player, ActiveProp)
+    log.trace("UseChainsaw", dump(ActiveProp))
+    if ActiveProp then
         log.debug(GetPlayerName(player) .. " is chainsawing a tree")
 
         CallRemoteEvent(player, "ShowMessage", "You collect some wood and put it in your inventory")

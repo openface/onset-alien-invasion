@@ -299,6 +299,15 @@ AddEvent("OnVNPCReachTargetFailed", function(npc)
     VNPCS.StopVNPC(npc)
     SetNPCAnimation(npc, "DONTKNOW", false)
 
+    local returning = GetNPCPropertyValue(npc, 'returning')
+    if returning then
+        -- alien is back in starting position
+        log.error("NPC (ID " .. npc .. ") cannot return.  Despawning...")
+        DestroyNPC(npc)
+        Aliens[npc] = nil
+        return
+    end
+
     local target = GetNPCPropertyValue(npc, 'target')
 
     if target == nil then

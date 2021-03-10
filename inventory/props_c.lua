@@ -35,7 +35,7 @@ AddEvent("OnGameTick", function()
             if prop then
                 local item_interaction = GetItemInteraction(prop)
                 if item_interaction then
-                    debug(dump(item_interaction))
+                    --debug(dump(item_interaction))
                     ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. item_interaction.interaction.use_label .. "')")
                     ActiveProp = {
                         hit_type = 'object',

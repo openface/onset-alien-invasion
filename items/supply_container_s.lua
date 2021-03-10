@@ -6,6 +6,21 @@ ItemConfig["supply_container"] = {
     max_carry = 1,
     recipe = nil,
     price = 100,
+    use_label = "Place",
+    interactions = {
+        equip = {
+            event = "EquipSupplyContainer"
+        }
+    },
+    attachment = {
+        x = -5.1,
+        y = -5.1,
+        z = 58.6,
+        rx = 90.4,
+        ry = 0,
+        rz = 0,
+        bone = "hand_r"
+    },
     prop = {
         use_label = "Open",
         event = "OpenStorage",
@@ -19,3 +34,7 @@ ItemConfig["supply_container"] = {
         }
     }
 }
+
+AddEvent("EquipSupplyContainer", function(player, object)
+    SetPlayerAnimation(player, "HANDSUP_STAND")    
+end)

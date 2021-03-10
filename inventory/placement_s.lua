@@ -1,4 +1,4 @@
-PlacedObjects = {}
+local PlacedObjects = {}
 
 InitTable("placed_items", {
     uuid = {
@@ -46,7 +46,6 @@ function onLoadPlacedItems()
             item = row['item']
         }
     
-
         -- todo: particles, components, etc
 
         log.debug("Spawned placed object " .. object .. " item " .. item)
@@ -143,7 +142,17 @@ function GetPlacedObjectsByName(item)
     return placed_objects
 end
 
+function GetPlacedObjectsCount()
+    return #table.keys(PlacedObjects)
+end
+
 function RemovePlacedObject(object)
+    placed = PlacedObjects[object]
+    if not placed then
+        return
+    end
+
     PlacedObjects[object] = nil
     DestroyObject(object)
+    DeleteRow("placed_items", { uuid = placed.uuid })
 end

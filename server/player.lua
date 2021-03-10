@@ -123,6 +123,10 @@ AddEvent("OnPlayerDeath", function(player, killer)
     -- stats
     BumpPlayerStat(player, 'deaths')
     AddPlayerChat(player, "YOU ARE DEAD!  You must wait " .. PlayerRespawnSecs .. " seconds to respawn...")
+
+    -- set a new random spawn location
+    x, y = randomPointInCircle(SafeZoneLocation.x, SafeZoneLocation.y, 6000)
+    SetPlayerSpawnLocation(player, x, y, SafeZoneLocation.z, 180)
 end)
 
 -- Happens after spawn!

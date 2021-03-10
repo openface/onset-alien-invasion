@@ -70,7 +70,7 @@ AddEvent("OnKeyPress", function(key)
         PlacementCooldown = GetTimeSeconds()
         PlacementTimer = CreateTimer(function(starttime)
             local secs = GetTimeSeconds() - starttime
-            AddPlayerChat("placement timer: "..starttime.." "..secs)
+            debug("placement timer: "..starttime.." "..secs)
 
             if secs > 3 then
                 CallEvent("HideSpinner")

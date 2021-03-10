@@ -53,17 +53,17 @@ AddEvent('OnKeyPress', function(key)
 
         if ActiveProp.hit_type == 'object' then
             -- interact with object prop
-            AddPlayerChat("interact with object prop " .. ActiveProp.hit_object)
+            debug("interact with object prop " .. ActiveProp.hit_object)
             CallRemoteEvent("InteractWithObjectProp", ActiveProp, CurrentInHand)
         else
             -- interact with world prop
-            AddPlayerChat("interact with world prop " .. ActiveProp.hit_type)
+            debug("interact with world prop " .. ActiveProp.hit_type)
             CallRemoteEvent("InteractWithWorldProp", ActiveProp, CurrentInHand)
         end
         ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
     elseif key == 'Left Mouse Button' and CurrentInHand then
         -- use item in hand
-        AddPlayerChat("use item in hand: " .. CurrentInHand.item)
+        debug("use item in hand: " .. CurrentInHand.item)
 
         if CurrentInHand.type == 'placeable' then
             CallEvent("PlaceItemFromInventory", CurrentInHand.uuid)

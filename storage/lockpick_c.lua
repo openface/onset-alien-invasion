@@ -16,7 +16,7 @@ end)
 
 AddRemoteEvent("ShowLockpick", function(storage_object)
     LockPickingStorageObject = storage_object
-    --AddPlayerChat("lockpicking object"..LockPickingStorageObject)
+    --debug("lockpicking object"..LockPickingStorageObject)
 
     ShowMouseCursor(true)
     SetInputMode(INPUT_GAMEANDUI)

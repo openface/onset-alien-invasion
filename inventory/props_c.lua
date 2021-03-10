@@ -3,7 +3,6 @@ ActiveProp = nil
 local LastHitObject
 local LastHitStruct
 local TraceRange = 600.0 -- todo: this needs to adjust depending on 1st/3rd camera view
-local Debug = false
 
 AddEvent("OnGameTick", function()
 
@@ -11,9 +10,7 @@ AddEvent("OnGameTick", function()
 
     -- previously hit an object but are now looking at something else
     if LastHitObject ~= nil and hitObject ~= LastHitObject then
-        if Debug then
-            AddPlayerChat("no longer looking at " .. LastHitObject .. " -> " .. dump(LastHitStruct))
-        end
+        --debug("no longer looking at " .. LastHitObject .. " -> " .. dump(LastHitStruct))
 
         ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
 
@@ -30,9 +27,7 @@ AddEvent("OnGameTick", function()
 
     -- looking at new object
     if hitObject ~= LastHitObject then
-        if Debug then
-            AddPlayerChat("-> now looking at " .. hitObject .. " -> " .. dump(hitStruct))
-        end
+        --debug("-> now looking at " .. hitObject .. " -> " .. dump(hitStruct))
 
         if hitStruct.type == 'object' then
             -- object interaction
@@ -40,7 +35,7 @@ AddEvent("OnGameTick", function()
             if prop then
                 local item_interaction = GetItemInteraction(prop)
                 if item_interaction then
-                    AddPlayerChat(dump(item_interaction))
+                    debug(dump(item_interaction))
                     ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. item_interaction.interaction.use_label .. "')")
                     ActiveProp = {
                         hit_type = 'object',
@@ -48,7 +43,7 @@ AddEvent("OnGameTick", function()
                         item_interaction = item_interaction,
                         options = prop.options,
                     }
-                    AddPlayerChat("OBJECT ActiveProp: " .. dump(ActiveProp))
+                    debug("OBJECT ActiveProp: " .. dump(ActiveProp))
                 end
             end
         elseif CurrentInHand then
@@ -60,7 +55,7 @@ AddEvent("OnGameTick", function()
                     hit_type = hitStruct.type,
                     hit_object = hitObject,
                 }
-                AddPlayerChat("ENV ActiveProp: " .. dump(ActiveProp))
+                debug("ENV ActiveProp: " .. dump(ActiveProp))
             end
         end
 
@@ -90,11 +85,11 @@ end
 
 -- @return  { use_label = "Chop Tree", event = "HarvestTree", sound = "sounds/chopping_wood.mp3", animation = { id = 920, duration = 5000 } }
 function CurrentInHandInteractsWithHitType(hittype)
-    AddPlayerChat("CurrentInHandInteractsWithHitType:"..hittype)
+    debug("CurrentInHandInteractsWithHitType:"..hittype)
     if CurrentInHand and CurrentInHand.interactions then
         for type, int in pairs(CurrentInHand.interactions) do
             if type == hittype then
-                AddPlayerChat("item interacts with world: " .. dump(int))
+                debug("item interacts with world: " .. dump(int))
                 return int
             end
         end
@@ -129,7 +124,7 @@ function ProcessHitResult(HitResult)
         return
     end
 
-    -- AddPlayerChat("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName() .." id:"..Comp:GetUniqueID())
+    -- debug("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName() .." id:"..Comp:GetUniqueID())
 
     -- environment
     if string.find(Comp:GetName(), "FoliageInstancedStaticMeshComponent") then

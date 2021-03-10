@@ -88,7 +88,7 @@ end)
 
 AddEvent("OnPlayerNetworkUpdatePropertyValue", function(player, PropertyName, PropertyValue)
     if PropertyName == "clothing" and PropertyValue ~= nil then
-        AddPlayerChat("clothing change:"..player.." to "..PropertyValue)
+        debug("clothing change:"..player.." to "..PropertyValue)
         SetPlayerClothingPreset(player, PropertyValue)
     end    
 end)
@@ -105,7 +105,7 @@ AddEvent("OnHideMainMenu", function ()
     -- hide any visible UIs
     for _,ui in pairs(GetAllWebUI()) do
       if GetWebVisibility(ui) == WEB_VISIBLE then
-        AddPlayerChat("Hiding UI: "..ui)
+        debug("Hiding UI: "..ui)
         SetWebVisibility(ui, WEB_HIDDEN)
       end
     end
@@ -179,6 +179,10 @@ AddRemoteEvent('PlayErrorSound', function()
 end)
 
 --
+function debug(msg)
+    AddPlayerChat('<span color="#cccccc" style="bold" size="10">' .. msg ..'</>')
+end
+
 function dump(o)
     if type(o) == 'table' then
         local s = '{ '

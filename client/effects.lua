@@ -70,7 +70,7 @@ end)
 
 function AddLightComponentToObject(object, component_cfg)
     if component_cfg.type == nil then
-        AddPlayerChat "Error invalid component config"
+        debug "Error invalid component config"
         return
     end
 

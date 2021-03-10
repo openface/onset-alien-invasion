@@ -9,6 +9,12 @@ ItemConfig["wooden_table"] = {
         wood = 50
     },
     price = 150,
+    interactions = {
+        equip = {
+            sound = "sounds/backpack.wav",
+            animation = { name = "CARRY_IDLE" },
+        }
+    },
     attachment = {
         x = 10.8,
         y = 53.3,
@@ -19,7 +25,3 @@ ItemConfig["wooden_table"] = {
         bone = "hand_r"
     },
 }
-
-AddEvent("items:wooden_table:equip", function(player)
-    SetPlayerAnimation(player, "CARRY_IDLE")    
-end)

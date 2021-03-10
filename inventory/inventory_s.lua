@@ -302,7 +302,7 @@ function UseItemFromInventory(player, uuid)
     end
 
     -- BEFORE USE callback
-    CallEvent("items:" .. item .. ":before_use", player, equipped_object)
+    CallEvent("items:" .. item .. ":before_use", player)
 
     PlayInteraction(player, interaction, function()
         -- increment used
@@ -310,8 +310,10 @@ function UseItemFromInventory(player, uuid)
             IncrementItemUsed(player, uuid)
         end
 
-        -- call USE event on object
-        CallEvent(interaction.event, player, equipped_object)
+        -- call interaction event
+        if interaction.event then
+            CallEvent(interaction.event, player)
+        end
     end)
 end
 AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
@@ -320,19 +322,19 @@ AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
 AddRemoteEvent("InteractWithObjectProp", function(player, ActiveProp, CurrentInHand)
     log.trace("InteractWithObjectProp",player, dump(ActiveProp), dump(CurrentInHand))
 
-    local interaction = ItemConfig[ActiveProp.interaction.item].interactions.use
+    local interaction = ActiveProp.item_interaction.interaction
 
-    if not ActiveProp.interaction.item then
-        -- no animation here, nothing in hand
+    if not interaction.animation then
+        -- no animation here, just call event
         log.debug("calling event (no interaction): "..interaction.event)
         CallEvent(interaction.event, player, ActiveProp, CurrentInHand)
         return
     end
 
+    -- call event with animation
     PlayInteraction(player, interaction, function()
         -- todo: increment use / max use?
 
-        -- call prop event on object
         log.debug("calling event (with interaction): "..interaction.event)
         CallEvent(interaction.event, player, ActiveProp, CurrentInHand)
     end)
@@ -370,13 +372,13 @@ function PlayInteraction(player, interaction, after_callback)
         end
         return
     end
-    if interaction['animation'] then
-        if interaction['animation'].name then
-            SetPlayerAnimation(player, interaction['animation'].name)
-        elseif interaction['animation'].id then
-            SetPlayerAnimation(player, tonumber(interaction['animation'].id))
+    if interaction.animation then
+        if interaction.animation.name then
+            SetPlayerAnimation(player, interaction.animation.name)
+        elseif interaction.animation.id then
+            SetPlayerAnimation(player, tonumber(interaction.animation.id))
         end
-        local duration = interaction['animation']['duration'] or 2000 -- default animation delay
+        local duration = interaction.animation.duration or 2000 -- default animation delay
 
         Delay(duration, function()
             SetPlayerAnimation(player, "STOP")
@@ -390,9 +392,9 @@ function PlayInteraction(player, interaction, after_callback)
             after_callback()
         end
     end
-    if interaction['sound'] then
+    if interaction.sound then
         local x, y, z = GetPlayerLocation(player)
-        PlaySoundSync(interaction['sound'], x, y, z)
+        PlaySoundSync(interaction.sound, x, y, z)
     end
 end
 

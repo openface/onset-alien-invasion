@@ -10,8 +10,7 @@ ItemConfig["chainsaw"] = {
         use = {
             use_label = "Start",
             sound = "sounds/chainsaw.wav",
-            animation = { name = "FISHING", duration = 1000 },
-            event = "UseChainsaw"
+            animation = { name = "FISHING", duration = 3000 },
         },
         tree = {
             use_label = "Murder Tree",

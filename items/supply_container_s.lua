@@ -9,6 +9,10 @@ ItemConfig["supply_container"] = {
     prop = {
         use_label = "Open",
         event = "OpenStorage",
+        interacts_with = {
+            screwdriver = "use",
+            crowbar = "use"
+        },
         options = {
             storage_type = 'object',
             storage_name = "Supply Container"

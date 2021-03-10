@@ -6,10 +6,16 @@ ItemConfig["vest"] = {
         metal = 2,
         plastic = 15
     },
-    interaction = {
-        sound = "sounds/backpack.wav",
-        animation = {
-            name = "CHECK_EQUIPMENT"
+    interactions = {
+        equip = {
+            sound = "sounds/backpack.wav",
+            animation = { name = "CHECK_EQUIPMENT" },
+            event = "EquipVest"
+        },
+        unequip = {
+            sound = "sounds/backpack.wav",
+            animation = { name = "CHECK_EQUIPMENT" },
+            event = "UnequipVest"
         }
     },
     modelid = 843,
@@ -27,11 +33,11 @@ ItemConfig["vest"] = {
     },
 }
 
-AddEvent("items:vest:equip", function(player, object)
+AddEvent("EquipVest", function(player, ActiveProp)
     SetPlayerArmor(player, 100)
 end)
 
-AddEvent("items:vest:unequip", function(player, object)
+AddEvent("UnequipVest", function(player, ActiveProp)
     SetPlayerArmor(player, 0)
 end)
 

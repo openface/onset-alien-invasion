@@ -38,13 +38,14 @@ AddEvent("OnGameTick", function()
             -- object interaction
             local prop = GetObjectPropertyValue(hitObject, "prop")
             if prop then
-                local interaction = GetPropInteraction(prop)
-                if interaction then
-                    ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. interaction.use_label .. "')")
+                local item_interaction = GetItemInteraction(prop)
+                if item_interaction then
+                    AddPlayerChat(dump(item_interaction))
+                    ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. item_interaction.interaction.use_label .. "')")
                     ActiveProp = {
                         hit_type = 'object',
                         hit_object = hitObject,
-                        interaction = interaction,
+                        item_interaction = item_interaction,
                         options = prop.options,
                     }
                     AddPlayerChat("OBJECT ActiveProp: " .. dump(ActiveProp))
@@ -68,22 +69,22 @@ AddEvent("OnGameTick", function()
     end
 end)
 
--- @return { use_label = "Ignite", event = "IgniteCampfire", item = "lighter", options = {} }
-function GetPropInteraction(prop)
+-- @return { item = "Crowbar", interaction = { use_label = "", event = "", animation = "", sound = "" } }
+function GetItemInteraction(prop)
     if prop.interacts_with and CurrentInHand then
-        for item, o in pairs(prop.interacts_with) do
-            if CurrentInHand.item == item then
+        for item, interaction_name in pairs(prop.interacts_with) do
+            if CurrentInHand.item == item and CurrentInHand.interactions[interaction_name] then
                 return {
                     item = item,
-                    use_label = o.use_label,
-                    event = o.event,
+                    interaction = CurrentInHand.interactions[interaction_name],
                 }
             end
         end
     end
+    -- no item interaction, default to using prop events
     return {
-        use_label = prop.use_label,
-        event = prop.event,
+        item = nil,
+        interaction = { use_label = prop.use_label, event = prop.event }
     }
 end
 

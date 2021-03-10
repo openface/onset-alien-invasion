@@ -49,14 +49,8 @@ function AddStorageProp(object)
         use_label = "Open",
         event = "OpenStorage",
         interacts_with = {
-            ["screwdriver"] = {
-                use_label = "Pick Lock",
-                event = "StartLockpick"
-            },
-            ["crowbar"] = {
-                use_label = "Smash Open",
-                event = "UnlockStorage"
-            }
+            screwdriver = "use",
+            crowbar = "use"
         },
         options = {
             storage_type = 'object',

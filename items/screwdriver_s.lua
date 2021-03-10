@@ -6,9 +6,12 @@ ItemConfig["screwdriver"] = {
     image = "lockpick/screwdriver.jpg",
     max_carry = 2,
     price = 20,
-    interaction = {
-        animation = { name = "LOCKDOOR", duration = "3500" },
-        use_label = "Screw",
+    interactions = {
+        use = {
+            animation = { name = "LOCKDOOR", duration = "3500" },
+            use_label = "Pick Lock",
+            event = "StartLockpick"
+        }
     },
     attachment = { 
       x = -10.5, 

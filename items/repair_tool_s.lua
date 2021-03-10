@@ -6,14 +6,12 @@ ItemConfig["repair_tool"] = {
     modelid = 552, -- plyers
     max_carry = 1,
     max_use = 10,
-    interaction = {
-        sound = "sounds/toolbox.wav",
-        animation = {
-            name = "BARCLEAN01",
-            duration = 10000,
-        },
-        interacts_on = {
-            { hittype = "vehicle_hood", use_label = "Repair Vehicle" }
+    interactions = {
+        vehicle_hood = {
+            use_label = "Repair Vehicle",
+            sound = "sounds/toolbox.wav",
+            animation = { name = "BARCLEAN01", duration = 10000 },
+            event = "RepairVehicle"
         },
     },
     attachment = {

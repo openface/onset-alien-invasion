@@ -12,7 +12,7 @@ ItemConfig["flashlight"] = {
     interactions = {
         use = {
             sound = "sounds/flashlight.wav",
-            use_label = "On/Off",
+            use_label = "Toggle On/Off",
             event = "ToggleFlashlight"
         }
     },

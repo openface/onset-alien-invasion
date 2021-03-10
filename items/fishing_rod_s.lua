@@ -6,7 +6,7 @@ ItemConfig["fishing_rod"] = {
         water = {
             sound = "sounds/fishing.mp3",
             animation = { name = "FISHING", duration = 10000 },
-            use_label = "Go Fishing",
+            use_label = "Cast Line",
             event = "GoFishing"
         }
     },

@@ -5,7 +5,6 @@ ItemConfig["campfire"] = {
     image = "survival/SM_Campfire.png",
     max_carry = 1,
     max_use = 1,
-    use_label = 'Place',
     attachment = {
         x = -15.8,
         y = 37.3,
@@ -15,7 +14,11 @@ ItemConfig["campfire"] = {
         rz = 0,
         bone = "hand_r"
     },
-    interactions = nil,
+    interactions = {
+        equip = {
+            event = "EquipCampfire"
+        }
+    },
     recipe = {
         wood = 3
     },
@@ -54,7 +57,7 @@ AddEvent("OnPackageStop", function()
     DestroyTimer(CampfireTimer)
 end)
 
-AddEvent("items:campfire:equip", function(player)
+AddEvent("EquipCampfire", function(player, object)
     SetPlayerAnimation(player, "CARRY_IDLE")
 end)
 

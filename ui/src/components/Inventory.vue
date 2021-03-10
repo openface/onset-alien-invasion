@@ -95,10 +95,12 @@
         </drop-mask>
 
         <div id="inhand" v-if="!inventory_visible && equipped_hands">
-            <div class="name">{{ equipped_hands.name }}</div>
-            <div class="use" v-if="equipped_hands.use_label">
-                <span class="key">LMB</span>
+            <div class="grad use" v-if="equipped_hands.use_label">
+                <span class="key">LMB</span> 
                 {{ equipped_hands.use_label }}
+            </div>
+            <div class="grad item">
+                {{ equipped_hands.name }}
             </div>
         </div>
     </drop>
@@ -381,13 +383,13 @@ export default {
                     },
                     {
                         index: 8,
-                        item: "beer",
+                        item: "supply_container",
                         uuid: "c1f5a0f9-ec94-426d-b2f2-eb0ee1aaecbb",
-                        name: "Beer",
+                        name: "Supply Container",
                         modelid: 15,
                         quantity: 4,
                         type: "usable",
-                        use_label: "Drink",
+                        use_label: "Place",
                         bone: "hand_r",
                         equipped: true,
                         hotbar_slot: 4,
@@ -517,28 +519,24 @@ export default {
     position: fixed;
     bottom: 1.2vh;
     right: 1vh;
-    width: 250px;
-    background-image: linear-gradient(to left, rgba(255,255,255,0), rgba(255,255,255,0.4));
+    width: 20%;
+}
+#inhand .grad {
+    width:100%;
+    background-image: linear-gradient(to left, rgba(0,0,0,0), rgba(0,0,0,0.4));
     font-family: helvetica;
-    font-weight: bold;
-    padding: 5px 10px;
+    color: rgba(255,255,255,0.9);
+    font-size:16px;
+    padding-left: 10px;
+    margin: 5px 10px;
+    line-height: 2.5em;
+    text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
 }
-#inhand .name {
-    font-size: 22px;
-    float: left;
-}
-#inhand .use {
-    float: right;
-    text-transform: uppercase;
-    font-size: 16px;
-}
-#inhand .use .key {
-    color: rgba(255, 255, 255, 0.9);;
-    font-size: 16px;
-    padding: 2px 5px;
-    background: rgba(0, 0, 0, 0.9);
+#inhand .grad.use .key {
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(0, 0, 0, 0.7);
     box-shadow: 3px 3px rgba(0, 0, 0, 0.1);
     border-radius: 20%;
-    line-height: 1.6em;
+    padding:3px 5px;
 }
 </style>

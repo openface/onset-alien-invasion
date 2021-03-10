@@ -8,7 +8,6 @@ ItemConfig["wooden_chair"] = {
         wood = 10
     },
     price = 25,
-    use_label = "Place",
     interactions = {
         equip = {
             event = "EquipWoodenChair"

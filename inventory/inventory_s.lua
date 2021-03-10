@@ -13,37 +13,33 @@ function SyncInventory(player)
     }
 
     -- inventory
-    for index, item in ipairs(inventory_items) do
-        if ItemConfig[item.item] then
-            local equipped = IsItemEquipped(player, item.uuid)
-            local bone = GetItemAttachmentBone(item.item)
-            local use_label
-            if ItemConfig[item.item].interactions and ItemConfig[item.item].interactions['use'] then
-                use_label = ItemConfig[item.item].interactions['use'].use_label
-            end
+    for index, inventory_item in ipairs(inventory_items) do
+        if ItemConfig[inventory_item.item] then
+            local equipped = IsItemEquipped(player, inventory_item.uuid)
+            local bone = GetItemAttachmentBone(inventory_item.item)
             table.insert(_send.inventory_items, {
                 ['index'] = index,
-                ['item'] = item.item,
-                ['uuid'] = item.uuid,
-                ['quantity'] = item.quantity,
+                ['item'] = inventory_item.item,
+                ['uuid'] = inventory_item.uuid,
+                ['quantity'] = inventory_item.quantity,
                 ['equipped'] = equipped,
-                ['used'] = item.used,
-                ['slot'] = item.slot,
-                ['hotbar_slot'] = item.hotbar_slot,
+                ['used'] = inventory_item.used,
+                ['slot'] = inventory_item.slot,
+                ['hotbar_slot'] = inventory_item.hotbar_slot,
                 ['bone'] = bone,
 
-                ['type'] = ItemConfig[item.item].type,
-                ['name'] = ItemConfig[item.item].name,
-                ['modelid'] = ItemConfig[item.item].modelid,
-                ['image'] = ItemConfig[item.item].image,
-                ['use_label'] = use_label
+                ['type'] = ItemConfig[inventory_item.item].type,
+                ['name'] = ItemConfig[inventory_item.item].name,
+                ['modelid'] = ItemConfig[inventory_item.item].modelid,
+                ['image'] = ItemConfig[inventory_item.item].image,
+                ['use_label'] = GetDefaultUseLabel(inventory_item.item)
             })
             if equipped and (bone == 'hand_l' or bone == 'hand_r') then
                 current_inhand = {}
-                current_inhand['item'] = item.item
-                current_inhand['uuid'] = item.uuid
-                current_inhand['type'] = ItemConfig[item.item].type
-                current_inhand['interactions'] = ItemConfig[item.item].interactions
+                current_inhand['item'] = inventory_item.item
+                current_inhand['uuid'] = inventory_item.uuid
+                current_inhand['type'] = ItemConfig[inventory_item.item].type
+                current_inhand['interactions'] = ItemConfig[inventory_item.item].interactions
             end
         end
     end
@@ -53,6 +49,14 @@ function SyncInventory(player)
 end
 AddRemoteEvent("SyncInventory", SyncInventory)
 AddEvent("SyncInventory", SyncInventory)
+
+function GetDefaultUseLabel(item)
+    if ItemConfig[item].type == 'placeable' then
+        return "Place"
+    elseif ItemConfig[item].interactions and ItemConfig[item].interactions['use'] then
+        return ItemConfig[item].interactions['use'].use_label
+    end
+end
 
 -- add item to inventory by item name (stacks)
 function AddToInventoryByName(player, item, amount)

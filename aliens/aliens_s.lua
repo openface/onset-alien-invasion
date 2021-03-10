@@ -325,6 +325,7 @@ AddEvent("OnVNPCReachTargetFailed", function(npc)
         -- alien is stuck, summon an alien friend and go away
         -- log.debug("Stuck alien.. spawning a friend")
         -- SpawnAlienNearPlayer(target)
+        CallRemoteEvent(target, 'AlienNoLongerAttacking')
         AlienReturn(npc)
     end
 end)
@@ -419,7 +420,7 @@ function AlienReturn(npc)
     local location = GetNPCPropertyValue(npc, 'location')
 
     -- SetNPCTargetLocation(npc, location[1], location[2], location[3], 800)
-    VNPCS.SetVNPCTargetLocation(npc, location[1], location[2], location[3], 300)
+    VNPCS.SetVNPCTargetLocation(npc, location[1], location[2], location[3], 100)
 end
 
 function GetNearestPlayer(npc)

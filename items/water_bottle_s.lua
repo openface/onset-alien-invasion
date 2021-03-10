@@ -12,8 +12,8 @@ ItemConfig["water_bottle"] = {
         },
         water = {
             use_label = "Fill Bottle",
-            sound = "sounds/fillwater.mp3",
-            animation = { name = "PICKUP_LOWER" },
+            sound = "sounds/fill_water.wav",
+            animation = { id = 921, duration = 10000 },
             event = "FillBottle"
         }
     },

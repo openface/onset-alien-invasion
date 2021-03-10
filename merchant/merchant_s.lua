@@ -46,7 +46,7 @@ AddEvent("StartMerchant", function(player)
 
     local _send = {
         ["merchant_items"] = item_data,
-        ["player_cash"] = 10 -- TODO
+        ["player_cash"] = 1000 -- TODO
     }
     -- log.debug(dump(json_encode(_send)))
     CallRemoteEvent(player, "LoadMerchantData", json_encode(_send))
@@ -82,10 +82,10 @@ AddRemoteEvent("BuyItem", function(player, item)
 
         CallRemoteEvent(player, "CompletePurchase", json_encode(
             {
-                player_cash = 10
+                player_cash = 1000
             }))
 
-        local x,y,z = GetPlayerLocation(player)
+        local x, y, z = GetPlayerLocation(player)
         PlaySoundSync("sounds/purchase.mp3", x, y, z)
         AddToInventoryByName(player, item)
     end)

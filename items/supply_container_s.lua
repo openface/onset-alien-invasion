@@ -1,7 +1,7 @@
 ItemConfig["supply_container"] = {
     name = "Supply Container",
     type = 'placeable',
-    category = "Storage",
+    category = "Supplies",
     modelid = 1013,
     max_carry = 1,
     recipe = nil,

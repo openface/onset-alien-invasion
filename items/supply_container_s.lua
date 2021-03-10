@@ -8,7 +8,8 @@ ItemConfig["supply_container"] = {
     price = 100,
     interactions = {
         equip = {
-            event = "EquipSupplyContainer"
+            event = "EquipSupplyContainer",
+            sound = "sounds/struggle.wav",
         }
     },
     attachment = {

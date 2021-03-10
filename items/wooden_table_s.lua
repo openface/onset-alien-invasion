@@ -11,7 +11,8 @@ ItemConfig["wooden_table"] = {
     price = 150,
     interactions = {
         equip = {
-            event = "EquipWoodenTable"
+            event = "EquipWoodenTable",
+            sound = "sounds/struggle.wav"
         }
     },
     attachment = {

@@ -7,26 +7,26 @@ Most item configuration options are optional.  Here is a sample pulled together 
 ```
 ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
     name = "Wooden Chair",              -- [required] display name
-    type = 'prop',                      -- [required] item type (see Item Types)
+    type = 'placement',                 -- [required] item type (see Item Types)
     category = 'Furniture',             -- [required] item category for merchant grouping
-    interaction = {
-        animation = { 
-            name = "SIT",               -- animation to play when equipping/using
-            duration = "4000"           -- milliseconds to delay for animation (default 2000)
+    interactions = {
+        use = {                         -- for interacting with object in your hand
+            use_label = "Drink", 
+            sound = "sounds/drink.wav",
+            animation = { name = "DRINKING" },
+            event = "DrinkWater"
         },
-        sound = "sounds/squeak.mp3"     -- sound to play during interaction with object
-        interacts_on = {
-            {
-                target = "tree",        -- for interacting with world objects (Eg. tree, water, vehicle_hood)
-                desc = "Chop Tree",     -- label for "Use" when looking at world object
-            }
+        water = {                       -- for interacting with object on water.  (tree, water, vehicle_hood, etc)
+            use_label = "Fill Bottle",
+            sound = "sounds/fill_water.wav",
+            animation = { id = 921, duration = 10000 },
+            event = "FillBottle"
         }
     },
     modelid = 1262,                     -- [required] object modelid
     image = "survival/SM_Axe-Neo.png",  -- 2D image for objects using a custom asset
     max_carry = 1,                      -- [required] maximum number that can be carried in inventory
     max_use = 1,                        -- for usable types, number of times it can be used
-    use_label = "Activate",             -- alternate name for "Use" (Eg. Drink, Eat, Chop, etc)
     recipe = {                          -- resources required to build this item at workbench (nil = non-buildable)
         metal = 20,
         plastic = 5,
@@ -71,19 +71,16 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
             rz = 0 
         },
     },
-    prop = {                    -- creates interactive props (Hit [F] while looking at it)
-        use_label = "Sit",
-        event = "SitInChair",
+    prop = {                            -- creates interactive props (Hit [F] while looking at it)
+        use_label = "Open",             -- use this prop directly (not through interaction with another item)
+        event = "OpenStorage",          -- the event to call when using this prop directly
         options = {                     -- options passed into the event
             whatever = 'youlike',
         },
-        interaction = {                 -- animation to play when interacting with prop
-            sound = "sounds/zippo.wav",
-            animation = {
-                id = 924,
-                duration = 10000
-            }
-        }
+        interacts_with = {              -- when interacting with this prop through another item in-hand
+            screwdriver = "picklock",   -- the item name and the item interaction to run
+            crowbar = "pry"
+        },
     }
 })
 ```
@@ -122,46 +119,7 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
 
 ## Interactive World Props
 
-WIP
-
-```
-SetObjectPropertyValue(object, "prop", { use_label = "Interact", event = "GetWorkbenchData", options = { id = config['id'] } })
-```
-
-
-#### Sitting in chairs
-#### Fishing in water
-#### Harvesting trees
-#### Repairing vehicles
-#### Searching garbage piles
-#### Turning on/off lights
-
-## Item Event Callbacks
-
-#### After Use
-
-```
-AddEvent("items:beer:use", function(player, object, prop)
-    -- drunk effect
-end)
-```
-
-#### After Equip
-```
-AddEvent("items:vest:equip", function(player, object)
-    SetPlayerArmor(player, 100)
-end)
-```
-
-#### After Unequip
-
-```
-AddEvent("items:vest:unequip", function(player, object)
-    SetPlayerArmor(player, 0)
-end)
-```
-
-## Merchants
+### Merchants
 
 ```
 CreateMerchant("Store", {
@@ -178,7 +136,7 @@ CreateMerchant("Store", {
   })
 ```
 
-## Workbenches
+### Workbenches
 
 ```
 CreateWorkbench({
@@ -196,3 +154,6 @@ CreateWorkbench({
     "rx": 0
 })
 ```
+
+### Placeable Items
+

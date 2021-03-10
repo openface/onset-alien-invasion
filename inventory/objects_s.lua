@@ -34,8 +34,8 @@ function GetItemInstance(uuid)
     return ItemInstances[uuid]
 end
 
-function GetAllItemInstances()
-    return ItemInstances
+function GetItemInstancesCount()
+    return #table.keys(ItemInstances)
 end
 
 AddEvent("OnPackageStop", function()

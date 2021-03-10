@@ -33,6 +33,7 @@ The satellite computer has enough power to communicate with the mothership. Sear
 * Interactive world props.  Hold LMB to use interact with item in hands.  (Eg. Chopping tree with axe, etc)
 * Storage containers that spawn random items.
 * Locked storage containers can be lock-picked with screwdriver, and forced opened with crowbar.
+* Campfires can be placed and ignited with a lighter.  They give health bonus to nearby players.
 
 ### Project Direction
 

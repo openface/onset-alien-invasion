@@ -270,9 +270,16 @@ end
 AddRemoteEvent("InteractWithItemInHand", function(player, CurrentInHand)
     log.trace("InteractWithItemInHand", dump(CurrentInHand))
 
+    -- does this item exist in the world?
     local item = GetItemInstance(CurrentInHand.uuid)
     if not item then
         log.error("Invalid item" .. uuid)
+        return
+    end
+
+    -- can this item be used directly?
+    local interaction = ItemConfig[item].interactions['use']
+    if not interaction then
         return
     end
 
@@ -287,12 +294,6 @@ AddRemoteEvent("InteractWithItemInHand", function(player, CurrentInHand)
     local equipped_object = GetEquippedObject(player, CurrentInHand.uuid)
     if not equipped_object then
         log.error "Cannot use unequipped item!"
-        return
-    end
-
-    local interaction = ItemConfig[item].interactions['use']
-    if not interaction then
-        log.error("No USE interaction for this item")
         return
     end
 

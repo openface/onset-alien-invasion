@@ -2,20 +2,17 @@ ItemConfig["fishing_rod"] = {
     name = "Fishing Rod",
     type = 'resource',
     category = "Supplies",
-    interaction = {
-        sound = "sounds/fishing.mp3",
-        animation = { name = "FISHING", duration = 10000 },
-        interacts_on = {
-            ["water"] = {
-                use_label = "Go Fishing",
-                event = "GoFishing"
-            }
+    interactions = {
+        water = {
+            sound = "sounds/fishing.mp3",
+            animation = { name = "FISHING", duration = 10000 },
+            use_label = "Go Fishing",
+            event = "GoFishing"
         }
     },
     modelid = 20011,
     image = "survival/SM_FishingRod.png",
     max_carry = 1,
-    use_label = "Cast",
     recipe = {
         metal = 10,
         plastic = 5
@@ -32,8 +29,8 @@ ItemConfig["fishing_rod"] = {
     }
 }
 
-AddEvent("GoFishing", function(player, prop)
-    if not prop then
+AddEvent("GoFishing", function(player, ActiveProp)
+    if not ActiveProp then
         return
     end
 
@@ -41,6 +38,8 @@ AddEvent("GoFishing", function(player, prop)
 
     if math.random(1,3) == 1 then
         CallRemoteEvent(player, "ShowMessage", "You caught a fish and put it in your inventory")
+
+        -- todo: add fish asset
         AddToInventoryByName(player, "wood")
     else
         CallRemoteEvent(player, "ShowMessage", "You caught nothing")

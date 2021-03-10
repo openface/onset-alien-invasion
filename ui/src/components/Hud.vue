@@ -174,6 +174,10 @@ export default {
     z-index:1001;
 }
 
+.toasted-container.bottom-right {
+    bottom: 18% !important;
+}
+
 /*
  * Boss health
  */

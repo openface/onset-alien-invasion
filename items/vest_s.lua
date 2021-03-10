@@ -33,11 +33,11 @@ ItemConfig["vest"] = {
     },
 }
 
-AddEvent("EquipVest", function(player, ActiveProp)
+AddEvent("EquipVest", function(player, object)
     SetPlayerArmor(player, 100)
 end)
 
-AddEvent("UnequipVest", function(player, ActiveProp)
+AddEvent("UnequipVest", function(player, object)
     SetPlayerArmor(player, 0)
 end)
 

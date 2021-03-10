@@ -57,35 +57,34 @@ function EquipItem(player, uuid)
     end
 
     -- equipable animations
-    if ItemConfig[item].type == 'equipable' then
-        PlayInteraction(player, uuid)
+    if ItemConfig[item].type == 'equipable' and ItemConfig[item].interactions and ItemConfig[item].interactions.equip then
+        PlayInteraction(player, ItemConfig[item].interactions.equip, function()
+            CallEvent(ItemConfig[item].interactions.equip.event, player, object)
+        end)
     end
 
-    -- update equipment list
-    local equipped = PlayerData[player].equipped
+            -- update equipment list
+            local equipped = PlayerData[player].equipped
 
-    -- clear all weapons from equipped list
-    for uuid, v in pairs(equipped) do
-        if v == 'weapon' then
-            equipped[uuid] = nil
-        end
-    end
+            -- clear all weapons from equipped list
+            for uuid, v in pairs(equipped) do
+                if v == 'weapon' then
+                    equipped[uuid] = nil
+                end
+            end
 
-    if ItemConfig[item].type == 'weapon' then
-        local weapon_id = AttachWeaponToPlayer(player, uuid)
-        equipped[uuid] = 'weapon'
-    else
-        local attached_object = AttachObjectToPlayer(player, uuid)
-        equipped[uuid] = attached_object
-    end
-    PlayerData[player].equipped = equipped
-    log.trace("EQUIPPED: ", dump(equipped))
+            if ItemConfig[item].type == 'weapon' then
+                local weapon_id = AttachWeaponToPlayer(player, uuid)
+                equipped[uuid] = 'weapon'
+            else
+                local attached_object = AttachObjectToPlayer(player, uuid)
+                equipped[uuid] = attached_object
+            end
+            PlayerData[player].equipped = equipped
+            log.trace("EQUIPPED: ", dump(equipped))
 
-    -- call EQUIP event on object
-    CallEvent("items:" .. item .. ":equip", player, object)
-
-    -- sync inventory
-    CallEvent("SyncInventory", player)
+            -- sync inventory
+            CallEvent("SyncInventory", player)
 end
 
 function AttachWeaponToPlayer(player, uuid)
@@ -169,11 +168,6 @@ function UnequipItem(player, uuid)
     if not ItemConfig[item] then
         return
     end
---[[ 
-    if ItemConfig[item].type == 'weapon' then
-        log.error("Cannot UnequipItem on weapons.  Use UnequipWeapon instead!")
-        return
-    end ]]
 
     -- item is attached object to player
     local object = GetEquippedObject(player, uuid)
@@ -186,12 +180,16 @@ function UnequipItem(player, uuid)
     -- cancel any currently running animations
     SetPlayerAnimation(player, "STOP")
 
+    if ItemConfig[item].type == 'equipable' and ItemConfig[item].interactions and ItemConfig[item].interactions.unequip then
+        PlayInteraction(player, ItemConfig[item].interactions.unequip, function()
+            CallEvent(ItemConfig[item].interactions.unequip.event, player, object)
+        end)
+    end
+
     -- remove from equipped list
     local equipped = PlayerData[player].equipped
     equipped[uuid] = nil
     PlayerData[player].equipped = equipped
-
-    log.trace("EQUIPPED: ", dump(equipped))
 
     if ItemConfig[item].type == 'weapon' then
         UnequipWeapon(player, uuid)
@@ -200,9 +198,6 @@ function UnequipItem(player, uuid)
     end
 
     log.debug(GetPlayerName(player) .. " unequipped item " .. item .. " uuid: " .. uuid)
-
-    -- call UNEQUIP event on object
-    CallEvent("items:" .. item .. ":unequip", player, object)
 
     -- sync inventory
     CallEvent("SyncInventory", player)

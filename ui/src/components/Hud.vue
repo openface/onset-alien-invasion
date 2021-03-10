@@ -109,7 +109,6 @@ export default {
     margin:0px;
     width:100%;
     position: fixed;
-    border:1px solid red;
     background: url('~@/assets/images/binoculars/overlay.png') no-repeat center center fixed;
     background-size: cover;
 }

@@ -30,6 +30,8 @@ ItemConfig["campfire"] = {
 }
 
 local CampfireTimer
+local HEALING_DISTANCE = 300
+local FIRE_DURATION = 60 * 1000 * 10 -- 10 mins
 
 AddEvent("OnPackageStart", function()
     CampfireTimer = CreateTimer(function()
@@ -38,7 +40,7 @@ AddEvent("OnPackageStart", function()
             -- heal if campfire is lit
             if GetObjectPropertyValue(object, "particle") then
                 local x, y, z = GetObjectLocation(object)
-                local players_in_range = GetPlayersInRange2D(x, y, 500)
+                local players_in_range = GetPlayersInRange2D(x, y, HEALING_DISTANCE)
                 for player in pairs(players_in_range) do
                     -- todo: player should take damage if too close to fire
                     SetPlayerHealth(player, GetPlayerHealth(player) + 5)
@@ -82,8 +84,8 @@ AddEvent("IgniteCampfire", function(player, ActiveProp)
         }
     })
 
-    -- fire goes after out 10 mins
-    Delay(60 * 1000 * 10, function()
+    -- fire goes out
+    Delay(FIRE_DURATION, function()
         SetObjectPropertyValue(ActiveProp.hit_object, "particle", nil)
     end)
 end)

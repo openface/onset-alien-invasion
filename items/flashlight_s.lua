@@ -9,9 +9,12 @@ ItemConfig["flashlight"] = {
     },
     modelid = 1270,
     max_carry = 1,
-    use_label = "On/Off",
-    interaction = {
-        sound = "sounds/flashlight.wav"
+    interactions = {
+        use = {
+            sound = "sounds/flashlight.wav",
+            use_label = "On/Off",
+            event = "ToggleFlashlight"
+        }
     },
     price = 50,
     light_component = {
@@ -38,8 +41,8 @@ ItemConfig["flashlight"] = {
     }
 }
 
-AddEvent("items:flashlight:use", function(player, object)
-    log.trace("items:flashlight:use", player, object)
+AddEvent("ToggleFlashlight", function(player, object)
+    log.trace("ToggleFlashlight", player, object)
 
     log.info(GetPlayerName(player) .. " toggles light object " .. object)
 

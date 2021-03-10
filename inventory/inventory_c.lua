@@ -68,7 +68,7 @@ AddEvent('OnKeyPress', function(key)
         if CurrentInHand.type == 'placeable' then
             CallEvent("PlaceItemFromInventory", CurrentInHand.uuid)
         else
-            CallRemoteEvent("UseItemFromInventory", CurrentInHand.uuid)
+            CallRemoteEvent("InteractWithItemInHand", CurrentInHand)
         end
     end
 end)

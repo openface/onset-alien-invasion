@@ -266,17 +266,17 @@ function GetNextAvailableInventorySlot(player)
     end
 end
 
--- use object from inventory
-function UseItemFromInventory(player, uuid)
-    log.trace("UseItemFromInventory",uuid)
+-- interact with item in hand
+AddRemoteEvent("InteractWithItemInHand", function(player, CurrentInHand)
+    log.trace("InteractWithItemInHand", dump(CurrentInHand))
 
-    local item = GetItemInstance(uuid)
+    local item = GetItemInstance(CurrentInHand.uuid)
     if not item then
         log.error("Invalid item" .. uuid)
         return
     end
 
-    local inventory_item = GetItemFromInventory(player, uuid)
+    local inventory_item = GetItemFromInventory(player, CurrentInHand.uuid)
     if not inventory_item then
         log.error("Cannot use item not in inventory!")
         return
@@ -284,7 +284,7 @@ function UseItemFromInventory(player, uuid)
 
     log.debug(GetPlayerName(player) .. " uses item " .. item .. " from inventory")
 
-    local equipped_object = GetEquippedObject(player, uuid)
+    local equipped_object = GetEquippedObject(player, CurrentInHand.uuid)
     if not equipped_object then
         log.error "Cannot use unequipped item!"
         return
@@ -312,11 +312,10 @@ function UseItemFromInventory(player, uuid)
 
         -- call interaction event
         if interaction.event then
-            CallEvent(interaction.event, player)
+            CallEvent(interaction.event, player, equipped_object)
         end
     end)
-end
-AddRemoteEvent("UseItemFromInventory", UseItemFromInventory)
+end)
 
 -- interact with objects
 AddRemoteEvent("InteractWithObjectProp", function(player, ActiveProp, CurrentInHand)

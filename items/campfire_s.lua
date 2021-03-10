@@ -15,7 +15,7 @@ ItemConfig["campfire"] = {
         rz = 0,
         bone = "hand_r"
     },
-    interaction = {},
+    interactions = nil,
     recipe = {
         wood = 3
     },
@@ -24,10 +24,7 @@ ItemConfig["campfire"] = {
         use_label = "Check Campfire",
         event = "CheckCampfire",
         interacts_with = {
-            ["lighter"] = {
-                use_label = "Ignite",
-                event = "IgniteCampfire"
-            }
+            lighter = "ignite"
         }
     },
 }

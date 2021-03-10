@@ -3,12 +3,13 @@ ItemConfig["lighter"] = {
     type = 'usable',
     category = "Supplies",
     recipe = nil,
-    interaction = {
-        sound = "sounds/zippo.wav",
-        animation = {
-            id = 924,
-            duration = 10000
-        },
+    interactions = {
+        ignite = {
+            use_label = "Ignite",
+            sound = "sounds/zippo.wav",
+            animation = { id = 924, duration = 10000 },
+            event = "IgniteCampfire"
+        }
     },
     modelid = 20024,
     max_use = 20,
@@ -26,9 +27,3 @@ ItemConfig["lighter"] = {
     },
 }
 
-AddEvent("items:lighter:use", function(player, object, ActiveProp)
-    if ActiveProp.modelid ~= "20007" then
-        return
-    end
-    CallEvent("IgniteCampfire", player, ActiveProp)
-end)

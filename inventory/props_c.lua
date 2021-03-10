@@ -73,7 +73,7 @@ end)
 function GetItemInteraction(prop)
     if prop.interacts_with and CurrentInHand then
         for item, interaction_name in pairs(prop.interacts_with) do
-            if CurrentInHand.item == item and CurrentInHand.interactions[interaction_name] then
+            if CurrentInHand.item == item and CurrentInHand.interactions and CurrentInHand.interactions[interaction_name] then
                 return {
                     item = item,
                     interaction = CurrentInHand.interactions[interaction_name],

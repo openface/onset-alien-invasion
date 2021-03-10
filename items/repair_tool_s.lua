@@ -9,8 +9,8 @@ ItemConfig["repair_tool"] = {
     interactions = {
         vehicle_hood = {
             use_label = "Repair Vehicle",
-            sound = "sounds/toolbox.wav",
-            animation = { name = "BARCLEAN01", duration = 10000 },
+            sound = "sounds/wrench.wav",
+            animation = { name = "BARCLEAN01", duration = 7000 },
             event = "RepairVehicle"
         },
     },
@@ -26,10 +26,11 @@ ItemConfig["repair_tool"] = {
     price = 50
 }
 
-AddEvent("items:repair_tool:use", function(player, object, prop)
-    if not prop then
+AddEvent("RepairVehicle", function(player, ActiveProp, CurrentInHand)
+    if not ActiveProp then
         return
     end
+    local vehicle = ActiveProp.hit_object
 
     log.info(GetPlayerName(player) .. " inspects vehicle " .. vehicle)
 
@@ -44,9 +45,9 @@ AddEvent("items:repair_tool:use", function(player, object, prop)
         -- repairable
         CallRemoteEvent(player, "ShowMessage", "You begin to repair the vehicle...")
 
-        SetVehicleHealth(options.vehicle, GetVehicleHealth(options.vehicle) + 250)
+        SetVehicleHealth(vehicle, GetVehicleHealth(vehicle) + 250)
 
-        local health_percentage = GetVehicleHealthPercentage(options.vehicle)
+        local health_percentage = GetVehicleHealthPercentage(vehicle)
         CallRemoteEvent(player, "ShowMessage", "Vehicle health is now " .. health_percentage .. "%%")
     else
         CallRemoteEvent(player, "ShowMessage", "Vehicle can not be repaired any further")

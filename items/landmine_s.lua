@@ -1,17 +1,12 @@
 ItemConfig["landmine"] = {
     name = "Landmine",
-    type = 'usable',
+    type = 'placeable',
     category = "Military Surplus",
     recipe = {
         metal = 20,
         plastic = 2
     },
-    interaction = {
-        sound = "sounds/shovel.wav",
-        animation = {
-            name = "PICKUP_LOWER"
-        }
-    },
+    interactions = nil,
     modelid = 1030,
     max_carry = 3,
     max_use = 1,
@@ -34,43 +29,33 @@ ItemConfig["landmine"] = {
 
 -- TODO: use hit event instead of timer!
 
-local Landmines = {}
 local LandmineTimer
 
 AddEvent("OnPackageStart", function()
     LandmineTimer = CreateTimer(function()
         --log.debug("in timer")
-        for _, object in pairs(Landmines) do
+        local landmine_objects = GetPlacedObjectsByName('landmine')
+        for _, object in pairs(landmine_objects) do
             local x, y, z = GetObjectLocation(object)
             local players_in_range = GetPlayersInRange2D(x, y, 300)
             if next(players_in_range) ~= nil then
                 -- boom
                 CreateExplosion(9, x, y, z, true, 1500.0, 1000000.0)
-                Landmines[object] = nil
-                DestroyObject(object)
+                RemovePlacedObject(object)
             end
         end
     end, 1000)
 end)
 
 AddEvent("OnPackageStop", function()
-    for _, o in pairs(Landmines) do
-        DestroyObject(o)
-    end
     DestroyTimer(LandmineTimer)
-    Landmines = {}
 end)
 
-AddEvent("items:landmine:use", function(player)
-    local x, y, z = GetPlayerLocation(player)
-    local object = CreateObject(1030, x + 100, y, z - 100)
-
+AddEvent("items:landmine:placed", function(player, object)
     PauseTimer(LandmineTimer)
 
-    Landmines[object] = object
-
-    Delay(10 * 1000, function()
+    Delay(5 * 1000, function()
         UnpauseTimer(LandmineTimer)
-        AddPlayerChat(player, "Landmine is now activated!")
+        CallRemoteEvent(player, "ShowMessage", "Landmine is now activated!")
     end)
 end)

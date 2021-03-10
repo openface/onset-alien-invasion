@@ -98,6 +98,8 @@ AddRemoteEvent("PlaceItem", function(player, uuid, loc)
     log.debug(GetPlayerName(player) .. " placed object " .. object .. " item " .. item)
     CallRemoteEvent(player, "ObjectPlaced", object)
 
+    CallEvent("items:" .. item .. ":placed", player, object)
+
     InsertRow("placed_items", {
         uuid = object_uuid,
         item = item,
@@ -122,8 +124,7 @@ AddRemoteEvent("UnplaceItem", function(player, object)
         return
     end
 
-    PlacedObjects[object] = nil
-    DestroyObject(object)
+    RemovePlacedObject(object)
 
     local uuid = RegisterNewItem(item)
     AddToInventory(player, uuid)
@@ -142,3 +143,7 @@ function GetPlacedObjectsByName(item)
     return placed_objects
 end
 
+function RemovePlacedObject(object)
+    PlacedObjects[object] = nil
+    DestroyObject(object)
+end

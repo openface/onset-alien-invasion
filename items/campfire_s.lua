@@ -41,7 +41,7 @@ AddEvent("OnPackageStart", function()
                 local players_in_range = GetPlayersInRange2D(x, y, 500)
                 for player in pairs(players_in_range) do
                     -- todo: player should take damage if too close to fire
-                    SetPlayerHealth(player, GetPlayerHealth(player) + 2)
+                    SetPlayerHealth(player, GetPlayerHealth(player) + 5)
                 end
             end
         end
@@ -82,8 +82,8 @@ AddEvent("IgniteCampfire", function(player, ActiveProp)
         }
     })
 
-    -- fire goes out
-    Delay(60 * 1000, function()
+    -- fire goes after out 10 mins
+    Delay(60 * 1000 * 10, function()
         SetObjectPropertyValue(ActiveProp.hit_object, "particle", nil)
     end)
 end)

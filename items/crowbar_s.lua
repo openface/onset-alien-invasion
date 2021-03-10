@@ -6,8 +6,8 @@ ItemConfig["crowbar"] = {
         metal = 20,
     },
     interactions = {
-        use = {
-            use_label = "Pry",
+        pry = {
+            use_label = "Pry Lock",
             sound = "sounds/chopping_wood.mp3",
             animation = { name = "PICKAXE_SWING", duration = 5000 },
             event = "UnlockStorage"

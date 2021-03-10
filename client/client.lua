@@ -180,7 +180,7 @@ end)
 
 --
 function debug(msg)
-    AddPlayerChat('<span color="#cccccc" style="bold" size="10">' .. msg ..'</>')
+    AddPlayerChat(msg)
 end
 
 function dump(o)

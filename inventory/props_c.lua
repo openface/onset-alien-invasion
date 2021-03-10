@@ -43,7 +43,7 @@ AddEvent("OnGameTick", function()
                         item_interaction = item_interaction,
                         options = prop.options,
                     }
-                    debug("OBJECT ActiveProp: " .. dump(ActiveProp))
+                    --debug("OBJECT ActiveProp: " .. dump(ActiveProp))
                 end
             end
         elseif CurrentInHand then
@@ -55,7 +55,7 @@ AddEvent("OnGameTick", function()
                     hit_type = hitStruct.type,
                     hit_object = hitObject,
                 }
-                debug("ENV ActiveProp: " .. dump(ActiveProp))
+                --debug("ENV ActiveProp: " .. dump(ActiveProp))
             end
         end
 

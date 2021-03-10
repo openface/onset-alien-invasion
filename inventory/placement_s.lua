@@ -41,7 +41,10 @@ function onLoadPlacedItems()
         SetObjectPropertyValue(object, "steamid", row['steamid'])
         SetObjectPropertyValue(object, "prop", ItemConfig[item].prop)
     
-        PlacedObjects[object] = row['uuid']
+        PlacedObjects[object] = {
+            uuid = row['uuid'],
+            item = row['item']
+        }
     
 
         -- todo: particles, components, etc
@@ -87,7 +90,10 @@ AddRemoteEvent("PlaceItem", function(player, uuid, loc)
 
     -- generate new uuid for each placed object
     local object_uuid = generate_uuid()
-    PlacedObjects[object] = object_uuid
+    PlacedObjects[object] = {
+        uuid = object_uuid,
+        item = item
+    }
 
     log.debug(GetPlayerName(player) .. " placed object " .. object .. " item " .. item)
     CallRemoteEvent(player, "ObjectPlaced", object)
@@ -119,8 +125,6 @@ AddRemoteEvent("UnplaceItem", function(player, object)
     PlacedObjects[object] = nil
     DestroyObject(object)
 
-
-
     local uuid = RegisterNewItem(item)
     AddToInventory(player, uuid)
 
@@ -130,8 +134,8 @@ end)
 
 function GetPlacedObjectsByName(item)
     local placed_objects = {}
-    for object,name in pairs(PlacedObjects) do
-        if name == item then
+    for object,p in pairs(PlacedObjects) do
+        if p.item == item then
             table.insert(placed_objects, object)
         end
     end

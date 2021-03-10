@@ -7,7 +7,7 @@ ItemConfig["screwdriver"] = {
     max_carry = 2,
     price = 20,
     interactions = {
-        use = {
+        picklock = {
             animation = { name = "LOCKDOOR", duration = "3500" },
             use_label = "Pick Lock",
             event = "StartLockpick"

@@ -78,16 +78,11 @@ AddRemoteEvent("UpdateStorage", function(player, object, storage_type, data)
     ReplaceStorageContents(object, storage_type, json_decode(data))
 end)
 
--- type is either 'object' or 'vehicle'
+-- storage type is either 'object' or 'vehicle' or 'npc'
 function ReplaceStorageContents(object, storage_type, data)
-    local old_storage
-    if storage_type == 'vehicle' then
-        old_storage = GetVehiclePropertyValue(object, "storage")
-    elseif storage_type == 'npc' then
-        old_storage = GetNPCPropertyValue(object, "storage")
-    else
-        old_storage = GetObjectPropertyValue(object, "storage")
-    end
+    local old_storage = GetObjectStorage(object, storage_type)
+
+    -- UnregisterItemInstance(item.uuid)
 
     local new_storage = {}
     for index, item in ipairs(data) do
@@ -108,11 +103,26 @@ function ReplaceStorageContents(object, storage_type, data)
         end
     end
 
+    SetObjectStorage(object, storage_type, new_storage)
+end
+
+function GetObjectStorage(object, storage_type)
     if storage_type == 'vehicle' then
-        SetVehiclePropertyValue(object, "storage", new_storage)
+        return GetVehiclePropertyValue(object, "storage")
     elseif storage_type == 'npc' then
-        SetNPCPropertyValue(object, "storage", new_storage)
+        return GetNPCPropertyValue(object, "storage")
     else
-        SetObjectPropertyValue(object, "storage", new_storage)
+        return GetObjectPropertyValue(object, "storage")
     end
 end
+
+function SetObjectStorage(object, storage_type, data)
+    if storage_type == 'vehicle' then
+        SetVehiclePropertyValue(object, "storage", data)
+    elseif storage_type == 'npc' then
+        SetNPCPropertyValue(object, "storage", data)
+    else
+        SetObjectPropertyValue(object, "storage", data)
+    end
+end
+

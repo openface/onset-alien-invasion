@@ -78,5 +78,14 @@ function SpawnStorageLoot(object)
         })
     end
     --log.trace(dump(random_content))
+
+    -- unregister all existing items
+    local old_storage = GetObjectStorage(object, 'object')
+    if old_storage then
+        for index, item in ipairs(old_storage) do
+            UnregisterItemInstance(item.uuid)
+        end
+    end
+
     ReplaceStorageContents(object, 'object', random_content)
 end

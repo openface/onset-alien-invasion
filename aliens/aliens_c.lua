@@ -47,13 +47,20 @@ AddRemoteEvent("AlienAttacking", function(npc)
 
     --debug("SpottedBy:"..dump(SpottedBy))
 
-    -- alien attack sound
-    Delay(Random(1,2000), function()
-        local x, y, z = GetNPCLocation(npc)
-        if x and y and z then
-            SetSoundVolume(CreateSound3D("client/sounds/alien.wav", x, y, z, 6000.0), 0.6)
-        end
-    end)
+    -- chance to make noises
+    if Random(1,7) == 7 then
+        -- alien attack sound
+        Delay(Random(1,5000), function()
+            local x, y, z = GetNPCLocation(npc)
+            if x and y and z then
+                if Random(1,2) == 1 then
+                    SetSoundVolume(CreateSound3D("client/sounds/alien.wav", x, y, z, 6000.0), 0.5)
+                else
+                    SetSoundVolume(CreateSound3D("client/sounds/alien_2.wav", x, y, z, 6000.0), 1)
+                end
+            end
+        end)
+    end
 end)
 
 function SetSafeAmbience()
@@ -67,7 +74,7 @@ AddRemoteEvent('AlienNoLongerAttacking', function(npc)
     --debug("SpottedBy:"..dump(SpottedBy))
 
     if next(SpottedBy) == nil then
-        ShowMessage("You are safe for now")
+        --ShowMessage("You are safe for now")
         SetSafeAmbience()
     end
 end)

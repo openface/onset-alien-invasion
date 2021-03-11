@@ -241,10 +241,7 @@ function SetAlienTarget(npc, player)
 
     SetNPCPropertyValue(npc, 'returning', nil)
 
-    local previous_target = GetNPCPropertyValue(npc, 'target')
-    if previous_target ~= player then
-        CallRemoteEvent(player, 'AlienAttacking', npc)
-    end
+    CallRemoteEvent(player, 'AlienAttacking', npc)
 
     local vehicle = GetPlayerVehicle(player)
     if vehicle == 0 then

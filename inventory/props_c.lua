@@ -27,7 +27,7 @@ AddEvent("OnGameTick", function()
 
     -- looking at new object
     if hitObject ~= LastHitObject then
-        debug("-> now looking at " .. hitObject .. " -> " .. dump(hitStruct))
+        --debug("-> now looking at " .. hitObject .. " -> " .. dump(hitStruct))
 
         if hitStruct.type == 'object' or hitStruct.type == 'npc' then
             local prop

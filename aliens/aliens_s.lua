@@ -189,7 +189,7 @@ AddEvent("OnNPCDeath", function(npc, killer)
         adjusted_killer = killer
     end
     if adjusted_killer ~= 0 then
-        CallRemoteEvent(adjusted_killer, 'AlienNoLongerAttacking')
+        CallRemoteEvent(adjusted_killer, 'AlienNoLongerAttacking', npc)
         AddPlayerChatAll(GetPlayerName(adjusted_killer) .. ' has killed an alien!')
         log.info("NPC (ID " .. npc .. ") killed by player " .. GetPlayerName(adjusted_killer))
         BumpPlayerStat(adjusted_killer, 'alien_kills')
@@ -303,7 +303,7 @@ function ResetAlien(npc)
         VNPCS.StopVNPC(npc)
 
         if not IsPlayerDead(player) then
-            CallRemoteEvent(player, 'AlienNoLongerAttacking')
+            CallRemoteEvent(player, 'AlienNoLongerAttacking', npc)
         end
 
         -- wait a bit then walk back home, little alien
@@ -342,24 +342,19 @@ AddEvent("OnVNPCReachTargetFailed", function(npc)
     end
 
     local target = GetNPCPropertyValue(npc, 'target')
-
-    if target == nil then
+    if not target then
         log.error("Alien is confused.  Despawning.")
         DestroyNPC(npc)
         Aliens[npc] = nil
         return
     end
-
+    
     if IsPlayerDead(target) or GetPlayerHealth(target) <= 0 then
         Delay(8000, function()
             AlienReturn(npc)
         end)
     else
-        -- alien is stuck, summon an alien friend and go away
-        -- log.debug("Stuck alien.. spawning a friend")
-        -- SpawnAlienNearPlayer(target)
-        CallRemoteEvent(target, 'AlienNoLongerAttacking')
-        AlienReturn(npc)
+        CallRemoteEvent(target, 'AlienNoLongerAttacking', npc)
     end
 end)
 

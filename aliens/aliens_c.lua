@@ -1,15 +1,9 @@
 local AmbientSound
-local AttackSound
 local AmbientSoundTimer
-local Spotted = false
+local SpottedBy = {}
 
 AddEvent("OnPackageStop", function()
     DestroySound(AmbientSound)
-
-    if AttackSound ~= nil then
-        DestroySound(AttackSound)
-    end
-
     DestroyTimer(AmbientSoundTimer)
 end)
 
@@ -44,40 +38,38 @@ function ApplyAlienSkin(npc)
 end
 
 AddRemoteEvent("AlienAttacking", function(npc)
-    SetSoundVolume(AmbientSound, 0.5)
-
-    if not Spotted then
+    if next(SpottedBy) == nil then
         ShowMessage("You have been spotted!")
+        SetSoundVolume(AmbientSound, 0.5)
     end
 
-    Spotted = true
+    SpottedBy[npc] = true
+
+    --debug("SpottedBy:"..dump(SpottedBy))
 
     -- alien attack sound
-    if AttackSound == nil then
+    Delay(Random(1,2000), function()
         local x, y, z = GetNPCLocation(npc)
         if x and y and z then
-            AttackSound = CreateSound3D("client/sounds/alien.wav", x, y, z, 6000.0)
-            SetSoundVolume(AttackSound, 0.6)
+            SetSoundVolume(CreateSound3D("client/sounds/alien.wav", x, y, z, 6000.0), 0.6)
         end
-    end
+    end)
 end)
 
 function SetSafeAmbience()
-    --SetSoundFadeOut(AmbientSound, 1000, 0.0)
+    --SetSoundFadeOut(AmbientSound, 5000, 0.0)
     SetSoundVolume(AmbientSound, 0.0)
-
-    if AttackSound ~= nil then
-        DestroySound(AttackSound)
-    end
 end
 
-AddRemoteEvent('AlienNoLongerAttacking', function()
-    if Spotted then
-        ShowMessage("You are safe for now")
-    end
+AddRemoteEvent('AlienNoLongerAttacking', function(npc)
+    SpottedBy[npc] = nil
 
-    Spotted = nil
-    SetSafeAmbience()
+    --debug("SpottedBy:"..dump(SpottedBy))
+
+    if next(SpottedBy) == nil then
+        ShowMessage("You are safe for now")
+        SetSafeAmbience()
+    end
 end)
 
 AddEvent("OnPlayerSpawn", function()

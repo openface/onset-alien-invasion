@@ -63,18 +63,17 @@ AddRemoteEvent("ShowBinoculars", function()
     if not PreviousIsFirstPerson then
         SetFirstPerson()
     end
+    
     SetNearClipPlane(50)
-
     SetCameraFoV(25)
-
 end)
 
 AddRemoteEvent("HideBinoculars", function()
-    if not PreviousIsFirstPerson then
+    if PreviousIsFirstPerson then
+        SetFirstPerson()
+    else
         SetThirdPerson()
     end
-    SetCameraFoV(90)
-
     ExecuteWebJS(HudUI, "EmitEvent('SetBinocularView', false)")
 end)
 

@@ -153,12 +153,14 @@ function SetFirstPerson()
     EnableFirstPersonCamera(true)
     SetNearClipPlane(9)
     SetCameraViewDistance(350)
+    SetCameraFoV(90)
 end
 
 function SetThirdPerson()
     EnableFirstPersonCamera(false)
     SetNearClipPlane(0)
     SetCameraViewDistance(375)
+    SetCameraFoV(90)
 end
 
 AddEvent("OnKeyPress", function(key)

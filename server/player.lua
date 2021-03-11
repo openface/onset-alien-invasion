@@ -93,8 +93,6 @@ AddEvent("OnPlayerSpawn", function(player)
             equipped = {}
         }
     end
-
-    SyncInventory(player)
 end)
 
 -- killer is never a NPC so we have to guess
@@ -228,6 +226,7 @@ function InitializePlayer(player)
     end
 
     SyncWeaponSlotsFromInventory(player)
+    SyncInventory(player)
 end
 
 -- Chat

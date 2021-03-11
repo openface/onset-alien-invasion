@@ -65,7 +65,7 @@ AddEvent("OnKeyRelease", function(key)
 end)
 
 AddEvent("OnKeyPress", function(key)
-    if PlacementPendingItem and key == 'Left Mouse Button' then
+    if key == 'Left Mouse Button' and PlacementPendingItem then
 
         PlacementCooldown = GetTimeSeconds()
         PlacementTimer = CreateTimer(function(starttime)
@@ -86,7 +86,7 @@ AddEvent("OnKeyPress", function(key)
                     })
                 end
                 DestroyTimer(PlacementTimer)
-            elseif secs > 0 then
+            else
                 CallEvent("ShowSpinner")
             end
         end, 200, PlacementCooldown)
@@ -162,6 +162,19 @@ function StopEditingObject()
     EditingObject = nil
 end
 
+function CancelEditingObject()
+    SetObjectEditable(EditingObject, EDIT_NONE)
+    SetObjectOutline(EditingObject, false)
+
+    EditingObject = nil
+    PendingPlacement = false
+
+    SetInputMode(INPUT_GAME)
+    ShowMouseCursor(false)
+
+    DestroyTimer(cancel_edit_timer)
+end
+
 -- timer used to cancel object placement if player walks away
 function CancelEditTimer(x, y, z)
     if not EditingObject then
@@ -172,15 +185,6 @@ function CancelEditTimer(x, y, z)
     if GetDistance3D(px, py, pz, x, y, z) > 1500 then
         AddPlayerChat("You are too far away to edit the object!")
 
-        SetObjectEditable(EditingObject, EDIT_NONE)
-        SetObjectOutline(EditingObject, false)
-
-        EditingObject = nil
-        PendingPlacement = false
-
-        SetInputMode(INPUT_GAME)
-        ShowMouseCursor(false)
-
-        DestroyTimer(cancel_edit_timer)
+        CancelEditingObject()
     end
 end

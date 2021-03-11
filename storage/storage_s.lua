@@ -29,6 +29,9 @@ AddEvent("OpenStorage", function(player, ActiveProp)
     if ActiveProp.options['storage_type'] == 'vehicle' then
         x, y, z = GetVehicleLocation(ActiveProp.hit_object)
         storage_items = GetVehiclePropertyValue(ActiveProp.hit_object, "storage") or {}
+    elseif ActiveProp.options['storage_type'] == 'npc' then
+        x, y, z = GetNPCLocation(ActiveProp.hit_object)
+        storage_items = GetNPCPropertyValue(ActiveProp.hit_object, "storage") or {}
     else
         x, y, z = GetObjectLocation(ActiveProp.hit_object)
         storage_items = GetObjectPropertyValue(ActiveProp.hit_object, "storage") or {}
@@ -71,11 +74,8 @@ end)
 -- updates storage from storage UI sorting
 -- [1] = { ["quantity"] = 1,["index"] = 1,["item"] = axe,}
 AddRemoteEvent("UpdateStorage", function(player, object, storage_type, data)
-    local storage_items = json_decode(data)
-    log.debug(GetPlayerName(player) .. " updates storage:" .. object .. " type:" .. storage_type .. dump(data))
-    local storage_items = json_decode(data)
-    log.debug(dump(storage_items))
-    ReplaceStorageContents(object, storage_type, storage_items)
+    log.trace("UpdateStorage", object, storage_type, dump(data))
+    ReplaceStorageContents(object, storage_type, json_decode(data))
 end)
 
 -- type is either 'object' or 'vehicle'
@@ -83,6 +83,8 @@ function ReplaceStorageContents(object, storage_type, data)
     local old_storage
     if storage_type == 'vehicle' then
         old_storage = GetVehiclePropertyValue(object, "storage")
+    elseif storage_type == 'npc' then
+        old_storage = GetNPCPropertyValue(object, "storage")
     else
         old_storage = GetObjectPropertyValue(object, "storage")
     end
@@ -108,6 +110,8 @@ function ReplaceStorageContents(object, storage_type, data)
 
     if storage_type == 'vehicle' then
         SetVehiclePropertyValue(object, "storage", new_storage)
+    elseif storage_type == 'npc' then
+        SetNPCPropertyValue(object, "storage", new_storage)
     else
         SetObjectPropertyValue(object, "storage", new_storage)
     end

@@ -55,6 +55,10 @@ AddEvent('OnKeyPress', function(key)
             -- interact with object prop
             debug("interact with object prop " .. ActiveProp.hit_object)
             CallRemoteEvent("InteractWithObjectProp", ActiveProp, CurrentInHand)
+        elseif ActiveProp.hit_type == 'npc' then
+            -- interact with object prop
+            debug("interact with npc prop " .. ActiveProp.hit_object)
+            CallRemoteEvent("InteractWithNPCProp", ActiveProp, CurrentInHand)
         else
             -- interact with world prop
             debug("interact with world prop " .. ActiveProp.hit_type)

@@ -112,7 +112,7 @@ function SpawnAlienNearPlayer(player, number_to_spawn)
     local number_to_spawn = number_to_spawn or 1
 
     local px, py, pz = GetPlayerLocation(player)
-    for i=1,number_to_spawn do
+    for i = 1, number_to_spawn do
         local x, y = randomPointInCircle(px, py, AlienAttackRange + 500) -- some buffer
         -- CreateObject(303, x, y, z+100, 0, 0, 0, 10, 10, 200) -- TODO remove me
         local npc = CreateNPC(x, y, pz + 100, 90)
@@ -121,7 +121,7 @@ function SpawnAlienNearPlayer(player, number_to_spawn)
         -- add a buffer to the health so that we can handle death
         -- in script instead of the game (our own animation, etc)
         -- If aliens health drops below 900, it's considered dead.
-        SetNPCHealth(npc, AlienHealth+1000)
+        SetNPCHealth(npc, AlienHealth + 1000)
 
         SetNPCRespawnTime(npc, 99999999) -- disable respawns
         SetNPCPropertyValue(npc, 'type', 'alien')
@@ -158,7 +158,7 @@ AddEvent("OnPlayerWeaponShot",
 AddEvent("OnNPCDamage", function(npc, damagetype, amount)
     if not GetNPCPropertyValue(npc, 'target') then
         SetNPCAnimation(npc, 900, false) -- hit
-    end    
+    end
 
     local health = GetNPCHealth(npc) - 1000
     log.debug("alien health: " .. health)
@@ -166,15 +166,15 @@ AddEvent("OnNPCDamage", function(npc, damagetype, amount)
     local dead = GetNPCPropertyValue(npc, "dead")
     if not dead and (health < 0) then
         KillAlien(npc)
-    end 
+    end
 end)
 
 function KillAlien(npc)
     VNPCS.StopVNPC(npc)
     SetNPCPropertyValue(npc, "dead", true)
-    SetNPCAnimation(npc,  math.random(901,902), false)
+    SetNPCAnimation(npc, math.random(901, 902), false)
     Delay(800, function()
-        log.debug("NPC "..npc.." is now fake dead.")
+        log.debug("NPC " .. npc .. " is now fake dead.")
         SetNPCHealth(npc, 0)
     end)
 end
@@ -194,12 +194,45 @@ AddEvent("OnNPCDeath", function(npc, killer)
         log.info("NPC (ID " .. npc .. ") killed by player " .. GetPlayerName(adjusted_killer))
         BumpPlayerStat(adjusted_killer, 'alien_kills')
     end
-    Delay(120 * 1000, function()
+
+    SpawnCorpseLoot(npc)
+    SetNPCPropertyValue(npc, "prop", {
+        use_label = "Search Corpse",
+        event = "OpenStorage",
+        options = {
+            storage_type = 'npc',
+            storage_name = "Alien Corpse",
+        }
+    })
+
+    -- despawn after 15 mins
+    Delay(60 * 1000 * 15, function()
         log.debug("NPC (ID " .. npc .. ") is dead.. despawning")
         DestroyNPC(npc)
         Aliens[npc] = nil
     end)
 end)
+
+function SpawnCorpseLoot(npc)
+    if not IsValidNPC(npc) then return end
+
+    log.debug("Spawning new loot for NPC: "..npc)
+    local items = table.keys(ItemConfig)
+    local random_items = getRandomSample(items, math.random(0, 2))
+
+    local random_content = {}
+    for index, item in pairs(random_items) do
+        table.insert(random_content, {
+            item = item,
+            uuid = RegisterNewItem(item),
+            slot = index,
+            quantity = 1,
+            used = 0
+        })
+    end
+    --log.trace(dump(random_content))
+    ReplaceStorageContents(npc, 'npc', random_content)
+end
 
 function SetAlienTarget(npc, player)
     if not IsPlayerAttackable(player) then
@@ -376,7 +409,7 @@ AddEvent("OnVNPCReachTarget", function(npc)
     else
         -- player too far away
         -- todo: can get stuck here
-        --SetAlienTarget(npc, target)
+        -- SetAlienTarget(npc, target)
     end
 end)
 

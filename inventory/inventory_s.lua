@@ -366,6 +366,16 @@ AddRemoteEvent("InteractWithWorldProp", function(player, ActiveProp, CurrentInHa
     end)
 end)
 
+AddRemoteEvent("InteractWithNPCProp", function(player, ActiveProp, CurrentInHand)
+    log.trace("InteractWithNPCProp", player, dump(ActiveProp), dump(CurrentInHand))
+
+    SetPlayerAnimation(player, 921)
+    Delay(2000, function()
+        SetPlayerAnimation(player, "STOP")
+        CallEvent(ActiveProp.item_interaction.interaction.event, player, ActiveProp)
+    end)
+end)
+
 -- interaction = { sound = "sounds/chainsaw.wav", animation = { id = 924, duration = 10000 } }
 function PlayInteraction(player, interaction, after_callback)
     log.debug("Playing interaction:", dump(interaction))

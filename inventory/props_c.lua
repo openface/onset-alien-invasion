@@ -10,7 +10,7 @@ AddEvent("OnGameTick", function()
 
     -- previously hit an object but are now looking at something else
     if LastHitObject ~= nil and hitObject ~= LastHitObject then
-        --debug("no longer looking at " .. LastHitObject .. " -> " .. dump(LastHitStruct))
+        -- debug("no longer looking at " .. LastHitObject .. " -> " .. dump(LastHitStruct))
 
         ExecuteWebJS(HudUI, "EmitEvent('HideInteractionMessage')")
 
@@ -27,23 +27,29 @@ AddEvent("OnGameTick", function()
 
     -- looking at new object
     if hitObject ~= LastHitObject then
-        --debug("-> now looking at " .. hitObject .. " -> " .. dump(hitStruct))
+        debug("-> now looking at " .. hitObject .. " -> " .. dump(hitStruct))
 
-        if hitStruct.type == 'object' then
-            -- object interaction
-            local prop = GetObjectPropertyValue(hitObject, "prop")
+        if hitStruct.type == 'object' or hitStruct.type == 'npc' then
+            local prop
+            if hitStruct.type == 'object' then
+                -- object interaction
+                prop = GetObjectPropertyValue(hitObject, "prop")
+            elseif hitStruct.type == 'npc' then
+                prop = GetNPCPropertyValue(hitObject, "prop")
+            end
             if prop then
                 local item_interaction = GetItemInteraction(prop)
                 if item_interaction then
-                    --debug(dump(item_interaction))
-                    ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. item_interaction.interaction.use_label .. "')")
+                    -- debug(dump(item_interaction))
+                    ExecuteWebJS(HudUI,
+                        "EmitEvent('ShowInteractionMessage','" .. item_interaction.interaction.use_label .. "')")
                     ActiveProp = {
-                        hit_type = 'object',
+                        hit_type = hitStruct.type,
                         hit_object = hitObject,
                         item_interaction = item_interaction,
-                        options = prop.options,
+                        options = prop.options
                     }
-                    --debug("OBJECT ActiveProp: " .. dump(ActiveProp))
+                    -- debug("OBJECT ActiveProp: " .. dump(ActiveProp))
                 end
             end
         elseif CurrentInHand then
@@ -53,9 +59,9 @@ AddEvent("OnGameTick", function()
                 ExecuteWebJS(HudUI, "EmitEvent('ShowInteractionMessage','" .. interaction.use_label .. "')")
                 ActiveProp = {
                     hit_type = hitStruct.type,
-                    hit_object = hitObject,
+                    hit_object = hitObject
                 }
-                --debug("ENV ActiveProp: " .. dump(ActiveProp))
+                -- debug("ENV ActiveProp: " .. dump(ActiveProp))
             end
         end
 
@@ -68,10 +74,11 @@ end)
 function GetItemInteraction(prop)
     if prop.interacts_with and CurrentInHand then
         for item, interaction_name in pairs(prop.interacts_with) do
-            if CurrentInHand.item == item and CurrentInHand.interactions and CurrentInHand.interactions[interaction_name] then
+            if CurrentInHand.item == item and CurrentInHand.interactions and
+                CurrentInHand.interactions[interaction_name] then
                 return {
                     item = item,
-                    interaction = CurrentInHand.interactions[interaction_name],
+                    interaction = CurrentInHand.interactions[interaction_name]
                 }
             end
         end
@@ -79,13 +86,16 @@ function GetItemInteraction(prop)
     -- no item interaction, default to using prop events
     return {
         item = nil,
-        interaction = { use_label = prop.use_label, event = prop.event }
+        interaction = {
+            use_label = prop.use_label,
+            event = prop.event
+        }
     }
 end
 
 -- @return  { use_label = "Chop Tree", event = "HarvestTree", sound = "sounds/chopping_wood.mp3", animation = { id = 920, duration = 5000 } }
 function CurrentInHandInteractsWithHitType(hittype)
-    debug("CurrentInHandInteractsWithHitType:"..hittype)
+    debug("CurrentInHandInteractsWithHitType:" .. hittype)
     if CurrentInHand and CurrentInHand.interactions then
         for type, int in pairs(CurrentInHand.interactions) do
             if type == hittype then
@@ -141,6 +151,16 @@ function ProcessHitResult(HitResult)
             component = Comp,
             actor = Actor
         }
+    end
+
+    -- npcs
+    for _, npc in pairs(GetStreamedNPC()) do
+        if GetNPCSkeletalMeshComponent(npc, "Body"):GetUniqueID() == Comp:GetUniqueID() or
+            GetNPCSkeletalMeshComponent(npc, "Clothing0"):GetUniqueID() == Comp:GetUniqueID() then
+            return npc, {
+                type = 'npc'
+            }
+        end
     end
 
     -- world objects

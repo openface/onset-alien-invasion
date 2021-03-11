@@ -27,7 +27,11 @@ function SetItemInstance(uuid, item)
 end
 
 function UnregisterItemInstance(uuid)
-    ItemInstances[uuid] = nil
+    local item = ItemInstances[uuid]
+    if item then
+        ItemInstances[uuid] = nil
+        log.debug("Unregistering item instance ("..item..") uuid: "..uuid)
+    end
 end
 
 function GetItemInstance(uuid)

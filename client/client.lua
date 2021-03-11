@@ -97,6 +97,10 @@ AddEvent("OnPlayerTalking", function(player)
     SetPlayerLipMovement(player)
 end)
 
+AddEvent("TakeDamage", function()
+    InvokeDamageFX(1000)
+end)
+
 AddRemoteEvent("ClientSetTime", function(time)
     SetTime(time)
 end)

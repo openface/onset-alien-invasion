@@ -24,13 +24,7 @@ AddEvent('OnKeyPress', function(key)
         SetWebVisibility(StorageUI, WEB_VISIBLE)
         SetWebVisibility(InventoryUI, WEB_HIDDEN)
 
-        CallRemoteEvent("OpenStorage", {
-            hit_object = GetPlayerVehicle(),
-            storage = {
-                name = "Glovebox",
-                type = 'vehicle' 
-            }
-        })
+        CallRemoteEvent("OpenGlovebox", GetPlayerVehicle())
     end
 end)
 
@@ -50,7 +44,6 @@ AddRemoteEvent("LoadStorageData", function(data)
     SetInputMode(INPUT_GAMEANDUI)
     SetWebVisibility(StorageUI, WEB_VISIBLE)
     SetWebVisibility(InventoryUI, WEB_HIDDEN)
-
     ExecuteWebJS(StorageUI, "EmitEvent('SetStorageData'," .. data .. ")")
     if not IsPlayerInVehicle() then
         local x, y, z = GetPlayerLocation(GetPlayerId())

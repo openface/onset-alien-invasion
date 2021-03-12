@@ -38,8 +38,8 @@ end)
 
 function AddStorageProp(object)
     local locked
-    -- 1 in 3 chance of being locked
-    if math.random(1,3) == 1 then
+    -- 1 in 5 chance of being locked
+    if math.random(1,5) == 1 then
         locked = false
     else
         locked = true
@@ -55,7 +55,7 @@ function AddStorageProp(object)
         storage = {
             type = 'object',
             name = "Storage Container",
-            locked = locked,
+            locked = false,
         },
     })
 end

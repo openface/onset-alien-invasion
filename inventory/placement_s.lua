@@ -1,4 +1,4 @@
-local PlacedObjects = {}
+PlacedObjects = {}
 
 InitTable("placed_items", {
     uuid = {
@@ -44,7 +44,15 @@ function onLoadPlacedItems()
         SetObjectPropertyValue(object, "steamid", row['steamid'])
 
         SetObjectPropertyValue(object, "prop", ItemConfig[item].prop)
-        
+
+        -- setup items in storage
+        local storage = json_decode(row['storage'])
+        for i, item in ipairs(storage) do
+            SetItemInstance(item.uuid, item.item)
+        end
+        SetObjectPropertyValue(object, "storage", storage)
+
+
         PlacedObjects[object] = {
             uuid = row['uuid'],
             item = row['item']
@@ -111,6 +119,7 @@ AddRemoteEvent("PlaceItem", function(player, uuid, loc)
             y = loc.y,
             z = loc.z
         },
+        storage = {}, -- todo
         steamid = steamid,
     })
 end)

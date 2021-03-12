@@ -1,7 +1,7 @@
-local VehicleData = {}
+VehicleData = {}
+
 local VehicleSaveTimer
 local VehicleSaveTime = 1000 * 60 * 1 -- 1 min
-
 local VEHICLE_MAX_HEALTH = 1000
 
 InitTable("vehicles", {
@@ -143,6 +143,16 @@ AddRemoteEvent("ToggleVehicleHood", function(player)
     else
         SetVehicleHoodRatio(vehicle, 60.0)
     end
+end)
+
+AddRemoteEvent("OpenGlovebox", function(player, vehicle)
+    CallEvent("OpenStorage", player, {
+        hit_object = vehicle,
+        storage = {
+            name = "Glovebox",
+            type = 'vehicle' 
+        }
+    })
 end)
 
 AddCommand("vehicle", function(player, modelid)

@@ -15,7 +15,7 @@ end)
 AddEvent("OpenStorage", function(player, ActiveProp)
     log.trace("OpenStorage " .. dump(ActiveProp))
 
-    if not ActiveProp.storage then
+    if not ActiveProp.storage or not ActiveProp.hit_object then
         log.error("Cannot open non-storage object!")
         return
     end
@@ -48,7 +48,7 @@ AddEvent("OpenStorage", function(player, ActiveProp)
         storage_object = ActiveProp.hit_object,
         storage_type = ActiveProp.storage.type,
         storage_name = ActiveProp.storage.name,
-        
+
         storage_items = storage_items,
         inventory_items = {}
     }
@@ -110,6 +110,15 @@ function ReplaceStorageContents(object, storage_type, data)
     end
 
     SetObjectStorage(object, storage_type, new_storage)
+
+    if storage_type == 'object' then
+        -- make sure it's a placed object 
+        -- world storage doesn't persist!
+        local po = PlacedObjects[object]
+        if po then
+            UpdateRows("placed_items", { storage = new_storage }, { uuid = po.uuid })
+        end
+    end
 end
 
 function GetObjectStorage(object, storage_type)
@@ -122,13 +131,15 @@ function GetObjectStorage(object, storage_type)
     end
 end
 
-function SetObjectStorage(object, storage_type, data)
+function SetObjectStorage(storage_object, storage_type, data)
     if storage_type == 'vehicle' then
-        SetVehiclePropertyValue(object, "storage", data)
+        SetVehiclePropertyValue(storage_object, "storage", data)
     elseif storage_type == 'npc' then
-        SetNPCPropertyValue(object, "storage", data)
+        SetNPCPropertyValue(storage_object, "storage", data)
+    elseif storage_type == 'object' then
+        SetObjectPropertyValue(storage_object, "storage", data)
     else
-        SetObjectPropertyValue(object, "storage", data)
+        log.error("Unknown storage type: " .. storage_type)
     end
 end
 

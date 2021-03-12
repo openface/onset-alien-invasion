@@ -460,10 +460,18 @@ AddRemoteEvent("UpdateInventory", function(player, data)
         })
     end
     log.trace("NEW INVENTORY", dump(new_inventory))
+
     PlayerData[player].inventory = new_inventory
 
     CheckEquippedFromInventory(player)
     SyncWeaponSlotsFromInventory(player)
+
+    -- persist
+    UpdateRows("accounts", { 
+        inventory = PlayerData[player].inventory, 
+        equipped = PlayerData[player].equipped 
+    }, { steamid = GetPlayerSteamId(player) })
+
     CallEvent("SyncInventory", player)
 end)
 

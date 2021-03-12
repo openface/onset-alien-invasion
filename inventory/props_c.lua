@@ -47,7 +47,7 @@ AddEvent("OnGameTick", function()
                         hit_type = hitStruct.type,
                         hit_object = hitObject,
                         item_interaction = item_interaction,
-                        options = prop.options
+                        storage = prop.storage
                     }
                     -- debug("OBJECT ActiveProp: " .. dump(ActiveProp))
                 end
@@ -138,7 +138,7 @@ function ProcessHitResult(HitResult)
 
     -- environment
     if string.find(Comp:GetName(), "FoliageInstancedStaticMeshComponent") then
-        -- foliage tree
+        -- tree
         return Comp:GetUniqueID(), {
             type = 'tree',
             component = Comp,

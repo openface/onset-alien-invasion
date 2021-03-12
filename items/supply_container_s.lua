@@ -28,10 +28,14 @@ ItemConfig["supply_container"] = {
             screwdriver = "use",
             crowbar = "use"
         },
-        options = {
+        storage = {
+            name = "Supply Container",
+            type = 'object',
+        },
+--[[         options = {
             storage_type = 'object',
             storage_name = "Supply Container"
-        }
+        } ]]
     }
 }
 

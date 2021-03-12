@@ -15,21 +15,26 @@ end)
 AddEvent("OpenStorage", function(player, ActiveProp)
     log.trace("OpenStorage " .. dump(ActiveProp))
 
-    if ActiveProp.options['locked'] then
+    if not ActiveProp.storage then
+        log.error("Cannot open non-storage object!")
+        return
+    end
+
+    if ActiveProp.storage.locked then
         CallRemoteEvent(player, "ShowError", "Locked")
         return
     end
 
     log.info(GetPlayerName(player) .. " opens storage object " .. ActiveProp.hit_object .. " type " ..
-                 ActiveProp.options['storage_type'])
+                 ActiveProp.storage.type)
 
     local x, y, z
     local storage_items
 
-    if ActiveProp.options['storage_type'] == 'vehicle' then
+    if ActiveProp.storage.type == 'vehicle' then
         x, y, z = GetVehicleLocation(ActiveProp.hit_object)
         storage_items = GetVehiclePropertyValue(ActiveProp.hit_object, "storage") or {}
-    elseif ActiveProp.options['storage_type'] == 'npc' then
+    elseif ActiveProp.storage.type == 'npc' then
         x, y, z = GetNPCLocation(ActiveProp.hit_object)
         storage_items = GetNPCPropertyValue(ActiveProp.hit_object, "storage") or {}
     else
@@ -40,9 +45,10 @@ AddEvent("OpenStorage", function(player, ActiveProp)
     PlaySoundSync("sounds/storage_open.wav", x, y, z)
 
     local _send = {
-        object = ActiveProp.hit_object,
-        type = ActiveProp.options['storage_type'],
-        storage_name = ActiveProp.options['storage_name'],
+        storage_object = ActiveProp.hit_object,
+        storage_type = ActiveProp.storage.type,
+        storage_name = ActiveProp.storage.name,
+        
         storage_items = storage_items,
         inventory_items = {}
     }

@@ -13,6 +13,9 @@ InitTable("placed_items", {
     location = {
         type = 'json'
     },
+    storage = {
+        type = 'json'
+    },
     steamid = {
         type = 'char',
         length = 17,
@@ -39,8 +42,9 @@ function onLoadPlacedItems()
         SetObjectPropertyValue(object, "item", item)
         SetObjectPropertyValue(object, "placeable", true)
         SetObjectPropertyValue(object, "steamid", row['steamid'])
+
         SetObjectPropertyValue(object, "prop", ItemConfig[item].prop)
-    
+        
         PlacedObjects[object] = {
             uuid = row['uuid'],
             item = row['item']

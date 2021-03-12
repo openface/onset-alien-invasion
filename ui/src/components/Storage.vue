@@ -60,8 +60,9 @@ export default {
         },
         SetStorageData: function(data) {
             this.storage_name = data.storage_name;
-            this.object = data.object;
-            this.type = data.type;
+            this.storage_object = data.storage_object;
+            this.storage_type = data.storage_type;
+
             this.storage_items = data.storage_items;
             this.inventory_items = data.inventory_items;
         },
@@ -76,7 +77,7 @@ export default {
                     slot: item.slot,
                 };
             });
-            this.CallEvent("UpdateStorage", this.object, this.type, JSON.stringify(data));
+            this.CallEvent("UpdateStorage", this.storage_object, this.storage_type, JSON.stringify(data));
         },
         onCutStorage: function(e) {
             window.console.log("onCutStorage:", e.data);
@@ -145,7 +146,7 @@ export default {
 
         if (!this.InGame) {
             this.EventBus.$emit("SetStorageData", {
-                object: 666,
+                storage_object: 666,
                 storage_type: "object",
                 storage_name: "Crate",
                 storage_items: [

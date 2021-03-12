@@ -26,9 +26,9 @@ AddEvent('OnKeyPress', function(key)
 
         CallRemoteEvent("OpenStorage", {
             hit_object = GetPlayerVehicle(),
-            options = {
-                storage_name = "Glovebox",
-                storage_type = 'vehicle' 
+            storage = {
+                name = "Glovebox",
+                type = 'vehicle' 
             }
         })
     end

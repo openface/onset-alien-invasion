@@ -68,10 +68,11 @@ function SpawnVehicle(modelid, x, y, z, h)
 end
 
 function SaveVehicle(vehicle)
-    if not VehicleData[vehicle] then
+    local uuid = VehicleData[vehicle]
+    if not uuid then
         return
     end
-    log.info("Saving vehicle: " .. vehicle)
+    log.info("Saving vehicle: " .. vehicle .. " uuid: " .. uuid)
     local x, y, z = GetVehicleLocation(vehicle)
     local h = GetVehicleHeading(vehicle)
     local modelid = GetVehicleModel(vehicle)

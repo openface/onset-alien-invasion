@@ -1,76 +1,92 @@
-local Vehicles = {}
-local VehicleRespawnTime = 10 * 60 * 1000 -- 10 mins
-local VehicleMaxHealth = 1000
+local VehicleData = {}
+local VehicleSaveTimer
+local VehicleSaveTime = 1000 * 60 * 1 -- 1 min
 
-VehiclesConfig = {{
-    uuid = "2b2a609b-8618-4776-b84a-a7e60602c411",
-    modelid = 23,
+local VEHICLE_RESPAWN_SECS = 1000 * 60 * 30 -- 30 mins
+local VEHICLE_MAX_HEALTH = 1000
+
+InitTable("vehicles", {
+    uuid = {
+        type = 'char',
+        length = 36,
+        unique = true
+    },
+    modelid = {
+        type = 'number',
+        length = 11
+    },
     location = {
-        x = -95885.109375,
-        y = 174622.578125,
-        z = 404.29016113281
+        type = 'json'
     }
-}, {
-    uuid = "2e1222e6-a29d-4e04-92ea-0d804ae76a8e",
-    modelid = 23,
-    location = {
-        x = -119527.0703125,
-        y = 220396.09375,
-        z = 164.50358581543
-    }
-}, {
-    uuid = "c3637a21-dcec-4298-92cb-0cfe4b49b9a2",
-    modelid = 23,
-    location = {
-        x = -121231.3046875,
-        y = 180339.890625,
-        z = 626.68872070313
-    }
-}, {
-    uuid = "4eadd776-b6d5-47ea-88d1-2a9f6d70b46d",
-    modelid = 23,
-    location = {
-        x = -99434.703125,
-        y = 198331.09375,
-        z = 1310.1840820313
-    }
-}, {
-    uuid = "fa3047e3-e457-4385-9ae8-e973b9091618",
-    modelid = 23,
-    location = {
-        x = -111261.5234375,
-        y = 191991.234375,
-        z = 1310.3996582031
-    }
-}}
+}, false) -- true to recreate table
 
 AddEvent("OnPackageStart", function()
     SpawnVehicles()
+
+    VehicleSaveTimer = CreateTimer(function()
+        for vehicle, _ in pairs(VehicleData) do
+            if IsValidVehicle(vehicle) then
+                SaveVehicle(vehicle)
+            end
+        end
+    end, VehicleSaveTime)
 end)
 
 AddEvent("OnPackageStop", function()
     DespawnVehicles()
-    Vehicles = {}
-    VehicleLocations = {}
 end)
 
 function DespawnVehicles()
-    for veh in pairs(Vehicles) do
-        Vehicles[veh] = nil
+    for veh, uuid in pairs(VehicleData) do
+        VehicleData[veh] = nil
         DestroyVehicle(veh)
     end
 end
 
 function SpawnVehicles()
-    DespawnVehicles()
+    SelectRows("vehicles", "*", nil, function()
+        for i = 1, mariadb_get_row_count() do
+            local row = mariadb_get_assoc(i)
+            local loc = json_decode(row['location'])
 
-    for _, cfg in pairs(VehiclesConfig) do
-        log.debug("Spawning vehicle modelid", cfg.modelid)
-        local veh = CreateVehicle(cfg.modelid, cfg.location.x, cfg.location.y, cfg.location.z)
-        SetVehicleRespawnParams(veh, false, VehicleRespawnTime, true)
-        SetVehicleHealth(veh, VehicleMaxHealth)
-        Vehicles[veh] = true
+            local vehicle = SpawnVehicle(row['modelid'], loc.x, loc.y, loc.z, loc.h)
+            if vehicle then
+                VehicleData[vehicle] = row['uuid']
+            end
+        end
+    end)
+end
+
+function SpawnVehicle(modelid, x, y, z, h)
+    local vehicle = CreateVehicle(modelid, x, y, z, h)
+    if not vehicle then
+        log.error("Cannot create vehicle: " .. modelid)
+        return
     end
+    SetVehicleRespawnParams(vehicle, false, VEHICLE_RESPAWN_SECS, true)
+    SetVehicleHealth(vehicle, VEHICLE_MAX_HEALTH)
+    return vehicle
+end
+
+function SaveVehicle(vehicle)
+    if not VehicleData[vehicle] then
+        return
+    end
+    log.info("Saving vehicle: " .. vehicle)
+    local x, y, z = GetVehicleLocation(vehicle)
+    local h = GetVehicleHeading(vehicle)
+    local modelid = GetVehicleModel(vehicle)
+
+    UpdateRows("vehicles", {
+        location = {
+            x = x,
+            y = y,
+            z = z,
+            h = h
+        }
+    }, {
+        uuid = VehicleData[vehicle]
+    })
 end
 
 AddEvent("OnPlayerEnterVehicle", function(player, vehicle, seat)
@@ -125,7 +141,31 @@ AddRemoteEvent("ToggleVehicleHood", function(player)
     end
 end)
 
+AddCommand("vehicle", function(player, modelid)
+    if not IsAdmin(player) then
+        return
+    end
+
+    local uuid = generate_uuid()
+    local x, y, z = GetPlayerLocation(player)
+    local h = GetPlayerHeading(player)
+
+    local vehicle = SpawnVehicle(modelid, x, y, z, h)
+    if vehicle then
+        InsertRow("vehicles", {
+            uuid = uuid,
+            modelid = modelid,
+            location = {
+                x = x,
+                y = y,
+                z = z,
+                h = h
+            }
+        })
+    end
+end)
+
 function GetVehicleHealthPercentage(vehicle)
-    return math.floor(GetVehicleHealth(vehicle) / VehicleMaxHealth * 100.0)
+    return math.floor(GetVehicleHealth(vehicle) / VEHICLE_MAX_HEALTH * 100.0)
 end
 

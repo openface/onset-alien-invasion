@@ -63,11 +63,17 @@ function TruncateTable(name)
 end
 
 function SelectRows(name, fields, where, callback)
+    if not callback then
+        log.warn("SelectRows missing callback!")
+    end
     return Tables[name].select(fields, where, callback)
 end
 
-function SelectFirst(name, where)
-    return Tables[name].first(where)
+function SelectFirst(name, where, callback)
+    if not callback then
+        log.warn("SelectFirst missing callback!")
+    end
+    return Tables[name].first(where, callback)
 end
 
 function DeleteRow(name, where)

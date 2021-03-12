@@ -14,7 +14,7 @@ local AlienSpawnTimer
 local AlienAttackTimer
 
 AddCommand("alien", function(player)
-    if not IsAdmin(GetPlayerSteamId(player)) then
+    if not IsAdmin(player) then
         return
     end
     SpawnAlienNearPlayer(player)
@@ -22,7 +22,7 @@ end)
 
 -- togaliens
 AddCommand("ta", function(player)
-    if not IsAdmin(GetPlayerSteamId(player)) then
+    if not IsAdmin(player) then
         return
     end
     AlienSpawnsEnabled = not AlienSpawnsEnabled
@@ -95,7 +95,7 @@ function IsPlayerAttackable(player)
         return true
     end
 
-    -- if IsAdmin(GetPlayerSteamId(player)) then return false end
+    -- if IsAdmin(player) then return false end
 
     -- don't attack if player is in safe zone
     local x, y, z = GetPlayerLocation(player)

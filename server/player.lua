@@ -136,23 +136,25 @@ AddEvent("OnPlayerSteamAuth", function(player)
 
     local account = SelectFirst("accounts", {
         steamid = steamid
-    })
-    if not account then
-        log.info("New account starting...")
+    }, function()
+        local row = mariadb_get_assoc(1)
+        if not row then
+            log.info("New account starting...")
 
-        -- new character gets character selection screen
-        SetPlayerDimension(player, math.random(1, 999))
-        CallRemoteEvent(player, "ShowCharacterSelection")
-    else
-        log.info("Loading existing character for player " .. GetPlayerName(player))
+            -- new character gets character selection screen
+            SetPlayerDimension(player, math.random(1, 999))
+            CallRemoteEvent(player, "ShowCharacterSelection")
+        else
+            log.info("Loading existing character for player " .. GetPlayerName(player))
 
-        -- initialize player from database
-        InitializePlayer(player)
+            -- initialize player from database
+            InitializePlayer(player)
 
-        -- player is already spawned, relocate them
-        local loc = json_decode(account['location'])
-        SetPlayerLocation(player, loc['x'], loc['y'], loc['z'])
-    end
+            -- player is already spawned, relocate them
+            local loc = json_decode(row['location'])
+            SetPlayerLocation(player, loc['x'], loc['y'], loc['z'])
+        end
+    end)
 end)
 
 -- new character selected
@@ -201,32 +203,37 @@ function InitializePlayer(player)
     -- existing player logging on
     local account = SelectFirst("accounts", {
         steamid = GetPlayerSteamId(player)
-    })
-    if not account then
-        log.error("Error initializing player from database!")
-        KickPlayer(player, "Error initializing player!")
-        return
-    end
+    }, function()
+        local row = mariadb_get_assoc(1)
+        if not row then
+            log.error("Error initializing player from database!")
+            KickPlayer(player, "Error initializing player!")
+            return
+        end
 
-    log.debug("Initializing player from database")
+        log.debug("Initializing player from database")
 
-    -- setup properties
-    SetPlayerPropertyValue(player, 'clothing', account['clothing'], true)
+        -- admin
+        PlayerData[player].is_admin = row['is_admin']
 
-    -- setup inventory
-    PlayerData[player].inventory = json_decode(account['inventory'])
-    for i, item in ipairs(PlayerData[player].inventory) do
-        SetItemInstance(item.uuid, item.item)
-    end
+        -- setup properties
+        SetPlayerPropertyValue(player, 'clothing', row['clothing'], true)
 
-    -- equip items
-    local equipped = json_decode(account['equipped'])
-    for uuid, object in pairs(equipped) do
-        EquipItem(player, uuid)
-    end
+        -- setup inventory
+        PlayerData[player].inventory = json_decode(row['inventory'])
+        for i, item in ipairs(PlayerData[player].inventory) do
+            SetItemInstance(item.uuid, item.item)
+        end
 
-    SyncWeaponSlotsFromInventory(player)
-    SyncInventory(player)
+        -- equip items
+        local equipped = json_decode(row['equipped'])
+        for uuid, object in pairs(equipped) do
+            EquipItem(player, uuid)
+        end
+
+        SyncWeaponSlotsFromInventory(player)
+        SyncInventory(player)
+    end)
 end
 
 -- Chat
@@ -259,11 +266,8 @@ function SavePlayer(player)
     })
 end
 
-function IsAdmin(steamid)
-    account = SelectFirst("accounts", {
-        steamid = steamid
-    })
-    if account and account["is_admin"] == "1" then
+function IsAdmin(player)
+    if PlayerData[player] and PlayerData[player].is_admin == "1" then
         return true
     else
         return false

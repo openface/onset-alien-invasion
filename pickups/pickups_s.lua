@@ -8,7 +8,7 @@ AddEvent("OnPackageStop", function()
 end)
 
 AddCommand("item", function(player, item)
-    if not IsAdmin(GetPlayerSteamId(player)) then
+    if not IsAdmin(player) then
         return
     end
     CreatePickupNearPlayer(player, item)

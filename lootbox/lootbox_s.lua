@@ -13,7 +13,7 @@ AddCommand("loot", function(player)
 end)
 
 AddCommand("lpos", function(player)
-    if not IsAdmin(GetPlayerSteamId(player)) then
+    if not IsAdmin(player) then
         return
     end
     local x, y, z = GetPlayerLocation(player)

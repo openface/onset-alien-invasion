@@ -189,16 +189,15 @@ function Table.new(conn, name, fields)
 
     -- selects first row only
     -- @param where     { age = 25 }
-    self.first = function(where)
+    self.first = function(where, callback)
         local select_query = "SELECT * FROM "..self.name
 
         -- append where clause
         select_query = select_query .. " " .. self._where(where) .. " LIMIT 1"
         log.trace(select_query)
-
         local query = mariadb_prepare(self.conn, select_query)
-        local result = mariadb_await_query(self.conn, query)
-        return mariadb_get_assoc(1)
+        local result = mariadb_query(self.conn, query, callback)
+        return true
     end
 
     -- builds a where clause

@@ -31,7 +31,7 @@ AddEvent("OnPackageStop", function()
 end)
 
 AddCommand("pos", function(player)
-    if not IsAdmin(GetPlayerSteamId(player)) then
+    if not IsAdmin(player) then
         return
     end
     local x, y, z = GetPlayerLocation(player)
@@ -62,7 +62,7 @@ end)
 
 -- console input from client
 AddRemoteEvent("ConsoleInput", function(player, input)
-    if not IsAdmin(GetPlayerSteamId(player)) then
+    if not IsAdmin(player) then
         return
     end
 

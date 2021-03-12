@@ -35,7 +35,7 @@ local Resources = {
 local CurrentlySearching = {}
 
 AddCommand("scrap", function(player, amt)
-    if not IsAdmin(GetPlayerSteamId(player)) then
+    if not IsAdmin(player) then
         return
     end
     local amt = amt or 1

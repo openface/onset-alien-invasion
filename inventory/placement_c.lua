@@ -109,9 +109,9 @@ AddEvent("OnKeyPress", function(key)
             EditMode = EDIT_LOCATION
         end
         SetObjectEditable(EditingObject, EditMode)
-    elseif EditingObject and key == 'Backspace' then
+    elseif key == 'Backspace' then
         -- put back into player inventory
-        CallRemoteEvent("UnplaceItem", EditingObject)
+        CallRemoteEvent("UnplaceItem", ActiveProp.hit_object)
     end
 end)
 

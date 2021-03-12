@@ -112,6 +112,12 @@ AddRemoteEvent("PlaceItem", function(player, uuid, loc)
 end)
 
 AddRemoteEvent("FinalizeObjectPlacement", function(player, object)
+    local item = GetObjectPropertyValue(object, "item")
+    if not ItemConfig[item] or ItemConfig[item].type ~= "placeable" then
+        log.error "Cannot place non-placeable objects"
+        return
+    end
+
     SetObjectPropertyValue(object, "steamid", GetPlayerSteamId(player))
     log.debug(GetPlayerName(player) .. " placed object " .. object)
 end)
@@ -119,17 +125,24 @@ end)
 AddRemoteEvent("UnplaceItem", function(player, object)
     local item = GetObjectPropertyValue(object, "item")
     if not ItemConfig[item] or ItemConfig[item].type ~= "placeable" then
-        log.error("Cannot unplace invalid or non-placeable item!")
+        log.error "Cannot pick up non-placeable objects"
         return
     end
+
+    -- ownership check?
+--[[     local steamid = GetObjectPropertyValue(object, "steamid")
+    if not steamid or steamid ~= tostring(GetPlayerSteamId(player)) then
+        CallRemoteEvent(player, "ShowError", "Cannot pick this up!")
+        return
+    end ]]
 
     RemovePlacedObject(object)
 
     local uuid = RegisterNewItem(item)
     AddToInventory(player, uuid)
 
-    AddPlayerChat(player, ItemConfig[item].name .. " has been added to your inventory.")
-    log.debug(GetPlayerName(player) .. " unplaced object " .. object .. " item " .. item)
+    CallRemoteEvent(player, "ShowMessage", ItemConfig[item].name .. " has been added to your inventory.")
+    log.debug(GetPlayerName(player) .. " unplaced object " .. object .. " item " .. item .. " new uuid: " .. uuid)
 end)
 
 function GetPlacedObjectsByName(item)

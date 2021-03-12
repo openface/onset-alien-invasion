@@ -2,7 +2,6 @@ local VehicleData = {}
 local VehicleSaveTimer
 local VehicleSaveTime = 1000 * 60 * 1 -- 1 min
 
-local VEHICLE_RESPAWN_SECS = 1000 * 60 * 30 -- 30 mins
 local VEHICLE_MAX_HEALTH = 1000
 
 InitTable("vehicles", {
@@ -63,7 +62,7 @@ function SpawnVehicle(modelid, x, y, z, h)
         log.error("Cannot create vehicle: " .. modelid)
         return
     end
-    SetVehicleRespawnParams(vehicle, false, VEHICLE_RESPAWN_SECS, true)
+    SetVehicleRespawnParams(vehicle, false, 0, false)
     SetVehicleHealth(vehicle, VEHICLE_MAX_HEALTH)
     return vehicle
 end

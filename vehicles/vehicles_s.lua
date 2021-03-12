@@ -56,6 +56,10 @@ function SpawnVehicles()
     end)
 end
 
+function GetVehicleInstancesCount()
+    return #table.keys(VehicleData)
+end
+
 function SpawnVehicle(modelid, x, y, z, h)
     local vehicle = CreateVehicle(modelid, x, y, z, h)
     if not vehicle then

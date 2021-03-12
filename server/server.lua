@@ -15,13 +15,14 @@ AddEvent("OnPackageStart", function()
             end
         end
         log.info("===================================================================================")
-        log.info("Objects: " .. #GetAllObjects() .. 
-                " Pickups: " .. #GetAllPickups() .. 
-                " Vehicles: " .. #GetAllVehicles() .. 
-                " Timers: " .. #GetAllTimers() .. 
-                " Players: " .. #GetAllPlayers() .. 
-                " ItemInstances: ".. GetItemInstancesCount() ..
-                " PlacedObjects: ".. GetPlacedObjectsCount())
+        log.info("Objects:          " .. #GetAllObjects() .. 
+                " Pickups:          " .. #GetAllPickups() .. 
+                " Vehicles:         " .. #GetAllVehicles() .. 
+                " VehicleInstances  " .. GetVehicleInstancesCount() ..
+                " Timers:           " .. #GetAllTimers() .. 
+                " Players:          " .. #GetAllPlayers() .. 
+                " ItemInstances:    " .. GetItemInstancesCount() ..
+                " PlacedObjects:    " .. GetPlacedObjectsCount())
         log.info("===================================================================================")
     end, GameSaveTime)
 end)

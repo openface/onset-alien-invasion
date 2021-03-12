@@ -64,6 +64,8 @@ AddEvent("OnPlayerJoin", function(player)
         equipped = {}
     }
 
+    SetPlayerVoiceEnabled(player, true)
+
     -- randomized spawn location
     x, y = randomPointInCircle(SafeZoneLocation.x, SafeZoneLocation.y, 6000)
     SetPlayerSpawnLocation(player, x, y, SafeZoneLocation.z, 180)

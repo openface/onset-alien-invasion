@@ -70,10 +70,12 @@ AddEvent("OnKeyPress", function(key)
         PlacementCooldown = GetTimeSeconds()
         PlacementTimer = CreateTimer(function(starttime)
             local secs = GetTimeSeconds() - starttime
+            local spinner = false
             debug("placement timer: "..starttime.." "..secs)
 
             if secs > 3 then
                 CallEvent("HideSpinner")
+                spinner = false
 
                 local x, y, z, distance = GetMouseHitLocation()
                 if distance > 1000 then
@@ -86,7 +88,8 @@ AddEvent("OnKeyPress", function(key)
                     })
                 end
                 DestroyTimer(PlacementTimer)
-            else
+            elseif not spinner then
+                spinner = true
                 CallEvent("ShowSpinner")
             end
         end, 200, PlacementCooldown)

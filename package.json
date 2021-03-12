@@ -29,11 +29,11 @@
         "inventory/weapons_s.lua",
         "inventory/objects_s.lua",
         "inventory/placement_s.lua",
+        "inventory/storage_s.lua",
+        "inventory/lockpick_s.lua",
 
         "scoreboard/scoreboard_s.lua",
         "pickups/pickups_s.lua",
-        "storage/storage_s.lua",
-        "storage/lockpick_s.lua",
         "doors/doors_s.lua",
         "world/world_s.lua",
         "world/world_garbage_s.lua",
@@ -60,8 +60,8 @@
         "inventory/props_c.lua",
         "inventory/weapons_c.lua",
         "inventory/placement_c.lua",
-        "storage/storage_c.lua",
-        "storage/lockpick_c.lua",
+        "inventory/storage_c.lua",
+        "inventory/lockpick_c.lua",
         "vehicles/vehicles_c.lua"
     ],
     "files": [

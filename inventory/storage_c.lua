@@ -24,7 +24,10 @@ AddEvent('OnKeyPress', function(key)
         SetWebVisibility(StorageUI, WEB_VISIBLE)
         SetWebVisibility(InventoryUI, WEB_HIDDEN)
 
-        CallRemoteEvent("OpenGlovebox", GetPlayerVehicle())
+        -- vehicle storage
+        local vehicle = GetPlayerVehicle()
+        local uuid = GetVehiclePropertyValue(vehicle, 'uuid')
+        CallRemoteEvent("OpenGlovebox", vehicle, uuid)
     end
 end)
 

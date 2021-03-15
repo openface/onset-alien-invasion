@@ -8,23 +8,20 @@ InitTable("storages", {
     },
     type = {
         type = 'char',
-        length = 24
-    },
-    name = {
-        type = 'char',
-        length = 64
-    },
-    locked = {
-        type = 'bool',
-        default = 0
+        length = '12'
     },
     contents = {
         type = 'json'
     },
-}, false) -- true to recreate table
+    locked = {
+        type = 'bool',
+        default = 0
+    }
+}, true) -- true to recreate table
 
-function CreateStorage(uuid, name, locked, contents)
+function MakeStorage(uuid, type, name, locked, contents)
     Storages[uuid] = {
+        type = type,
         name = name,
         locked = locked,
         contents = contents
@@ -45,13 +42,29 @@ AddEvent("UnlockStorage", function(player, ActiveProp)
     CallRemoteEvent(player, "ShowMessage", "Storage is now unlocked!")
 end)
 
+AddRemoteEvent("OpenGlovebox", function(player, vehicle, uuid)
+    CallEvent("OpenStorage", player, {
+        hit_object = vehicle,
+        storage = {
+            uuid = uuid,
+            type = 'vehicle'
+        }
+    })
+end)
+
 AddEvent("OpenStorage", function(player, ActiveProp)
     log.trace("OpenStorage " .. dump(ActiveProp))
 
-    local uuid = GetObjectPropertyValue(ActiveProp.hit_object, 'uuid')
+    local uuid = ActiveProp.storage.uuid
+    local storage_type = ActiveProp.storage.type
 
     if not Storages[uuid] then
         log.error("Cannot open non-storage object!")
+        return
+    end
+
+    if Storages[uuid].type ~= ActiveProp.storage.type then
+        log.error("Invalid storage!")
         return
     end
 

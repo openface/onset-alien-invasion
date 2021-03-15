@@ -19,7 +19,6 @@ AddEvent("OnPackageStart", function()
                 AddGarbageProp(object)
             elseif WorldStorageConfig[v.modelID] then
                 AddStorageProp(object)
-                SpawnStorageLoot(object)
             end
 
             WorldObjects[object] = true

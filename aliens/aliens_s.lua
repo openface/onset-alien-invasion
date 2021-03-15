@@ -195,13 +195,17 @@ AddEvent("OnNPCDeath", function(npc, killer)
         BumpPlayerStat(adjusted_killer, 'alien_kills')
     end
 
+    -- create non-persistant storage on NPC
     local uuid = generate_uuid()
-    SetNPCPropertyValue(npc, 'uuid', uuid) -- storage uuid
-    CreateStorage(uuid, "Alien Corpse", false, GenerateRandomLoot())
 
+    MakeStorage(uuid, 'npc', 'Alien Corpse', false, GenerateRandomLoot())
     SetNPCPropertyValue(npc, "prop", {
         use_label = "Search Corpse",
         event = "OpenStorage",
+        storage = {
+            uuid = uuid,
+            type = 'npc'
+        }
     })
 
     -- despawn after 15 mins

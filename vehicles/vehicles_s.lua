@@ -145,16 +145,6 @@ AddRemoteEvent("ToggleVehicleHood", function(player)
     end
 end)
 
-AddRemoteEvent("OpenGlovebox", function(player, vehicle)
-    CallEvent("OpenStorage", player, {
-        hit_object = vehicle,
-        storage = {
-            name = "Glovebox",
-            type = 'vehicle' 
-        }
-    })
-end)
-
 AddCommand("vehicle", function(player, modelid)
     if not IsAdmin(player) then
         return
@@ -165,18 +155,25 @@ AddCommand("vehicle", function(player, modelid)
     local h = GetPlayerHeading(player)
 
     local vehicle = SpawnVehicle(modelid, x, y, z, h)
-    if vehicle then
-        InsertRow("vehicles", {
-            uuid = uuid,
-            modelid = modelid,
-            location = {
-                x = x,
-                y = y,
-                z = z,
-                h = h
-            }
-        })
+    if not vehicle then
+        log.error("Cannot spawn vehicle")
+        return
     end
+
+    InsertRow("vehicles", {
+        uuid = uuid,
+        modelid = modelid,
+        location = {
+            x = x,
+            y = y,
+            z = z,
+            h = h
+        }
+    })
+
+    SetVehiclePropertyValue(vehicle, "uuid", uuid)
+    MakeStorage(uuid, "vehicle", "Glovebox", false, {})
+
 end)
 
 function GetVehicleHealthPercentage(vehicle)

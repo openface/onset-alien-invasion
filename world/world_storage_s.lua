@@ -22,8 +22,8 @@ local StorageLootSpawnInterval = 1000 * 60 * 15 -- 15 minutes
 
 AddEvent("OnPackageStart", function()
     StorageLootSpawnTimer = CreateTimer(function()
-        for object in pairs(WorldStorageObjects) do
-            SpawnStorageLoot(object)
+        for object,uuid in pairs(WorldStorageObjects) do
+            SpawnStorageLoot(object, uuid)
         end
     end, StorageLootSpawnInterval)
 end)
@@ -47,29 +47,33 @@ function AddStorageProp(object)
         locked = true
     end
 
-    CreateStorage(uuid, 'Storage Container', locked, {})
+    MakeStorage(uuid, 'object', 'Storage Container', locked, {})
 
     WorldStorageObjects[object] = uuid
 
-    SetObjectPropertyValue(object, 'uuid', uuid)
+    --SetObjectPropertyValue(object, 'uuid', uuid)
     SetObjectPropertyValue(object, "prop", {
         use_label = "Open",
         event = "OpenStorage",
         interacts_with = {
             screwdriver = "picklock",
             crowbar = "pry"
+        },
+        storage = {
+            type = "object",
+            uuid = uuid,
         }
     })
+
+    SpawnStorageLoot(object, uuid)
 end
 
-function SpawnStorageLoot(object)
+function SpawnStorageLoot(object, uuid)
     if not IsValidObject(object) then 
         return 
     end
 
-    local uuid = GetObjectPropertyValue(object, "uuid")
-
-    log.debug("Spawning new loot for storage "..GetObjectModel(object).. " object ".. object .. " uuid ".. uuid)
+    log.debug("Spawning new loot for storage "..GetObjectModel(object).. " object ".. object .. " uuid "..uuid)
     local items = table.keys(ItemConfig)
     local random_items = getRandomSample(items, math.random(0, 2))
 
@@ -84,7 +88,6 @@ function SpawnStorageLoot(object)
         })
     end
     --log.trace(dump(random_content))
-
 
     -- unregister all existing items
     local old_storage = Storages[uuid].contents

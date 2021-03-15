@@ -152,7 +152,7 @@ AddRemoteEvent("UnplaceItem", function(player, object)
     RemovePlacedObject(object)
 
     local uuid = RegisterNewItem(item)
-    AddToInventory(player, uuid)
+    AddItemInstanceToInventory(player, uuid)
 
     CallRemoteEvent(player, "ShowMessage", ItemConfig[item].name .. " has been added to your inventory.")
     log.debug(GetPlayerName(player) .. " unplaced object " .. object .. " item " .. item .. " new uuid: " .. uuid)

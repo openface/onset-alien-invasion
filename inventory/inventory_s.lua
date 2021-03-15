@@ -63,15 +63,15 @@ function AddToInventoryByName(player, item, amount)
     local inventory_item = GetItemFromInventoryByName(player, item)
     if inventory_item then
         -- add to existing item stack
-        AddToInventory(player, inventory_item.uuid, amount)
+        AddItemInstanceToInventory(player, inventory_item.uuid, amount)
     else
         -- add new item
-        AddToInventory(player, RegisterNewItem(item), amount)
+        AddItemInstanceToInventory(player, RegisterNewItem(item), amount)
     end
 end
 
 -- add unique item to inventory
-function AddToInventory(player, uuid, amount)
+function AddItemInstanceToInventory(player, uuid, amount)
     local item = GetItemInstance(uuid)
     if not ItemConfig[item] then
         log.error("Invalid item " .. item)
@@ -210,7 +210,7 @@ AddRemoteEvent("DropItemFromInventory", function(player, uuid, forward_vector)
         RemoveFromInventory(player, uuid)
 
         -- spawn object near player
-        CreatePickupNearPlayer(player, item, forward_vector)
+        CreateItemInstancePickupNearPlayer(player, uuid, forward_vector)
 
         CallRemoteEvent(player, "ShowMessage", ItemConfig[item].name .. " has been dropped")
     end)

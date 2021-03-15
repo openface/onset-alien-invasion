@@ -118,7 +118,7 @@ function AttachObjectToPlayer(player, uuid)
         SetObjectScale(attached_object, ItemConfig[item].scale.x, ItemConfig[item].scale.y, ItemConfig[item].scale.z)
     end
 
-    SetObjectPropertyValue(attached_object, "_name", item)
+    --SetObjectPropertyValue(attached_object, "item", item)
     SetObjectAttached(attached_object, ATTACH_PLAYER, player, ItemConfig[item].attachment['x'],
         ItemConfig[item].attachment['y'], ItemConfig[item].attachment['z'], ItemConfig[item].attachment['rx'],
         ItemConfig[item].attachment['ry'], ItemConfig[item].attachment['rz'], ItemConfig[item].attachment['bone'])

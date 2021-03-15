@@ -11,11 +11,22 @@ AddCommand("item", function(player, item)
     if not IsAdmin(player) then
         return
     end
-    CreatePickupNearPlayer(player, item)
+    local uuid = RegisterNewItem(item)
+    CreateItemInstancePickupNearPlayer(player, uuid)
 end)
 
--- creates a new object or weapon near given player
-function CreatePickupNearPlayer(player, item, forward_vector)
+-- creates an existing item by uuid near given player
+function CreateItemInstancePickupNearPlayer(player, uuid, forward_vector)
+    local item = GetItemInstance(uuid)
+    if not item then
+        log.error("Unknown item "..uuid)
+        return
+    end
+    if not ItemConfig[item] then
+        log.debug("Invalid object " .. item)
+        return
+    end
+
     local x, y, z = GetPlayerLocation(player)
     if forward_vector then
         x = x + (forward_vector.vx * 150)
@@ -24,18 +35,14 @@ function CreatePickupNearPlayer(player, item, forward_vector)
         -- random location around player
         x, y = randomPointInCircle(x, y, 150)
     end
-    CreateObjectPickup(item, x, y, z - 75)
-end
 
-function CreateObjectPickup(item, x, y, z)
-    if not ItemConfig[item] then
-        log.debug("Invalid object " .. item)
-        return
-    end
-    log.debug("Creating object pickup " .. item .. " modelid " .. ItemConfig[item].modelid .. " type " .. ItemConfig[item].type)
+    z = z - 75
+
+    log.debug("Creating object pickup " .. item .. " modelid " .. ItemConfig[item].modelid .. " type " .. ItemConfig[item].type .. " uuid "..uuid)
 
     local pickup = CreatePickup(ItemConfig[item].modelid, x, y, z)
-    SetPickupPropertyValue(pickup, '_name', item)
+    SetPickupPropertyValue(pickup, 'item', item)
+    SetPickupPropertyValue(pickup, 'uuid', uuid)
     SetPickupPropertyValue(pickup, '_text', CreateText3D(ItemConfig[item].name, 8, x, y, z + 100, 0, 0, 0))
     if ItemConfig[item].scale ~= nil then
         SetPickupScale(pickup, ItemConfig[item].scale.x, ItemConfig[item].scale.y, ItemConfig[item].scale.z)
@@ -53,7 +60,7 @@ function DestroyObjectPickup(pickup)
 end
 
 AddEvent("OnPlayerPickupHit", function(player, pickup)
-    local item = GetPickupPropertyValue(pickup, '_name')
+    local item = GetPickupPropertyValue(pickup, 'item')
     if item == nil then
         return
     end
@@ -78,7 +85,9 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
     CallRemoteEvent(player, "ShowMessage", "You have picked up a "..ItemConfig[item].name)
 
     -- adds to player inventory and syncs
-    AddToInventoryByName(player, item)
+    local uuid = GetPickupPropertyValue(pickup, 'uuid')
+
+    AddItemInstanceToInventory(player, uuid)
 
     DestroyText3D(GetPickupPropertyValue(pickup, '_text'))
     DestroyPickup(pickup)

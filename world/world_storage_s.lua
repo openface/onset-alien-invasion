@@ -37,6 +37,8 @@ AddEvent("OnPackageStop", function()
 end)
 
 function AddStorageProp(object)
+    local uuid = generate_uuid()
+
     local locked
     -- 1 in 5 chance of being locked
     if math.random(1,5) == 1 then
@@ -44,26 +46,30 @@ function AddStorageProp(object)
     else
         locked = true
     end
-    WorldStorageObjects[object] = true
+
+    CreateStorage(uuid, 'Storage Container', locked, {})
+
+    WorldStorageObjects[object] = uuid
+
+    SetObjectPropertyValue(object, 'uuid', uuid)
     SetObjectPropertyValue(object, "prop", {
         use_label = "Open",
         event = "OpenStorage",
         interacts_with = {
             screwdriver = "picklock",
             crowbar = "pry"
-        },
-        storage = {
-            type = 'object',
-            name = "Storage Container",
-            locked = false,
-        },
+        }
     })
 end
 
 function SpawnStorageLoot(object)
-    if not IsValidObject(object) then return end
+    if not IsValidObject(object) then 
+        return 
+    end
 
-    log.debug("Spawning new loot for storage "..GetObjectModel(object).. " object ".. object)
+    local uuid = GetObjectPropertyValue(object, "uuid")
+
+    log.debug("Spawning new loot for storage "..GetObjectModel(object).. " object ".. object .. " uuid ".. uuid)
     local items = table.keys(ItemConfig)
     local random_items = getRandomSample(items, math.random(0, 2))
 
@@ -79,13 +85,14 @@ function SpawnStorageLoot(object)
     end
     --log.trace(dump(random_content))
 
+
     -- unregister all existing items
-    local old_storage = GetObjectStorage(object, 'object')
+    local old_storage = Storages[uuid].contents
     if old_storage then
         for index, item in ipairs(old_storage) do
             UnregisterItemInstance(item.uuid)
         end
     end
 
-    ReplaceStorageContents(object, 'object', random_content)
+    ReplaceStorageContents(uuid, random_content)
 end

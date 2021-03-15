@@ -195,14 +195,13 @@ AddEvent("OnNPCDeath", function(npc, killer)
         BumpPlayerStat(adjusted_killer, 'alien_kills')
     end
 
-    SpawnCorpseLoot(npc)
+    local uuid = generate_uuid()
+    SetNPCPropertyValue(npc, 'uuid', uuid) -- storage uuid
+    CreateStorage(uuid, "Alien Corpse", false, GenerateRandomLoot())
+
     SetNPCPropertyValue(npc, "prop", {
         use_label = "Search Corpse",
         event = "OpenStorage",
-        storage = {
-            type = 'npc',
-            name = "Alien Corpse",
-        }
     })
 
     -- despawn after 15 mins
@@ -213,10 +212,7 @@ AddEvent("OnNPCDeath", function(npc, killer)
     end)
 end)
 
-function SpawnCorpseLoot(npc)
-    if not IsValidNPC(npc) then return end
-
-    log.debug("Spawning new loot for NPC: "..npc)
+function GenerateRandomLoot()
     local items = table.keys(ItemConfig)
     local random_items = getRandomSample(items, math.random(0, 2))
 
@@ -230,8 +226,7 @@ function SpawnCorpseLoot(npc)
             used = 0
         })
     end
-    --log.trace(dump(random_content))
-    ReplaceStorageContents(npc, 'npc', random_content)
+    return random_content
 end
 
 function SetAlienTarget(npc, player)

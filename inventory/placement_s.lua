@@ -13,14 +13,11 @@ InitTable("placed_items", {
     location = {
         type = 'json'
     },
-    storage = {
-        type = 'json'
-    },
     steamid = {
         type = 'char',
         length = 17,
     },
-}, false) -- true to recreate table
+}, true) -- true to recreate table
 
 AddEvent("OnPackageStart", function()
     log.info("Creating placed items....")
@@ -45,13 +42,13 @@ function onLoadPlacedItems()
 
         SetObjectPropertyValue(object, "prop", ItemConfig[item].prop)
 
-        -- setup items in storage
+--[[         -- setup items in storage
         local storage = json_decode(row['storage'])
         for i, item in ipairs(storage) do
             SetItemInstance(item.uuid, item.item)
         end
         SetObjectPropertyValue(object, "storage", storage)
-
+ ]]
 
         PlacedObjects[object] = {
             uuid = row['uuid'],
@@ -119,7 +116,6 @@ AddRemoteEvent("PlaceItem", function(player, uuid, loc)
             y = loc.y,
             z = loc.z
         },
-        storage = {}, -- todo
         steamid = steamid,
     })
 end)

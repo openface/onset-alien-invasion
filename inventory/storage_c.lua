@@ -69,6 +69,6 @@ function OpenStorageTimer(loc)
 end
 
 --
-AddEvent("UpdateStorage", function(object, storage_type, data)
-    CallRemoteEvent("UpdateStorage", object, storage_type, data)
+AddEvent("UpdateStorage", function(uuid, data)
+    CallRemoteEvent("UpdateStorage", uuid, data)
 end)

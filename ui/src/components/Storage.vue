@@ -1,7 +1,7 @@
 <template>
     <div id="container">
         <div class="section">
-            <div id="title">{{ storage_name }}</div>
+            <div id="title">{{ name }}</div>
             <div class="storage_items">
                 <drop class="square" v-for="slot in MAX_STORAGE_SLOTS" :key="slot" mode="cut" @drop="onDropToStorageSlot(slot, $event)" :accepts-data="CanDropToStorage">
                     <drag v-if="getItemByStorageSlot(slot)" @cut="onCutStorage" :data="getItemByStorageSlot(slot)" :key="getItemByStorageSlot(slot).uuid">
@@ -41,9 +41,8 @@ export default {
     },
     data() {
         return {
-            storage_name: null,
-            object: null,
-            type: null,
+            name: null,
+            uuid: null,
             storage_items: [],
             inventory_items: [],
         };
@@ -59,9 +58,8 @@ export default {
             // todo: check storage limits
         },
         SetStorageData: function(data) {
-            this.storage_name = data.storage_name;
-            this.storage_object = data.storage_object;
-            this.storage_type = data.storage_type;
+            this.uuid = data.uuid;
+            this.name = data.name;
 
             this.storage_items = data.storage_items;
             this.inventory_items = data.inventory_items;
@@ -77,7 +75,7 @@ export default {
                     slot: item.slot,
                 };
             });
-            this.CallEvent("UpdateStorage", this.storage_object, this.storage_type, JSON.stringify(data));
+            this.CallEvent("UpdateStorage", this.uuid, JSON.stringify(data));
         },
         onCutStorage: function(e) {
             window.console.log("onCutStorage:", e.data);
@@ -146,9 +144,8 @@ export default {
 
         if (!this.InGame) {
             this.EventBus.$emit("SetStorageData", {
-                storage_object: 666,
-                storage_type: "object",
-                storage_name: "Crate",
+                uuid: "60cfcd63-74ab-4127-ab44-debc2bb3b015",
+                name: "Crate",
                 storage_items: [
                 ],
                 inventory_items: [

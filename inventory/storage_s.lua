@@ -1,3 +1,36 @@
+Storages = {}
+
+InitTable("storages", {
+    uuid = {
+        type = 'char',
+        length = 36,
+        unique = true
+    },
+    type = {
+        type = 'char',
+        length = 24
+    },
+    name = {
+        type = 'char',
+        length = 64
+    },
+    locked = {
+        type = 'bool',
+        default = 0
+    },
+    contents = {
+        type = 'json'
+    },
+}, false) -- true to recreate table
+
+function CreateStorage(uuid, name, locked, contents)
+    Storages[uuid] = {
+        name = name,
+        locked = locked,
+        contents = contents
+    }
+end
+
 AddEvent("UnlockStorage", function(player, ActiveProp)
     log.trace("UnlockStorage", ActiveProp.hit_object)
 
@@ -15,40 +48,27 @@ end)
 AddEvent("OpenStorage", function(player, ActiveProp)
     log.trace("OpenStorage " .. dump(ActiveProp))
 
-    if not ActiveProp.storage or not ActiveProp.hit_object then
+    local uuid = GetObjectPropertyValue(ActiveProp.hit_object, 'uuid')
+
+    if not Storages[uuid] then
         log.error("Cannot open non-storage object!")
         return
     end
 
-    if ActiveProp.storage.locked then
+    if Storages[uuid].locked then
         CallRemoteEvent(player, "ShowError", "Locked")
         return
     end
 
-    log.info(GetPlayerName(player) .. " opens storage object " .. ActiveProp.hit_object .. " type " ..
-                 ActiveProp.storage.type)
+    log.info(GetPlayerName(player) .. " opens storage object " .. ActiveProp.hit_object)
 
-    local x, y, z
-    local storage_items
-
-    if ActiveProp.storage.type == 'vehicle' then
-        x, y, z = GetVehicleLocation(ActiveProp.hit_object)
-        storage_items = GetVehiclePropertyValue(ActiveProp.hit_object, "storage") or {}
-    elseif ActiveProp.storage.type == 'npc' then
-        x, y, z = GetNPCLocation(ActiveProp.hit_object)
-        storage_items = GetNPCPropertyValue(ActiveProp.hit_object, "storage") or {}
-    else
-        x, y, z = GetObjectLocation(ActiveProp.hit_object)
-        storage_items = GetObjectPropertyValue(ActiveProp.hit_object, "storage") or {}
-    end
-
+    local x, y, z = GetPlayerLocation(player)
     PlaySoundSync("sounds/storage_open.wav", x, y, z)
 
+    local storage_items = Storages[uuid].contents or {}
     local _send = {
-        storage_object = ActiveProp.hit_object,
-        storage_type = ActiveProp.storage.type,
-        storage_name = ActiveProp.storage.name,
-
+        uuid = uuid,
+        name = Storages[uuid].name,
         storage_items = storage_items,
         inventory_items = {}
     }
@@ -79,14 +99,14 @@ end)
 
 -- updates storage from storage UI sorting
 -- [1] = { ["quantity"] = 1,["index"] = 1,["item"] = axe,}
-AddRemoteEvent("UpdateStorage", function(player, object, storage_type, data)
-    log.trace("UpdateStorage", object, storage_type, dump(data))
-    ReplaceStorageContents(object, storage_type, json_decode(data))
+AddRemoteEvent("UpdateStorage", function(player, uuid, data)
+    log.trace("UpdateStorage", uuid, dump(data))
+    ReplaceStorageContents(uuid, json_decode(data))
 end)
 
 -- storage type is either 'object' or 'vehicle' or 'npc'
-function ReplaceStorageContents(object, storage_type, data)
-    local old_storage = GetObjectStorage(object, storage_type)
+function ReplaceStorageContents(uuid, data)
+    local old_storage = Storages[uuid].contents
 
     -- UnregisterItemInstance(item.uuid)
 
@@ -109,37 +129,6 @@ function ReplaceStorageContents(object, storage_type, data)
         end
     end
 
-    SetObjectStorage(object, storage_type, new_storage)
-
-    if storage_type == 'object' then
-        -- make sure it's a placed object 
-        -- world storage doesn't persist!
-        local po = PlacedObjects[object]
-        if po then
-            UpdateRows("placed_items", { storage = new_storage }, { uuid = po.uuid })
-        end
-    end
-end
-
-function GetObjectStorage(object, storage_type)
-    if storage_type == 'vehicle' then
-        return GetVehiclePropertyValue(object, "storage")
-    elseif storage_type == 'npc' then
-        return GetNPCPropertyValue(object, "storage")
-    else
-        return GetObjectPropertyValue(object, "storage")
-    end
-end
-
-function SetObjectStorage(storage_object, storage_type, data)
-    if storage_type == 'vehicle' then
-        SetVehiclePropertyValue(storage_object, "storage", data)
-    elseif storage_type == 'npc' then
-        SetNPCPropertyValue(storage_object, "storage", data)
-    elseif storage_type == 'object' then
-        SetObjectPropertyValue(storage_object, "storage", data)
-    else
-        log.error("Unknown storage type: " .. storage_type)
-    end
+    Storages[uuid].contents = new_storage
 end
 

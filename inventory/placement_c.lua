@@ -59,7 +59,7 @@ AddEvent("OnKeyRelease", function(key)
         end
 
         if EditingObject then
-            StopEditingObject()
+            FinishEditingObject()
         end
     end
 end)
@@ -149,18 +149,20 @@ function SelectEditableObject(object)
     SetInputMode(INPUT_GAMEANDUI)
     ShowMouseCursor(true)
 
-    local x, y, z = GetObjectLocation(EditingObject)
-    cancel_edit_timer = CreateTimer(CancelEditTimer, 1000, x, y, z)
+    cancel_edit_timer = CreateTimer(CancelEditTimer, 1000)
 end
 
-function StopEditingObject()
+function FinishEditingObject()
     SetObjectEditable(EditingObject, EDIT_NONE)
     SetObjectOutline(EditingObject, false)
 
     SetInputMode(INPUT_GAME)
     ShowMouseCursor(false)
 
-    CallRemoteEvent("FinalizeObjectPlacement", EditingObject)
+    local x,y,z = GetObjectLocation(EditingObject)
+    local rx,ry,rz = GetObjectRotation(EditingObject)
+
+    CallRemoteEvent("UpdateObjectPlacement", EditingObject, x, y, z, rx, ry, rz)
 
     EditingObject = nil
 end
@@ -179,11 +181,11 @@ function CancelEditingObject()
 end
 
 -- timer used to cancel object placement if player walks away
-function CancelEditTimer(x, y, z)
+function CancelEditTimer()
     if not EditingObject then
         return
     end
-
+    local x, y, z = GetObjectLocation(EditingObject)
     local px, py, pz = GetPlayerLocation()
     if GetDistance3D(px, py, pz, x, y, z) > 1500 then
         AddPlayerChat("You are too far away to edit the object!")

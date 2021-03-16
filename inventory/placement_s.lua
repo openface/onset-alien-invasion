@@ -13,6 +13,9 @@ InitTable("placed_items", {
     location = {
         type = 'json'
     },
+    rotation = {
+        type = 'json'
+    },
     storage = {
         type = 'json'
     },
@@ -31,8 +34,8 @@ function onLoadPlacedItems()
     for i=1, mariadb_get_row_count() do
         local row = mariadb_get_assoc(i)
         local item = row['item']
-        local loc = json_decode(row['location'])
-    
+
+        local loc = json_decode(row['location'])    
         local object = CreateObject(ItemConfig[item].modelid, loc.x, loc.y, loc.z)
         if not object then
             log.error("Cannot create placed item: "..item)
@@ -44,6 +47,10 @@ function onLoadPlacedItems()
         SetObjectPropertyValue(object, "steamid", row['steamid'])
 
         SetObjectPropertyValue(object, "prop", ItemConfig[item].prop)
+
+        -- rotation
+        local rot = json_decode(row['rotation'])
+        SetObjectRotation(object, rot.x, rot.y, rot.z)
 
         -- setup items in storage
         local storage = json_decode(row['storage'])
@@ -111,6 +118,8 @@ AddRemoteEvent("PlaceItem", function(player, uuid, loc)
 
     CallEvent("items:" .. item .. ":placed", player, object)
 
+    local rx, ry, rz = GetObjectRotation(object)
+
     InsertRow("placed_items", {
         uuid = object_uuid,
         item = item,
@@ -119,19 +128,43 @@ AddRemoteEvent("PlaceItem", function(player, uuid, loc)
             y = loc.y,
             z = loc.z
         },
+        rotation = {
+            x = rx,
+            y = ry,
+            z = rz
+        },
         storage = {}, -- todo
         steamid = steamid,
     })
 end)
 
-AddRemoteEvent("FinalizeObjectPlacement", function(player, object)
+AddRemoteEvent("UpdateObjectPlacement", function(player, object, x, y, z, rx, ry, rz)
     local item = GetObjectPropertyValue(object, "item")
     if not ItemConfig[item] or ItemConfig[item].type ~= "placeable" then
         log.error "Cannot place non-placeable objects"
         return
     end
 
+    local po = PlacedObjects[object]
+    if not po.uuid then
+        log.error "Cannot place unknown item"
+        return
+    end
+
     SetObjectPropertyValue(object, "steamid", GetPlayerSteamId(player))
+
+    UpdateRows("placed_items", {
+        location = {
+            x = x,
+            y = y,
+            z = z
+        },
+        rotation = {
+            x = rx,
+            y = ry,
+            z = rz
+        }
+    }, { uuid = po.uuid })
     log.debug(GetPlayerName(player) .. " placed object " .. object)
 end)
 

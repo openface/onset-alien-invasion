@@ -33,8 +33,10 @@ function ApplyAlienSkin(npc)
 end
 
 AddRemoteEvent("AlienMelee", function(npc)
-    local x, y, z = GetNPCLocation(npc)
-    SetSoundVolume(CreateSound3D("client/sounds/alien_grunt.wav", x, y, z, 6000.0), 0.6)
+    if Random(1, 2) == 1 then
+        local x, y, z = GetNPCLocation(npc)
+        SetSoundVolume(CreateSound3D("client/sounds/alien_grunt.wav", x, y, z, 6000.0), 1.0)
+    end
 end)
 
 AddRemoteEvent("AlienAttacking", function(npc)

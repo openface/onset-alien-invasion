@@ -28,7 +28,6 @@ ReplaceObjectModelMesh(20030, "/AlienInvasion/Meshes/SM_SleepingBag-Open-Green")
 -- Lockpick
 ReplaceObjectModelMesh(20100, "/AlienInvasion/Meshes/MSH_Screwdriver_01")
 
-
 -- Animations
 LoadPak("SurvivalAnimations", "/SurvivalAnimations/", "../../../OnsetModding/Plugins/SurvivalAnimations/Content/")
 

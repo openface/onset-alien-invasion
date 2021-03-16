@@ -158,13 +158,14 @@ AddEvent("OnPlayerWeaponShot",
     end)
 
 AddEvent("OnNPCDamage", function(npc, damagetype, amount)
-    if math.random(1, 2) == 1 then
-        SetNPCAnimation(npc, 900, false) -- hit
-    else
-        SetNPCAnimation(npc, 904, false) -- stun
-    end
-
     AlienHitCooldown[npc] = os.time()
+    if (os.time() - (AlienHitCooldown[npc] or 0) > 5) then
+        if math.random(1, 2) == 1 then
+            SetNPCAnimation(npc, 900, false) -- hit
+        else
+            SetNPCAnimation(npc, 904, false) -- stun
+        end
+    end
 
     local health = GetNPCHealth(npc) - 1000
     log.debug("alien health: " .. health)
@@ -186,6 +187,8 @@ function KillAlien(npc)
 end
 
 AddEvent("OnNPCDeath", function(npc, killer)
+    AlienHitCooldown[npc] = nil
+    
     local shotby = GetNPCPropertyValue(npc, "shotby")
     -- hack to get around a bug where OnNPCDeath 
     -- doesn't always report the killer

@@ -30,6 +30,7 @@ ItemConfig["landmine"] = {
 -- TODO: use hit event instead of timer!
 
 local LandmineTimer
+local BOOM_RANGE = 50
 
 AddEvent("OnPackageStart", function()
     LandmineTimer = CreateTimer(function()
@@ -37,7 +38,7 @@ AddEvent("OnPackageStart", function()
         local landmine_objects = GetPlacedObjectsByName('landmine')
         for _, object in pairs(landmine_objects) do
             local x, y, z = GetObjectLocation(object)
-            local players_in_range = GetPlayersInRange2D(x, y, 300)
+            local players_in_range = GetPlayersInRange2D(x, y, BOOM_RANGE)
             if next(players_in_range) ~= nil then
                 -- boom
                 CreateExplosion(9, x, y, z, true, 1500.0, 1000000.0)

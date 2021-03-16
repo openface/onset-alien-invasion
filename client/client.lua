@@ -97,9 +97,9 @@ AddEvent("OnPlayerTalking", function(player)
     SetPlayerLipMovement(player)
 end)
 
-AddEvent("TakeDamage", function()
+AddRemoteEvent("TakeDamage", function()
     InvokeDamageFX(1000)
-    SetSoundVolume(CreateSound("client/sounds/pain.mp3"), 1)
+    SetSoundVolume(CreateSound("client/sounds/pain.mp3"), 1.0)
 end)
 
 AddRemoteEvent("ClientSetTime", function(time)

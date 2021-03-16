@@ -103,7 +103,6 @@ function IsPlayerAttackable(player)
     local x, y, z = GetPlayerLocation(player)
     local distance = GetDistance3D(x, y, z, SafeZoneLocation.x, SafeZoneLocation.y, SafeZoneLocation.z)
     if distance < SafeZoneRange then
-        log.debug(GetPlayerName(player) .. " is in safe zone")
         return false
     end
 

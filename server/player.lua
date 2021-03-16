@@ -90,10 +90,8 @@ AddEvent("OnPlayerSpawn", function(player)
 
     -- reset PlayerData
     if PlayerData[player] then
-        PlayerData[player] = {
-            inventory = {},
-            equipped = {}
-        }
+        PlayerData[player].inventory = {}
+        PlayerData[player].equipped = {}
     end
 end)
 

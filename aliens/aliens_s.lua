@@ -238,6 +238,11 @@ function SpawnCorpseLoot(npc)
 end
 
 function SetAlienTarget(npc, player)
+    local existing_target = AlienTargets[npc]
+    if existing_target == player then
+        return
+    end
+
     if not IsPlayerAttackable(player) then
         return
     end
@@ -245,12 +250,13 @@ function SetAlienTarget(npc, player)
     SetNPCPropertyValue(npc, 'returning', nil)
 
     CallRemoteEvent(player, 'AlienAttacking', npc)
+    AlienTargets[npc] = player
+    log.trace("alien targetting player ", player)
 
     local vehicle = GetPlayerVehicle(player)
     if vehicle == 0 then
         -- target is on foot
         log.debug("NPC (ID " .. npc .. ") targets player " .. GetPlayerName(player))
-        AlienTargets[npc] = player
 
         -- alien has a new target
         -- SetNPCFollowPlayer(npc, player, math.random(325, 360)) -- random speed
@@ -258,7 +264,6 @@ function SetAlienTarget(npc, player)
     else
         -- target is in a vehicle
         log.debug("NPC (ID " .. npc .. ") targets player in vehicle: " .. GetPlayerName(player))
-        AlienTargets[npc] = player
 
         -- alien has a new target vehicle
         -- SetNPCFollowVehicle(npc, vehicle, 400)
@@ -289,14 +294,14 @@ function ResetAlien(npc)
 
     -- alien can attack, let's go
     local player = GetNearestPlayer(npc)
-    if not player or AlienTargets[player] then
+    if not player then
         -- invalid player or player already the target
         return
     end
 
     if IsPlayerAttackable(player) then
         -- we found a nearby target
-        EngageTarget(npc, player)
+        SetAlienTarget(npc, player)
     elseif (GetNPCPropertyValue(npc, 'target') == player) then
         log.debug("NPC (ID " .. npc .. ") target " .. GetPlayerName(player) .. " is no longer attackable")
         -- target is out of range, stop following
@@ -340,25 +345,15 @@ AddEvent("OnVNPCReachTargetFailed", function(npc)
         log.error("NPC (ID " .. npc .. ") cannot return.  Despawning...")
         DestroyNPC(npc)
         Aliens[npc] = nil
-        AlienTargets[npc] = nil
         return
     end
 
     local target = AlienTargets[npc]
-    if not target then
-        log.error("Alien is confused.  Despawning.")
-        DestroyNPC(npc)
-        Aliens[npc] = nil
-        return
-    end
-
-    if IsPlayerDead(target) or GetPlayerHealth(target) <= 0 then
-        Delay(8000, function()
-            AlienReturn(npc)
-        end)
-    else
+    if target then
         CallRemoteEvent(target, 'AlienNoLongerAttacking', npc)
     end
+
+    log.error("Alien is stuck.")
 end)
 
 -- kills players when reached
@@ -394,26 +389,26 @@ AddEvent("OnVNPCReachTarget", function(npc)
         return
     end
 
-    EngageTarget(npc, target)
-end)
-
--- close range to target!
-function EngageTarget(npc, player)
     local x, y, z = GetNPCLocation(npc)
-    local px, py, pz = GetPlayerLocation(player)
+    local px, py, pz = GetPlayerLocation(target)
     local dist = GetDistance3D(x, y, z, px, py, pz)
 
     if dist > 200 then
-        SetAlienTarget(npc, player)
-        return
+        -- too far away, set new target
+        AlienTargets[npc] = nil
+        SetAlienTarget(npc, target)
+    else
+        -- close range
+        log.debug("alien melee")
+        VNPCS.StopVNPC(npc)
+        AlienTargets[npc] = nil
+
+        SetNPCAnimation(npc, 903, false)
+        Delay(2000, function()
+            AttemptHitPlayer(npc, target)
+        end)
     end
-    log.debug("alien melee")
-    VNPCS.StopVNPC(npc)
-    SetNPCAnimation(npc, 903, false)
-    Delay(2000, function()
-        AttemptHitPlayer(npc, player)
-    end)
-end
+end)
 
 function AttemptHitPlayer(npc, player)
     local x, y, z = GetNPCLocation(npc)
@@ -444,7 +439,6 @@ function AttemptHitPlayer(npc, player)
     Delay(1000, function()
         SetPlayerAnimation(player, "STOP")
     end)
-
 end
 
 -- return alien back to starting position

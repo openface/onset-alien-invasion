@@ -289,7 +289,8 @@ function ResetAlien(npc)
 
     -- alien can attack, let's go
     local player = GetNearestPlayer(npc)
-    if not player then
+    if not player or AlienTargets[player] then
+        -- invalid player or player already the target
         return
     end
 
@@ -418,7 +419,7 @@ function AttemptHitPlayer(npc, player)
     local x, y, z = GetNPCLocation(npc)
     local px, py, pz = GetPlayerLocation(player)
     local dist = GetDistance3D(x, y, z, px, py, pz)
-    if dist > 300 then
+    if dist > 150 then
         log.debug("alien missed")
         SetAlienTarget(npc, player)
         return
@@ -439,6 +440,11 @@ function AttemptHitPlayer(npc, player)
     end
 
     CallRemoteEvent(player, "TakeDamage")
+    SetPlayerAnimation(player, 900)
+    Delay(1000, function()
+        SetPlayerAnimation(player, "STOP")
+    end)
+
 end
 
 -- return alien back to starting position

@@ -21,14 +21,15 @@ end)
 AddEvent("OnNPCStreamIn", function(npc)
     local type = GetNPCPropertyValue(npc, "type")
 
-    if (type == "alien") then
-        ApplyAlienSkin(npc)
+    if type ~= "alien" then
+        return
     end
+    ApplyAlienSkin(npc)
 end)
 
 function ApplyAlienSkin(npc)
     SetNPCClothingPreset(npc, Random(23, 24))
-    --SetNPCOutline(npc, true)
+    -- SetNPCOutline(npc, true)
 end
 
 AddRemoteEvent("AlienAttacking", function(npc)
@@ -39,15 +40,15 @@ AddRemoteEvent("AlienAttacking", function(npc)
 
     SpottedBy[npc] = true
 
-    --debug("SpottedBy:"..dump(SpottedBy))
+    -- debug("SpottedBy:"..dump(SpottedBy))
 
     -- chance to make noises
-    if Random(1,7) == 7 then
+    if Random(1, 7) == 7 then
         -- alien attack sound
-        Delay(Random(1,5000), function()
+        Delay(Random(1, 5000), function()
             local x, y, z = GetNPCLocation(npc)
             if x and y and z then
-                if Random(1,2) == 1 then
+                if Random(1, 2) == 1 then
                     SetSoundVolume(CreateSound3D("client/sounds/alien.wav", x, y, z, 6000.0), 0.5)
                 else
                     SetSoundVolume(CreateSound3D("client/sounds/alien_2.wav", x, y, z, 6000.0), 1)
@@ -58,17 +59,17 @@ AddRemoteEvent("AlienAttacking", function(npc)
 end)
 
 function SetSafeAmbience()
-    --SetSoundFadeOut(AmbientSound, 5000, 0.0)
+    -- SetSoundFadeOut(AmbientSound, 5000, 0.0)
     SetSoundVolume(AmbientSound, 0.0)
 end
 
 AddRemoteEvent('AlienNoLongerAttacking', function(npc)
     SpottedBy[npc] = nil
 
-    --debug("SpottedBy:"..dump(SpottedBy))
+    -- debug("SpottedBy:"..dump(SpottedBy))
 
     if next(SpottedBy) == nil then
-        --ShowMessage("You are safe for now")
+        -- ShowMessage("You are safe for now")
         SetSafeAmbience()
     end
 end)

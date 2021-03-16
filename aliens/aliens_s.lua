@@ -9,6 +9,7 @@ local AlienHealth = 100
 local AlienAttackRange = 5000
 local AlienAttackDamage = 50
 local AlienRetargetCooldown = {} -- aliens re-target on every weapon hit w/ cooldown period
+local AlienHitCooldown = {} -- alien attack cooldown after alien takes damage
 local AlienSpawnsEnabled = true
 local AlienSpawnTimer
 local AlienAttackTimer
@@ -159,6 +160,7 @@ AddEvent("OnPlayerWeaponShot",
 AddEvent("OnNPCDamage", function(npc, damagetype, amount)
     if not GetNPCPropertyValue(npc, 'target') then
         SetNPCAnimation(npc, 900, false) -- hit
+        AlienHitCooldown[npc] = os.time()
     end
 
     local health = GetNPCHealth(npc) - 1000
@@ -326,6 +328,7 @@ AddEvent("OnNPCDestroyed", function(npc)
 
     log.info("Despawned alien " .. npc)
     AlienRetargetCooldown[npc] = nil
+    AlienHitCooldown[npc] = nil
     Aliens[npc] = nil
     AlienTargets[npc] = nil
 end)
@@ -393,20 +396,25 @@ AddEvent("OnVNPCReachTarget", function(npc)
     local px, py, pz = GetPlayerLocation(target)
     local dist = GetDistance3D(x, y, z, px, py, pz)
 
+    AlienTargets[npc] = nil
+
     if dist > 200 then
         -- too far away, set new target
-        AlienTargets[npc] = nil
         SetAlienTarget(npc, target)
     else
-        -- close range
-        log.debug("alien melee")
-        VNPCS.StopVNPC(npc)
-        AlienTargets[npc] = nil
+        if (os.time() - (AlienHitCooldown[npc] or 0) > 1) then
 
-        SetNPCAnimation(npc, 903, false)
-        Delay(2000, function()
-            AttemptHitPlayer(npc, target)
-        end)
+            -- close range
+            log.debug("alien melee")
+            VNPCS.StopVNPC(npc)
+
+            SetNPCAnimation(npc, 903, false)
+            Delay(2000, function()
+                AttemptHitPlayer(npc, target)
+            end)
+        else
+            log.debug("alien hit cooldown")
+        end
     end
 end)
 

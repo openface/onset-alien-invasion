@@ -12,13 +12,7 @@ AddEvent("OnPackageStart", function()
     SetSoundVolume(AmbientSound, 0.0)
 
     AmbientSoundTimer = CreateTimer(function()
-        local targetted = false
-        for k, v in pairs(GetStreamedNPC()) do
-            if GetNPCPropertyValue(v, 'target') == GetPlayerId() then
-                targetted = true
-            end
-        end
-        if targetted == false then
+        if next(SpottedBy) == nil then
             SetSafeAmbience()
         end
     end, 10000)

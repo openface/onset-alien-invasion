@@ -118,6 +118,11 @@ function ReplaceStorageContents(object, storage_type, data)
         if po then
             UpdateRows("placed_items", { storage = new_storage }, { uuid = po.uuid })
         end
+    elseif storage_type == 'vehicle' then
+        local vehicle_uuid = VehicleData[object]
+        if vehicle_uuid then
+            UpdateRows("vehicles", { storage = new_storage }, { uuid = vehicle_uuid })
+        end
     end
 end
 

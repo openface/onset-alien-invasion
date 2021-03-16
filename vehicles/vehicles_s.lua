@@ -14,6 +14,9 @@ InitTable("vehicles", {
         type = 'number',
         length = 11
     },
+    storage = {
+        type = 'json'
+    },
     location = {
         type = 'json'
     }
@@ -50,6 +53,13 @@ function SpawnVehicles()
 
             local vehicle = SpawnVehicle(row['modelid'], loc.x, loc.y, loc.z, loc.h)
             if vehicle then
+                -- setup items in storage
+                local storage = json_decode(row['storage'])
+                for i, item in ipairs(storage) do
+                    SetItemInstance(item.uuid, item.item)
+                end
+                SetVehiclePropertyValue(vehicle, "storage", storage)
+
                 VehicleData[vehicle] = row['uuid']
             end
         end
@@ -150,7 +160,7 @@ AddRemoteEvent("OpenGlovebox", function(player, vehicle)
         hit_object = vehicle,
         storage = {
             name = "Glovebox",
-            type = 'vehicle' 
+            type = 'vehicle'
         }
     })
 end)

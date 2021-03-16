@@ -9,7 +9,6 @@ local AlienHealth = 100
 local AlienAttackRange = 5000
 local AlienAttackDamage = 50
 local AlienRetargetCooldown = {} -- aliens re-target on every weapon hit w/ cooldown period
-local AlienHitCooldown = {} -- alien attack cooldown after alien takes damage
 local AlienSpawnsEnabled = true
 local AlienSpawnTimer
 local AlienAttackTimer
@@ -158,13 +157,10 @@ AddEvent("OnPlayerWeaponShot",
     end)
 
 AddEvent("OnNPCDamage", function(npc, damagetype, amount)
-    AlienHitCooldown[npc] = os.time()
-    if (os.time() - (AlienHitCooldown[npc] or 0) > 5) then
-        if math.random(1, 2) == 1 then
-            SetNPCAnimation(npc, 900, false) -- hit
-        else
-            SetNPCAnimation(npc, 904, false) -- stun
-        end
+    if math.random(1, 2) == 1 then
+        SetNPCAnimation(npc, 900, false) -- hit
+    else
+        SetNPCAnimation(npc, 904, false) -- stun
     end
 
     local health = GetNPCHealth(npc) - 1000
@@ -187,8 +183,6 @@ function KillAlien(npc)
 end
 
 AddEvent("OnNPCDeath", function(npc, killer)
-    AlienHitCooldown[npc] = nil
-    
     local shotby = GetNPCPropertyValue(npc, "shotby")
     -- hack to get around a bug where OnNPCDeath 
     -- doesn't always report the killer
@@ -334,7 +328,6 @@ AddEvent("OnNPCDestroyed", function(npc)
 
     log.info("Despawned alien " .. npc)
     AlienRetargetCooldown[npc] = nil
-    AlienHitCooldown[npc] = nil
     Aliens[npc] = nil
     AlienTargets[npc] = nil
 end)
@@ -360,6 +353,7 @@ AddEvent("OnVNPCReachTargetFailed", function(npc)
     local target = AlienTargets[npc]
     if target then
         CallRemoteEvent(target, 'AlienNoLongerAttacking', npc)
+        AlienTargets[npc] = nil
     end
 
     log.error("Alien is stuck.")
@@ -408,19 +402,15 @@ AddEvent("OnVNPCReachTarget", function(npc)
         -- too far away, set new target
         SetAlienTarget(npc, target)
     else
-        if (os.time() - (AlienHitCooldown[npc] or 0) > 1) then
 
-            -- close range
-            log.debug("alien melee")
-            VNPCS.StopVNPC(npc)
+        -- close range
+        log.debug("alien melee")
+        VNPCS.StopVNPC(npc)
 
-            SetNPCAnimation(npc, 903, false)
-            Delay(2000, function()
-                AttemptHitPlayer(npc, target)
-            end)
-        else
-            log.debug("alien hit cooldown")
-        end
+        SetNPCAnimation(npc, 903, false)
+        Delay(1000, function()
+            AttemptHitPlayer(npc, target)
+        end)
     end
 end)
 
@@ -449,7 +439,7 @@ function AttemptHitPlayer(npc, player)
     end
 
     CallRemoteEvent(player, "TakeDamage")
-    SetPlayerAnimation(player, 900)
+    SetPlayerAnimation(player, 904)
     Delay(1000, function()
         SetPlayerAnimation(player, "STOP")
     end)

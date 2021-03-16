@@ -32,6 +32,11 @@ function ApplyAlienSkin(npc)
     -- SetNPCOutline(npc, true)
 end
 
+AddRemoteEvent("AlienMelee", function(npc)
+    local x, y, z = GetNPCLocation(npc)
+    SetSoundVolume(CreateSound3D("client/sounds/alien_grunt.wav", x, y, z, 6000.0), 0.6)
+end)
+
 AddRemoteEvent("AlienAttacking", function(npc)
     if next(SpottedBy) == nil then
         ShowMessage("You have been spotted!")

@@ -407,7 +407,8 @@ AddEvent("OnVNPCReachTarget", function(npc)
         log.debug("alien melee")
         VNPCS.StopVNPC(npc)
 
-        SetNPCAnimation(npc, 903, false)
+        SetNPCAnimation(npc, 903, false) -- punch
+        CallRemoteEvent(target, "AlienMelee", npc)
         Delay(1000, function()
             AttemptHitPlayer(npc, target)
         end)

@@ -158,10 +158,13 @@ AddEvent("OnPlayerWeaponShot",
     end)
 
 AddEvent("OnNPCDamage", function(npc, damagetype, amount)
-    if not GetNPCPropertyValue(npc, 'target') then
+    if math.random(1, 2) == 1 then
         SetNPCAnimation(npc, 900, false) -- hit
-        AlienHitCooldown[npc] = os.time()
+    else
+        SetNPCAnimation(npc, 904, false) -- stun
     end
+
+    AlienHitCooldown[npc] = os.time()
 
     local health = GetNPCHealth(npc) - 1000
     log.debug("alien health: " .. health)

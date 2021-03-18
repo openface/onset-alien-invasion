@@ -1,7 +1,7 @@
 <template>
     <div id="container">
         <div id="inner">
-            <div id="title">AUTO MECHANIC</div>
+            <div id="title">AUTO MECHANIC <a class="close" @click="CloseMechanic()">X</a></div>
             <div class="content">
                 <table>
                     <th colspan="2">Vehicle Stats</th>
@@ -19,36 +19,36 @@
                 <table>
                     <th colspan="2">Damage Inspection</th>
                     <tr>
-                        <td>1</td>
-                        <td>{{ damage['1'] }}</td>
+                        <td>Right Front Wheel</td>
+                        <td>{{ damage['one'] }}</td>
                     </tr>
                     <tr>
-                        <td>2</td>
-                        <td>{{ damage['2'] }}</td>
+                        <td>Front Body</td>
+                        <td>{{ damage['two'] }}</td>
                     </tr>
                     <tr>
-                        <td>3</td>
-                        <td>{{ damage['3'] }}</td>
+                        <td>Rear Body</td>
+                        <td>{{ damage['three'] }}</td>
                     </tr>
                     <tr>
-                        <td>4</td>
-                        <td>{{ damage['4'] }}</td>
+                        <td>Rear Body</td>
+                        <td>{{ damage['four'] }}</td>
                     </tr>
                     <tr>
-                        <td>5</td>
-                        <td>{{ damage['5'] }}</td>
+                        <td>Left Body</td>
+                        <td>{{ damage['five'] }}</td>
                     </tr>
                     <tr>
-                        <td>6</td>
-                        <td>{{ damage['6'] }}</td>
+                        <td>Left Body</td>
+                        <td>{{ damage['six'] }}</td>
                     </tr>
                     <tr>
-                        <td>7</td>
-                        <td>{{ damage['7'] }}</td>
+                        <td>Right Body</td>
+                        <td>{{ damage['seven'] }}</td>
                     </tr>
                     <tr>
-                        <td>8</td>
-                        <td>{{ damage['8'] }}</td>
+                        <td>Rear Right Wheel</td>
+                        <td>{{ damage['eight'] }}</td>
                     </tr>
                 </table>
             </div>
@@ -74,6 +74,9 @@ export default {
             this.health = data.health,
             this.damage = data.damage
         },
+        CloseMechanic: function() {
+            this.CallEvent("CloseMechanic")
+        }
     },
     mounted() {
         this.EventBus.$on("LoadVehicleData", this.LoadVehicleData);
@@ -84,14 +87,14 @@ export default {
                 model_name: "Whatev",
                 health: 100,
                 damage: {
-                    1: 0.0,
-                    2: 0.0,
-                    3: 0.0,
-                    4: 0.0,
-                    5: 0.0,
-                    6: 0.0,
-                    7: 0.0,
-                    8: 0.0,
+                    one: 0.0,
+                    two: 0.0,
+                    three: 0.0,
+                    four: 0.0,
+                    five: 0.0,
+                    six: 0.0,
+                    seven: 0.0,
+                    eight: 0.0,
                 }
             });
         }
@@ -120,6 +123,19 @@ export default {
     font-weight: bold;
     font-family: impact;
     text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
+}
+a.close {
+    color:#fff;
+    font-size:18px;
+    font-family:arial;
+    float:right;
+    background:#1770ff;
+    border-radius:2px;
+    margin-right:10px;
+    padding:0 5px;
+}
+a.close:hover {
+    cursor: pointer;
 }
 .content {
     color:#fff;

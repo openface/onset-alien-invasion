@@ -29,11 +29,47 @@ function CreateMechanic(config)
 end
 
 AddEvent("StartMechanic", function(player)
-    local _send = {
-        ["merchant_items"] = {},
-        ["player_cash"] = 1000 -- TODO
+    local vehicle, dist = GetNearestVehicle(player)
+    if vehicle == 0 or dist > 500 then
+        CallRemoteEvent(player, "ShowError", "Cannot find nearby vehicle!")
+        return
+    end
+
+    local damage = {
+        one = GetVehicleDamage(vehicle, 1),
+        two = GetVehicleDamage(vehicle, 2),
+        three = GetVehicleDamage(vehicle, 3),
+        four = GetVehicleDamage(vehicle, 4),
+        five = GetVehicleDamage(vehicle, 5),
+        six = GetVehicleDamage(vehicle, 6),
+        seven = GetVehicleDamage(vehicle, 7),
+        eight = GetVehicleDamage(vehicle, 8),
     }
-    -- log.debug(dump(json_encode(_send)))
+
+    local _send = {
+        modelid = GetVehicleModel(vehicle),
+        model_name = GetVehicleModelName(vehicle),
+        health = GetVehicleHealth(vehicle),
+        damage = damage
+    }
+
+    log.debug(dump(json_encode(_send)))
     CallRemoteEvent(player, "LoadVehicleData", json_encode(_send))
 end)
 
+function GetNearestVehicle(player)
+	local vehicles = GetStreamedVehiclesForPlayer(player)
+	local found = 0
+	local nearest_dist = 999999.9
+	local x, y, z = GetPlayerLocation(player)
+
+	for _,v in pairs(vehicles) do
+		local x2, y2, z2 = GetVehicleLocation(v)
+		local dist = GetDistance3D(x, y, z, x2, y2, z2)
+		if dist < nearest_dist then
+			nearest_dist = dist
+			found = v
+		end
+	end
+	return found, nearest_dist
+end

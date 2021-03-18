@@ -52,10 +52,12 @@ function AddStorageProp(object)
             screwdriver = "picklock",
             crowbar = "pry"
         },
-        storage = {
-            type = 'object',
-            name = "Storage Container",
-            locked = false,
+        options = {
+            storage = {
+                type = 'object',
+                name = "Storage Container",
+                locked = false,
+            }
         },
     })
 end

@@ -47,7 +47,7 @@ AddEvent("OnGameTick", function()
                         hit_type = hitStruct.type,
                         hit_object = hitObject,
                         item_interaction = item_interaction,
-                        storage = prop.storage
+                        options = prop.options,
                     }
                     -- debug("OBJECT ActiveProp: " .. dump(ActiveProp))
                 end

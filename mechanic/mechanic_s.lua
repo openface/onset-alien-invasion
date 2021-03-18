@@ -5,8 +5,7 @@ AddEvent("OnPackageStart", function()
 
     local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/mechanic/mechanics.json")
     for _, config in pairs(_table) do
-        -- todo: merchant name is hardcoded for now
-        CreateMechanic("Store", config)
+        CreateMechanic(config)
     end
 end)
 
@@ -18,8 +17,8 @@ AddEvent("OnPackageStop", function()
     end
 end)
 
-function CreateMechanic(name, config)
-    log.debug("Creating mechanic: " .. name)
+function CreateMechanic(config)
+    log.debug("Creating mechanic: " .. config.name)
     local object = CreateObject(config.modelID, config.x, config.y, config.z, config.rx, config.ry, config.rz,
                        config.sx, config.sy, config.sz)
     SetObjectPropertyValue(object, "prop", {

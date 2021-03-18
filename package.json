@@ -23,6 +23,7 @@
         "computer/computer_s.lua",
         "workbench/workbench_s.lua",
         "merchant/merchant_s.lua",
+        "mechanic/mechanic_s.lua",
 
         "inventory/inventory_s.lua",
         "inventory/pickups_s.lua",
@@ -54,6 +55,7 @@
         "computer/computer_c.lua",
         "workbench/workbench_c.lua",
         "merchant/merchant_c.lua",
+        "mechanic/mechanic_c.lua",
         "scoreboard/scoreboard_c.lua",
         "inventory/inventory_c.lua",
         "inventory/pickups_c.lua",

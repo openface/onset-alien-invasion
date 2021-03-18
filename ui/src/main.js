@@ -111,6 +111,7 @@ import Storage from "./components/Storage.vue";
 import Hud from "./components/Hud.vue";
 import Workbench from "./components/Workbench.vue";
 import Merchant from "./components/Merchant.vue";
+import Mechanic from "./components/Mechanic.vue";
 import Computer from "./components/Computer.vue";
 import Scoreboard from "./components/Scoreboard.vue";
 import Lockpick from "./components/Lockpick.vue";
@@ -123,6 +124,7 @@ const routes = [
     { path: "/hud", component: Hud, name: "Hud" },
     { path: "/workbench", component: Workbench, name: "Workbench" },
     { path: "/merchant", component: Merchant, name: "Merchant" },
+    { path: "/mechanic", component: Mechanic, name: "Mechanic" },
     { path: "/computer", component: Computer, name: "Computer" },
     { path: "/scoreboard", component: Scoreboard, name: "Scoreboard" },
     { path: "/lockpick", component: Lockpick, name: "Lockpick" },

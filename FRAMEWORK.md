@@ -2,7 +2,7 @@
 
 ## Items
 
-Most item configuration options are optional.  Here is a sample pulled together from various objects:
+Most item configuration options are optional. Here is a sample pulled together from various objects:
 
 ```
 ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
@@ -11,7 +11,7 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
     category = 'Furniture',             -- [required] item category for merchant grouping
     interactions = {
         use = {                         -- for interacting with object in your hand
-            use_label = "Drink", 
+            use_label = "Drink",
             sound = "sounds/drink.wav",
             animation = { name = "DRINKING" },
             event = "DrinkWater"
@@ -39,13 +39,13 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
     auto_equip = true                   -- automatically equip the item when picked up
     price = 150,                        -- cash required to purchase this item at merchant (nil = non-purchasable)
     attachment = {                      -- how to attach this item to player when equipped/using
-        x = -20, 
-        y = 5, 
-        z = 22, 
-        rx = 82, 
-        ry = 180, 
-        rz = 10, 
-        bone = "hand_r" 
+        x = -20,
+        y = 5,
+        z = 22,
+        rx = 82,
+        ry = 180,
+        rz = 10,
+        bone = "hand_r"
     },
     light_component = {                       -- light component to attach to object
         type = "pointlight",            -- pointlight, spotlight, or rectlight
@@ -63,12 +63,12 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
     particle = {                        -- particle to emit for this object
         path = "/Game/Geometry/OldTown/Effects/PS_LanternFire",
         position = {                    -- relative position to object
-            x = 0, 
-            y = 0, 
-            z = 17, 
-            rx = 0, 
-            ry = 0, 
-            rz = 0 
+            x = 0,
+            y = 0,
+            z = 17,
+            rx = 0,
+            ry = 0,
+            rz = 0
         },
     },
     prop = {                            -- creates interactive props (Hit [F] while looking at it)
@@ -88,34 +88,39 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
 ## Inventory Item Types
 
 #### weapon
-- Weapons are their own system, but are loosely integrated into the inventory
-- Can be dropped from inventory
-- Can only carry 2 weapons in slots 2,3.  (slot 1 is reserved for fists/disarm)
+
+-   Weapons are their own system, but are loosely integrated into the inventory
+-   Can be dropped from inventory
+-   Can only carry 2 weapons in slots 2,3. (slot 1 is reserved for fists/disarm)
 
 #### resource
-- Used at the workbench to build them from them
-- Can be used but not directly (Eg. Fishing Rod is used by interacting with water)
-- Does not adhere to max_uses or track uses
-- Found in the world by scavenging scrap heaps
+
+-   Used at the workbench to build them from them
+-   Can be used but not directly (Eg. Fishing Rod is used by interacting with water)
+-   Does not adhere to max_uses or track uses
+-   Found in the world by scavenging scrap heaps
 
 #### equipable
-- Can be used directory from inventory to equip
-- Does not adhere to max_uses or tracks uses
-- Plays interaction when equipping
+
+-   Can be used directory from inventory to equip
+-   Does not adhere to max_uses or tracks uses
+-   Plays interaction when equipping
 
 #### usable
-- Can be used directory from inventory
-- Adheres to max_uses and trackes item uses
-- Plays interaction when using
+
+-   Can be used directory from inventory
+-   Adheres to max_uses and trackes item uses
+-   Plays interaction when using
 
 #### placeable
-- Interactive props that can be stored in inventory
-- Can be placed into the world from inventory (cannot become a pickup again)
-- When dropped instead of placed, they are pickups
-- Can be interacted with using `prop` interactions (Eg. Press [E] to sit in a chair)
-- Placeable objects are editable (rotation and location)
-- Player can hold Left Ctrl to see all placeable objects and click to edit objects nearby
-- Placeable objects persist to the database and are respawn when server starts.
+
+-   Interactive props that can be stored in inventory
+-   Can be placed into the world from inventory (cannot become a pickup again)
+-   When dropped instead of placed, they are pickups
+-   Can be interacted with using `prop` interactions (Eg. Press [E] to sit in a chair)
+-   Placeable objects are editable (rotation and location)
+-   Player can hold Left Ctrl to see all placeable objects and click to edit objects nearby
+-   Placeable objects persist to the database and are respawn when server starts.
 
 ## Interactive World Props
 
@@ -155,5 +160,24 @@ CreateWorkbench({
 })
 ```
 
-### Placeable Items
+### Mechanics
 
+Creates an interactive area for vehicle analysis and repair.
+
+```
+CreateMechanic({
+    "name": "Fancy Mechanic",
+    "y": 195897.5625,
+    "x": -100827.96875,
+    "z": 1222.7762451172,
+    "sz": 1,
+    "sx": 1,
+    "sy": 1,
+    "ry": 94.462623596191,
+    "rx": -0.0014343396760523,
+    "modelID": 2,
+    "rz": -0.0014343259390444
+})
+```
+
+### Placeable Items

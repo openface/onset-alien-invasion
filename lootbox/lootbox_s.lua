@@ -1,6 +1,6 @@
 local LootLocations = {} -- lootpickups.json
 local LootDropInterval = 5 * 60 * 1000 -- drop loot every 5 min (if players are nearby)
-local LootWeapons = { 'ak47', 'ak47g', 'auto_shotgun', 'shotgun', 'm16a4', 'ump', 'uzi' }
+local LootWeapons = {'ak47', 'ak47g', 'auto_shotgun', 'shotgun', 'm16a4', 'ump', 'uzi'}
 local LootTimer
 
 AddCommand("loot", function(player)
@@ -8,7 +8,11 @@ AddCommand("loot", function(player)
         return
     end
     local x, y, z = GetPlayerLocation(player)
-    local pos = { [1] = x, [2] = y, [3] = z }
+    local pos = {
+        [1] = x,
+        [2] = y,
+        [3] = z
+    }
     SpawnLootArea(pos)
 end)
 
@@ -17,20 +21,20 @@ AddCommand("lpos", function(player)
         return
     end
     local x, y, z = GetPlayerLocation(player)
-    string = "Location: "..x.." "..y.." "..z
+    string = "Location: " .. x .. " " .. y .. " " .. z
     AddPlayerChat(player, string)
     log.debug(string)
-    table.insert(LootLocations, { x, y, z })
+    table.insert(LootLocations, {x, y, z})
 
-    File_SaveJSONTable("packages/"..GetPackageName().."/lootbox/lootboxes.json", LootLocations)
+    File_SaveJSONTable("packages/" .. GetPackageName() .. "/lootbox/lootboxes.json", LootLocations)
 end)
 
 AddEvent("OnPackageStart", function()
-    LootLocations = File_LoadJSONTable("packages/"..GetPackageName().."/lootbox/lootboxes.json")
+    LootLocations = File_LoadJSONTable("packages/" .. GetPackageName() .. "/lootbox/lootboxes.json")
 
     -- spawn random loot area
-	  LootTimer = CreateTimer(function()
-        SpawnLootArea(LootLocations[ math.random(#LootLocations) ])
+    LootTimer = CreateTimer(function()
+        SpawnLootArea(LootLocations[math.random(#LootLocations)])
     end, LootDropInterval)
 end)
 
@@ -51,25 +55,23 @@ function SpawnLootArea(pos)
     DestroyLootPickups()
 
     -- parachute is the lootdrop object
-    local lootdrop = CreateObject(819, pos[1], pos[2], pos[3]+20000)
+    local lootdrop = CreateObject(819, pos[1], pos[2], pos[3] + 20000)
     SetObjectPropertyValue(lootdrop, 'type', 'lootdrop')
 
     -- attach a crate
-    local box = CreateObject(588, pos[1], pos[2], pos[3]+30000)
+    local box = CreateObject(588, pos[1], pos[2], pos[3] + 30000)
     SetObjectAttached(box, ATTACH_OBJECT, lootdrop, 0, 0, 10)
 
     -- move parachute to location
     SetObjectMoveTo(lootdrop, pos[1], pos[2], pos[3] - 50, 750)
 
     -- notify players loot is dropping
-    for _,p in pairs(players) do
-        CallRemoteEvent(p, "LootDropping", pos[1], pos[2], pos[3])        
-    end
+    BroadcastRemoteEvent("LootDropping", pos[1], pos[2], pos[3])
 end
 
 function DestroyLootPickups()
     local pickups = GetAllPickups()
-    for _,p in pairs(pickups) do
+    for _, p in pairs(pickups) do
         if (GetPickupPropertyValue(p, 'type') == 'loot') then
             DestroyPickup(p)
         end
@@ -78,14 +80,14 @@ end
 
 -- spawn pickup once lootbox lands
 AddEvent("OnObjectStopMoving", function(object)
-    if GetObjectPropertyValue(object, 'type') ~= 'lootdrop' then 
-        return 
+    if GetObjectPropertyValue(object, 'type') ~= 'lootdrop' then
+        return
     end
 
     -- get attached create
     local attach_type, box = GetObjectAttachmentInfo(object)
 
-    local x,y,z = GetObjectLocation(object)
+    local x, y, z = GetObjectLocation(object)
 
     DestroyObject(object)
     DestroyObject(box)
@@ -95,9 +97,7 @@ AddEvent("OnObjectStopMoving", function(object)
     SetPickupPropertyValue(pickup, 'type', 'loot')
 
     -- notify players
-    for _,p in pairs(GetAllPlayers()) do
-        CallRemoteEvent(p, 'LootSpawned', pickup, x, y, z)
-    end
+    BroadcastRemoteEvent("LootSpawned", pickup, x, y, z)
 end)
 
 -- pickup loot
@@ -114,20 +114,18 @@ AddEvent("OnPlayerPickupHit", function(player, pickup)
     DestroyPickup(pickup)
 
     BumpPlayerStat(player, "loot_collected")
-    log.debug(GetPlayerName(player)..' has picked up a lootbox')
+    log.debug(GetPlayerName(player) .. ' has picked up a lootbox')
 
     CallRemoteEvent(player, "LootPickedup")
 
     -- remove waypoint for others
-    for _,p in pairs(GetAllPlayers()) do
-        CallRemoteEvent(p, "HideLootWaypoint")
-    end
+    BroadcastRemoteEvent("HideLootWaypoint")
 end)
 
 function AddLootItem(player, item)
     if ItemConfig[item] then
         AddToInventoryByName(player, item)
-        CallRemoteEvent(player, "ShowMessage", "You picked up a "..ItemConfig[item].name)
+        CallRemoteEvent(player, "ShowMessage", "You picked up a " .. ItemConfig[item].name)
     end
 end
 

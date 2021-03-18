@@ -11,7 +11,7 @@ end)
 
 AddEvent("OnPackageStop", function()
     log.info "Destroying all merchants..."
-    for object in pairs(Merchants) do
+    for object in pairs(Mechanics) do
         Mechanics[object] = nil
         DestroyObject(object)
     end
@@ -25,29 +25,15 @@ function CreateMechanic(config)
         use_label = "Interact",
         event = "StartMechanic"
     })
-    Merchants[object] = true
+    Mechanics[object] = true
 end
 
 AddEvent("StartMechanic", function(player)
-    local item_data = {}
-    for key, item in pairs(ItemConfig) do
-        if item['price'] ~= nil then
-            table.insert(item_data, {
-                item = key,
-                name = item.name,
-                category = item.category,
-                modelid = item.modelid,
-                image = item.image,
-                price = item.price
-            })
-        end
-    end
-
     local _send = {
-        ["merchant_items"] = item_data,
+        ["merchant_items"] = {},
         ["player_cash"] = 1000 -- TODO
     }
     -- log.debug(dump(json_encode(_send)))
-    CallRemoteEvent(player, "LoadMechanicData", json_encode(_send))
+    CallRemoteEvent(player, "LoadVehicleData", json_encode(_send))
 end)
 

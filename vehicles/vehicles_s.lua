@@ -129,10 +129,16 @@ end
 
 function OpenHood(vehicle)
     SetVehicleHoodRatio(vehicle, 60.0)
+
+    local x,y,z = GetVehicleLocation(vehicle)
+    PlaySoundSync("sounds/hood_open.wav", x, y, z)
 end
 
 function CloseHood(vehicle)
     SetVehicleHoodRatio(vehicle, 0.0)
+
+    local x,y,z = GetVehicleLocation(vehicle)
+    PlaySoundSync("sounds/hood_close.wav", x, y, z)
 end
 
 AddRemoteEvent("ToggleVehicleTrunk", function(player)

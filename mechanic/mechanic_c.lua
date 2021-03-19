@@ -26,4 +26,6 @@ AddEvent("CloseMechanic", function()
     SetInputMode(INPUT_GAME)
     SetWebVisibility(MechanicUI, WEB_HIDDEN)
     SetWebVisibility(InventoryUI, WEB_HITINVISIBLE)
+
+    CallRemoteEvent("CloseMechanic")
 end)

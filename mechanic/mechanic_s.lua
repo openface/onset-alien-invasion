@@ -1,4 +1,5 @@
 local Mechanics = {}
+local VehiclesInGarage = {}
 
 AddEvent("OnPackageStart", function()
     log.info("Loading mechanics...")
@@ -15,6 +16,7 @@ AddEvent("OnPackageStop", function()
         Mechanics[object] = nil
         DestroyObject(object)
     end
+    VehiclesInGarage = {}
 end)
 
 function CreateMechanic(config)
@@ -35,7 +37,11 @@ AddEvent("StartMechanic", function(player)
         return
     end
 
+    VehiclesInGarage[player] = vehicle
+
     OpenHood(vehicle)
+    StartVehicleEngine(vehicle)
+    SetVehicleLightEnabled(vehicle, true)
 
     local damage = {
         one = GetVehicleDamage(vehicle, 1),
@@ -58,6 +64,23 @@ AddEvent("StartMechanic", function(player)
     log.debug(dump(json_encode(_send)))
     CallRemoteEvent(player, "LoadVehicleData", json_encode(_send))
 end)
+
+AddRemoteEvent("CloseMechanic", function(player)
+    if not VehiclesInGarage[player] then
+        log.error "No vehicle found in garage!"
+        return
+    end
+
+    local vehicle = VehiclesInGarage[player]
+    CloseHood(vehicle)
+    StopVehicleEngine(vehicle)
+    SetVehicleLightEnabled(vehicle, false)
+
+    VehiclesInGarage[player] = nil
+
+    CallRemoteEvent(player, "SendMessage", "Thank you come again!")
+end)
+
 
 function GetNearestVehicle(player)
 	local vehicles = GetStreamedVehiclesForPlayer(player)

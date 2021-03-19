@@ -117,6 +117,9 @@ AddEvent("OnHideMainMenu", function ()
     SetIgnoreMoveInput(false)
     SetIgnoreLookInput(false)
     ShowMouseCursor(false)
+
+    -- ensure inventory is OK
+    SetWebVisibility(InventoryUI, WEB_HITINVISIBLE)
 end)
 
 -- skydive

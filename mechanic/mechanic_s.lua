@@ -62,7 +62,15 @@ AddEvent("StartMechanic", function(player)
     }
 
     log.debug(dump(json_encode(_send)))
-    CallRemoteEvent(player, "LoadVehicleData", json_encode(_send))
+    CallRemoteEvent(player, "LoadVehicleData", vehicle, json_encode(_send))
+end)
+
+AddRemoteEvent("ShowVehicleBones", function(player, bone_data)
+    for k,v in pairs(bone_data) do
+        log.debug(k)
+        log.debug(dump(v))
+        CreateText3D(k, "20", v.x, v.y, v.z, 0, 0, 0)
+    end
 end)
 
 AddRemoteEvent("CloseMechanic", function(player)

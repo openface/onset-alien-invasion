@@ -35,6 +35,8 @@ AddEvent("StartMechanic", function(player)
         return
     end
 
+    OpenHood(vehicle)
+
     local damage = {
         one = GetVehicleDamage(vehicle, 1),
         two = GetVehicleDamage(vehicle, 2),
@@ -49,7 +51,7 @@ AddEvent("StartMechanic", function(player)
     local _send = {
         modelid = GetVehicleModel(vehicle),
         model_name = GetVehicleModelName(vehicle),
-        health = GetVehicleHealth(vehicle),
+        health = GetVehicleHealthPercentage(vehicle),
         damage = damage
     }
 

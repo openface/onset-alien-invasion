@@ -119,6 +119,22 @@ AddEvent("OnPlayerLeaveVehicle", function(player, vehicle, seat)
     end
 end)
 
+function OpenTrunk(vehicle)
+    SetVehicleTrunkRatio(vehicle, 60.0)
+end
+
+function CloseTrunk(vehicle)
+    SetVehicleTrunkRatio(vehicle, 0.0)
+end
+
+function OpenHood(vehicle)
+    SetVehicleHoodRatio(vehicle, 60.0)
+end
+
+function CloseHood(vehicle)
+    SetVehicleHoodRatio(vehicle, 0.0)
+end
+
 AddRemoteEvent("ToggleVehicleTrunk", function(player)
     local vehicle = GetPlayerVehicle(player)
 
@@ -131,9 +147,9 @@ AddRemoteEvent("ToggleVehicleTrunk", function(player)
     end
 
     if (GetVehicleTrunkRatio(vehicle) > 0.0) then
-        SetVehicleTrunkRatio(vehicle, 0.0)
+        CloseTrunk(vehicle)
     else
-        SetVehicleTrunkRatio(vehicle, 60.0)
+        OpenTrunk(vehicle)
     end
 end)
 
@@ -149,9 +165,9 @@ AddRemoteEvent("ToggleVehicleHood", function(player)
     end
 
     if (GetVehicleHoodRatio(vehicle) > 0.0) then
-        SetVehicleHoodRatio(vehicle, 0.0)
+        CloseHood(vehicle)
     else
-        SetVehicleHoodRatio(vehicle, 60.0)
+        OpenHood(vehicle)
     end
 end)
 

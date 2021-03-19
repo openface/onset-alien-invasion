@@ -3,54 +3,28 @@
         <div id="inner">
             <div id="title">AUTO MECHANIC <a class="close" @click="CloseMechanic()">X</a></div>
             <div class="content">
-                <table>
-                    <th colspan="2">Vehicle Stats</th>
-                    <tr>
-                        <td>Model Name:</td>
-                        <td>{{ model_name }}</td>
-                    </tr>
-                    <tr>
-                        <td>Overall Health:</td>
-                        <td>{{ health }}</td>
-                    </tr>
-                </table>
+                <div class="stats">
+                    Model Name:<br />
+                    <span>{{ model_name }}</span>
+                </div>
+                <div class="health">
+                    Overall Health:<br />
+                    <span>{{ health }}%</span>
+                </div>
             </div>
-            <div class="content">
-                <table>
-                    <th colspan="2">Damage Inspection</th>
-                    <tr>
-                        <td>Right Front Wheel</td>
-                        <td>{{ damage['one'] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Front Body</td>
-                        <td>{{ damage['two'] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Rear Body</td>
-                        <td>{{ damage['three'] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Rear Body</td>
-                        <td>{{ damage['four'] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Left Body</td>
-                        <td>{{ damage['five'] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Left Body</td>
-                        <td>{{ damage['six'] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Right Body</td>
-                        <td>{{ damage['seven'] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Rear Right Wheel</td>
-                        <td>{{ damage['eight'] }}</td>
-                    </tr>
-                </table>
+            <br style="clear:both" />
+            <div class="content" v-if="damage">
+                <div id="car">
+                    <img :src="require('@/assets/images/mechanic/car.png')" alt="" width="200" />
+                    <div class="dmg" id="body_wheel_front_right">{{ body_wheel_front_right }}</div>
+                    <div class="dmg" id="body_wheel_front_left">{{ body_wheel_front_left }}</div>
+                    <div class="dmg" id="body_wheel_rear_left">{{ body_wheel_rear_left }}</div>
+                    <div class="dmg" id="body_wheel_rear_right">{{ body_wheel_rear_right }}</div>
+                    <div class="dmg" id="body_door_front_right">{{ body_door_front_right }}</div>
+                    <div class="dmg" id="body_door_front_left">{{ body_door_front_left }}</div>
+                    <div class="dmg" id="body_door_rear_right">{{ body_door_rear_right }}</div>
+                    <div class="dmg" id="body_door_rear_left">{{ body_door_rear_left }}</div>
+                </div>
             </div>
         </div>
     </div>
@@ -64,19 +38,52 @@ export default {
             modelid: null,
             model_name: null,
             health: null,
-            damage: {}
+            damage: {},
         };
     },
+    computed: {
+        body_wheel_front_right: function() {
+            return this.CalcPerc(this.damage['one'])
+        },
+        body_wheel_front_left: function() {
+            return this.CalcPerc(this.damage['two'])
+        },
+        body_wheel_rear_left: function() {
+            return this.CalcPerc(this.damage['three'])
+        },
+        body_wheel_rear_right: function() {
+            return this.CalcPerc(this.damage['four'])
+        },
+        body_door_front_right: function() {
+            return this.CalcPerc(this.damage['five'])
+        },
+        body_door_front_left: function() {
+            return this.CalcPerc(this.damage['six'])
+        },
+        body_door_rear_right: function() {
+            return this.CalcPerc(this.damage['seven'])
+        },
+        body_door_rear_left: function() {
+            return this.CalcPerc(this.damage['eight'])
+        }
+    },
     methods: {
+        CalcPerc: function(dmg) {
+            if (typeof(dmg) == 'undefined') {
+                return "N/A";
+            }
+            window.console.log(dmg);
+            return (100 - (dmg * 100)).toFixed(2) + "%";
+        },
         LoadVehicleData: function(data) {
-            this.modelid = data.modelid,
-            this.model_name = data.model_name,
-            this.health = data.health,
+            this.modelid = data.modelid
+            this.model_name = data.model_name
+            this.health = data.health
             this.damage = data.damage
         },
         CloseMechanic: function() {
-            this.CallEvent("CloseMechanic")
-        }
+            this.CallEvent("CloseMechanic");
+        },
     },
     mounted() {
         this.EventBus.$on("LoadVehicleData", this.LoadVehicleData);
@@ -87,14 +94,14 @@ export default {
                 model_name: "Whatev",
                 health: 100,
                 damage: {
-                    one: 0.0,
-                    two: 0.0,
-                    three: 0.0,
-                    four: 0.0,
-                    five: 0.0,
-                    six: 0.0,
-                    seven: 0.0,
-                    eight: 0.0,
+                    two:0.079999998211861,
+                    eight:0,
+                    seven:0,
+                    one:0.019999999552965,
+                    three:0.019999999552965,
+                    five:0.03999999910593,
+                    six:0.019999999552965,
+                    four:0
                 }
             });
         }
@@ -109,7 +116,7 @@ export default {
 }
 #inner {
     margin: auto;
-    width: 510px;
+    width: 600px;
     background: rgba(0, 0, 0, 0.9);
     font-family: helvetica;
     text-shadow: 1px 1px black;
@@ -125,27 +132,86 @@ export default {
     text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
 }
 a.close {
-    color:#fff;
-    font-size:18px;
-    font-family:arial;
-    float:right;
-    background:#1770ff;
-    border-radius:2px;
-    margin-right:10px;
-    padding:0 5px;
+    color: #fff;
+    font-size: 18px;
+    font-family: arial;
+    float: right;
+    background: #1770ff;
+    border-radius: 2px;
+    margin-right: 10px;
+    padding: 0 5px;
 }
 a.close:hover {
     cursor: pointer;
 }
 .content {
-    color:#fff;
+    color: #fff;
     text-shadow: 2px 2px rgba(0, 0, 0, 0.2);
-    background: rgba(255,255,255, 0.1);
-    margin:10px;
-    padding:10px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 10px;
+    padding: 10px;
+    min-height:60px;
+    font-size:14px;
+    color:#999;
+}
+.content .stats {
+    float:left;
+}
+.content .health {
+    float:right;
+}
+.content span {
+    font-size:40px;
+    font-weight:bold;
+    color:#fff;
 }
 table th {
     text-transform: uppercase;
-    text-align:left;
+    text-align: left;
+}
+#car {
+    position: relative;
+    text-align:center;
+}
+.dmg {
+    position:absolute;
+    background:red;
+    color:#fff;
+    font-size:14px;
+    font-weight:bold;
+    padding:2px 10px;
+    text-shadow: 2px 2px rgba(0, 0, 0, 0.2);
+}
+#body_wheel_front_right {
+    top:0;
+    right:100px;
+}
+#body_wheel_front_left {
+    top:0;
+    left:100px;
+}
+#body_wheel_rear_left {
+    bottom:0;
+    left:100px;
+}
+#body_wheel_rear_right {
+    bottom:0;
+    right:100px;
+}
+#body_door_front_right {
+    top:80px;
+    right:100px;
+}
+#body_door_front_left {
+    top:80px;
+    left:100px;
+}
+#body_door_rear_right {
+    bottom:80px;
+    right:100px;
+}
+#body_door_rear_left {
+    bottom:80px;
+    left:100px;
 }
 </style>

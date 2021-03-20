@@ -42,9 +42,7 @@ AddEvent("OnPackageStart", function()
         end
 
         for vehicle, uuid in pairs(VehicleData) do
-            if IsValidVehicle(vehicle) then
-                SaveVehicle(vehicle)
-            end
+            SaveVehicle(vehicle)
         end
     end, VehicleSaveTime)
 end)
@@ -99,6 +97,11 @@ function SaveVehicle(vehicle)
     if not uuid then
         return
     end
+    if not IsValidVehicle(vehicle) then
+        log.error("Cannot save invalid vehicle")
+        return
+    end    
+
     log.info("Saving vehicle: " .. vehicle .. " uuid: " .. uuid)
     local x, y, z = GetVehicleLocation(vehicle)
     local h = GetVehicleHeading(vehicle)

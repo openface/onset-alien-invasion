@@ -3,7 +3,7 @@ local merchant_timer
 
 AddEvent("OnPackageStart", function()
     MerchantUI = CreateWebUI(0.0, 0.0, 0.0, 0.0)
-    SetWebURL(MerchantUI, "http://asset/"..GetPackageName().."/ui/dist/index.html#/merchant/")
+    SetWebURL(MerchantUI, "http://asset/" .. GetPackageName() .. "/ui/dist/index.html#/merchant/")
     SetWebAlignment(MerchantUI, 0.0, 0.0)
     SetWebAnchors(MerchantUI, 0.0, 0.0, 1.0, 1.0)
     SetWebVisibility(MerchantUI, WEB_HIDDEN)
@@ -20,36 +20,40 @@ AddRemoteEvent("LoadMerchantData", function(data)
     SetWebVisibility(MerchantUI, WEB_VISIBLE)
     SetWebVisibility(InventoryUI, WEB_HIDDEN)
 
-    ExecuteWebJS(MerchantUI, "EmitEvent('LoadMerchantData',"..data..")")
+    ExecuteWebJS(MerchantUI, "EmitEvent('LoadMerchantData'," .. data .. ")")
 
-    local x,y,z = GetPlayerLocation(GetPlayerId())
-    merchant_timer = CreateTimer(ShowMerchantTimer, 1000, { x = x, y = y, z = z })
+    local x, y, z = GetPlayerLocation(GetPlayerId())
+    merchant_timer = CreateTimer(ShowMerchantTimer, 1000, {
+        x = x,
+        y = y,
+        z = z
+    })
 end)
 
 -- timer used to hide workbench screen once player walks away
 function ShowMerchantTimer(loc)
-  local x,y,z = GetPlayerLocation(GetPlayerId())
-  if GetDistance3D(x, y, z, loc.x, loc.y, loc.z) > 100 then
-      ShowMouseCursor(false)
-      SetInputMode(INPUT_GAME)
-      SetWebVisibility(MerchantUI, WEB_HIDDEN)
-      SetWebVisibility(InventoryUI, WEB_HITINVISIBLE)
-      DestroyTimer(merchant_timer)
-  end
+    local x, y, z = GetPlayerLocation(GetPlayerId())
+    if GetDistance3D(x, y, z, loc.x, loc.y, loc.z) > 100 then
+        ShowMouseCursor(false)
+        SetInputMode(INPUT_GAME)
+        SetWebVisibility(MerchantUI, WEB_HIDDEN)
+        SetWebVisibility(InventoryUI, WEB_HITINVISIBLE)
+        DestroyTimer(merchant_timer)
+    end
 end
 
 -- selected item to build from UI
 AddEvent("BuyItem", function(item)
-    CallRemoteEvent("BuyItem", item)    
+    CallRemoteEvent("BuyItem", item)
 end)
 
 AddRemoteEvent("CompletePurchase", function(data)
-    ExecuteWebJS(MerchantUI, "EmitEvent('CompletePurchase',"..data..")")
+    ExecuteWebJS(MerchantUI, "EmitEvent('CompletePurchase'," .. data .. ")")
 end)
 
 AddRemoteEvent("PurchaseDenied", function()
-  ExecuteWebJS(MerchantUI, "EmitEvent('PurchaseDenied')")
-  SetSoundVolume(CreateSound("client/sounds/error.wav"), 0.5)
+    ExecuteWebJS(MerchantUI, "EmitEvent('PurchaseDenied')")
+    SetSoundVolume(CreateSound("client/sounds/error.wav"), 0.5)
 end)
 
 -- clicks while navigating merchant items

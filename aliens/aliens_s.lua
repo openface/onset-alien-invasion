@@ -202,9 +202,11 @@ AddEvent("OnNPCDeath", function(npc, killer)
     SetNPCPropertyValue(npc, "prop", {
         use_label = "Search Corpse",
         event = "OpenStorage",
-        storage = {
-            type = 'npc',
-            name = "Alien Corpse"
+        options = {
+            storage = {
+                type = 'npc',
+                name = "Alien Corpse"
+            }
         }
     })
 

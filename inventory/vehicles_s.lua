@@ -37,6 +37,10 @@ AddEvent("OnPackageStart", function()
     SpawnVehicles()
 
     VehicleSaveTimer = CreateTimer(function()
+        if not next(GetAllPlayers()) then
+            return
+        end
+
         for vehicle, uuid in pairs(VehicleData) do
             if IsValidVehicle(vehicle) then
                 SaveVehicle(vehicle)
@@ -46,15 +50,11 @@ AddEvent("OnPackageStart", function()
 end)
 
 AddEvent("OnPackageStop", function()
-    DespawnVehicles()
-end)
-
-function DespawnVehicles()
     for veh, uuid in pairs(VehicleData) do
         VehicleData[veh] = nil
         DestroyVehicle(veh)
     end
-end
+end)
 
 function SpawnVehicles()
     SelectRows("vehicles", "*", nil, function()

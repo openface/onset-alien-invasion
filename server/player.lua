@@ -274,6 +274,10 @@ function IsAdmin(player)
     end
 end
 
+function GetPlayerInstancesCount()
+    return #table.keys(PlayerData)
+end
+
 AddCommand("die", function(player)
     SetPlayerHealth(player, 0)
     AddPlayerChat(player, "You have been forcefully killed.")

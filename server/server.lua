@@ -10,16 +10,17 @@ local GameSaveTime = 1000 * 60 -- 60 secs
 AddEvent("OnPackageStart", function()
     GameSaveTimer = CreateTimer(function()
         -- stats
-        log.info("===================================================================================")
+        log.info("=== Game Entities =================================================================")
         log.info("Objects:          " .. #GetAllObjects())
         log.info("Pickups:          " .. #GetAllPickups())
         log.info("Vehicles:         " .. #GetAllVehicles())
-        log.info("VehicleInstances  " .. GetVehicleInstancesCount())
         log.info("Timers:           " .. #GetAllTimers())
         log.info("Players:          " .. #GetAllPlayers())
+        log.info("--- Server Instances --------------------------------------------------------------")
+        log.info("PlayerInstances:  " .. GetPlayerInstancesCount())
+        log.info("VehicleInstances: " .. GetVehicleInstancesCount())
         log.info("ItemInstances:    " .. GetItemInstancesCount())
         log.info("PlacedObjects:    " .. GetPlacedObjectsCount())
-        log.info("===================================================================================")
 
         -- save all players
         for player, _ in pairs(PlayerData) do

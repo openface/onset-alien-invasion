@@ -282,7 +282,33 @@ end
 
 function IncreaseVehicleHealth(vehicle, amount)
     local new_health = GetVehicleHealth(vehicle) + amount
-    SetVehicleHealth(vehicle, math.min(new_health, VEHICLE_MAX_HEALTH))
+    local actual_new_health = math.min(new_health, VEHICLE_MAX_HEALTH)
+    SetVehicleHealth(vehicle, actual_new_health)
+
+    if actual_new_health == VEHICLE_MAX_HEALTH then
+        -- full repair
+        SetVehicleDamageIndexes(vehicle, {
+            one = 0.0,
+            two = 0.0,
+            three = 0.0,
+            four = 0.0,
+            five = 0.0,
+            six = 0.0,
+            seven = 0.0,
+            eight = 0.0,
+        })
+    else
+        -- partial repair
+        local new_indexes = {}
+        local damages = GetVehicleDamageIndexes(vehicle)
+        for k,v in pairs(damages) do
+            local p = v / (VEHICLE_MAX_HEALTH / amount)
+            log.debug("portion: "..p)
+            new_indexes[k] = v + (v / (VEHICLE_MAX_HEALTH / amount))
+        end
+        SetVehicleDamageIndexes(vehicle, new_indexes)
+    end
+    SaveVehicle(vehicle)
 end
 
 function generate_license()

@@ -9,22 +9,6 @@ local GameSaveTime = 1000 * 60 -- 60 secs
 
 AddEvent("OnPackageStart", function()
     GameSaveTimer = CreateTimer(function()
-        -- stats
-        log.info("=== Game Entities / Instances =====================================================")
-        log.info("Objects:          " .. #GetAllObjects())
-        log.info("   PlacedObjects:       " .. GetPlacedObjectsCount())
-        log.info("   ItemInstances:       " .. GetItemInstancesCount())
-        log.info("   WorldObjects:        " .. GetWorldObjectsCount())
-        log.info("   Workbenches:         " .. GetWorkbenchCount())
-        log.info("   WorldStorageObjects: " .. GetWorldStorageObjectsCount())
-        log.info("   Merchants:           " .. GetMerchantsCount())
-        log.info("   Mechanics:           " .. GetMechanicsCount())
-        log.info("Vehicles:         " .. #GetAllVehicles()  .. " (" .. GetVehicleInstancesCount() .. " instances)")
-        log.info("Players:          " .. #GetAllPlayers()   .. " (" .. GetPlayerInstancesCount()  .. " instances)")
-        log.info("NPCs:             " .. #GetAllNPC()       .. " (" .. GetAlienInstancesCount()   .. " aliens)")
-        log.info("Pickups:          " .. #GetAllPickups())
-        log.info("Timers:           " .. #GetAllTimers())
-
         -- save all players
         for player, _ in pairs(PlayerData) do
             if IsValidPlayer(player) and GetPlayerDimension(player) == 0 and not IsPlayerDead(player) then
@@ -75,7 +59,7 @@ AddRemoteEvent("ConsoleInput", function(player, input)
     end
 
     if input == "stats" then
-        print("Objects: " .. tostring(GetObjectCount()))
+        ShowStats()
     end
 
     log.debug("console: " .. input)
@@ -85,10 +69,32 @@ AddEvent("OnConsoleInput", function(input)
     if input == "" then
         return
     end
+    if input == "stats" then
+        ShowStats()
+        return
+    end
     if input == "quit" or input == "exit" then
         ServerExit("Exiting via console command")
     end
-    -- run lua
-    load(input)()
 end)
 
+-- stats
+function ShowStats()
+    log.info("=== Game Entities / Instances =====================================================")
+    log.info("Objects:             " .. #GetAllObjects())
+    log.info("Vehicles:            " .. #GetAllVehicles())
+    log.info("Players:             " .. #GetAllPlayers())
+    log.info("NPCs:                " .. #GetAllNPC())
+    log.info("Pickups:             " .. #GetAllPickups())
+    log.info("Timers:              " .. #GetAllTimers())
+    log.info("PlacedObjects:       " .. GetPlacedObjectsCount())
+    log.info("ItemInstances:       " .. GetItemInstancesCount())
+    log.info("WorldObjects:        " .. GetWorldObjectsCount())
+    log.info("Workbenches:         " .. GetWorkbenchCount())
+    log.info("WorldStorageObjects: " .. GetWorldStorageObjectsCount())
+    log.info("Merchants:           " .. GetMerchantsCount())
+    log.info("Mechanics:           " .. GetMechanicsCount())
+    log.info("Aliens:              " .. GetAlienInstancesCount())
+    log.info("PlayerData:          " .. GetPlayerInstancesCount())
+    log.info("VehicleData:         " .. GetVehicleInstancesCount())
+end

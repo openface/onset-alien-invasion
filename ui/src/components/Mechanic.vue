@@ -1,0 +1,297 @@
+<template>
+    <div id="container">
+        <div id="inner" :class="IsBusy() ? 'blurred' : ''">
+            <div id="title">AUTO MECHANIC <a class="close" @click="CloseMechanic()">X</a></div>
+            <div class="content">
+                <div class="stats">
+                    Model Name<br />
+                    <span>{{ model_name }}</span>
+                </div>
+                <div class="health">
+                    Overall Health<br />
+                    <span>{{ health }}%</span>
+                </div>
+            </div>
+            <div class="action">
+                <button id="repair" @click="RepairVehicle()" :disabled="IsPristine()">Repair Vehicle</button>
+            </div>
+            <div class="content" v-if="damage">
+                <div id="car">
+                    <img :src="require('@/assets/images/mechanic/car.png')" alt="" width="200" />
+                    <div :class="{ dmg:true, 'good': IsGood(body_wheel_front_right) }" id="body_wheel_front_right">{{ body_wheel_front_right }}%</div>
+                    <div :class="{ dmg:true, 'good': IsGood(body_wheel_front_left) }" id="body_wheel_front_left">{{ body_wheel_front_left }}%</div>
+                    <div :class="{ dmg:true, 'good': IsGood(body_wheel_rear_left) }" id="body_wheel_rear_left">{{ body_wheel_rear_left }}%</div>
+                    <div :class="{ dmg:true, 'good': IsGood(body_wheel_rear_right) }" id="body_wheel_rear_right">{{ body_wheel_rear_right }}%</div>
+                    <div :class="{ dmg:true, 'good': IsGood(body_door_front_right) }" id="body_door_front_right">{{ body_door_front_right }}%</div>
+                    <div :class="{ dmg:true, 'good': IsGood(body_door_front_left) }" id="body_door_front_left">{{ body_door_front_left }}%</div>
+                    <div :class="{ dmg:true, 'good': IsGood(body_door_rear_right) }" id="body_door_rear_right">{{ body_door_rear_right }}%</div>
+                    <div :class="{ dmg:true, 'good': IsGood(body_door_rear_left) }" id="body_door_rear_left">{{ body_door_rear_left }}%</div>
+                </div>
+            </div>
+        </div>
+        <div id="progress" v-if="IsBusy()">
+            <loading-progress
+                :indeterminate="true"
+                size="40"
+                rotate
+                fillDuration="3"
+                rotationDuration="4"
+            />
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    name: "Mechanic",
+    data() {
+        return {
+            modelid: null,
+            model_name: null,
+            health: null,
+            damage: {},
+            is_busy: false,
+        };
+    },
+    computed: {
+        body_wheel_front_right: function() {
+            return this.CalcPerc(this.damage['one'])
+        },
+        body_wheel_front_left: function() {
+            return this.CalcPerc(this.damage['two'])
+        },
+        body_wheel_rear_left: function() {
+            return this.CalcPerc(this.damage['three'])
+        },
+        body_wheel_rear_right: function() {
+            return this.CalcPerc(this.damage['four'])
+        },
+        body_door_front_right: function() {
+            return this.CalcPerc(this.damage['five'])
+        },
+        body_door_front_left: function() {
+            return this.CalcPerc(this.damage['six'])
+        },
+        body_door_rear_right: function() {
+            return this.CalcPerc(this.damage['seven'])
+        },
+        body_door_rear_left: function() {
+            return this.CalcPerc(this.damage['eight'])
+        }
+    },
+    methods: {
+        IsBusy() {
+            return this.is_busy;
+        },
+        IsGood: function(amt) {
+            if (amt == 100.00) {
+                return true
+            } else {
+                return false;
+            }
+        },
+        IsPristine: function() {
+            if (this.health == 100) {
+                return true
+            } else {
+                return false
+            }
+        },
+        CalcPerc: function(dmg) {
+            if (typeof(dmg) == 'undefined') {
+                return "N/A";
+            }
+            window.console.log(dmg);
+            return (100 - (dmg * 100)).toFixed(2);
+        },
+        LoadVehicleData: function(data) {
+            this.is_busy = false;
+            this.modelid = data.modelid
+            this.model_name = data.model_name
+            this.health = data.health
+            this.damage = data.damage
+        },
+        CloseMechanic: function() {
+            this.CallEvent("CloseMechanic");
+        },
+        RepairVehicle: function() {
+            this.is_busy = true;
+            this.CallEvent("RepairVehicle");
+        }
+    },
+    mounted() {
+        this.EventBus.$on("LoadVehicleData", this.LoadVehicleData);
+
+        if (!this.InGame) {
+            this.EventBus.$emit("LoadVehicleData", {
+                modelid: 23,
+                model_name: "Whatev",
+                health: 90,
+                damage: {
+                    two:0.079999998211861,
+                    eight:0,
+                    seven:0,
+                    one:0.019999999552965,
+                    three:0.019999999552965,
+                    five:0.03999999910593,
+                    six:0.019999999552965,
+                    four:0
+                }
+            });
+        }
+    },
+};
+</script>
+
+<style scoped>
+#container {
+    display: flex;
+    height: 75vh;
+}
+#progress {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+#progress >>> .vue-progress-path path {
+    stroke-width: 16;
+}
+#progress >>> .vue-progress-path .progress {
+    stroke: rgba(255, 255, 255, 0.6);
+}
+#progress >>> .vue-progress-path .background {
+    stroke: rgba(0, 0, 0, 0.4);
+}
+#inner {
+    margin: auto;
+    width: 600px;
+    background: rgba(0, 0, 0, 0.9);
+    font-family: helvetica;
+    text-shadow: 1px 1px black;
+    padding: 10px;
+}
+.blurred {
+    filter: blur(3px) grayscale(100%);
+}
+#title {
+    color: #fff;
+    font-size: 36px;
+    text-align: center;
+    margin: 0;
+    font-weight: bold;
+    font-family: impact;
+    text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
+}
+a.close {
+    color: #fff;
+    font-size: 18px;
+    font-family: arial;
+    float: right;
+    background: #1770ff;
+    border-radius: 2px;
+    margin-right: 10px;
+    padding: 0 5px;
+}
+a.close:hover {
+    cursor: pointer;
+}
+.content {
+    color: #fff;
+    text-shadow: 2px 2px rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    margin: 10px;
+    padding: 10px;
+    min-height:60px;
+    font-size:14px;
+    color:#999;
+}
+.content .stats {
+    float:left;
+}
+.content .health {
+    float:right;
+}
+.content span {
+    font-size:40px;
+    font-weight:bold;
+    color:#fff;
+}
+.action {
+    padding:10px;
+    text-align:center;
+}
+table th {
+    text-transform: uppercase;
+    text-align: left;
+}
+#car {
+    position: relative;
+    text-align:center;
+}
+.dmg {
+    position:absolute;
+    background:red;
+    color:#fff;
+    font-size:14px;
+    font-weight:bold;
+    padding:2px 10px;
+    text-shadow: 2px 2px rgba(0, 0, 0, 0.2);
+}
+.dmg.good {
+    background:green;
+}
+#body_wheel_front_right {
+    top:0;
+    right:100px;
+}
+#body_wheel_front_left {
+    top:0;
+    left:100px;
+}
+#body_wheel_rear_left {
+    bottom:0;
+    left:100px;
+}
+#body_wheel_rear_right {
+    bottom:0;
+    right:100px;
+}
+#body_door_front_right {
+    top:80px;
+    right:100px;
+}
+#body_door_front_left {
+    top:80px;
+    left:100px;
+}
+#body_door_rear_right {
+    bottom:80px;
+    right:100px;
+}
+#body_door_rear_left {
+    bottom:80px;
+    left:100px;
+}
+button#repair {
+    font-weight: bold;
+    border: 0px;
+    padding: 10px;
+    font-size: 14px;
+    background: #1770ff;
+    color: #fff;
+    border-radius:3px;
+    border:1px outset #1770ff;
+}
+#inner:not(.blurred) button#repair:hover:not([disabled]) {
+    cursor: pointer;
+    background: #3684ff;
+    border:1px outset #1770ff;
+}
+button#repair:disabled,
+button#repair[disabled] {
+    background: #999;
+    color: #666666;
+    border:1px inset #666666;
+}
+</style>

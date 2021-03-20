@@ -25,15 +25,22 @@ function CreateWorkbench(config)
         use_label = "Interact",
         event = "StartWorkbench",
         options = {
-            id = config.id,
-            name = config.name
+            workbench = {
+                id = config.id,
+                name = config.name
+            }
         }
     })
     Workbenches[object] = true
 end
 
-AddEvent("StartWorkbench", function(player, prop)
-    log.debug("Workbench: " .. prop.options['id'])
+AddEvent("StartWorkbench", function(player, ActiveProp)
+    log.debug("Workbench: " .. ActiveProp.options.workbench.id)
+    if not ActiveProp.options.workbench then
+        log.error("Cannot start non-workbench object")
+        return
+    end
+
     local item_data = {}
     for key, item in pairs(ItemConfig) do
         if item.recipe then
@@ -48,7 +55,7 @@ AddEvent("StartWorkbench", function(player, prop)
     end
 
     local _send = {
-        ["workbench_name"] = prop.options['name'],
+        ["workbench_name"] = ActiveProp.options.workbench.name,
         ["item_data"] = item_data,
         ["player_resources"] = GetPlayerResources(player)
     }

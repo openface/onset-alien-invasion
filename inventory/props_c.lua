@@ -47,7 +47,7 @@ AddEvent("OnGameTick", function()
                         hit_type = hitStruct.type,
                         hit_object = hitObject,
                         item_interaction = item_interaction,
-                        storage = prop.storage
+                        options = prop.options,
                     }
                     -- debug("OBJECT ActiveProp: " .. dump(ActiveProp))
                 end
@@ -134,7 +134,7 @@ function ProcessHitResult(HitResult)
         return
     end
 
-    -- debug("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName() .." id:"..Comp:GetUniqueID())
+    --debug("comp name: " .. Comp:GetName() .. " class:" .. Comp:GetClassName() .." id:"..Comp:GetUniqueID())
 
     -- environment
     if string.find(Comp:GetName(), "FoliageInstancedStaticMeshComponent") then

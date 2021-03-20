@@ -60,8 +60,8 @@ function GetItemAttachmentBone(item)
 end
 
 function PlaySoundSync(sound, x, y, z, distance)
-    local distance = distance or 1000
-    for k, ply in pairs(GetPlayersInRange3D(x, y, z, 1000)) do
+    local distance = distance or 2000
+    for k, ply in pairs(GetPlayersInRange3D(x, y, z, distance)) do
         CallRemoteEvent(ply, "Play3DSound", sound, x, y, z, distance)
     end
 end

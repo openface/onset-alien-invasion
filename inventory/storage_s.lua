@@ -15,26 +15,26 @@ end)
 AddEvent("OpenStorage", function(player, ActiveProp)
     log.trace("OpenStorage " .. dump(ActiveProp))
 
-    if not ActiveProp.storage or not ActiveProp.hit_object then
+    if not ActiveProp.options.storage or not ActiveProp.hit_object then
         log.error("Cannot open non-storage object!")
         return
     end
 
-    if ActiveProp.storage.locked then
+    if ActiveProp.options.storage.locked then
         CallRemoteEvent(player, "ShowError", "Locked")
         return
     end
 
     log.info(GetPlayerName(player) .. " opens storage object " .. ActiveProp.hit_object .. " type " ..
-                 ActiveProp.storage.type)
+                 ActiveProp.options.storage.type)
 
     local x, y, z
     local storage_items
 
-    if ActiveProp.storage.type == 'vehicle' then
+    if ActiveProp.options.storage.type == 'vehicle' then
         x, y, z = GetVehicleLocation(ActiveProp.hit_object)
         storage_items = GetVehiclePropertyValue(ActiveProp.hit_object, "storage") or {}
-    elseif ActiveProp.storage.type == 'npc' then
+    elseif ActiveProp.options.storage.type == 'npc' then
         x, y, z = GetNPCLocation(ActiveProp.hit_object)
         storage_items = GetNPCPropertyValue(ActiveProp.hit_object, "storage") or {}
     else
@@ -46,8 +46,8 @@ AddEvent("OpenStorage", function(player, ActiveProp)
 
     local _send = {
         storage_object = ActiveProp.hit_object,
-        storage_type = ActiveProp.storage.type,
-        storage_name = ActiveProp.storage.name,
+        storage_type = ActiveProp.options.storage.type,
+        storage_name = ActiveProp.options.storage.name,
 
         storage_items = storage_items,
         inventory_items = {}

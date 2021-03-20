@@ -18,11 +18,11 @@
 
         "aliens/aliens_s.lua",
         "lootbox/lootbox_s.lua",
-        "vehicles/vehicles_s.lua",
         "boss/boss_s.lua",
         "computer/computer_s.lua",
         "workbench/workbench_s.lua",
         "merchant/merchant_s.lua",
+        "mechanic/mechanic_s.lua",
 
         "inventory/inventory_s.lua",
         "inventory/pickups_s.lua",
@@ -32,6 +32,7 @@
         "inventory/placement_s.lua",
         "inventory/storage_s.lua",
         "inventory/lockpick_s.lua",
+        "inventory/vehicles_s.lua",
 
         "scoreboard/scoreboard_s.lua",
         "doors/doors_s.lua",
@@ -54,6 +55,7 @@
         "computer/computer_c.lua",
         "workbench/workbench_c.lua",
         "merchant/merchant_c.lua",
+        "mechanic/mechanic_c.lua",
         "scoreboard/scoreboard_c.lua",
         "inventory/inventory_c.lua",
         "inventory/pickups_c.lua",
@@ -62,7 +64,7 @@
         "inventory/placement_c.lua",
         "inventory/storage_c.lua",
         "inventory/lockpick_c.lua",
-        "vehicles/vehicles_c.lua"
+        "inventory/vehicles_c.lua"
     ],
     "files": [
         "client/pak/Mothership.pak",

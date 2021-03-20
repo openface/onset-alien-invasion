@@ -6,7 +6,7 @@ AddEvent("OnPackageStart", function()
     local _table = File_LoadJSONTable("packages/" .. GetPackageName() .. "/merchant/merchants.json")
     for _, config in pairs(_table) do
         -- todo: merchant name is hardcoded for now
-        RegisterMerchant("Store", config)
+        CreateMerchant("Store", config)
     end
 end)
 
@@ -18,8 +18,8 @@ AddEvent("OnPackageStop", function()
     end
 end)
 
-function RegisterMerchant(name, config)
-    log.debug("Registering merchant: " .. name)
+function CreateMerchant(name, config)
+    log.debug("Creating merchant: " .. name)
     local object = CreateObject(config.modelID, config.x, config.y, config.z, config.rx, config.ry, config.rz,
                        config.sx, config.sy, config.sz)
     SetObjectPropertyValue(object, "prop", {

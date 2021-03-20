@@ -6,7 +6,7 @@ local Boss
 local BossTargetedLocation
 local BossBombTimer
 local BossKillers = {}
-local MAX_BOSS_DURATION = 1000 * 90 -- 90 seconds
+local MAX_BOSS_DURATION = 1000 * 60 -- 1 min
 local FakeBossModelID = 91212
 
 AddEvent("OnPackageStart", function()
@@ -104,9 +104,7 @@ function DespawnBoss()
         return
     end
 
-    for _, ply in pairs(GetAllPlayers()) do
-        CallRemoteEvent(ply, "DespawnBoss", Boss)
-    end
+    BroadcastRemoteEvent("DespawnBoss", Boss)
 
     DestroyTimer(BossBombTimer)
     DestroyObject(Boss)
@@ -137,17 +135,12 @@ AddEvent("OnPlayerWeaponShot",
                 BossKillers[player] = player
             end
 
-            -- update boss health bar for everyone
-            local players = GetAllPlayers()
-
             -- this is network intensive, so we only send health status
             -- when percentage is divisible by 5
             local percentage_health = math.floor(BossHealth / BossInitialHealth * 100.0)
             if first_hit or math.fmod(percentage_health, 5) == 0.0 then
                 log.debug("Mothership health: " .. percentage_health .. "%")
-                for _, ply in pairs(players) do
-                    CallRemoteEvent(ply, "SetBossHealth", percentage_health)
-                end
+                BroadcastRemoteEvent("SetBossHealth", percentage_health)
             end
 
             -- explosions in the sky
@@ -171,9 +164,7 @@ AddEvent("OnPlayerWeaponShot",
 
                 DespawnBoss()
 
-                for _, ply in pairs(players) do
-                    CallRemoteEvent(ply, "ShowBanner", "MOTHERSHIP HAS BEEN DEFEATED!")
-                end
+                BroadcastRemoteEvent("ShowBanner", "MOTHERSHIP HAS BEEN DEFEATED!")
                 log.info "Mothership has been defeated"
             end
         end

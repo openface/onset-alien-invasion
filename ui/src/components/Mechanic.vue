@@ -1,6 +1,6 @@
 <template>
     <div id="container">
-        <div id="inner">
+        <div id="inner" :class="IsBusy() ? 'blurred' : ''">
             <div id="title">AUTO MECHANIC <a class="close" @click="CloseMechanic()">X</a></div>
             <div class="content">
                 <div class="stats">
@@ -29,6 +29,15 @@
                 </div>
             </div>
         </div>
+        <div id="progress" v-if="IsBusy()">
+            <loading-progress
+                :indeterminate="true"
+                size="40"
+                rotate
+                fillDuration="3"
+                rotationDuration="4"
+            />
+        </div>
     </div>
 </template>
 
@@ -41,6 +50,7 @@ export default {
             model_name: null,
             health: null,
             damage: {},
+            is_busy: false,
         };
     },
     computed: {
@@ -70,6 +80,9 @@ export default {
         }
     },
     methods: {
+        IsBusy() {
+            return this.is_busy;
+        },
         IsGood: function(amt) {
             if (amt == 100.00) {
                 return true
@@ -92,6 +105,7 @@ export default {
             return (100 - (dmg * 100)).toFixed(2);
         },
         LoadVehicleData: function(data) {
+            this.is_busy = false;
             this.modelid = data.modelid
             this.model_name = data.model_name
             this.health = data.health
@@ -101,6 +115,7 @@ export default {
             this.CallEvent("CloseMechanic");
         },
         RepairVehicle: function() {
+            this.is_busy = true;
             this.CallEvent("RepairVehicle");
         }
     },
@@ -133,6 +148,21 @@ export default {
     display: flex;
     height: 75vh;
 }
+#progress {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+#progress >>> .vue-progress-path path {
+    stroke-width: 16;
+}
+#progress >>> .vue-progress-path .progress {
+    stroke: rgba(255, 255, 255, 0.6);
+}
+#progress >>> .vue-progress-path .background {
+    stroke: rgba(0, 0, 0, 0.4);
+}
 #inner {
     margin: auto;
     width: 600px;
@@ -140,6 +170,9 @@ export default {
     font-family: helvetica;
     text-shadow: 1px 1px black;
     padding: 10px;
+}
+.blurred {
+    filter: blur(3px) grayscale(100%);
 }
 #title {
     color: #fff;
@@ -250,7 +283,7 @@ button#repair {
     border-radius:3px;
     border:1px outset #1770ff;
 }
-button#repair:hover:not([disabled]) {
+#inner:not(.blurred) button#repair:hover:not([disabled]) {
     cursor: pointer;
     background: #3684ff;
     border:1px outset #1770ff;

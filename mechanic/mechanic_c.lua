@@ -21,6 +21,10 @@ AddRemoteEvent("LoadVehicleData", function(vehicle, data)
     ExecuteWebJS(MechanicUI, "EmitEvent('LoadVehicleData'," .. data .. ")")
 end)
 
+AddRemoteEvent("UpdateVehicleData", function(data)
+    ExecuteWebJS(MechanicUI, "EmitEvent('UpdateVehicleData'," .. data .. ")")
+end)
+
 AddEvent("CloseMechanic", function()
     ShowMouseCursor(false)
     SetInputMode(INPUT_GAME)

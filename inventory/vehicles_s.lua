@@ -302,9 +302,7 @@ function IncreaseVehicleHealth(vehicle, amount)
         local new_indexes = {}
         local damages = GetVehicleDamageIndexes(vehicle)
         for k,v in pairs(damages) do
-            local p = v / (VEHICLE_MAX_HEALTH / amount)
-            log.debug("portion: "..p)
-            new_indexes[k] = v + (v / (VEHICLE_MAX_HEALTH / amount))
+            new_indexes[k] = v - (v / (VEHICLE_MAX_HEALTH / amount))
         end
         SetVehicleDamageIndexes(vehicle, new_indexes)
     end

@@ -4,26 +4,28 @@
             <div id="title">AUTO MECHANIC <a class="close" @click="CloseMechanic()">X</a></div>
             <div class="content">
                 <div class="stats">
-                    Model Name:<br />
+                    Model Name<br />
                     <span>{{ model_name }}</span>
                 </div>
                 <div class="health">
-                    Overall Health:<br />
+                    Overall Health<br />
                     <span>{{ health }}%</span>
                 </div>
             </div>
-            <br style="clear:both" />
+            <div class="action">
+                <button id="repair" @click="RepairVehicle()" :disabled="IsPristine()">Repair Vehicle</button>
+            </div>
             <div class="content" v-if="damage">
                 <div id="car">
                     <img :src="require('@/assets/images/mechanic/car.png')" alt="" width="200" />
-                    <div class="dmg" id="body_wheel_front_right">{{ body_wheel_front_right }}</div>
-                    <div class="dmg" id="body_wheel_front_left">{{ body_wheel_front_left }}</div>
-                    <div class="dmg" id="body_wheel_rear_left">{{ body_wheel_rear_left }}</div>
-                    <div class="dmg" id="body_wheel_rear_right">{{ body_wheel_rear_right }}</div>
-                    <div class="dmg" id="body_door_front_right">{{ body_door_front_right }}</div>
-                    <div class="dmg" id="body_door_front_left">{{ body_door_front_left }}</div>
-                    <div class="dmg" id="body_door_rear_right">{{ body_door_rear_right }}</div>
-                    <div class="dmg" id="body_door_rear_left">{{ body_door_rear_left }}</div>
+                    <div :class="{ dmg:true, 'good': IsGood(body_wheel_front_right) }" id="body_wheel_front_right">{{ body_wheel_front_right }}%</div>
+                    <div :class="{ dmg:true, 'good': IsGood(body_wheel_front_left) }" id="body_wheel_front_left">{{ body_wheel_front_left }}%</div>
+                    <div :class="{ dmg:true, 'good': IsGood(body_wheel_rear_left) }" id="body_wheel_rear_left">{{ body_wheel_rear_left }}%</div>
+                    <div :class="{ dmg:true, 'good': IsGood(body_wheel_rear_right) }" id="body_wheel_rear_right">{{ body_wheel_rear_right }}%</div>
+                    <div :class="{ dmg:true, 'good': IsGood(body_door_front_right) }" id="body_door_front_right">{{ body_door_front_right }}%</div>
+                    <div :class="{ dmg:true, 'good': IsGood(body_door_front_left) }" id="body_door_front_left">{{ body_door_front_left }}%</div>
+                    <div :class="{ dmg:true, 'good': IsGood(body_door_rear_right) }" id="body_door_rear_right">{{ body_door_rear_right }}%</div>
+                    <div :class="{ dmg:true, 'good': IsGood(body_door_rear_left) }" id="body_door_rear_left">{{ body_door_rear_left }}%</div>
                 </div>
             </div>
         </div>
@@ -68,12 +70,26 @@ export default {
         }
     },
     methods: {
+        IsGood: function(amt) {
+            if (amt == 100.00) {
+                return true
+            } else {
+                return false;
+            }
+        },
+        IsPristine: function() {
+            if (this.health == 100) {
+                return true
+            } else {
+                return false
+            }
+        },
         CalcPerc: function(dmg) {
             if (typeof(dmg) == 'undefined') {
                 return "N/A";
             }
             window.console.log(dmg);
-            return (100 - (dmg * 100)).toFixed(2) + "%";
+            return (100 - (dmg * 100)).toFixed(2);
         },
         LoadVehicleData: function(data) {
             this.modelid = data.modelid
@@ -84,6 +100,9 @@ export default {
         CloseMechanic: function() {
             this.CallEvent("CloseMechanic");
         },
+        RepairVehicle: function() {
+            this.CallEvent("RepairVehicle");
+        }
     },
     mounted() {
         this.EventBus.$on("LoadVehicleData", this.LoadVehicleData);
@@ -92,7 +111,7 @@ export default {
             this.EventBus.$emit("LoadVehicleData", {
                 modelid: 23,
                 model_name: "Whatev",
-                health: 100,
+                health: 90,
                 damage: {
                     two:0.079999998211861,
                     eight:0,
@@ -165,6 +184,10 @@ a.close:hover {
     font-weight:bold;
     color:#fff;
 }
+.action {
+    padding:10px;
+    text-align:center;
+}
 table th {
     text-transform: uppercase;
     text-align: left;
@@ -181,6 +204,9 @@ table th {
     font-weight:bold;
     padding:2px 10px;
     text-shadow: 2px 2px rgba(0, 0, 0, 0.2);
+}
+.dmg.good {
+    background:green;
 }
 #body_wheel_front_right {
     top:0;
@@ -213,5 +239,26 @@ table th {
 #body_door_rear_left {
     bottom:80px;
     left:100px;
+}
+button#repair {
+    font-weight: bold;
+    border: 0px;
+    padding: 10px;
+    font-size: 14px;
+    background: #1770ff;
+    color: #fff;
+    border-radius:3px;
+    border:1px outset #1770ff;
+}
+button#repair:hover:not([disabled]) {
+    cursor: pointer;
+    background: #3684ff;
+    border:1px outset #1770ff;
+}
+button#repair:disabled,
+button#repair[disabled] {
+    background: #999;
+    color: #666666;
+    border:1px inset #666666;
 }
 </style>

@@ -19,6 +19,17 @@ InitTable("vehicles", {
     },
     location = {
         type = 'json'
+    },
+    health = {
+        type = 'number',
+        length = 11
+    },
+    damage = {
+        type = 'json'
+    },
+    license = {
+        type = 'char',
+        length = 13
     }
 }, false) -- true to recreate table
 
@@ -26,7 +37,7 @@ AddEvent("OnPackageStart", function()
     SpawnVehicles()
 
     VehicleSaveTimer = CreateTimer(function()
-        for vehicle, _ in pairs(VehicleData) do
+        for vehicle, uuid in pairs(VehicleData) do
             if IsValidVehicle(vehicle) then
                 SaveVehicle(vehicle)
             end
@@ -59,6 +70,9 @@ function SpawnVehicles()
                     SetItemInstance(item.uuid, item.item)
                 end
                 SetVehiclePropertyValue(vehicle, "storage", storage)
+                SetVehicleLicensePlate(vehicle, row['license'])
+                SetVehicleHealth(vehicle, row['health'])
+                SetVehicleDamageIndexes(vehicle, json_decode(row['damage']))
 
                 VehicleData[vehicle] = row['uuid']
             end
@@ -77,7 +91,6 @@ function SpawnVehicle(modelid, x, y, z, h)
         return
     end
     SetVehicleRespawnParams(vehicle, false, 0, false)
-    SetVehicleHealth(vehicle, VEHICLE_MAX_HEALTH)
     return vehicle
 end
 
@@ -97,10 +110,36 @@ function SaveVehicle(vehicle)
             y = y,
             z = z,
             h = h
-        }
+        },
+        health = GetVehicleHealth(vehicle),
+        damage = GetVehicleDamageIndexes(vehicle)
     }, {
         uuid = VehicleData[vehicle]
     })
+end
+
+function GetVehicleDamageIndexes(vehicle)
+    return {
+        one = GetVehicleDamage(vehicle, 1),
+        two = GetVehicleDamage(vehicle, 2),
+        three = GetVehicleDamage(vehicle, 3),
+        four = GetVehicleDamage(vehicle, 4),
+        five = GetVehicleDamage(vehicle, 5),
+        six = GetVehicleDamage(vehicle, 6),
+        seven = GetVehicleDamage(vehicle, 7),
+        eight = GetVehicleDamage(vehicle, 8)
+    }
+end
+
+function SetVehicleDamageIndexes(vehicle, indexes)
+    SetVehicleDamage(vehicle, 1, indexes['one'])
+    SetVehicleDamage(vehicle, 2, indexes['two'])
+    SetVehicleDamage(vehicle, 3, indexes['three'])
+    SetVehicleDamage(vehicle, 4, indexes['four'])
+    SetVehicleDamage(vehicle, 5, indexes['five'])
+    SetVehicleDamage(vehicle, 6, indexes['six'])
+    SetVehicleDamage(vehicle, 7, indexes['seven'])
+    SetVehicleDamage(vehicle, 8, indexes['eight'])
 end
 
 AddEvent("OnPlayerEnterVehicle", function(player, vehicle, seat)
@@ -130,14 +169,14 @@ end
 function OpenHood(vehicle)
     SetVehicleHoodRatio(vehicle, 60.0)
 
-    local x,y,z = GetVehicleLocation(vehicle)
+    local x, y, z = GetVehicleLocation(vehicle)
     PlaySoundSync("sounds/hood_open.wav", x, y, z)
 end
 
 function CloseHood(vehicle)
     SetVehicleHoodRatio(vehicle, 0.0)
 
-    local x,y,z = GetVehicleLocation(vehicle)
+    local x, y, z = GetVehicleLocation(vehicle)
     PlaySoundSync("sounds/hood_close.wav", x, y, z)
 end
 
@@ -213,7 +252,7 @@ AddCommand("vehicle", function(player, modelid)
     local uuid = generate_uuid()
     local x, y, z = GetPlayerLocation(player)
     local h = GetPlayerHeading(player)
-
+    local license = generate_license()
     local vehicle = SpawnVehicle(modelid, x, y, z, h)
     if vehicle then
         InsertRow("vehicles", {
@@ -224,8 +263,16 @@ AddCommand("vehicle", function(player, modelid)
                 y = y,
                 z = z,
                 h = h
-            }
+            },
+            health = GetVehicleHealth(vehicle),
+            damage = GetVehicleDamageIndexes(vehicle),
+            license = license
         })
+
+        SetVehicleLicensePlate(vehicle, license)
+        SetVehicleHealth(vehicle, VEHICLE_MAX_HEALTH)
+
+        VehicleData[vehicle] = uuid
     end
 end)
 
@@ -233,3 +280,14 @@ function GetVehicleHealthPercentage(vehicle)
     return math.floor(GetVehicleHealth(vehicle) / VEHICLE_MAX_HEALTH * 100.0)
 end
 
+function generate_license()
+    local res = ""
+    for i = 1, 3 do
+        res = res .. string.char(math.random(97, 122))
+    end
+    res = res .. "-"
+    for i = 1, 3 do
+        res = res .. string.char(math.random(97, 122))
+    end
+    return res:upper()
+end

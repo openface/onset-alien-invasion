@@ -32,14 +32,17 @@ end
 
 AddEvent("StartMechanic", function(player)
     local vehicle, dist = GetNearestVehicle(player)
-    if vehicle == 0 or dist > 500 then
+    if vehicle == 0 or dist > 350 then
         CallRemoteEvent(player, "ShowError", "Cannot find nearby vehicle!")
+        return
+    end
+    if (GetVehicleHoodRatio(vehicle) == 0.0) then
+        CallRemoteEvent(player, "ShowError", "Hood must be open to repair or inspect vehicle!")
         return
     end
 
     VehiclesInGarage[player] = vehicle
 
-    OpenHood(vehicle)
     StartVehicleEngine(vehicle)
     SetVehicleLightEnabled(vehicle, true)
 
@@ -65,21 +68,13 @@ AddEvent("StartMechanic", function(player)
     CallRemoteEvent(player, "LoadVehicleData", vehicle, json_encode(_send))
 end)
 
-AddRemoteEvent("ShowVehicleBones", function(player, bone_data)
-    for k,v in pairs(bone_data) do
-        log.debug(k)
-        log.debug(dump(v))
-        CreateText3D(k, "20", v.x, v.y, v.z, 0, 0, 0)
-    end
-end)
-
 AddRemoteEvent("CloseMechanic", function(player)
-    if not VehiclesInGarage[player] then
+    local vehicle = VehiclesInGarage[player]
+    if not vehicle then
         log.error "No vehicle found in garage!"
         return
     end
 
-    local vehicle = VehiclesInGarage[player]
     CloseHood(vehicle)
     StopVehicleEngine(vehicle)
     SetVehicleLightEnabled(vehicle, false)
@@ -88,7 +83,6 @@ AddRemoteEvent("CloseMechanic", function(player)
 
     CallRemoteEvent(player, "SendMessage", "Thank you come again!")
 end)
-
 
 function GetNearestVehicle(player)
 	local vehicles = GetStreamedVehiclesForPlayer(player)
@@ -105,4 +99,30 @@ function GetNearestVehicle(player)
 		end
 	end
 	return found, nearest_dist
+end
+
+function RepairVehicle1() 
+    local vehicle = ActiveProp.hit_object
+
+    log.info(GetPlayerName(player) .. " inspects vehicle " .. vehicle)
+
+    local health_percentage = GetVehicleHealthPercentage(vehicle)
+    CallRemoteEvent(player, "ShowMessage", "Vehicle Health: " .. health_percentage .. "%%")
+
+    if GetVehicleDamage(vehicle, 1) == 1 then
+        -- unrepairable
+        CallRemoteEvent(player, "ShowMessage", "The vehicle is unrepairable")
+        CallRemoteEvent(player, "PlayErrorSound")
+    elseif health_percentage <= 75 then
+        -- repairable
+        CallRemoteEvent(player, "ShowMessage", "You begin to repair the vehicle...")
+
+        SetVehicleHealth(vehicle, GetVehicleHealth(vehicle) + 250)
+
+        local health_percentage = GetVehicleHealthPercentage(vehicle)
+        CallRemoteEvent(player, "ShowMessage", "Vehicle health is now " .. health_percentage .. "%%")
+    else
+        CallRemoteEvent(player, "ShowMessage", "Vehicle can not be repaired any further")
+        CallRemoteEvent(player, "PlayErrorSound")
+    end
 end

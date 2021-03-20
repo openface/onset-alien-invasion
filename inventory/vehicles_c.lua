@@ -4,6 +4,8 @@ AddEvent("OnKeyPress", function(key)
         CallRemoteEvent("ToggleVehicleTrunk")
     elseif key == "J" then
         CallRemoteEvent("ToggleVehicleHood")
+    elseif key == "G" then
+        CallRemoteEvent("ToggleVehicleEngine")
     end
 end)
 

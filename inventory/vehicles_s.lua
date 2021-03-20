@@ -108,7 +108,7 @@ AddEvent("OnPlayerEnterVehicle", function(player, vehicle, seat)
         StartVehicleEngine(vehicle)
         SetVehicleLightEnabled(vehicle, true)
 
-        CallRemoteEvent(player, "ShowMessage", "[H] Horn  [L] Lights  [J] Hood  [K] Trunk")
+        CallRemoteEvent(player, "ShowMessage", "[G] Engine  [H] Horn  [L] Lights  [J] Hood  [K] Trunk")
     end
 end)
 
@@ -149,7 +149,7 @@ AddRemoteEvent("ToggleVehicleTrunk", function(player)
     end
 
     if (GetPlayerVehicleSeat(player) ~= 1) then
-        return AddPlayerChat(player, "You must be the driver of the vehicle")
+        return AddPlayerChat(player, "You must be the driver of the vehicle for this!")
     end
 
     if (GetVehicleTrunkRatio(vehicle) > 0.0) then
@@ -167,13 +167,31 @@ AddRemoteEvent("ToggleVehicleHood", function(player)
     end
 
     if (GetPlayerVehicleSeat(player) ~= 1) then
-        return AddPlayerChat(player, "You must be the driver of the vehicle")
+        return AddPlayerChat(player, "You must be the driver of the vehicle for this!")
     end
 
     if (GetVehicleHoodRatio(vehicle) > 0.0) then
         CloseHood(vehicle)
     else
         OpenHood(vehicle)
+    end
+end)
+
+AddRemoteEvent("ToggleVehicleEngine", function(player)
+    local vehicle = GetPlayerVehicle(player)
+
+    if (vehicle == 0) then
+        return AddPlayerChat(player, "You must be in a vehicle")
+    end
+
+    if (GetPlayerVehicleSeat(player) ~= 1) then
+        return AddPlayerChat(player, "You must be the driver of the vehicle for this!")
+    end
+
+    if GetVehicleEngineState(vehicle) then
+        StopVehicleEngine(vehicle)
+    else
+        StartVehicleEngine(vehicle)
     end
 end)
 

@@ -173,7 +173,7 @@ function ProcessHitResult(HitResult)
     end
 
     -- vehicle hoods
---[[     for _, veh in pairs(GetStreamedVehicles()) do
+    for _, veh in pairs(GetStreamedVehicles()) do
         if GetVehicleSkeletalMeshComponent(veh):GetUniqueID() == Comp:GetUniqueID() then
             -- we only care about being close to the hood bone
             if IsNearVehicleOpenHood(veh) then
@@ -183,5 +183,5 @@ function ProcessHitResult(HitResult)
             end
         end
     end
- ]]end
+end
 

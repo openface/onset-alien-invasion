@@ -22,6 +22,10 @@ local StorageLootSpawnInterval = 1000 * 60 * 15 -- 15 minutes
 
 AddEvent("OnPackageStart", function()
     StorageLootSpawnTimer = CreateTimer(function()
+        if not next(GetAllPlayers()) then
+            return
+        end
+        
         for object in pairs(WorldStorageObjects) do
             SpawnStorageLoot(object)
         end

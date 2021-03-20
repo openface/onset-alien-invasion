@@ -9,6 +9,10 @@ local GameSaveTime = 1000 * 60 -- 60 secs
 
 AddEvent("OnPackageStart", function()
     GameSaveTimer = CreateTimer(function()
+        if not next(GetAllPlayers()) then
+            return
+        end
+        
         for player, _ in pairs(PlayerData) do
             if IsValidPlayer(player) and GetPlayerDimension(player) == 0 and not IsPlayerDead(player) then
                 SavePlayer(player)

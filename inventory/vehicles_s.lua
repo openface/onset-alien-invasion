@@ -280,6 +280,11 @@ function GetVehicleHealthPercentage(vehicle)
     return math.floor(GetVehicleHealth(vehicle) / VEHICLE_MAX_HEALTH * 100.0)
 end
 
+function IncreaseVehicleHealth(vehicle, amount)
+    local new_health = GetVehicleHealth(vehicle) + amount
+    SetVehicleHealth(vehicle, math.min(new_health, VEHICLE_MAX_HEALTH))
+end
+
 function generate_license()
     local res = ""
     for i = 1, 3 do

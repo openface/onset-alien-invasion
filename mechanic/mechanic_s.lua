@@ -46,6 +46,10 @@ AddEvent("StartMechanic", function(player)
     StartVehicleEngine(vehicle)
     SetVehicleLightEnabled(vehicle, true)
 
+    SendVehicleData(player, vehicle)
+end)
+
+function SendVehicleData(player, vehicle)    
     local _send = {
         modelid = GetVehicleModel(vehicle),
         model_name = GetVehicleModelName(vehicle),
@@ -55,7 +59,7 @@ AddEvent("StartMechanic", function(player)
 
     log.debug(dump(json_encode(_send)))
     CallRemoteEvent(player, "LoadVehicleData", vehicle, json_encode(_send))
-end)
+end
 
 AddRemoteEvent("CloseMechanic", function(player)
     local vehicle = VehiclesInGarage[player]
@@ -64,7 +68,6 @@ AddRemoteEvent("CloseMechanic", function(player)
         return
     end
 
-    CloseHood(vehicle)
     StopVehicleEngine(vehicle)
     SetVehicleLightEnabled(vehicle, false)
 
@@ -84,10 +87,12 @@ AddRemoteEvent("RepairVehicle", function(player)
 
     CallRemoteEvent(player, "ShowMessage", "You begin to repair the vehicle...")
 
-    SetVehicleHealth(vehicle, GetVehicleHealth(vehicle) + 250)
+    local x,y,z = GetVehicleLocation(vehicle)
+    PlaySoundSync("sounds/drill.wav", x, y, z)
 
-    local health_percentage = GetVehicleHealthPercentage(vehicle)
-    CallRemoteEvent(player, "ShowMessage", "Vehicle health is now " .. health_percentage .. "%%")
+    IncreaseVehicleHealth(vehicle, 100)
+
+    SendVehicleData(player, vehicle)
 end)
 
 function GetNearestVehicle(player)

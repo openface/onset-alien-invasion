@@ -17,6 +17,10 @@ AddEvent("OnPackageStop", function()
     end
 end)
 
+function GetWorkbenchCount()
+    return #table.keys(Workbenches)
+end
+
 function CreateWorkbench(config)
     log.debug("Creating workbench: " .. config.name)
     local object = CreateObject(config.modelID, config.x, config.y, config.z, config.rx, config.ry, config.rz,

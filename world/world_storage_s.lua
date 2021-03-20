@@ -40,6 +40,10 @@ AddEvent("OnPackageStop", function()
     WorldStorageObjects = {}
 end)
 
+function GetWorldStorageObjectsCount()
+    return #table.keys(WorldStorageObjects)
+end
+
 function AddStorageProp(object)
     local locked
     -- 1 in 5 chance of being locked

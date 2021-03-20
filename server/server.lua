@@ -10,19 +10,21 @@ local GameSaveTime = 1000 * 60 -- 60 secs
 AddEvent("OnPackageStart", function()
     GameSaveTimer = CreateTimer(function()
         -- stats
-        log.info("=== Game Entities =================================================================")
+        log.info("=== Game Entities / Instances =====================================================")
         log.info("Objects:          " .. #GetAllObjects())
+        log.info("   PlacedObjects:       " .. GetPlacedObjectsCount())
+        log.info("   ItemInstances:       " .. GetItemInstancesCount())
+        log.info("   WorldObjects:        " .. GetWorldObjectsCount())
+        log.info("   Workbenches:         " .. GetWorkbenchCount())
+        log.info("   WorldStorageObjects: " .. GetWorldStorageObjectsCount())
+        log.info("   Merchants:           " .. GetMerchantsCount())
+        log.info("   Mechanics:           " .. GetMechanicsCount())
+        log.info("Vehicles:         " .. #GetAllVehicles()  .. " (" .. GetVehicleInstancesCount() .. " instances)")
+        log.info("Players:          " .. #GetAllPlayers()   .. " (" .. GetPlayerInstancesCount()  .. " instances)")
+        log.info("NPCs:             " .. #GetAllNPC()       .. " (" .. GetAlienInstancesCount()   .. " aliens)")
         log.info("Pickups:          " .. #GetAllPickups())
-        log.info("Vehicles:         " .. #GetAllVehicles())
         log.info("Timers:           " .. #GetAllTimers())
-        log.info("Players:          " .. #GetAllPlayers())
-        log.info("--- Server Instances --------------------------------------------------------------")
-        log.info("PlayerInstances:  " .. GetPlayerInstancesCount())
-        log.info("VehicleInstances: " .. GetVehicleInstancesCount())
-        log.info("ItemInstances:    " .. GetItemInstancesCount())
-        log.info("PlacedObjects:    " .. GetPlacedObjectsCount())
-        log.info("AlienInstances:   " .. GetAlienInstancesCount())
-        
+
         -- save all players
         for player, _ in pairs(PlayerData) do
             if IsValidPlayer(player) and GetPlayerDimension(player) == 0 and not IsPlayerDead(player) then

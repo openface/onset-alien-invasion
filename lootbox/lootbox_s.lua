@@ -44,8 +44,7 @@ AddEvent("OnPackageStop", function()
 end)
 
 function SpawnLootArea(pos)
-    local players = GetAllPlayers()
-    if next(players) == nil then
+    if not next(GetAllPlayers()) then
         return
     end
 

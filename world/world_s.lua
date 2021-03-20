@@ -39,3 +39,6 @@ AddEvent("OnPackageStop", function()
     end
 end)
 
+function GetWorldObjectsCount()
+    return #table.keys(WorldObjects)
+end

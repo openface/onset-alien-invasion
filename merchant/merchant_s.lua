@@ -29,6 +29,10 @@ function CreateMerchant(name, config)
     Merchants[object] = true
 end
 
+function GetMerchantsCount()
+    return #table.keys(Merchants)
+end
+
 AddEvent("StartMerchant", function(player)
     local item_data = {}
     for key, item in pairs(ItemConfig) do

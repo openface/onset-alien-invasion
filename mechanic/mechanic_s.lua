@@ -30,6 +30,10 @@ function CreateMechanic(config)
     Mechanics[object] = true
 end
 
+function GetMechanicsCount()
+    return #table.keys(Mechanics)
+end
+
 AddEvent("StartMechanic", function(player)
     local vehicle, dist = GetNearestVehicle(player)
     if vehicle == 0 or dist > 350 then

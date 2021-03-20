@@ -1,6 +1,6 @@
 local VNPCS = ImportPackage("vnpcs")
 if VNPCS == nil then
-    print("Missing Onset_Weapon_Patch package!")
+    print("Missing VNPCS package!")
     ServerExit()
 end
 
@@ -10,8 +10,10 @@ local AlienAttackRange = 5000
 local AlienAttackDamage = 50
 local AlienRetargetCooldown = {} -- aliens re-target on every weapon hit w/ cooldown period
 local AlienSpawnsEnabled = true
+local AlienSpawnInterval = 120 * 1000 -- 2 mins
 local AlienSpawnTimer
-local AlienAttackTimer
+local AlienTickInterval = 1000 * 3 -- 3 secs
+local AlienTickTimer
 
 local AlienTargets = {}
 
@@ -35,24 +37,31 @@ AddEvent("OnPackageStart", function()
     -- re-spawn on a timer
     AlienSpawnTimer = CreateTimer(function()
         SpawnAliens()
-    end, 120 * 1000) -- alien spawn every 2 mins
+    end, AlienSpawnInterval)
 
     -- process timer for all aliens
-    AlienAttackTimer = CreateTimer(function()
+    AlienTickTimer = CreateTimer(function()
         for _, npc in pairs(GetAllNPC()) do
             if (GetNPCPropertyValue(npc, 'type') == 'alien') then
                 ResetAlien(npc)
             end
         end
-    end, 3000) -- alien attack tick every 10 seconds
+    end, AlienTickInterval)
 end)
 
 AddEvent("OnPackageStop", function()
-    ClearAliens()
+    for _, npc in pairs(Aliens) do
+        DestroyNPC(npc)
+    end
+    Aliens = {}
 
     DestroyTimer(AlienSpawnTimer)
-    DestroyTimer(AlienAttackTimer)
+    DestroyTimer(AlienTickTimer)
 end)
+
+function GetAlienInstancesCount()
+    return #table.keys(Aliens)
+end
 
 function SpawnAliens()
     if AlienSpawnsEnabled ~= true then
@@ -69,13 +78,6 @@ function SpawnAliens()
             end
         end
     end
-end
-
-function ClearAliens()
-    for _, npc in pairs(Aliens) do
-        DestroyNPC(npc)
-    end
-    Aliens = {}
 end
 
 function IsPlayerAttackable(player)

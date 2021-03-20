@@ -115,9 +115,6 @@ function DespawnBoss()
     BossHealth = BossInitialHealth
     BossKillers = {}
 
-    -- despawn all aliens
-    ClearAliens()
-
     log.info "Mothership despawned"
 end
 

@@ -21,7 +21,8 @@ AddEvent("OnPackageStart", function()
         log.info("VehicleInstances: " .. GetVehicleInstancesCount())
         log.info("ItemInstances:    " .. GetItemInstancesCount())
         log.info("PlacedObjects:    " .. GetPlacedObjectsCount())
-
+        log.info("AlienInstances:   " .. GetAlienInstancesCount())
+        
         -- save all players
         for player, _ in pairs(PlayerData) do
             if IsValidPlayer(player) and GetPlayerDimension(player) == 0 and not IsPlayerDead(player) then

@@ -2,25 +2,23 @@ local CurrentTime
 local TimeTimer
 
 AddEvent("OnPackageStart", function()
-  CurrentTime = 10 -- server start time
+    CurrentTime = 10 -- server start time
 
-  TimeTimer = CreateTimer(function()
-    CurrentTime = CurrentTime + 0.20
-      if CurrentTime > 24 then
-        CurrentTime = 0
-      end
-      SyncTime()
-  end, 60 * 1000)
+    TimeTimer = CreateTimer(function()
+        CurrentTime = CurrentTime + 0.20
+        if CurrentTime > 24 then
+            CurrentTime = 0
+        end
+        SyncTime()
+    end, 60 * 1000)
 end)
 
 AddEvent("OnPackageStop", function()
-  DestroyTimer(TimeTimer)
+    DestroyTimer(TimeTimer)
 end)
 
 function SyncTime()
-  --log.debug("Time is now "..CurrentTime)
-  for _,ply in pairs(GetAllPlayers()) do
-      CallRemoteEvent(ply, "ClientSetTime", CurrentTime)
-  end
+    -- log.debug("Time is now "..CurrentTime)
+    BroadcastRemoteEvent("ClientSetTime", CurrentTime)
 end
 AddEvent("OnPlayerJoin", SyncTime)

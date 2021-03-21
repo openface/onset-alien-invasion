@@ -81,7 +81,7 @@ function SpawnAliens()
 end
 
 function IsPlayerAttackable(player)
-    if player == nil or player == 0 then
+    if (player == nil or player == 0) or not PlayerData[player] then
         return false
     end
 

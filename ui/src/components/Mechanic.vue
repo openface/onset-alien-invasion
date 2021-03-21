@@ -13,7 +13,7 @@
                 </div>
             </div>
             <div class="action">
-                <button id="repair" @click="RepairVehicle()" :disabled="IsPristine()">Repair Vehicle</button>
+                <button id="repair" @click="RepairVehicle()" :disabled="IsPristine() || IsBusy()">Repair Vehicle</button>
             </div>
             <div class="content" v-if="damage">
                 <div id="car">
@@ -28,15 +28,6 @@
                     <div :class="{ dmg:true, 'good': IsGood(body_door_rear_left) }" id="body_door_rear_left">{{ body_door_rear_left }}%</div>
                 </div>
             </div>
-        </div>
-        <div id="progress" v-if="IsBusy()">
-            <loading-progress
-                :indeterminate="true"
-                size="40"
-                rotate
-                fillDuration="3"
-                rotationDuration="4"
-            />
         </div>
     </div>
 </template>
@@ -148,31 +139,15 @@ export default {
     display: flex;
     height: 75vh;
 }
-#progress {
-    position: fixed;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-#progress >>> .vue-progress-path path {
-    stroke-width: 16;
-}
-#progress >>> .vue-progress-path .progress {
-    stroke: rgba(255, 255, 255, 0.6);
-}
-#progress >>> .vue-progress-path .background {
-    stroke: rgba(0, 0, 0, 0.4);
-}
 #inner {
-    margin: auto;
-    width: 600px;
+    position:fixed;
+    right:5%;
+    top:20%;
+    width: 400px;
     background: rgba(0, 0, 0, 0.9);
     font-family: helvetica;
     text-shadow: 1px 1px black;
     padding: 10px;
-}
-.blurred {
-    filter: blur(3px) grayscale(100%);
 }
 #title {
     color: #fff;
@@ -243,35 +218,35 @@ table th {
 }
 #body_wheel_front_right {
     top:0;
-    right:100px;
+    right:0;
 }
 #body_wheel_front_left {
     top:0;
-    left:100px;
+    left:0;
 }
 #body_wheel_rear_left {
     bottom:0;
-    left:100px;
+    left:0;
 }
 #body_wheel_rear_right {
     bottom:0;
-    right:100px;
+    right:0;
 }
 #body_door_front_right {
     top:80px;
-    right:100px;
+    right:0;
 }
 #body_door_front_left {
     top:80px;
-    left:100px;
+    left:0;
 }
 #body_door_rear_right {
     bottom:80px;
-    right:100px;
+    right:0;
 }
 #body_door_rear_left {
     bottom:80px;
-    left:100px;
+    left:0;
 }
 button#repair {
     font-weight: bold;
@@ -283,7 +258,7 @@ button#repair {
     border-radius:3px;
     border:1px outset #1770ff;
 }
-#inner:not(.blurred) button#repair:hover:not([disabled]) {
+button#repair:hover:not([disabled]) {
     cursor: pointer;
     background: #3684ff;
     border:1px outset #1770ff;

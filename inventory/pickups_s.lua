@@ -61,7 +61,7 @@ end
 
 AddEvent("OnPlayerPickupHit", function(player, pickup)
     local item = GetPickupPropertyValue(pickup, 'item')
-    if item == nil then
+    if not item then
         return
     end
 

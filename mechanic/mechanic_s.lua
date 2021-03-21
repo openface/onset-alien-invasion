@@ -12,23 +12,47 @@ end)
 
 AddEvent("OnPackageStop", function()
     log.info "Destroying all merchants..."
-    for object in pairs(Mechanics) do
-        Mechanics[object] = nil
-        DestroyObject(object)
+    for pickup,mech in pairs(Mechanics) do
+        Mechanics[pickup] = nil
+        DestroyPickup(pickup)
+        DestroyText3D(mech.text3d)
     end
     VehiclesInGarage = {}
 end)
 
 function CreateMechanic(config)
     log.debug("Creating mechanic: " .. config.name)
-    local object = CreateObject(config.modelID, config.x, config.y, config.z, config.rx, config.ry, config.rz,
-                       config.sx, config.sy, config.sz)
-    SetObjectPropertyValue(object, "prop", {
-        use_label = "Interact",
-        event = "StartMechanic"
-    })
-    Mechanics[object] = true
+
+    local pickup = CreatePickup(2, config.x, config.y, config.z)
+    SetPickupPropertyValue(pickup, "mechanic", true)
+
+    Mechanics[pickup] = {
+        name = config.name,
+        text3d = CreateText3D(config.name, 12, config.x, config.y, config.z + 100, 0, 0, 0)
+    }
 end
+
+AddEvent("OnPlayerPickupHit", function(player, pickup)
+    if not GetPickupPropertyValue(pickup, "mechanic") then
+        return
+    end
+    if not Mechanics[pickup] then
+        return
+    end
+
+    local vehicle = GetPlayerVehicle(player)
+    if not vehicle then
+        return
+    end
+
+    if GetVehicleDriver(vehicle) ~= player then
+        return
+    end
+
+    OpenHood(vehicle)
+
+    CallEvent("StartMechanic", player)
+end)
 
 function GetMechanicsCount()
     return #table.keys(Mechanics)
@@ -47,9 +71,6 @@ AddEvent("StartMechanic", function(player)
 
     VehiclesInGarage[player] = vehicle
 
-    StartVehicleEngine(vehicle)
-    SetVehicleLightEnabled(vehicle, true)
-
     local _send = GetVehicleData(vehicle)
     CallRemoteEvent(player, "LoadVehicleData", vehicle, json_encode(_send))
 end)
@@ -66,12 +87,10 @@ end
 AddRemoteEvent("CloseMechanic", function(player)
     local vehicle = VehiclesInGarage[player]
     if not vehicle then
-        log.error "No vehicle found in garage!"
         return
     end
 
-    StopVehicleEngine(vehicle)
-    SetVehicleLightEnabled(vehicle, false)
+    CloseHood(vehicle)
 
     VehiclesInGarage[player] = nil
 

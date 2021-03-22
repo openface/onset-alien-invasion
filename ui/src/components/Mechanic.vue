@@ -1,19 +1,26 @@
 <template>
     <div id="container">
         <div id="inner" :class="IsBusy() ? 'blurred' : ''">
-            <div id="title">AUTO MECHANIC <a class="close" @click="CloseMechanic()">X</a></div>
+            <div id="title">GARAGE <a class="close" @click="CloseMechanic()">X</a></div>
             <div class="content">
                 <div class="stats">
                     Model Name<br />
                     <span>{{ model_name }}</span>
                 </div>
-                <div class="health">
-                    Overall Health<br />
-                    <span>{{ health }}%</span>
+                <div class="license">
+                    License<br />
+                    <span>{{ license }}</span>
                 </div>
+                <br style="clear:both" />
             </div>
-            <div class="action">
-                <button id="repair" @click="RepairVehicle()" :disabled="IsPristine() || IsBusy()">Repair Vehicle</button>
+            <div class="section">
+                <div class="subtitle">
+                    Health <b>{{ health }}%</b>
+                </div>
+                <div class="action">
+                    <button id="repair" @click="RepairVehicle()" :disabled="IsPristine() || IsBusy()">Repair Vehicle</button>
+                </div>
+                <br style="clear:both" />
             </div>
             <div class="content" v-if="damage">
                 <div id="car">
@@ -28,6 +35,15 @@
                     <div :class="{ dmg:true, 'good': IsGood(body_door_rear_left) }" id="body_door_rear_left">{{ body_door_rear_left }}%</div>
                 </div>
             </div>
+            <div class="section">
+                <div class="subtitle">
+                    Paint Color
+                </div>
+                <div class="action">
+                    <button id="paint" @click="PaintVehicle()" :disabled="IsBusy()">Paint Vehicle</button>
+                </div>
+                <br style="clear:both" />
+            </div>
         </div>
     </div>
 </template>
@@ -40,6 +56,7 @@ export default {
             modelid: null,
             model_name: null,
             health: null,
+            license: null,
             damage: {},
             is_busy: false,
         };
@@ -100,6 +117,7 @@ export default {
             this.modelid = data.modelid
             this.model_name = data.model_name
             this.health = data.health
+            this.license = data.license
             this.damage = data.damage
         },
         CloseMechanic: function() {
@@ -108,6 +126,10 @@ export default {
         RepairVehicle: function() {
             this.is_busy = true;
             this.CallEvent("RepairVehicle");
+        },
+        PaintVehicle: function() {
+            this.is_busy = true;
+            this.CallEvent("PaintVehicle");
         }
     },
     mounted() {
@@ -118,6 +140,7 @@ export default {
                 modelid: 23,
                 model_name: "Whatev",
                 health: 90,
+                license: 'ABC-123',
                 damage: {
                     two:0.079999998211861,
                     eight:0,
@@ -147,11 +170,11 @@ export default {
     background: rgba(0, 0, 0, 0.9);
     font-family: helvetica;
     text-shadow: 1px 1px black;
-    padding: 10px;
+    padding: 5px;
 }
 #title {
     color: #fff;
-    font-size: 36px;
+    font-size: 32px;
     text-align: center;
     margin: 0;
     font-weight: bold;
@@ -160,13 +183,14 @@ export default {
 }
 a.close {
     color: #fff;
-    font-size: 18px;
+    font-size: 22px;
     font-family: arial;
     float: right;
     background: #1770ff;
     border-radius: 2px;
+    margin-top:5px;
     margin-right: 10px;
-    padding: 0 5px;
+    padding: 0 8px;
 }
 a.close:hover {
     cursor: pointer;
@@ -177,24 +201,32 @@ a.close:hover {
     background: rgba(255, 255, 255, 0.1);
     margin: 10px;
     padding: 10px;
-    min-height:60px;
     font-size:14px;
     color:#999;
 }
 .content .stats {
     float:left;
 }
-.content .health {
+.content .license {
     float:right;
 }
 .content span {
-    font-size:40px;
+    font-size:32px;
     font-weight:bold;
     color:#fff;
 }
-.action {
-    padding:10px;
-    text-align:center;
+.section {
+    padding:5px 15px;
+}
+.section .subtitle {
+    color:#fff;
+    float:left;
+    font-size:26px;
+    line-height:1.5em;
+}
+.section .action {
+    text-align:right;
+    float:right;
 }
 table th {
     text-transform: uppercase;
@@ -248,7 +280,7 @@ table th {
     bottom:80px;
     left:0;
 }
-button#repair {
+button {
     font-weight: bold;
     border: 0px;
     padding: 10px;
@@ -258,13 +290,13 @@ button#repair {
     border-radius:3px;
     border:1px outset #1770ff;
 }
-button#repair:hover:not([disabled]) {
+button:hover:not([disabled]) {
     cursor: pointer;
     background: #3684ff;
     border:1px outset #1770ff;
 }
-button#repair:disabled,
-button#repair[disabled] {
+button:disabled,
+button[disabled] {
     background: #999;
     color: #666666;
     border:1px inset #666666;

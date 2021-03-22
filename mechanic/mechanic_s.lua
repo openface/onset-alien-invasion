@@ -1,5 +1,6 @@
 local Mechanics = {}
 local VehiclesInGarage = {}
+local TempColors = {}
 
 AddEvent("OnPackageStart", function()
     log.info("Loading mechanics...")
@@ -92,6 +93,12 @@ AddRemoteEvent("CloseMechanic", function(player)
 
     CloseHood(vehicle)
 
+    if TempColors[player] then
+        local prev_color = TempColors[player]
+        SetVehicleColor(vehicle, RGB(prev_color.r, prev_color.g, prev_color.b))
+        TempColors[player] = nil
+    end
+
     VehiclesInGarage[player] = nil
 
     CallRemoteEvent(player, "SendMessage", "Thank you come again!")
@@ -117,6 +124,34 @@ AddRemoteEvent("RepairVehicle", function(player)
         CallRemoteEvent(player, "LoadVehicleData", vehicle, json_encode(_send))
     end)
 end)
+
+AddRemoteEvent("PaintVehicle", function(player, r, g, b)
+    log.trace("PaintVehicle", dump(rgba))
+
+    local vehicle = GetPlayerVehicle(player)
+    SetVehicleColor(vehicle, RGB(r, g, b))
+
+    SaveVehicle(vehicle)
+
+    TempColors[player] = nil
+end)
+
+AddRemoteEvent("PreviewColor", function(player, r, g, b)
+    log.trace("PreviewColor", r, g, b)
+
+    local vehicle = GetPlayerVehicle(player)
+
+    -- store temp colors until mechanic UI closes
+    local _r,_g,_b = HexToRGBA(GetVehicleColor(vehicle))
+    TempColors[player] = { 
+        r = _r, 
+        g = _g,
+        b = _b
+    }
+
+    SetVehicleColor(vehicle, RGB(r, g, b))
+end)
+
 
 function GetNearestVehicle(player)
     local vehicles = GetStreamedVehiclesForPlayer(player)

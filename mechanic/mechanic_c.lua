@@ -37,3 +37,11 @@ end)
 AddEvent("RepairVehicle", function()
     CallRemoteEvent("RepairVehicle")
 end)
+
+AddEvent("PreviewColor", function(r, g, b)
+    CallRemoteEvent("PreviewColor", r, g, b)
+end)
+
+AddEvent("PaintVehicle", function(r, g, b)
+    CallRemoteEvent("PaintVehicle", r, g, b)
+end)

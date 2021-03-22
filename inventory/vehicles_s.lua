@@ -30,6 +30,9 @@ InitTable("vehicles", {
     license = {
         type = 'char',
         length = 13
+    },
+    color = {
+        type = 'json',
     }
 }, false) -- true to recreate table
 
@@ -59,6 +62,7 @@ function SpawnVehicles()
         for i = 1, mariadb_get_row_count() do
             local row = mariadb_get_assoc(i)
             local loc = json_decode(row['location'])
+            local color = json_decode(row['color'])
 
             local vehicle = SpawnVehicle(row['modelid'], loc.x, loc.y, loc.z, loc.h)
             if vehicle then
@@ -69,6 +73,8 @@ function SpawnVehicles()
                 end
                 SetVehiclePropertyValue(vehicle, "storage", storage)
                 SetVehicleLicensePlate(vehicle, row['license'])
+                SetVehicleColor(vehicle, RGB(color.r, color.g, color.b))
+
                 SetVehicleHealth(vehicle, row['health'])
                 SetVehicleDamageIndexes(vehicle, json_decode(row['damage']))
 
@@ -106,7 +112,7 @@ function SaveVehicle(vehicle)
     local x, y, z = GetVehicleLocation(vehicle)
     local h = GetVehicleHeading(vehicle)
     local modelid = GetVehicleModel(vehicle)
-
+    local r,g,b = HexToRGBA(GetVehicleColor(vehicle))
     UpdateRows("vehicles", {
         location = {
             x = x,
@@ -115,7 +121,12 @@ function SaveVehicle(vehicle)
             h = h
         },
         health = GetVehicleHealth(vehicle),
-        damage = GetVehicleDamageIndexes(vehicle)
+        damage = GetVehicleDamageIndexes(vehicle),
+        color = {
+            r = r,
+            g = g,
+            b = b
+        }
     }, {
         uuid = VehicleData[vehicle]
     })
@@ -257,6 +268,7 @@ AddCommand("vehicle", function(player, modelid)
     local h = GetPlayerHeading(player)
     local license = generate_license()
     local vehicle = SpawnVehicle(modelid, x, y, z, h)
+    local r,g,b = HexToRGBA(GetVehicleColor(vehicle))
     if vehicle then
         InsertRow("vehicles", {
             uuid = uuid,
@@ -269,11 +281,18 @@ AddCommand("vehicle", function(player, modelid)
             },
             health = GetVehicleHealth(vehicle),
             damage = GetVehicleDamageIndexes(vehicle),
-            license = license
+            license = license,
+            color = {
+                r = r,
+                g = g,
+                b = b
+            }
         })
 
         SetVehicleLicensePlate(vehicle, license)
         SetVehicleHealth(vehicle, VEHICLE_MAX_HEALTH)
+        
+        SetPlayerInVehicle(player, vehicle)
 
         VehicleData[vehicle] = uuid
     end

@@ -139,10 +139,10 @@ export default {
             this.CallEvent("RepairVehicle");
         },
         PaintVehicle: function() {
-            this.CallEvent("PaintVehicle", this.color.hex8);
+            this.CallEvent("PaintVehicle", this.color.rgba['r'], this.color.rgba['g'], this.color.rgba['b']);
         },
         PreviewColor: function() {
-            this.CallEvent("PreviewColor", this.color.hex8)
+            this.CallEvent("PreviewColor", this.color.rgba['r'], this.color.rgba['g'], this.color.rgba['b'])
         }
     },
     mounted() {

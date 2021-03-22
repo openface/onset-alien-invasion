@@ -152,7 +152,9 @@ AddEvent("OnPlayerSteamAuth", function(player)
 
             -- player is already spawned, relocate them
             local loc = json_decode(row['location'])
-            SetPlayerLocation(player, loc['x'], loc['y'], loc['z'])
+
+            -- increase Z just a bit to avoid collisions with any vehicles
+            SetPlayerLocation(player, loc['x'], loc['y'], loc['z'] + 250)
         end
     end)
 end)

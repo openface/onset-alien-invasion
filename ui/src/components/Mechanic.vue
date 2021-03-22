@@ -14,15 +14,15 @@
                 <br style="clear:both" />
             </div>
             <div class="section">
-                <div class="subtitle">
-                    Health <b>{{ health }}%</b>
+                <div class="heading">
+                    <div class="subtitle">
+                        Health <b>{{ health }}%</b>
+                    </div>
+                    <div class="action">
+                        <button id="repair" @click="RepairVehicle()" :disabled="IsPristine() || IsBusy()">Repair Vehicle</button>
+                    </div>
+                    <br style="clear:both" />
                 </div>
-                <div class="action">
-                    <button id="repair" @click="RepairVehicle()" :disabled="IsPristine() || IsBusy()">Repair Vehicle</button>
-                </div>
-                <br style="clear:both" />
-            </div>
-            <div class="content" v-if="damage">
                 <div id="car">
                     <img :src="require('@/assets/images/mechanic/car.png')" alt="" width="200" />
                     <div :class="{ dmg:true, 'good': IsGood(body_wheel_front_right) }" id="body_wheel_front_right">{{ body_wheel_front_right }}%</div>
@@ -35,20 +35,26 @@
                     <div :class="{ dmg:true, 'good': IsGood(body_door_rear_left) }" id="body_door_rear_left">{{ body_door_rear_left }}%</div>
                 </div>
             </div>
+            <br />
             <div class="section">
-                <div class="subtitle">
-                    Paint Color
+                <div class="heading">
+                    <div class="subtitle">
+                        Vehicle Color
+                    </div>
+                    <div class="action">
+                        <button id="paint" @click="PaintVehicle()">Paint Vehicle</button>
+                    </div>
+                    <br style="clear:both" />
                 </div>
-                <div class="action">
-                    <button id="paint" @click="PaintVehicle()" :disabled="IsBusy()">Paint Vehicle</button>
-                </div>
-                <br style="clear:both" />
+                <compact-picker v-model="color" style="width:100%;" @input="PreviewColor" />
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import { Compact } from 'vue-color'
+
 export default {
     name: "Mechanic",
     data() {
@@ -58,8 +64,12 @@ export default {
             health: null,
             license: null,
             damage: {},
+            color: "",
             is_busy: false,
         };
+    },
+    components: {
+        'compact-picker': Compact,
     },
     computed: {
         body_wheel_front_right: function() {
@@ -119,6 +129,7 @@ export default {
             this.health = data.health
             this.license = data.license
             this.damage = data.damage
+            this.color = data.color
         },
         CloseMechanic: function() {
             this.CallEvent("CloseMechanic");
@@ -128,8 +139,10 @@ export default {
             this.CallEvent("RepairVehicle");
         },
         PaintVehicle: function() {
-            this.is_busy = true;
-            this.CallEvent("PaintVehicle");
+            this.CallEvent("PaintVehicle", this.color.hex8);
+        },
+        PreviewColor: function() {
+            this.CallEvent("PreviewColor", this.color.hex8)
         }
     },
     mounted() {
@@ -150,7 +163,8 @@ export default {
                     five:0.03999999910593,
                     six:0.019999999552965,
                     four:0
-                }
+                },
+                color: "#000000"
             });
         }
     },
@@ -166,7 +180,7 @@ export default {
     position:fixed;
     right:5%;
     top:20%;
-    width: 400px;
+    width: 405px;
     background: rgba(0, 0, 0, 0.9);
     font-family: helvetica;
     text-shadow: 1px 1px black;
@@ -197,11 +211,8 @@ a.close:hover {
 }
 .content {
     color: #fff;
-    text-shadow: 2px 2px rgba(0, 0, 0, 0.2);
-    background: rgba(255, 255, 255, 0.1);
-    margin: 10px;
     padding: 10px;
-    font-size:14px;
+    font-size:12px;
     color:#999;
 }
 .content .stats {
@@ -211,12 +222,18 @@ a.close:hover {
     float:right;
 }
 .content span {
-    font-size:32px;
+    font-size:24px;
     font-weight:bold;
     color:#fff;
 }
 .section {
-    padding:5px 15px;
+    padding:10px;
+    margin:10px;
+    text-shadow: 2px 2px rgba(0, 0, 0, 0.9);
+    background: rgba(255, 255, 255, 0.1);
+}
+.section .heading {
+    margin-bottom:20px;
 }
 .section .subtitle {
     color:#fff;

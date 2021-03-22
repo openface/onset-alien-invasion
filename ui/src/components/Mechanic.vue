@@ -25,14 +25,14 @@
                 </div>
                 <div id="car">
                     <img :src="require('@/assets/images/mechanic/car.png')" alt="" width="200" />
-                    <div :class="{ dmg:true, 'good': IsGood(body_wheel_front_right) }" id="body_wheel_front_right">{{ body_wheel_front_right }}%</div>
-                    <div :class="{ dmg:true, 'good': IsGood(body_wheel_front_left) }" id="body_wheel_front_left">{{ body_wheel_front_left }}%</div>
-                    <div :class="{ dmg:true, 'good': IsGood(body_wheel_rear_left) }" id="body_wheel_rear_left">{{ body_wheel_rear_left }}%</div>
-                    <div :class="{ dmg:true, 'good': IsGood(body_wheel_rear_right) }" id="body_wheel_rear_right">{{ body_wheel_rear_right }}%</div>
-                    <div :class="{ dmg:true, 'good': IsGood(body_door_front_right) }" id="body_door_front_right">{{ body_door_front_right }}%</div>
-                    <div :class="{ dmg:true, 'good': IsGood(body_door_front_left) }" id="body_door_front_left">{{ body_door_front_left }}%</div>
-                    <div :class="{ dmg:true, 'good': IsGood(body_door_rear_right) }" id="body_door_rear_right">{{ body_door_rear_right }}%</div>
-                    <div :class="{ dmg:true, 'good': IsGood(body_door_rear_left) }" id="body_door_rear_left">{{ body_door_rear_left }}%</div>
+                    <div :class="{ dmg: true, good: IsGood(body_wheel_front_right) }" id="body_wheel_front_right">{{ body_wheel_front_right }}%</div>
+                    <div :class="{ dmg: true, good: IsGood(body_wheel_front_left) }" id="body_wheel_front_left">{{ body_wheel_front_left }}%</div>
+                    <div :class="{ dmg: true, good: IsGood(body_wheel_rear_left) }" id="body_wheel_rear_left">{{ body_wheel_rear_left }}%</div>
+                    <div :class="{ dmg: true, good: IsGood(body_wheel_rear_right) }" id="body_wheel_rear_right">{{ body_wheel_rear_right }}%</div>
+                    <div :class="{ dmg: true, good: IsGood(body_door_front_right) }" id="body_door_front_right">{{ body_door_front_right }}%</div>
+                    <div :class="{ dmg: true, good: IsGood(body_door_front_left) }" id="body_door_front_left">{{ body_door_front_left }}%</div>
+                    <div :class="{ dmg: true, good: IsGood(body_door_rear_right) }" id="body_door_rear_right">{{ body_door_rear_right }}%</div>
+                    <div :class="{ dmg: true, good: IsGood(body_door_rear_left) }" id="body_door_rear_left">{{ body_door_rear_left }}%</div>
                 </div>
             </div>
             <br />
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { Compact } from 'vue-color'
+import { Compact } from "vue-color";
 
 export default {
     name: "Mechanic",
@@ -64,72 +64,72 @@ export default {
             health: null,
             license: null,
             damage: {},
-            color: "",
+            color: {},
             is_busy: false,
         };
     },
     components: {
-        'compact-picker': Compact,
+        "compact-picker": Compact,
     },
     computed: {
         body_wheel_front_right: function() {
-            return this.CalcPerc(this.damage['one'])
+            return this.CalcPerc(this.damage["one"]);
         },
         body_wheel_front_left: function() {
-            return this.CalcPerc(this.damage['two'])
+            return this.CalcPerc(this.damage["two"]);
         },
         body_wheel_rear_left: function() {
-            return this.CalcPerc(this.damage['three'])
+            return this.CalcPerc(this.damage["three"]);
         },
         body_wheel_rear_right: function() {
-            return this.CalcPerc(this.damage['four'])
+            return this.CalcPerc(this.damage["four"]);
         },
         body_door_front_right: function() {
-            return this.CalcPerc(this.damage['five'])
+            return this.CalcPerc(this.damage["five"]);
         },
         body_door_front_left: function() {
-            return this.CalcPerc(this.damage['six'])
+            return this.CalcPerc(this.damage["six"]);
         },
         body_door_rear_right: function() {
-            return this.CalcPerc(this.damage['seven'])
+            return this.CalcPerc(this.damage["seven"]);
         },
         body_door_rear_left: function() {
-            return this.CalcPerc(this.damage['eight'])
-        }
+            return this.CalcPerc(this.damage["eight"]);
+        },
     },
     methods: {
         IsBusy() {
             return this.is_busy;
         },
         IsGood: function(amt) {
-            if (amt == 100.00) {
-                return true
+            if (amt == 100.0) {
+                return true;
             } else {
                 return false;
             }
         },
         IsPristine: function() {
             if (this.health == 100) {
-                return true
+                return true;
             } else {
-                return false
+                return false;
             }
         },
         CalcPerc: function(dmg) {
-            if (typeof(dmg) == 'undefined') {
+            if (typeof dmg == "undefined") {
                 return "N/A";
             }
             window.console.log(dmg);
-            return (100 - (dmg * 100)).toFixed(2);
+            return (100 - dmg * 100).toFixed(2);
         },
         LoadVehicleData: function(data) {
             this.is_busy = false;
-            this.modelid = data.modelid
-            this.model_name = data.model_name
-            this.health = data.health
-            this.license = data.license
-            this.damage = data.damage
-            this.color = data.color
+            this.modelid = data.modelid;
+            this.model_name = data.model_name;
+            this.health = data.health;
+            this.license = data.license;
+            this.damage = data.damage;
+            this.color = data.color;
         },
         CloseMechanic: function() {
             this.CallEvent("CloseMechanic");
@@ -139,11 +139,11 @@ export default {
             this.CallEvent("RepairVehicle");
         },
         PaintVehicle: function() {
-            this.CallEvent("PaintVehicle", this.color.rgba['r'], this.color.rgba['g'], this.color.rgba['b']);
+            this.CallEvent("PaintVehicle", this.color.rgba["r"], this.color.rgba["g"], this.color.rgba["b"]);
         },
         PreviewColor: function() {
-            this.CallEvent("PreviewColor", this.color.rgba['r'], this.color.rgba['g'], this.color.rgba['b'])
-        }
+            this.CallEvent("PreviewColor", this.color.rgba["r"], this.color.rgba["g"], this.color.rgba["b"]);
+        },
     },
     mounted() {
         this.EventBus.$on("LoadVehicleData", this.LoadVehicleData);
@@ -153,18 +153,18 @@ export default {
                 modelid: 23,
                 model_name: "Whatev",
                 health: 90,
-                license: 'ABC-123',
+                license: "ABC-123",
                 damage: {
-                    two:0.079999998211861,
-                    eight:0,
-                    seven:0,
-                    one:0.019999999552965,
-                    three:0.019999999552965,
-                    five:0.03999999910593,
-                    six:0.019999999552965,
-                    four:0
+                    two: 0.079999998211861,
+                    eight: 0,
+                    seven: 0,
+                    one: 0.019999999552965,
+                    three: 0.019999999552965,
+                    five: 0.03999999910593,
+                    six: 0.019999999552965,
+                    four: 0,
                 },
-                color: "#000000"
+                color: { r: 255, g: 255, b: 255 },
             });
         }
     },
@@ -177,9 +177,9 @@ export default {
     height: 75vh;
 }
 #inner {
-    position:fixed;
-    right:5%;
-    top:20%;
+    position: fixed;
+    right: 5%;
+    top: 20%;
     width: 405px;
     background: rgba(0, 0, 0, 0.9);
     font-family: helvetica;
@@ -202,7 +202,7 @@ a.close {
     float: right;
     background: #1770ff;
     border-radius: 2px;
-    margin-top:5px;
+    margin-top: 5px;
     margin-right: 10px;
     padding: 0 8px;
 }
@@ -212,38 +212,38 @@ a.close:hover {
 .content {
     color: #fff;
     padding: 10px;
-    font-size:12px;
-    color:#999;
+    font-size: 12px;
+    color: #999;
 }
 .content .stats {
-    float:left;
+    float: left;
 }
 .content .license {
-    float:right;
+    float: right;
 }
 .content span {
-    font-size:24px;
-    font-weight:bold;
-    color:#fff;
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
 }
 .section {
-    padding:10px;
-    margin:10px;
+    padding: 10px;
+    margin: 10px;
     text-shadow: 2px 2px rgba(0, 0, 0, 0.9);
     background: rgba(255, 255, 255, 0.1);
 }
 .section .heading {
-    margin-bottom:20px;
+    margin-bottom: 20px;
 }
 .section .subtitle {
-    color:#fff;
-    float:left;
-    font-size:26px;
-    line-height:1.5em;
+    color: #fff;
+    float: left;
+    font-size: 26px;
+    line-height: 1.5em;
 }
 .section .action {
-    text-align:right;
-    float:right;
+    text-align: right;
+    float: right;
 }
 table th {
     text-transform: uppercase;
@@ -251,51 +251,51 @@ table th {
 }
 #car {
     position: relative;
-    text-align:center;
+    text-align: center;
 }
 .dmg {
-    position:absolute;
-    background:red;
-    color:#fff;
-    font-size:14px;
-    font-weight:bold;
-    padding:2px 10px;
+    position: absolute;
+    background: red;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 2px 10px;
     text-shadow: 2px 2px rgba(0, 0, 0, 0.2);
 }
 .dmg.good {
-    background:green;
+    background: green;
 }
 #body_wheel_front_right {
-    top:0;
-    right:0;
+    top: 0;
+    right: 0;
 }
 #body_wheel_front_left {
-    top:0;
-    left:0;
+    top: 0;
+    left: 0;
 }
 #body_wheel_rear_left {
-    bottom:0;
-    left:0;
+    bottom: 0;
+    left: 0;
 }
 #body_wheel_rear_right {
-    bottom:0;
-    right:0;
+    bottom: 0;
+    right: 0;
 }
 #body_door_front_right {
-    top:80px;
-    right:0;
+    top: 80px;
+    right: 0;
 }
 #body_door_front_left {
-    top:80px;
-    left:0;
+    top: 80px;
+    left: 0;
 }
 #body_door_rear_right {
-    bottom:80px;
-    right:0;
+    bottom: 80px;
+    right: 0;
 }
 #body_door_rear_left {
-    bottom:80px;
-    left:0;
+    bottom: 80px;
+    left: 0;
 }
 button {
     font-weight: bold;
@@ -304,18 +304,18 @@ button {
     font-size: 14px;
     background: #1770ff;
     color: #fff;
-    border-radius:3px;
-    border:1px outset #1770ff;
+    border-radius: 3px;
+    border: 1px outset #1770ff;
 }
 button:hover:not([disabled]) {
     cursor: pointer;
     background: #3684ff;
-    border:1px outset #1770ff;
+    border: 1px outset #1770ff;
 }
 button:disabled,
 button[disabled] {
     background: #999;
     color: #666666;
-    border:1px inset #666666;
+    border: 1px inset #666666;
 }
 </style>

@@ -279,7 +279,7 @@ AddCommand("vehicle", function(player, modelid)
                 z = z,
                 h = h
             },
-            health = GetVehicleHealth(vehicle),
+            health = VEHICLE_MAX_HEALTH,
             damage = GetVehicleDamageIndexes(vehicle),
             license = license,
             color = {

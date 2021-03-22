@@ -76,12 +76,18 @@ AddEvent("StartMechanic", function(player)
     CallRemoteEvent(player, "LoadVehicleData", vehicle, json_encode(_send))
 end)
 
-function GetVehicleData(vehicle)    
+function GetVehicleData(vehicle)
+    local r,g,b = HexToRGBA(GetVehicleColor(vehicle))
     return {
         modelid = GetVehicleModel(vehicle),
         model_name = GetVehicleModelName(vehicle),
         health = GetVehicleHealthPercentage(vehicle),
-        damage = GetVehicleDamageIndexes(vehicle)
+        damage = GetVehicleDamageIndexes(vehicle),
+        color = {
+            r = r,
+            g = g,
+            b = b
+        }
     }
 end
 
@@ -134,6 +140,9 @@ AddRemoteEvent("PaintVehicle", function(player, r, g, b)
     SaveVehicle(vehicle)
 
     TempColors[player] = nil
+
+    local x,y,z = GetVehicleLocation(vehicle)
+    PlaySoundSync("sounds/paint.mp3", x, y, z)
 end)
 
 AddRemoteEvent("PreviewColor", function(player, r, g, b)

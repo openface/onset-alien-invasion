@@ -12,7 +12,7 @@ local AlienRetargetCooldown = {} -- aliens re-target on every weapon hit w/ cool
 local AlienSpawnsEnabled = true
 local AlienSpawnInterval = 120 * 1000 -- 2 mins
 local AlienSpawnTimer
-local AlienTickInterval = 1000 * 3 -- 3 secs
+local AlienTickInterval = 1000 * 5 -- 3 secs
 local AlienTickTimer
 
 local AlienTargets = {}
@@ -244,6 +244,8 @@ function SpawnCorpseLoot(npc)
 end
 
 function SetAlienTarget(npc, player)
+    log.trace("SetAlienTarget", player)
+
     local existing_target = AlienTargets[npc]
     if existing_target == player then
         return
@@ -289,6 +291,8 @@ end
 
 -- alien tick
 function ResetAlien(npc)
+    log.trace("ResetAlien", npc)
+    
     if GetNPCPropertyValue(npc, "dead") then
         return
     end
@@ -308,7 +312,7 @@ function ResetAlien(npc)
     if IsPlayerAttackable(player) then
         -- we found a nearby target
         SetAlienTarget(npc, player)
-    elseif (GetNPCPropertyValue(npc, 'target') == player) then
+    elseif (AlienTargets[npc] == player) then
         log.debug("NPC (ID " .. npc .. ") target " .. GetPlayerName(player) .. " is no longer attackable")
         -- target is out of range, stop following
         AlienTargets[npc] = nil
@@ -342,15 +346,11 @@ AddEvent("OnVNPCReachTargetFailed", function(npc)
         return
     end
 
-    VNPCS.StopVNPC(npc)
-    SetNPCAnimation(npc, "DONTKNOW", false)
-
     local returning = GetNPCPropertyValue(npc, 'returning')
     if returning then
         -- alien is back in starting position
         log.error("NPC (ID " .. npc .. ") cannot return.  Despawning...")
         DestroyNPC(npc)
-        Aliens[npc] = nil
         return
     end
 
@@ -359,8 +359,16 @@ AddEvent("OnVNPCReachTargetFailed", function(npc)
         CallRemoteEvent(target, 'AlienNoLongerAttacking', npc)
         AlienTargets[npc] = nil
     end
+    VNPCS.StopVNPC(npc)
 
-    log.error("Alien is stuck.")
+    log.error("Alien is stuck.  Teleporting...")
+
+    -- teleport alien to hopefully gain a pathway
+    Delay(200, function()
+        local x, y, z = GetNPCLocation(npc)
+        local x, y = randomPointInCircle(x, y, 300)
+        SetNPCLocation(npc, x, y, z + 300)
+    end)
 end)
 
 -- kills players when reached

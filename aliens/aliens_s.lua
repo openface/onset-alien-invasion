@@ -296,13 +296,12 @@ function ResetAlien(npc)
     end
 
     -- alien can attack, let's go
-    local player = GetNearestPlayer(npc)
+    local player, dist = GetNearestPlayer(npc)
     if not player then
-        -- invalid player or player already the target
         return
     end
 
-    if IsPlayerAttackable(player) then
+    if IsPlayerAttackable(player) and dist < AlienAttackRange then
         -- we found a nearby target
         SetAlienTarget(npc, player)
     elseif (AlienTargets[npc] == player) then
@@ -470,7 +469,7 @@ end
 function GetNearestPlayer(npc)
     local plys = GetAllPlayers()
     local found = 0
-    local nearest_dist = AlienAttackRange
+    local nearest_dist = 99999
     local x, y, z = GetNPCLocation(npc)
 
     for _, v in pairs(plys) do

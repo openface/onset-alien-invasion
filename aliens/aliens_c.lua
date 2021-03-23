@@ -50,7 +50,7 @@ AddRemoteEvent("AlienAttacking", function(npc)
     -- debug("SpottedBy:"..dump(SpottedBy))
 
     -- chance to make noises
-    if Random(1, 7) == 7 then
+    if Random(1, 2) == 1 then
         -- alien attack sound
         Delay(Random(1, 5000), function()
             local x, y, z = GetNPCLocation(npc)

@@ -244,22 +244,17 @@ function SpawnCorpseLoot(npc)
 end
 
 function SetAlienTarget(npc, player)
-    log.trace("SetAlienTarget", player)
-
-    local existing_target = AlienTargets[npc]
-    if existing_target == player then
-        return
-    end
-
     if not IsPlayerAttackable(player) then
+        AlienTarget[npc] = nil
         return
     end
+
+    AlienTargets[npc] = player
+    CallRemoteEvent(player, 'AlienAttacking', npc)
 
     SetNPCPropertyValue(npc, 'returning', nil)
 
-    CallRemoteEvent(player, 'AlienAttacking', npc)
-    AlienTargets[npc] = player
-    log.trace("alien targetting player ", player)
+    log.trace("NPC targets player ", player)
 
     local vehicle = GetPlayerVehicle(player)
     if vehicle == 0 then
@@ -291,8 +286,6 @@ end
 
 -- alien tick
 function ResetAlien(npc)
-    log.trace("ResetAlien", npc)
-    
     if GetNPCPropertyValue(npc, "dead") then
         return
     end

@@ -30,7 +30,7 @@ AddEvent("OnWebLoadComplete", function(ui)
 end)
 
 AddEvent('OnKeyPress', function(key)
-    if IsShiftPressed() or IsAltPressed() or EditingObject or GetWebVisibility(InventoryUI) == WEB_HIDDEN then
+    if IsAltPressed() or EditingObject or GetWebVisibility(InventoryUI) == WEB_HIDDEN then
         return
     end
     if IsPlayerInVehicle() then

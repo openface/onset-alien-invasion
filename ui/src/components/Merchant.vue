@@ -10,21 +10,15 @@
                         <div class="pic">
                             <img :src="getImageUrl(item)" />
                         </div>
-                        <div class="details">
-                            <div class="name">{{ item.name }}</div>
-                            <div class="action">
-                                <div v-if="player_cash >= item.price">
-                                    <button class="buy" @click="BuyItem(item.item)">
-                                        BUY ($<b>{{ item.price }}</b
-                                        >)
-                                    </button>
-                                </div>
-                                <div v-else>
-                                    <button class="need_cash" disabled="true">
-                                        BUY ($<b>{{ item.price }}</b
-                                        >)
-                                    </button>
-                                </div>
+                        <div class="name">
+                            {{ item.name }} $<b>{{ item.price }}</b>
+                            </div>
+                        <div class="action">
+                            <div v-if="player_cash >= item.price">
+                                <button class="buy" @click="BuyItem(item.item)">BUY</button>
+                            </div>
+                            <div v-else>
+                                <button class="need_cash" disabled="true">BUY</button>
                             </div>
                         </div>
                         <br style="clear:both;" />
@@ -212,18 +206,18 @@ export default {
 <style scoped>
 #container {
     display: flex;
-    height: 75vh;
+    height: 85vh;
 }
 #inner {
     margin: auto;
-    width: 910px;
+    width: 810px;
     background: rgba(0, 0, 0, 0.9);
     font-family: helvetica;
     text-shadow: 1px 1px black;
     padding: 10px;
 }
-#inner:not(.blurred) .item:hover {
-    background: rgba(255, 255, 255, 0.2);
+#inner.blurred {
+    filter: blur(3px) grayscale(100%);
 }
 #title {
     color: #fff;
@@ -233,15 +227,6 @@ export default {
     font-weight: bold;
     font-family: impact;
     text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
-}
-.vue-progress-path path {
-    stroke-width: 16;
-}
-.vue-progress-path .progress {
-    stroke: rgba(255, 255, 255, 0.6);
-}
-.vue-progress-path .background {
-    stroke: rgba(0, 0, 0, 0.4);
 }
 .category {
     margin-top: 10px;
@@ -255,51 +240,39 @@ export default {
     flex-wrap: wrap;
     align-content: flex-start;
 }
-.blurred {
-    filter: blur(3px) grayscale(100%);
-}
 .item {
-    padding: 8px;
-    width: 200px;
-    margin: 5px;
-    height: 50px;
+    width: 250px;
+    margin: 5px 10px;
+    height: 40px;
     background: rgba(255, 255, 255, 0.1);
 }
 .item .pic {
     float: left;
-    width: 50px;
+    width: 40px;
     margin-right:5px;
 }
 .item .pic img {
     border-radius: 3px;
-    width: 50px;
+    width: 40px;
     border: 1px solid rgba(0, 0, 0, 0.1);
 }
-.item .details {
-    float: left;
-    width: 140px;
+.item .name {
+    float:left;
+    font-size: 14px;
+    color: #fff;
+    line-height:2em;
 }
-.item .details .name {
+.item .action {
+    float:right;
     font-size: 16px;
     color: #fff;
-    margin-bottom: 10px;
-}
-.item .details .info {
-    font-size: 11px;
-    color: #fff;
-    line-height: 2em;
-}
-.item .details .info b {
-    font-weight: bold;
 }
 button {
     font-weight: bold;
     border: 0px;
-    padding: 3px;
     display: block;
     font-size: 14px;
-    width: 100%;
-    height: 22px;
+    height: 40px;
 }
 button.buy {
     background: #1770ff;
@@ -307,7 +280,7 @@ button.buy {
 }
 #inner:not(.blurred) button.buy:hover:not([disabled]) {
     cursor: pointer;
-    background: #3684ff;
+    background:green;
 }
 button:disabled,
 button[disabled] {

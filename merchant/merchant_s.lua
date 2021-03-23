@@ -77,10 +77,10 @@ AddRemoteEvent("BuyItem", function(player, item)
 
     -- TODO: remove money from player
 
-    -- SetPlayerLocation(player, -105738.5859375, 193734.59375, 1396.1424560547) 
-    -- SetPlayerHeading(player, -92.786437988281)   
-    -- SetPlayerAnimation(player, "BARCLEAN01")
-    Delay(4000, function()
+    local x, y, z = GetPlayerLocation(player)
+    PlaySoundSync("sounds/purchase.mp3", x, y, z)
+
+    Delay(2000, function()
         -- SetPlayerAnimation(player, "STOP")
         AddPlayerChat(player, "Purchase is complete.")
 
@@ -89,8 +89,6 @@ AddRemoteEvent("BuyItem", function(player, item)
                 player_cash = 1000
             }))
 
-        local x, y, z = GetPlayerLocation(player)
-        PlaySoundSync("sounds/purchase.mp3", x, y, z)
         AddToInventoryByName(player, item)
     end)
 end)

@@ -42,13 +42,17 @@
                         Vehicle Color
                     </div>
                     <div class="action">
-                        <button id="paint" @click="PaintVehicle()">Paint Vehicle</button>
+                        <button id="paint" @click="PaintVehicle()" :disabled="IsBusy() || !ColorChanged()">Paint Vehicle</button>
                     </div>
                     <br style="clear:both" />
                 </div>
                 <compact-picker v-model="color" style="width:100%;" @input="PreviewColor" />
             </div>
-        </div>
+        </div> 
+
+        <div id="progress" v-if="IsBusy()">
+            <loading-progress :indeterminate="true" size="40" rotate fillDuration="3" rotationDuration="4" />
+        </div> 
     </div>
 </template>
 
@@ -101,6 +105,9 @@ export default {
         IsBusy() {
             return this.is_busy;
         },
+        ColorChanged() {
+            return typeof(this.color.rgba) != 'undefined'
+        },
         IsGood: function(amt) {
             if (amt == 100.0) {
                 return true;
@@ -139,6 +146,7 @@ export default {
             this.CallEvent("RepairVehicle");
         },
         PaintVehicle: function() {
+            this.is_busy = true;
             this.CallEvent("PaintVehicle", this.color.rgba["r"], this.color.rgba["g"], this.color.rgba["b"]);
         },
         PreviewColor: function() {
@@ -185,6 +193,18 @@ export default {
     font-family: helvetica;
     text-shadow: 1px 1px black;
     padding: 5px;
+}
+#inner.blurred {
+    filter: blur(3px) grayscale(100%);
+}
+#progress {
+    position: fixed;
+    width: 405px;
+    top: 50%;
+    right:5%;
+    left:auto;
+    transform: none;
+    text-align:center;
 }
 #title {
     color: #fff;

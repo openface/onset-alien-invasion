@@ -18,7 +18,7 @@ body { user-select: none; overflow: hidden; height: 100%; margin:0; }
     transform: translate(-50%, -50%);
 }
 #progress >>> .vue-progress-path path {
-    stroke-width: 16;
+    stroke-width: 12;
 }
 #progress >>> .vue-progress-path .progress {
     stroke: rgba(255, 255, 255, 0.6);

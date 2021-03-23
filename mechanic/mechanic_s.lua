@@ -135,14 +135,19 @@ AddRemoteEvent("PaintVehicle", function(player, r, g, b)
     log.trace("PaintVehicle", dump(rgba))
 
     local vehicle = GetPlayerVehicle(player)
-    SetVehicleColor(vehicle, RGB(r, g, b))
-
-    SaveVehicle(vehicle)
 
     TempColors[player] = nil
 
     local x,y,z = GetVehicleLocation(vehicle)
     PlaySoundSync("sounds/paint.mp3", x, y, z)
+
+    Delay(6000, function()
+        SetVehicleColor(vehicle, RGB(r, g, b))    
+        SaveVehicle(vehicle)
+
+        local _send = GetVehicleData(vehicle)
+        CallRemoteEvent(player, "LoadVehicleData", vehicle, json_encode(_send))
+    end)
 end)
 
 AddRemoteEvent("PreviewColor", function(player, r, g, b)

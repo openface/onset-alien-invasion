@@ -35,14 +35,17 @@ end
 AddRemoteEvent("AlienMelee", function(npc)
     if Random(1, 2) == 1 then
         local x, y, z = GetNPCLocation(npc)
-        SetSoundVolume(CreateSound3D("client/sounds/alien_grunt.wav", x, y, z, 6000.0), 0.9)
+        SetSoundVolume(CreateSound3D("client/sounds/alien_3.mp3", x, y, z, 6000.0), 1.5)
     end
 end)
 
 AddRemoteEvent("AlienAttacking", function(npc)
     if next(SpottedBy) == nil then
         ShowMessage("You have been spotted!")
-        SetSoundVolume(AmbientSound, 0.5)
+        SetSoundVolume(AmbientSound, 0.3)
+
+        local x, y, z = GetNPCLocation(npc)
+        SetSoundVolume(CreateSound3D("client/sounds/running.wav", x, y, z, 6000.0), 2.0)
     end
 
     SpottedBy[npc] = true

@@ -23,6 +23,9 @@ ItemConfig["wooden_chair"] = {          -- [required] unique id / item name
             event = "FillBottle"
         }
     },
+    enter_vehicles_while_equipped = true, -- large items use a player animation when the item is equipped.
+                                          -- this option prevents player from entering vehicles while carrying item.
+
     modelid = 1262,                     -- [required] object modelid
     image = "survival/SM_Axe-Neo.png",  -- 2D image for objects using a custom asset
     max_carry = 1,                      -- [required] maximum number that can be carried in inventory

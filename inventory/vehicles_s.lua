@@ -248,6 +248,16 @@ AddRemoteEvent("ToggleVehicleEngine", function(player)
     end
 end)
 
+AddRemoteEvent("ChangeVehicleSeat", function(player, seat)
+    local vehicle = GetPlayerVehicle(player)
+    if not vehicle then
+        return
+    end
+    if GetVehiclePassenger(vehicle, seat) == 0 then
+        SetPlayerInVehicle(player, vehicle, seat)
+    end
+end)
+
 AddRemoteEvent("OpenGlovebox", function(player, vehicle)
     CallEvent("OpenStorage", player, {
         hit_object = vehicle,

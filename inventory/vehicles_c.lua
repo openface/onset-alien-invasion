@@ -27,3 +27,13 @@ AddEvent("OnPlayerStartEnterVehicle", function(vehicle, seat)
         return false
     end
 end)
+
+AddEvent('OnKeyPress', function(key)
+    if not IsPlayerInVehicle() then
+        return
+    end
+
+    if key == '1' or key == '2' or key == '3' or key == '4' then
+        CallRemoteEvent("ChangeVehicleSeat", key)
+    end
+end)

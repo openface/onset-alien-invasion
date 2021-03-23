@@ -107,13 +107,21 @@ AddRemoteEvent("CloseMechanic", function(player)
 
     VehiclesInGarage[player] = nil
 
-    CallRemoteEvent(player, "SendMessage", "Thank you come again!")
+    CallRemoteEvent(player, "ShowMessage", "Thank you come again!")
 end)
 
 AddRemoteEvent("RepairVehicle", function(player)
     local vehicle = VehiclesInGarage[player]
     if not vehicle then
         log.error "No vehicle found in garage!"
+        return
+    end
+
+    -- cancel if vehicle is too far away
+    local vx,vy,vz = GetVehicleLocation(vehicle)
+    local x,y,z = GetPlayerLocation(player)
+    if GetDistance2D(x, y, vx, vy) > 250 then
+        CallRemoteEvent(player, "CloseMechanic")
         return
     end
 
@@ -134,8 +142,12 @@ end)
 AddRemoteEvent("PaintVehicle", function(player, r, g, b)
     log.trace("PaintVehicle", dump(rgba))
 
-    local vehicle = GetPlayerVehicle(player)
-
+    local vehicle = VehiclesInGarage[player]
+    if not vehicle then
+        log.error "No vehicle found in garage!"
+        return
+    end
+    
     TempColors[player] = nil
 
     local x,y,z = GetVehicleLocation(vehicle)

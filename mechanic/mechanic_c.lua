@@ -25,14 +25,16 @@ AddRemoteEvent("UpdateVehicleData", function(data)
     ExecuteWebJS(MechanicUI, "EmitEvent('UpdateVehicleData'," .. data .. ")")
 end)
 
-AddEvent("CloseMechanic", function()
+function CloseMechanic()
     ShowMouseCursor(false)
     SetInputMode(INPUT_GAME)
     SetWebVisibility(MechanicUI, WEB_HIDDEN)
     SetWebVisibility(InventoryUI, WEB_HITINVISIBLE)
 
     CallRemoteEvent("CloseMechanic")
-end)
+end
+AddEvent("CloseMechanic", CloseMechanic)
+AddRemoteEvent("CloseMechanic", CloseMechanic)
 
 AddEvent("RepairVehicle", function()
     CallRemoteEvent("RepairVehicle")

@@ -6,6 +6,7 @@ ItemConfig["supply_container"] = {
     max_carry = 1,
     recipe = nil,
     price = 100,
+    enter_vehicles_while_equipped = false,
     interactions = {
         equip = {
             event = "EquipSupplyContainer",

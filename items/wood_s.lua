@@ -2,10 +2,11 @@ ItemConfig["wood"] = {
     name = "Wood",
     type = 'resource',
     modelid = 297,
+    enter_vehicles_while_equipped = false,
     interactions = {
         equip = {
             sound = "sounds/backpack.wav",
-            animation = { name = "CARRY_IDLE" },
+            event = "EquipWood",
         }
     },
     attachment = {
@@ -24,3 +25,7 @@ ItemConfig["wood"] = {
     },
     max_carry = 5,
 }
+
+AddEvent("EquipWood", function(player, object)
+    SetPlayerAnimation(player, "CARRY_IDLE")
+end)

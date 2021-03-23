@@ -14,6 +14,7 @@ ItemConfig["campfire"] = {
         rz = 0,
         bone = "hand_r"
     },
+    enter_vehicles_while_equipped = false,
     interactions = {
         equip = {
             event = "EquipCampfire"

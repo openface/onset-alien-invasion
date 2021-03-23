@@ -38,8 +38,11 @@ function SyncInventory(player)
                 current_inhand = {}
                 current_inhand['item'] = inventory_item.item
                 current_inhand['uuid'] = inventory_item.uuid
+
+                -- todo: might as well send the entire item_cfg ?
                 current_inhand['type'] = ItemConfig[inventory_item.item].type
                 current_inhand['interactions'] = ItemConfig[inventory_item.item].interactions
+                current_inhand['enter_vehicles_while_equipped'] = ItemConfig[inventory_item.item].enter_vehicles_while_equipped
             end
         end
     end

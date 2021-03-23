@@ -19,3 +19,11 @@ function IsNearVehicleOpenHood(vehicle)
         return false
     end
 end
+
+-- cannot enter vehicles carrying some big items
+AddEvent("OnPlayerStartEnterVehicle", function(vehicle, seat)
+    if CurrentInHand and CurrentInHand.enter_vehicles_while_equipped == false then
+        ShowError("Your hands are too full!")
+        return false
+    end
+end)

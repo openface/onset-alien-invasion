@@ -5,6 +5,7 @@ ItemConfig["paint"] = {
     modelid = 1576,
     max_carry = 1,
     max_use = 3,
+    enter_vehicles_while_equipped = false,
     interactions = {
         vehicle_hood = {
             use_label = "Paint Vehicle",
@@ -13,7 +14,7 @@ ItemConfig["paint"] = {
             event = "StartMechanic"
         },
         equip = {
-            event = "EquipPaint"
+            event = "EquipPaint",
         }
     },
     attachment = {

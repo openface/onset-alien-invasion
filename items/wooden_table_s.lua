@@ -9,10 +9,11 @@ ItemConfig["wooden_table"] = {
         wood = 50
     },
     price = 150,
+    enter_vehicles_while_equipped = false,
     interactions = {
         equip = {
-            event = "EquipWoodenTable",
-            sound = "sounds/struggle.wav"
+            sound = "sounds/struggle.wav",
+            event = "EquipTable",        
         }
     },
     attachment = {
@@ -26,6 +27,6 @@ ItemConfig["wooden_table"] = {
     },
 }
 
-AddEvent("EquipWoodenTable", function(player, object)
-    SetPlayerAnimation(player, "CARRY_IDLE")    
+AddEvent("EquipTable", function(player, object)
+    SetPlayerAnimation(player, "CARRY_IDLE")
 end)
